@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 
 namespace FoodOrderBackend.Models
 {
-    public class OrderDetail
+    public class Cart
     {
-        public int OrderID { get; set; }
+        public Guid AppUserId { get; set; }
         public int FoodID { get; set; }
-        public int Amount { get; set; }
-        public decimal Price { get; set; }
+        public int Quantity { get; set; }
 
-        public Order Order { get; set; }
+        public AppUser AppUser { get; set; }
         public Food Food { get; set; }
     }
 }

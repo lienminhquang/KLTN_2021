@@ -7,12 +7,17 @@ namespace FoodOrderBackend.Models
 {
     public class Order
     {
-        public Guid UserId { get; set; }
-        public int FoodId { get; set; }
+        public int ID { get; set; }
+        public Guid AppUserID { get; set; }
         public DateTime CreatedDate { get; set; }
-        public int IsPaid { get; set; }
+        public bool IsPaid { get; set; }
         public DateTime DatePaid { get; set; }
-        public int OrderStatusId { get; set; }
-        public int PromotionId { get; set; }
+        public int OrderStatusID { get; set; }
+        public int? PromotionID { get; set; }
+
+        public List<OrderDetail> OrderDetails { get; set; }
+        public Promotion Promotion { get; set; }
+        public AppUser AppUser { get; set; }
+        public OrderStatus OrderStatus { get; set; }
     }
 }

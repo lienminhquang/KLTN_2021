@@ -22,5 +22,8 @@ namespace FoodOrderBackend.Models
         public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
 
+        public List<Order> Orders { get; set; }
+        public List<Rating> Ratings { get; set; }
+        public List<Cart> Carts { get; set; }
     }
 }

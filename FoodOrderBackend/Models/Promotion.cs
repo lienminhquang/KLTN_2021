@@ -7,8 +7,9 @@ namespace FoodOrderBackend.Models
 {
     public class Promotion
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
+        public string Code { get; set; }
         public string Desciption { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime StartDate { get; set; }
@@ -16,5 +17,7 @@ namespace FoodOrderBackend.Models
         public int Amount { get; set; }
         public decimal Percent { get; set; }
         public bool Enabled { get; set; }
+
+        public List<Order> Orders { get; set; }
     }
 }
