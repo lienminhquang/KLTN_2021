@@ -36,6 +36,7 @@ namespace FoodOrderBackend.Data
             builder.ApplyConfiguration(new CategoryConfig());
             builder.ApplyConfiguration(new FoodCategoryConfig());
             builder.ApplyConfiguration(new FoodConfig());
+            builder.ApplyConfiguration(new ImageConfig());
             builder.ApplyConfiguration(new OrderConfig());
             builder.ApplyConfiguration(new OrderDetailConfig());
             builder.ApplyConfiguration(new OrderStatusConfig());
@@ -58,10 +59,11 @@ namespace FoodOrderBackend.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Food> Foods { get; set; }
         public DbSet<FoodCategory> FoodCategories { get; set; }
+        public DbSet<Image> Images { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<Rating> Ra { get; set; }
+        public DbSet<Rating> Rating { get; set; }
     }
 }

@@ -69,10 +69,16 @@ namespace FoodOrderBackend.Extentions
                 new Category { ID = 3, Description = "Mon an kem", Name = "Cac mon an kem mon chinh" }
                 );
             modelBuilder.Entity<Food>().HasData(
-                new Food { ID = 1, Name = "Com tam gia truyen", Description = "Com tam lam tu by quyet gia truyen co 2 khong 1", ImagePath = "default", Price = 15000, Count = 100 },
-                new Food { ID = 2, Name = "Canh rong bien", Description = "Canh rong bien thit bam", ImagePath = "default", Price = 10000, Count = 57 },
-                new Food { ID = 3, Name = "Pepsi", Description = "Nuoc giai khat pepsi", ImagePath = "default", Price = 7000, Count = 1000 },
-                new Food { ID = 4, Name = "Tra da", Description = "Tra da lam tu by quyet gia truyen co 2 khong 1", ImagePath = "default", Price = 5000, Count = 200 }
+                new Food { ID = 1, Name = "Com tam gia truyen", Description = "Com tam lam tu by quyet gia truyen co 2 khong 1", Price = 15000, Count = 100 },
+                new Food { ID = 2, Name = "Canh rong bien", Description = "Canh rong bien thit bam", Price = 10000, Count = 57 },
+                new Food { ID = 3, Name = "Pepsi", Description = "Nuoc giai khat pepsi",  Price = 7000, Count = 1000 },
+                new Food { ID = 4, Name = "Tra da", Description = "Tra da lam tu by quyet gia truyen co 2 khong 1", Price = 5000, Count = 200 }
+                );
+            modelBuilder.Entity<Image>().HasData(
+                new Image { ID = 1, Caption = "", FoodID = 1, ImagePath = "default.png", SortOrder = 1 },
+                new Image { ID = 2, Caption = "", FoodID = 2, ImagePath = "default.png", SortOrder = 1 },
+                new Image { ID = 3, Caption = "", FoodID = 3, ImagePath = "default.png", SortOrder = 1 },
+                new Image { ID = 4, Caption = "", FoodID = 4, ImagePath = "default.png", SortOrder = 1 }
                 );
             modelBuilder.Entity<FoodCategory>().HasData(
                 new FoodCategory { CategoryID = 1, FoodID = 1 },
