@@ -4,14 +4,16 @@ using FoodOrderBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodOrderBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210318161324_Data seeding")]
+    partial class Dataseeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,7 @@ namespace FoodOrderBackend.Migrations
                         new
                         {
                             Id = new Guid("b9e08f48-883c-42dc-a700-da5cf1d81aa3"),
-                            ConcurrencyStamp = "6b15a5eb-ad51-4d85-87c0-41b27a1615b0",
+                            ConcurrencyStamp = "64241348-79de-4b51-8da8-7da1a5c36308",
                             Description = "This is Admintrator role.",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -62,7 +64,7 @@ namespace FoodOrderBackend.Migrations
                         new
                         {
                             Id = new Guid("74d17d8b-3f91-4d3a-893f-09b4e51e3834"),
-                            ConcurrencyStamp = "9ad0bb0b-0a99-401a-81c9-23f4ef5ef2b5",
+                            ConcurrencyStamp = "16349281-f43a-4b61-9117-a507b9b3d13f",
                             Description = "This is User role.",
                             Name = "user",
                             NormalizedName = "User"
@@ -156,7 +158,7 @@ namespace FoodOrderBackend.Migrations
                         {
                             Id = new Guid("b4e253b2-756e-48b8-9c42-b5acb139bed4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fc7e0537-717e-47bf-b82b-ae1d8e07508f",
+                            ConcurrencyStamp = "5b9c6899-30bd-4866-aeca-41f7091aa8e9",
                             DateOfBirth = new DateTime(1999, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jame@gmail.com",
                             EmailConfirmed = false,
@@ -164,7 +166,7 @@ namespace FoodOrderBackend.Migrations
                             LastName = "Jame",
                             LockoutEnabled = false,
                             NormalizedEmail = "JAME@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIgkDxtaZplnDwTgeGNjeEw91zlBQpr8oRytX3P0yWm22CAKin58H9wCzr+oKeKolg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDV6OCinywMuR0BpXBQ2qCut24U8PrDJXajXWHnG/KLQeexWK2jSrMVXGHKSUucKUg==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -174,7 +176,7 @@ namespace FoodOrderBackend.Migrations
                         {
                             Id = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c7695217-bc3e-4c7b-97d7-b5f0e55cc24c",
+                            ConcurrencyStamp = "359cb04b-be2b-4b52-bcba-d200648206c9",
                             DateOfBirth = new DateTime(1990, 7, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "messi10@gmail.com",
                             EmailConfirmed = false,
@@ -182,7 +184,7 @@ namespace FoodOrderBackend.Migrations
                             LastName = "Messi",
                             LockoutEnabled = false,
                             NormalizedEmail = "MESSI10@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPDnKFoV4LOAOOnjAlYWPGzYELh7nHoKLn0h8U7lhJexD7wVz7l59ysMhJE91GvDXg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIyZFJ5btZRqQSTNr/H/ez4KjuwH1x/4Jct7G5KYFxw8AszbQerk/AM1A0ROc1UWZw==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -409,9 +411,6 @@ namespace FoodOrderBackend.Migrations
                     b.Property<int>("OrderStatusID")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("PromotionAmount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int?>("PromotionID")
                         .HasColumnType("int");
 
@@ -430,7 +429,7 @@ namespace FoodOrderBackend.Migrations
                         {
                             ID = 1,
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
-                            CreatedDate = new DateTime(2021, 3, 18, 23, 23, 31, 739, DateTimeKind.Local).AddTicks(9133),
+                            CreatedDate = new DateTime(2021, 3, 18, 23, 13, 23, 191, DateTimeKind.Local).AddTicks(9527),
                             IsPaid = false,
                             OrderStatusID = 1,
                             PromotionID = 1
@@ -553,7 +552,7 @@ namespace FoodOrderBackend.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 3, 18, 23, 23, 31, 689, DateTimeKind.Local).AddTicks(8655));
+                        .HasDefaultValue(new DateTime(2021, 3, 18, 23, 13, 23, 88, DateTimeKind.Local).AddTicks(7532));
 
                     b.Property<string>("Desciption")
                         .HasMaxLength(300)
@@ -567,7 +566,7 @@ namespace FoodOrderBackend.Migrations
                     b.Property<DateTime>("EndDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 3, 18, 23, 23, 31, 691, DateTimeKind.Local).AddTicks(4694));
+                        .HasDefaultValue(new DateTime(2021, 3, 18, 23, 13, 23, 90, DateTimeKind.Local).AddTicks(2539));
 
                     b.Property<int>("Max")
                         .HasColumnType("int");
@@ -589,7 +588,7 @@ namespace FoodOrderBackend.Migrations
                     b.Property<DateTime>("StartDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 3, 18, 23, 23, 31, 691, DateTimeKind.Local).AddTicks(4246));
+                        .HasDefaultValue(new DateTime(2021, 3, 18, 23, 13, 23, 90, DateTimeKind.Local).AddTicks(1913));
 
                     b.HasKey("ID");
 
@@ -601,14 +600,14 @@ namespace FoodOrderBackend.Migrations
                             ID = 1,
                             Amount = 100,
                             Code = "THANHVIENMOI",
-                            CreatedDate = new DateTime(2021, 3, 18, 23, 23, 31, 740, DateTimeKind.Local).AddTicks(9248),
+                            CreatedDate = new DateTime(2021, 3, 18, 23, 13, 23, 192, DateTimeKind.Local).AddTicks(9080),
                             Enabled = true,
                             EndDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Max = 5000,
                             MinPrice = 50000,
                             Name = "Chao thanh vien moi",
                             Percent = 0.25f,
-                            StartDate = new DateTime(2021, 3, 18, 23, 23, 31, 741, DateTimeKind.Local).AddTicks(2138)
+                            StartDate = new DateTime(2021, 3, 18, 23, 13, 23, 193, DateTimeKind.Local).AddTicks(1832)
                         });
                 });
 
@@ -643,7 +642,7 @@ namespace FoodOrderBackend.Migrations
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             FoodID = 1,
                             Comment = "Good",
-                            LastCreatedTime = new DateTime(2021, 3, 18, 23, 23, 31, 741, DateTimeKind.Local).AddTicks(4911),
+                            LastCreatedTime = new DateTime(2021, 3, 18, 23, 13, 23, 193, DateTimeKind.Local).AddTicks(4451),
                             Star = 5
                         });
                 });

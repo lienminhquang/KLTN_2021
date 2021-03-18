@@ -14,10 +14,12 @@ namespace FoodOrderBackend.Configurations
         {
             builder.ToTable("Food");
             builder.HasKey(x => x.ID);
+            builder.Property(x => x.ID).UseIdentityColumn();
             builder.Property(x => x.Name).IsRequired().IsUnicode().HasMaxLength(100);
             builder.Property(x => x.Description).IsRequired().IsUnicode().HasMaxLength(300);
             builder.Property(x => x.Price).IsRequired();
             builder.Property(x => x.ImagePath).IsRequired();
+            builder.Property(x => x.Count).IsRequired().HasDefaultValue(0);
 
             builder.HasMany(x => x.OrderDetails).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
             builder.HasMany(x => x.Ratings).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);

@@ -15,8 +15,10 @@ namespace FoodOrderBackend.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int Amount { get; set; }
-        public decimal Percent { get; set; }
+        public float Percent { get; set; }
         public bool Enabled { get; set; }
+        public int Max { get; set; }
+        public int MinPrice { get; set; }
 
         public List<Order> Orders { get; set; }
     }

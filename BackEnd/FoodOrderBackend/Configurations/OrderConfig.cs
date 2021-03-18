@@ -14,6 +14,7 @@ namespace FoodOrderBackend.Configurations
         {
             builder.ToTable("Order");
             builder.HasKey(x => x.ID);
+            builder.Property(x => x.ID).UseIdentityColumn();
             builder.Property(x => x.IsPaid).IsRequired().HasDefaultValue(false);
 
             builder.HasMany(x => x.OrderDetails).WithOne(x => x.Order).HasForeignKey(x => x.OrderID);

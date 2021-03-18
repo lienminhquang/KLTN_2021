@@ -1,4 +1,5 @@
 ﻿using FoodOrderBackend.Configurations;
+using FoodOrderBackend.Extentions;
 using FoodOrderBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -47,6 +48,8 @@ namespace FoodOrderBackend.Data
             builder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRole").HasKey(x => new { x.UserId, x.RoleId });
             builder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserToken").HasKey(x => x.UserId);
             builder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaim");
+
+            builder.Seed();
         }
 
         public DbSet<AppRole> AppRoles { get; set; }
