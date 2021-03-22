@@ -14,6 +14,14 @@ namespace FoodOrderBackend.Controllers
 
     public class FoodController : ControllerBase
     {
+        public class FoodCreateRequest
+        {
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public decimal Price { get; set; }
+            public int Count { get; set; }
+        }
+
         private readonly ApplicationDBContext m_dbContext;
 
         public FoodController(ApplicationDBContext i_context)
@@ -30,12 +38,75 @@ namespace FoodOrderBackend.Controllers
                 .Include(f => f.Images)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(f => f.ID == id);
-            if(food == null)
+            if (food == null)
             {
                 return NotFound();
             }
 
             return food;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Food>> CreateFood([FromForm] FoodCreateRequest foodCreateRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var food = await m_dbContext.Foods.AddAsync(new Food { Description = foodCreateRequest.Description, Name = foodCreateRequest.Name, Price = foodCreateRequest.Price });
+
+            await m_dbContext.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetFoodByID), new { id = food.Entity.ID }, food.Entity);
+
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateFood([FromForm] Food newFood)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var food = await m_dbContext.Foods.FirstOrDefaultAsync(x => x.ID == newFood.ID);
+            if(food == null)
+            {
+                return NotFound();
+            }
+            food.Name = newFood.Name;
+            food.Description = newFood.Description;
+            food.Count = newFood.Count;
+            food.Price = newFood.Price;
+            try
+            {
+                await m_dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteFood(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var food = await m_dbContext.Foods.FindAsync(id);
+            if (food == null)
+            {
+                return NotFound();
+            }
+            m_dbContext.Foods.Remove(food);
+            await m_dbContext.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
