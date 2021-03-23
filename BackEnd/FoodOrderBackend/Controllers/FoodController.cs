@@ -108,5 +108,60 @@ namespace FoodOrderBackend.Controllers
 
             return NoContent();
         }
+
+        [HttpGet]
+        // TODO: return the sortorder, currentfilter, pagenumber to the client.
+        public async Task<ActionResult<IEnumerable<Food>>> GetAllFood(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        {
+            var foods = from f in m_dbContext.Foods 
+                        select f;
+
+            // if search string change, reset the page number to 1
+            if(!String.IsNullOrEmpty(searchString))
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            if(!String.IsNullOrEmpty(searchString))
+            {
+                foods = foods.Where(f => f.Name.Contains(searchString) || f.Description.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "ID":
+                    foods = foods.OrderBy(x => x.ID);
+                    break;
+                case "ID_desc":
+                    foods = foods.OrderByDescending(x => x.ID);
+                    break;
+                case "Name":
+                    foods = foods.OrderBy(x => x.Name);
+                    break;
+                case "Name_desc":
+                    foods = foods.OrderByDescending(x => x.Name);
+                    break;
+                case "Price":
+                    foods = foods.OrderBy(x => x.Price);
+                    break;
+                case "Price_desc":
+                    foods = foods.OrderByDescending(x => x.Price);
+                    break;
+                case "Count":
+                    foods = foods.OrderBy(x => x.Count);
+                    break;
+                case "Count_desc":
+                    foods = foods.OrderByDescending(x => x.Count);
+                    break;
+                default:
+                    break;
+            }
+
+            return await PaginatedList<Food>.CreateAsync(foods.AsNoTracking(), pageNumber ?? 1, 2);
+        }
     }
 }
