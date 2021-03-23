@@ -1,4 +1,5 @@
 ﻿using FoodOrderBackend.Data;
+using FoodOrderBackend.Helpers;
 using FoodOrderBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +63,7 @@ namespace FoodOrderBackend.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateFood([FromForm] Food newFood)
+        public async Task<ActionResult> EditFood([FromForm] Food newFood)
         {
             if (!ModelState.IsValid)
             {
@@ -131,37 +132,9 @@ namespace FoodOrderBackend.Controllers
                 foods = foods.Where(f => f.Name.Contains(searchString) || f.Description.Contains(searchString));
             }
 
-            switch (sortOrder)
-            {
-                case "ID":
-                    foods = foods.OrderBy(x => x.ID);
-                    break;
-                case "ID_desc":
-                    foods = foods.OrderByDescending(x => x.ID);
-                    break;
-                case "Name":
-                    foods = foods.OrderBy(x => x.Name);
-                    break;
-                case "Name_desc":
-                    foods = foods.OrderByDescending(x => x.Name);
-                    break;
-                case "Price":
-                    foods = foods.OrderBy(x => x.Price);
-                    break;
-                case "Price_desc":
-                    foods = foods.OrderByDescending(x => x.Price);
-                    break;
-                case "Count":
-                    foods = foods.OrderBy(x => x.Count);
-                    break;
-                case "Count_desc":
-                    foods = foods.OrderByDescending(x => x.Count);
-                    break;
-                default:
-                    break;
-            }
+            foods = Helpers.Utilities<Food>.Sort(foods, sortOrder, "ID");
 
-            return await PaginatedList<Food>.CreateAsync(foods.AsNoTracking(), pageNumber ?? 1, 2);
+            return await PaginatedList<Food>.CreateAsync(foods.AsNoTracking(), pageNumber ?? 1, Helpers.Configs.PageSize);
         }
     }
 }
