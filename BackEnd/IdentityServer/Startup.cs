@@ -109,11 +109,23 @@ namespace IdentityServer
                 .AddInMemoryApiResources(Resources.GetApiResources())
                 .AddTestUsers(Users.Get())
                 .AddDeveloperSigningCredential();
+
+            // add swagger
+            services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(
+                c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My IDENTITY SERVER");
+                }
+                );
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
