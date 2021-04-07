@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data.Common;
+//using Microsoft.Data.Sqlite;
 
 namespace FoodOrderBackend
 {
@@ -26,13 +28,31 @@ namespace FoodOrderBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //authentication
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication("Bearer", options =>
+                {
+                    options.ApiName = "api1";
+                    options.Authority = "https://localhost:6000";
+                });
+
             services.AddDbContext<ApplicationDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("FoodOrderDatabase")));
+            //services.AddDbContext<ApplicationDBContext>(opt => opt.UseSqlite(CreateInMemoryDatabase()));
             services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 
             // register swagger genenator
             services.AddSwaggerGen();
         }
+
+        //private static DbConnection CreateInMemoryDatabase()
+        //{
+        //    var connection = new SqliteConnection("Filename=:memory:");
+
+        //    connection.Open();
+
+        //    return connection;
+        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -61,6 +81,7 @@ namespace FoodOrderBackend
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

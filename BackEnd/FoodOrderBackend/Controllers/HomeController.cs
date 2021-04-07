@@ -1,4 +1,5 @@
 ﻿using FoodOrderBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -26,6 +27,12 @@ namespace FoodOrderBackend.Controllers
         public IActionResult Privacy()
         {
             return Ok();
+        }
+
+        [Authorize]
+        public IActionResult Secret()
+        {
+            return Ok("Secret page");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

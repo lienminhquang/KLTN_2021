@@ -25,6 +25,7 @@ namespace FoodOrderBackend.Controllers
         public async Task<IEnumerable<Image>> Get()
         {
             //var image = m_dbContext.Images
+            return null;
         }
 
         // GET api/<ValuesController>/5
