@@ -8,9 +8,13 @@ class Orders extends StatefulWidget {
 class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  final List<Tab> myTabs = <Tab>[
-    Tab(text: 'LEFT'),
-    Tab(text: 'RIGHT'),
+  final List<Tab> myTabs = [
+    Tab(
+      text: 'Incomming',
+    ),
+    Tab(
+      text: 'History',
+    ),
   ];
   @override
   void initState() {
@@ -33,14 +37,7 @@ class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
             TabBar(
               unselectedLabelColor: Colors.black,
               labelColor: Colors.red,
-              tabs: [
-                Tab(
-                  text: 'Incomming',
-                ),
-                Tab(
-                  text: 'History',
-                ),
-              ],
+              tabs: myTabs,
               controller: _tabController,
               indicatorSize: TabBarIndicatorSize.tab,
             ),

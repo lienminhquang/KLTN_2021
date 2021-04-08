@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/pages/Promotions.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -49,8 +50,13 @@ class _ProfileState extends State<Profile> {
                   leading: Icon(Icons.local_offer_outlined),
                   title: Text("Promotions"),
                   trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: (){
-                    
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return Promotions();
+                      }),
+                    );
                   },
                 ),
               ),
