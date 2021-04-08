@@ -1,8 +1,9 @@
-import 'package:carousel_pro/carousel_pro.dart';
+//import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/pages/Category.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -15,21 +16,21 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: Correct auto play animations, click to open details pages
     height: 150,
 
-    child: Carousel(
-      autoplay: false,
-      images: [
-        AssetImage('images/yelloweyecat.jpg'),
-        AssetImage('images/cat.jpg'),
-        AssetImage('images/ladybug.jpg'),
-        AssetImage('images/seals.jpg'),
-        AssetImage('images/crabs.jpg'),
-        AssetImage('images/animegirl.jpg')
-      ],
-      animationDuration: const Duration(milliseconds: 700),
-      dotSize: 3.0,
-      dotBgColor: Colors.transparent,
-      dotSpacing: 10.0,
-    ),
+    // child: Carousel(
+    //   autoplay: false,
+    //   images: [
+    //     AssetImage('images/yelloweyecat.jpg'),
+    //     AssetImage('images/cat.jpg'),
+    //     AssetImage('images/ladybug.jpg'),
+    //     AssetImage('images/seals.jpg'),
+    //     AssetImage('images/crabs.jpg'),
+    //     AssetImage('images/animegirl.jpg')
+    //   ],
+    //   animationDuration: const Duration(milliseconds: 700),
+    //   dotSize: 3.0,
+    //   dotBgColor: Colors.transparent,
+    //   dotSpacing: 10.0,
+    // ),
   );
 
   @override
@@ -154,18 +155,26 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          Expanded(
-            child: Image.asset('images/yelloweyecat.jpg'),
-            flex: 3,
-          ),
-          Text(
-            "$name",
-            style: TextStyle(fontSize: 12.0),
-            textAlign: TextAlign.center,
-          )
-        ],
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CategoryPage()),
+          );
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: Image.asset('images/yelloweyecat.jpg'),
+              flex: 3,
+            ),
+            Text(
+              "$name",
+              style: TextStyle(fontSize: 12.0),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
       ),
       color: Colors.teal[100],
     );
@@ -232,13 +241,13 @@ class FastChoice extends StatelessWidget {
                             ButtonBar(
                               alignment: MainAxisAlignment.start,
                               children: [
-                                FlatButton(
+                                TextButton(
                                   onPressed: () {
                                     // Perform some action
                                   },
                                   child: const Text('ACTION 1'),
                                 ),
-                                FlatButton(
+                                TextButton(
                                   onPressed: () {
                                     // Perform some action
                                   },
