@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/pages/Category.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
-  final String title;
+  //final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -13,7 +13,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Widget imageCarousel = Container(
-    // TODO: Correct auto play animations, click to open details pages
     height: 150,
 
     // child: Carousel(
@@ -32,6 +31,12 @@ class _MyHomePageState extends State<MyHomePage> {
     //   dotSpacing: 10.0,
     // ),
   );
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,21 +118,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.favorite,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.assignment),
-            onPressed: () {},
-          )
-        ],
-      ),
       body: Container(
         child: ListView(
           children: [
