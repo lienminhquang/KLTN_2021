@@ -2,9 +2,9 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key}) : super(key: key);
 
-  final String title;
+  //final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -12,7 +12,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Widget imageCarousel = Container(
-    // TODO: Correct auto play animations, click to open details pages
     height: 150,
 
     child: Carousel(
@@ -118,21 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.favorite,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.assignment),
-            onPressed: () {},
-          )
-        ],
-      ),
       body: Container(
         child: ListView(
           children: [
@@ -144,38 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
             FastChoice()
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: Colors.red,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article_rounded),
-            label: 'Orders',
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_rounded),
-            label: 'Favorite',
-            backgroundColor: Colors.purple,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_rounded),
-            label: 'Notification',
-            backgroundColor: Colors.pink,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_box_rounded),
-            label: 'Profile',
-            backgroundColor: Colors.yellow,
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
       ),
     );
   }
@@ -270,13 +222,13 @@ class FastChoice extends StatelessWidget {
                             ButtonBar(
                               alignment: MainAxisAlignment.start,
                               children: [
-                                FlatButton(
+                                TextButton(
                                   onPressed: () {
                                     // Perform some action
                                   },
                                   child: const Text('ACTION 1'),
                                 ),
-                                FlatButton(
+                                TextButton(
                                   onPressed: () {
                                     // Perform some action
                                   },
