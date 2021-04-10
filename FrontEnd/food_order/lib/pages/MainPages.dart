@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> {
             onPressed: () {},
           ),
           IconButton(
-            icon: Icon(Icons.assignment),
+            icon: Icon(Icons.card_giftcard),
             onPressed: () {},
           )
         ],
