@@ -6,6 +6,7 @@ class CartItem extends StatelessWidget {
   final Cart cart;
   @override
   Widget build(BuildContext context) {
+    //hàm này để tìm chiều rộng tương ứng với mỗi màn hình
     double getProportionateScreenWidth(double inputWidth) {
       double screenWidth = MediaQuery.of(context).size.width;
       return (inputWidth / 375.0) * screenWidth;

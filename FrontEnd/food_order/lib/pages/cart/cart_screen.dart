@@ -4,6 +4,8 @@ import 'Cart.dart';
 import 'body.dart';
 
 class CartItemsPage extends StatelessWidget {
+  static String routeName = "/cart";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

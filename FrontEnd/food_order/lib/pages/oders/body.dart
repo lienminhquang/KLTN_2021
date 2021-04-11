@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Orders extends StatefulWidget {
+class Body extends StatefulWidget {
   @override
-  _OrdersState createState() => _OrdersState();
+  _BodyState createState() => _BodyState();
 }
 
-class _OrdersState extends State<Orders> with SingleTickerProviderStateMixin {
+class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
   late TabController _tabController; // = TabController(length: 1, vsync: this);
 
   final List<Tab> myTabs = [

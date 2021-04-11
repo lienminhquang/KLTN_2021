@@ -1,42 +1,16 @@
-//import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:food_delivery/pages/Category.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+import '../categoty/Category.dart';
 
-  //final String title;
-
+class Body extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _BodyState createState() => _BodyState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _BodyState extends State<Body> {
   Widget imageCarousel = Container(
     height: 150,
-
-    // child: Carousel(
-    //   autoplay: false,
-    //   images: [
-    //     AssetImage('images/yelloweyecat.jpg'),
-    //     AssetImage('images/cat.jpg'),
-    //     AssetImage('images/ladybug.jpg'),
-    //     AssetImage('images/seals.jpg'),
-    //     AssetImage('images/crabs.jpg'),
-    //     AssetImage('images/animegirl.jpg')
-    //   ],
-    //   animationDuration: const Duration(milliseconds: 700),
-    //   dotSize: 3.0,
-    //   dotBgColor: Colors.transparent,
-    //   dotSpacing: 10.0,
-    // ),
   );
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,10 +121,7 @@ class CategoryItem extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CategoryPage()),
-          );
+          Navigator.pushNamed(context, CategoryPage.routeName);
         },
         child: Column(
           children: [

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'Home.dart';
-
-class Promotions extends StatefulWidget {
+class Body extends StatefulWidget {
   @override
-  _PromotionsState createState() => _PromotionsState();
+  _BodyState createState() => _BodyState();
 }
 
-class _PromotionsState extends State<Promotions>
-    with SingleTickerProviderStateMixin {
+class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<Tab> myTab = [
     Tab(

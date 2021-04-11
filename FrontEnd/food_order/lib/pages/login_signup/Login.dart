@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/pages/MainPages.dart';
-import 'package:food_delivery/pages/SignUp.dart';
+import 'package:food_delivery/pages/cart/cart_screen.dart';
+import 'package:food_delivery/pages/home/Home.dart';
+import 'package:food_delivery/pages/login_signup/SignUp.dart';
 
 class LoginPage extends StatefulWidget {
+  static String routeName = "/login";
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -81,6 +83,9 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment(1.0, 0.0),
                   padding: EdgeInsets.only(top: 15.0, left: 20.0),
                   child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, CartItemsPage.routeName);
+                    },
                     child: Text(
                       'Quên mật khẩu',
                       style: TextStyle(
@@ -103,10 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                     elevation: 7.0,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MainPage()),
-                        );
+                        Navigator.pushNamed(context, HomeScreen.routeName);
                       },
                       child: Center(
                         child: Text(
@@ -173,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pushNamed('/signup');
+                  Navigator.pushNamed(context, SignupPage.routeName);
                 },
                 child: Text('Đăng ký',
                     style: TextStyle(

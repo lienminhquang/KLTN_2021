@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 // import 'package:food_delivery/pages/MainPages.dart';
 // import 'package:food_delivery/pages/Home.dart';
-import 'package:food_delivery/pages/Login.dart';
-import 'package:food_delivery/pages/SignUp.dart';
+import 'package:food_delivery/pages/login_signup/Login.dart';
 
-import 'package:food_delivery/pages/cart/cart_screen.dart';
+import 'package:food_delivery/routers.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,15 +15,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: <String, WidgetBuilder>{
-        '/signup': (BuildContext context) => new SignupPage()
-      },
       title: 'Food Delivery',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: CartItemsPage(),
+      routes: routes,
+      initialRoute: LoginPage.routeName,
     );
   }
 }
