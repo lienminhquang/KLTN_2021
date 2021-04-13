@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 
 namespace FoodOrderBackend.Controllers
 {
-    public class HomeController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -19,22 +21,26 @@ namespace FoodOrderBackend.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return Ok();
         }
 
+        [HttpGet("privacy")]
         public IActionResult Privacy()
         {
             return Ok();
         }
 
+        [HttpGet("secret")]
         [Authorize]
         public IActionResult Secret()
         {
             return Ok("Secret page");
         }
 
+        [HttpGet("error")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
