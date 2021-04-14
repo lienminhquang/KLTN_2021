@@ -36,7 +36,7 @@ namespace FoodOrderBackend
                 .AddIdentityServerAuthentication("Bearer", options =>
                 {
                     options.ApiName = "api1";
-                    options.Authority = "https://localhost:6000";
+                    options.Authority = "https://localhost:6001";
                 });
 
             services.AddDbContext<ApplicationDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("FoodOrderDatabase")));
