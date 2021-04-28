@@ -1,0 +1,54 @@
+﻿using FoodOrder.Core.Models;
+using FoodOrder.Data;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace FoodOrder.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ImagesController : ControllerBase
+    {
+        private readonly ApplicationDBContext m_dbContext;
+        public ImagesController(ApplicationDBContext i_dbContext)
+        {
+            m_dbContext = i_dbContext;
+        }
+
+        // GET: api/<ValuesController>
+        [HttpGet]
+        public async Task<IEnumerable<Image>> Get()
+        {
+            //var image = m_dbContext.Images
+            return null;
+        }
+
+        // GET api/<ValuesController>/5
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
+        }
+
+        // POST api/<ValuesController>
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
+
+        // PUT api/<ValuesController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/<ValuesController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
+    }
+}
