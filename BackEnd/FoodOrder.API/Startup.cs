@@ -1,5 +1,8 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using FoodOrder.API.Services;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -28,7 +31,9 @@ namespace FoodOrder.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("FoodOrderDatabase")));
-            services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers()
+                .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
 
             #region Identity
             services.AddIdentity<AppUser, AppRole>(options =>
@@ -72,6 +77,7 @@ namespace FoodOrder.API
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
 
             services.AddTransient<UserServices, UserServices>();
+            //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
             #endregion
 
 
@@ -123,9 +129,6 @@ namespace FoodOrder.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-           
-
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
