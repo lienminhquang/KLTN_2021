@@ -1,37 +1,37 @@
-﻿using Admin.Models;
-using Admin.Services;
-using IdentityModel.Client;
-using Microsoft.AspNetCore.Authorization;
+﻿using FoodOrder.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Admin.Controllers
+namespace FoodOrder.Admin.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class HomeController : ControllerBase
+    public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ITokenService _tokenService;
 
-        public HomeController(ILogger<HomeController> logger, ITokenService tokenService)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _tokenService = tokenService;
         }
 
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> TestSecret()
+        public IActionResult Index()
         {
-            var token = await _tokenService.GetToken("api1.read");
-            return Ok(token);
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

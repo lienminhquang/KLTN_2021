@@ -1,6 +1,6 @@
 using System;
 
-namespace Admin.Models
+namespace FoodOrder.Admin.Models
 {
     public class ErrorViewModel
     {
