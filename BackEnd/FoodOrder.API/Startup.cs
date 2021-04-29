@@ -1,6 +1,9 @@
+using FoodOrder.API.Services;
+using FoodOrder.Core.Models;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,21 +25,29 @@ namespace FoodOrder.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //authentication
-            services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication("Bearer", options =>
-                {
-                    options.ApiName = "api1";
-                    options.Authority = "https://localhost:5001";
-                });
-
             services.AddDbContext<ApplicationDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("FoodOrderDatabase")));
-            
-
-            //services.AddDbContext<ApplicationDBContext>(opt => opt.UseSqlite(CreateInMemoryDatabase()));
             services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+            #region Identity
+            services.AddIdentity<AppUser, AppRole>(options =>
+            {
+                options.Password.RequireUppercase = false;
+            })
+                .AddEntityFrameworkStores<ApplicationDBContext>()
+                .AddDefaultTokenProviders();
+            #endregion
 
+
+            #region DI
+            services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
+            services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
+            services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
+
+            services.AddTransient<UserServices, UserServices>();
+            #endregion
+
+
+            #region Swagger
             // register swagger genenator
             services.AddSwaggerGen(swagger =>
             {
@@ -47,7 +58,8 @@ namespace FoodOrder.API
                     Title = "JWT Token Authentication API",
                     Description = "Description"
                 });
-                // To Enable authorization using Swagger (JWT)  
+
+                //To Enable authorization using Swagger (JWT)  
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
@@ -66,7 +78,10 @@ namespace FoodOrder.API
                                 {
                                     Type = ReferenceType.SecurityScheme,
                                     Id = "Bearer"
-                                }
+                                },
+                                Scheme = "oauth2",
+                                Name = "Bearer",
+                                In = ParameterLocation.Header
                             },
                             new string[] {}
 
@@ -74,28 +89,13 @@ namespace FoodOrder.API
                 });
 
             });
-
+            #endregion
         }
-
-        //private static DbConnection CreateInMemoryDatabase()
-        //{
-        //    var connection = new SqliteConnection("Filename=:memory:");
-
-        //    connection.Open();
-
-        //    return connection;
-        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(
-                c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                }
-                );
+           
 
 
             if (env.IsDevelopment())
@@ -111,10 +111,18 @@ namespace FoodOrder.API
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
             app.UseRouting();
 
-            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(
+                c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                }
+                );
 
             app.UseEndpoints(endpoints =>
             {
