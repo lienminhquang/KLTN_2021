@@ -32,7 +32,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             if(!ModelState.IsValid)
             {
@@ -43,12 +43,12 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest("Login fail, check your username or password!");
             }
-            return Ok(new { token = rs });
+            return Ok(rs);
         }
 
         [HttpPost("Register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromForm] RegisterRequest registerRequest)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {
             if (!ModelState.IsValid)
             {

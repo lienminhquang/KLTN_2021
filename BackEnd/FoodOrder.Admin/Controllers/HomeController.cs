@@ -1,4 +1,5 @@
 ﻿using FoodOrder.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -20,6 +22,8 @@ namespace FoodOrder.Admin.Controllers
 
         public IActionResult Index()
         {
+            var username = User.Identity.Name;
+
             return View();
         }
 
