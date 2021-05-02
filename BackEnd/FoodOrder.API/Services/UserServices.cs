@@ -1,5 +1,7 @@
-﻿using FoodOrder.Core.Models;
+﻿using FoodOrder.Core.Helpers;
+using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
+using FoodOrder.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -19,13 +21,19 @@ namespace FoodOrder.API.Services
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IConfiguration _config;
+        private readonly ApplicationDBContext _dbContext;
 
-        public UserServices(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration configuration)
+        public UserServices(UserManager<AppUser> userManager
+            , SignInManager<AppUser> signInManager
+            , RoleManager<AppRole> roleManager
+            , IConfiguration configuration
+            , ApplicationDBContext applicationDBContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _config = configuration;
+            _dbContext = applicationDBContext;
         }
 
         public async Task<string> Authenticate(LoginRequest loginRequest)
@@ -76,6 +84,38 @@ namespace FoodOrder.API.Services
 
             var rs = await _userManager.CreateAsync(user, registerRequest.Password);
             return rs.Succeeded;
+        }
+
+        public async Task<PaginatedList<UserVM>> GetUserPaging(PagingRequestBase request)
+        {
+            var users = from c in _dbContext.AppUsers select new UserVM() { 
+                Username = c.UserName,
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                DateOfBirth = c.DateOfBirth,
+                Address = c.Address,
+                Email = c.Email
+            };
+            if (!String.IsNullOrEmpty(request.SearchString))
+            {
+                request.PageNumber = 1;
+            }
+            else
+            {
+                request.SearchString = request.CurrentFilter;
+            }
+
+            if (!String.IsNullOrEmpty(request.SearchString))
+            {
+                users = users.Where(c => c.Username.Contains(request.SearchString)
+                || c.FirstName.Contains(request.SearchString)
+                || c.LastName.Contains(request.SearchString)
+                || c.Email.Contains(request.SearchString));
+            }
+
+            users = Core.Helpers.Utilities<UserVM>.Sort(users, request.SortOrder, "Username");
+
+            return await PaginatedList<UserVM>.CreateAsync(users, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
         }
     }
 }

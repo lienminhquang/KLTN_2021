@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FoodOrder.API.Helpers
+namespace FoodOrder.Core.Helpers
 {
-    class Configs
+    public class Configs
     {
         public static int PageSize = 2;
     }

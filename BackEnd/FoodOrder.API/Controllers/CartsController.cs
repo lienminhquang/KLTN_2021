@@ -1,12 +1,13 @@
 ﻿using FoodOrder.Core.Models;
 using FoodOrder.Data;
-using FoodOrder.API.Helpers;
+using FoodOrder.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FoodOrder.Core.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,16 +37,16 @@ namespace FoodOrder.API.Controllers
         }
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<IEnumerable<Cart>> GetAsync(string sortOrder, string searchString, string currentFilter, int? pageNumber)
+        public async Task<IEnumerable<Cart>> GetAsync(PagingRequestBase request)
         {
             var carts = from c in m_dbContext.Carts select c;
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(request.SearchString))
             {
-                pageNumber = 1;
+                request.PageNumber = 1;
             }
             else
             {
-                searchString = currentFilter;
+                request.SearchString = request.CurrentFilter;
             }
 
             //if (!String.IsNullOrEmpty(searchString))
@@ -53,9 +54,9 @@ namespace FoodOrder.API.Controllers
             //    carts = carts.Where(c => c..Contains(searchString) || c.Description.Contains(searchString));
             //}
 
-            carts = Helpers.Utilities<Cart>.Sort(carts, sortOrder, "AppUserId");
+            carts = Core.Helpers.Utilities<Cart>.Sort(carts, request.SortOrder, "AppUserId");
 
-            return await PaginatedList<Cart>.CreateAsync(carts, pageNumber ?? 1, Helpers.Configs.PageSize);
+            return await PaginatedList<Cart>.CreateAsync(carts, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
         }
 
         // GET api/<ValuesController>/5

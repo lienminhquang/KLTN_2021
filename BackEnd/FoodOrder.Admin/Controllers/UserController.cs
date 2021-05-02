@@ -25,9 +25,18 @@ namespace FoodOrder.Admin.Controllers
             _config = configuration;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync([FromQuery] PagingRequestBase request)
         {
-            return View();
+            byte[] tokenByte;
+            string token="";
+            if (HttpContext.Session.TryGetValue("Token", out tokenByte))
+            {
+                token = Encoding.UTF8.GetString(tokenByte);
+            }
+
+            var users = await _adminUserService.GetUserPaging(request, token);
+
+            return View(users);
         }
 
         [HttpPost]
@@ -67,6 +76,7 @@ namespace FoodOrder.Admin.Controllers
                 userPrincipal,
                 authProperties
                 );
+            HttpContext.Session.Set("Token", Encoding.UTF8.GetBytes(token));
 
             return RedirectToAction("Index", "Home");
         }
@@ -85,5 +95,7 @@ namespace FoodOrder.Admin.Controllers
 
             return principal;
         }
+
+        
     }
 }

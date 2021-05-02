@@ -4,12 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FoodOrder.API.Helpers
+namespace FoodOrder.Core.Helpers
 {
     public class PaginatedList<T> : List<T>
     {
         public int PageIndex { get; set; }
         public int TotalPage { get; set; }
+
+        public PaginatedList()
+        {
+
+        }
 
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {

@@ -1,4 +1,4 @@
-﻿using FoodOrder.API.Helpers;
+﻿using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Models;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -132,9 +132,9 @@ namespace FoodOrder.API.Controllers
                 foods = foods.Where(f => f.Name.Contains(searchString) || f.Description.Contains(searchString));
             }
 
-            foods = Helpers.Utilities<Food>.Sort(foods, sortOrder, "ID");
+            foods = Core.Helpers.Utilities<Food>.Sort(foods, sortOrder, "ID");
 
-            return await PaginatedList<Food>.CreateAsync(foods.AsNoTracking(), pageNumber ?? 1, Helpers.Configs.PageSize);
+            return await PaginatedList<Food>.CreateAsync(foods.AsNoTracking(), pageNumber ?? 1, Core.Helpers.Configs.PageSize);
         }
     }
 }

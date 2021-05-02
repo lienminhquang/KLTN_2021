@@ -1,4 +1,4 @@
-﻿using FoodOrder.API.Helpers;
+﻿using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Models;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -54,9 +54,9 @@ namespace FoodOrder.API.Controllers
                 rating = rating.Where(c => c.Comment.Contains(searchString));
             }
 
-            rating = Helpers.Utilities<Rating>.Sort(rating, sortOrder, "AppUserID");
+            rating = Core.Helpers.Utilities<Rating>.Sort(rating, sortOrder, "AppUserID");
 
-            return await PaginatedList<Rating>.CreateAsync(rating, pageNumber ?? 1, Helpers.Configs.PageSize);
+            return await PaginatedList<Rating>.CreateAsync(rating, pageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
         }
 

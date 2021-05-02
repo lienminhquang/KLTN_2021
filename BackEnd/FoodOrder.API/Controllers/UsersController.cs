@@ -64,10 +64,9 @@ namespace FoodOrder.API.Controllers
 
         // GET: api/<UsersController>
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] PagingRequestBase request)
         {
-            var users = from c in _dbContext.AppUsers select c;
-            return Ok(users.ToList());
+            return Ok(await _userService.GetUserPaging(request));
         }
 
         // GET api/<UsersController>/5
