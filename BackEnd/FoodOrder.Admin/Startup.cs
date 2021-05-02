@@ -29,10 +29,10 @@ namespace FoodOrder.Admin
         {
             services.AddControllersWithViews()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
-            services.AddSession(op =>
-            {
-                op.IdleTimeout = TimeSpan.FromMinutes(30);
-            });
+            //services.AddSession(op =>
+            //{
+            //    op.IdleTimeout = TimeSpan.FromMinutes(30);
+            //});
 
             services.AddHttpClient();
 
@@ -78,7 +78,7 @@ namespace FoodOrder.Admin
             app.UseRouting();
 
             app.UseAuthorization();
-            app.UseSession();
+            //app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

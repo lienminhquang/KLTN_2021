@@ -2,6 +2,7 @@
 using FoodOrder.Core.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Logging;
@@ -14,10 +15,17 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly AdminUserService _adminUserService;
         private readonly IConfiguration _config;
+
+        public bool ValidateTokenInCookie()
+        {
+            string token;
+            return HttpContext.Request.Cookies.TryGetValue("Token", out token);
+        }
 
         public UserController(AdminUserService adminUserService, IConfiguration configuration)
         {
@@ -25,18 +33,49 @@ namespace FoodOrder.Admin.Controllers
             _config = configuration;
         }
 
+        [HttpGet]
         public async Task<IActionResult> IndexAsync([FromQuery] PagingRequestBase request)
         {
-            byte[] tokenByte;
-            string token="";
-            if (HttpContext.Session.TryGetValue("Token", out tokenByte))
+            if(!ValidateTokenInCookie())
             {
-                token = Encoding.UTF8.GetString(tokenByte);
+                return RedirectToAction("Login", "User");
             }
 
-            var users = await _adminUserService.GetUserPaging(request, token);
+            var users = await _adminUserService.GetUserPaging(request, GetToken());
 
             return View(users);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            if (!ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromForm] RegisterRequest request)
+        {
+            if (!ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            bool rs = await _adminUserService.CreateUser(request, GetToken());
+            if(rs)
+            {
+                return RedirectToAction("Index", "User");
+            }
+            return View();
         }
 
         [HttpPost]
@@ -47,14 +86,16 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Login()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
+           
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
             if(!ModelState.IsValid)
@@ -77,6 +118,10 @@ namespace FoodOrder.Admin.Controllers
                 authProperties
                 );
             HttpContext.Session.Set("Token", Encoding.UTF8.GetBytes(token));
+            HttpContext.Response.Cookies.Append("Token", token, new Microsoft.AspNetCore.Http.CookieOptions()
+            {
+                Expires = DateTime.Now.AddMinutes(10)
+            });
 
             return RedirectToAction("Index", "Home");
         }
@@ -96,6 +141,11 @@ namespace FoodOrder.Admin.Controllers
             return principal;
         }
 
-        
+        private string GetToken()
+        {
+            string token = "";
+            HttpContext.Request.Cookies.TryGetValue("Token", out token);
+            return token;
+        }
     }
 }

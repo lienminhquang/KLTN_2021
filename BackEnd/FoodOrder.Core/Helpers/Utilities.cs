@@ -8,7 +8,7 @@ namespace FoodOrder.Core.Helpers
 {
     public class Configs
     {
-        public static int PageSize = 2;
+        public static int PageSize = 10;
     }
 
     public class Utilities<T>

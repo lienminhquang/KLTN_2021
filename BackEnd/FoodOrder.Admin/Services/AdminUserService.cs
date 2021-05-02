@@ -45,5 +45,18 @@ namespace FoodOrder.Admin.Services
             return users;
         }
 
+        public async Task<bool> CreateUser(RegisterRequest request, string token)
+        {
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var res = await client.PostAsync(_config["BaseAddress"] + "/api/Users/Register", httpContent);
+
+            return res.IsSuccessStatusCode;
+        }
+
     }
 }
