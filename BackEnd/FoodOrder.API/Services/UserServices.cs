@@ -89,10 +89,41 @@ namespace FoodOrder.API.Services
 
             if (!rs.Succeeded)
             {
-                return new FailedResult<bool>(String.Join('\n', rs.Errors));
+                String error = "";
+                foreach (var item in rs.Errors)
+                {
+                    error += item.Description + "\n";
+                }
+                return new FailedResult<bool>(error);
             }
 
             return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<UserUpdateRequest>> EditUser(string id, UserUpdateRequest request)
+        {
+            AppUser user = await _userManager.FindByIdAsync(id);
+            if(user == null)
+            {
+                return new FailedResult<UserUpdateRequest>("User not found!");
+            }
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.DateOfBirth = request.Dob;
+            IdentityResult rs = await _userManager.UpdateAsync(user);
+
+            if(!rs.Succeeded)
+            {
+                String error = "";
+                foreach (var item in rs.Errors)
+                {
+                    error += item.Description + "\n";
+                }
+                return new FailedResult<UserUpdateRequest>(error);
+            }
+
+            return new SuccessedResult<UserUpdateRequest>(request);
         }
 
         public async Task<ApiResult<PaginatedList<UserVM>>> GetUserPaging(PagingRequestBase request)
@@ -103,7 +134,8 @@ namespace FoodOrder.API.Services
                 LastName = c.LastName,
                 DateOfBirth = c.DateOfBirth,
                 Address = c.Address,
-                Email = c.Email
+                Email = c.Email,
+                ID = c.Id
             };
             if (!String.IsNullOrEmpty(request.SearchString))
             {
@@ -127,6 +159,25 @@ namespace FoodOrder.API.Services
             var created = await PaginatedList<UserVM>.CreateAsync(users, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
             return new SuccessedResult<PaginatedList<UserVM>>(created);
+        }
+
+        public async Task<ApiResult<UserVM>> GetUserByID(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if(user == null)
+            {
+                return new FailedResult<UserVM>("User not found!");
+            }
+            return new SuccessedResult<UserVM>(new UserVM()
+            {
+                ID = user.Id,
+                Username = user.UserName,
+                Address = user.Address,
+                DateOfBirth = user.DateOfBirth,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            });
         }
     }
 }

@@ -60,5 +60,28 @@ namespace FoodOrder.Admin.Services
             return JsonConvert.DeserializeObject<ApiResult<bool>>(await res.Content.ReadAsStringAsync());
         }
 
+        public async Task<ApiResult<UserUpdateRequest>> EditUser(UserUpdateRequest request, string token)
+        {
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var res = await client.PutAsync(_config["BaseAddress"] + "/api/Users/" + request.UserID.ToString(), httpContent);
+
+            return JsonConvert.DeserializeObject<ApiResult<UserUpdateRequest>>(await res.Content.ReadAsStringAsync());
+        }
+
+        public async Task<ApiResult<UserVM>> GetUserByID(string id, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = _config["BaseAddress"] + $"/api/Users/" + id;
+            var rs = await client.GetAsync(uri);
+            var body = await rs.Content.ReadAsStringAsync();
+            var users = JsonConvert.DeserializeObject<ApiResult<UserVM>>(body);
+            return users;
+        }
     }
 }

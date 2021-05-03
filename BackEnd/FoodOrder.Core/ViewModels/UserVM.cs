@@ -8,6 +8,7 @@ namespace FoodOrder.Core.ViewModels
 {
     public class UserVM
     {
+        public Guid ID { get; set; }
         public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

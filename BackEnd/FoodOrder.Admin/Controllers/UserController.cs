@@ -36,14 +36,14 @@ namespace FoodOrder.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync([FromQuery] PagingRequestBase request)
         {
-            if(!ValidateTokenInCookie())
+            if (!ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
 
             var users = await _adminUserService.GetUserPaging(request, GetToken());
 
-            if(!users.IsSuccessed)
+            if (!users.IsSuccessed)
             {
                 return View(users.ErrorMessage);
             }
@@ -72,18 +72,68 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ??
+                // Todo: catch error ?? can we return apiresult as model and check success in view ?
                 return View(ModelState);
             }
 
             var rs = await _adminUserService.CreateUser(request, GetToken());
-            if(rs.IsSuccessed)
+            if (rs.IsSuccessed)
             {
                 return RedirectToAction("Index", "User");
             }
 
             // Todo: catch error ??
             return View(rs.ErrorMessage);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] UserUpdateRequest request)
+        {
+            if (!ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Todo: catch error ?? can we return apiresult as model and check success in view ?
+                return View(ModelState);
+            }
+
+            var rs = await _adminUserService.EditUser(request, GetToken());
+            if (rs.IsSuccessed)
+            {
+                return View(rs.PayLoad);
+            }
+
+            // Todo: catch error ??
+            return View(rs.ErrorMessage);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (!ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            var result = await _adminUserService.GetUserByID(id, GetToken());
+            if(!result.IsSuccessed)
+            {
+                return View(result.ErrorMessage);
+            }
+
+            UserVM userVM = result.PayLoad;
+
+            return View(new UserUpdateRequest()
+            {
+                Dob = userVM.DateOfBirth,
+                Email = userVM.Email,
+                FirstName = userVM.FirstName,
+                LastName = userVM.LastName,
+                UserID = userVM.ID
+            });
         }
 
         [HttpPost]

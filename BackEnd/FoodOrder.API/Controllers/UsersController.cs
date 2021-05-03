@@ -77,9 +77,15 @@ namespace FoodOrder.API.Controllers
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(string id)
         {
-            return "value";
+            var result = await _userService.GetUserByID(id);
+            if(!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
         // POST api/<UsersController>
@@ -90,8 +96,15 @@ namespace FoodOrder.API.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(string id, [FromBody] UserUpdateRequest request)
         {
+            var result = await _userService.EditUser(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
         // DELETE api/<UsersController>/5
