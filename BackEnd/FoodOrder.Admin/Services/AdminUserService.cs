@@ -1,4 +1,5 @@
 ﻿using FoodOrder.Core.Helpers;
+using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -23,7 +24,7 @@ namespace FoodOrder.Admin.Services
             _config = configuration;
         }
 
-        public async Task<string> Authenticate(LoginRequest loginRequest)
+        public async Task<ApiResult<string>> Authenticate(LoginRequest loginRequest)
         {
             var loginRequestJson = JsonConvert.SerializeObject(loginRequest);
             var httpContent = new StringContent(loginRequestJson, Encoding.UTF8, "application/json");
@@ -31,21 +32,22 @@ namespace FoodOrder.Admin.Services
             var client = _httpClientFactory.CreateClient();
             var res = await client.PostAsync(_config["BaseAddress"] + "/api/Users/Login", httpContent);
 
-            return await res.Content.ReadAsStringAsync();
+            string resultString = await res.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ApiResult<string>>(resultString);
         }
 
-        public async Task<PaginatedList<UserVM>> GetUserPaging(PagingRequestBase request, string token)
+        public async Task<ApiResult<PaginatedList<UserVM>>> GetUserPaging(PagingRequestBase request, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = _config["BaseAddress"] + $"/api/Users?" + request.ToQueryString("&");
             var rs = await client.GetAsync(uri);
             var body = await rs.Content.ReadAsStringAsync();
-            var users = JsonConvert.DeserializeObject<PaginatedList<UserVM>>(body);
+            var users = JsonConvert.DeserializeObject<ApiResult<PaginatedList<UserVM>>>(body);
             return users;
         }
 
-        public async Task<bool> CreateUser(RegisterRequest request, string token)
+        public async Task<ApiResult<bool>> CreateUser(RegisterRequest request, string token)
         {
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
@@ -55,7 +57,7 @@ namespace FoodOrder.Admin.Services
 
             var res = await client.PostAsync(_config["BaseAddress"] + "/api/Users/Register", httpContent);
 
-            return res.IsSuccessStatusCode;
+            return JsonConvert.DeserializeObject<ApiResult<bool>>(await res.Content.ReadAsStringAsync());
         }
 
     }

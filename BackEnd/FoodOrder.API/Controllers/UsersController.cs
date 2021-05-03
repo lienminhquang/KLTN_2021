@@ -1,4 +1,5 @@
 ﻿using FoodOrder.API.Services;
+using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Data;
@@ -36,12 +37,12 @@ namespace FoodOrder.API.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest("Internal server error!");
+                return BadRequest(new FailedResult<string>(ModelState.ToString()));
             }
-            var rs = await _userService.Authenticate(loginRequest);
-            if(string.IsNullOrEmpty(rs))
+            ApiResult<string> rs = await _userService.Authenticate(loginRequest);
+            if(!rs.IsSuccessed)
             {
-                return BadRequest("Login fail, check your username or password!");
+                return BadRequest(rs);
             }
             return Ok(rs);
         }
@@ -52,21 +53,26 @@ namespace FoodOrder.API.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Internal server error!");
+                return BadRequest(new FailedResult<string>(ModelState.ToString()));
             }
             var rs = await _userService.Register(registerRequest);
-            if(rs == false)
+            if(!rs.IsSuccessed)
             {
-                return BadRequest("Could not create user!");
+                return BadRequest(rs);
             }
-            return Ok();
+            return Ok(rs);
         }
 
         // GET: api/<UsersController>
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] PagingRequestBase request)
         {
-            return Ok(await _userService.GetUserPaging(request));
+            var rs = await _userService.GetUserPaging(request);
+            if (!rs.IsSuccessed)
+            {
+                return BadRequest(rs);
+            }
+            return Ok(rs);
         }
 
         // GET api/<UsersController>/5

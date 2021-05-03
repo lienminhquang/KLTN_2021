@@ -1,4 +1,5 @@
 ﻿using FoodOrder.Core.Helpers;
+using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Data;
@@ -36,18 +37,18 @@ namespace FoodOrder.API.Services
             _dbContext = applicationDBContext;
         }
 
-        public async Task<string> Authenticate(LoginRequest loginRequest)
+        public async Task<ApiResult<string>> Authenticate(LoginRequest loginRequest)
         {
             var user = await _userManager.FindByNameAsync(loginRequest.Username);
             if(user == null)
             {
-                return null;
+                return new FailedResult<string>("User does not exist!");
             }
 
             var signinResult = await _signInManager.PasswordSignInAsync(user, loginRequest.Password, loginRequest.RememberMe, true);
             if(!signinResult.Succeeded)
             {
-                return null;
+                return new FailedResult<string>("Can't signin!");
             }
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
@@ -68,10 +69,12 @@ namespace FoodOrder.API.Services
                     signingCredentials: creds
                 );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return new SuccessedResult<string>(tokenString);
         }
 
-        public async Task<bool> Register(RegisterRequest registerRequest)
+        public async Task<ApiResult<bool>> Register(RegisterRequest registerRequest)
         {
             var user = new AppUser()
             {
@@ -83,10 +86,16 @@ namespace FoodOrder.API.Services
             };
 
             var rs = await _userManager.CreateAsync(user, registerRequest.Password);
-            return rs.Succeeded;
+
+            if (!rs.Succeeded)
+            {
+                return new FailedResult<bool>(String.Join('\n', rs.Errors));
+            }
+
+            return new SuccessedResult<bool>(true);
         }
 
-        public async Task<PaginatedList<UserVM>> GetUserPaging(PagingRequestBase request)
+        public async Task<ApiResult<PaginatedList<UserVM>>> GetUserPaging(PagingRequestBase request)
         {
             var users = from c in _dbContext.AppUsers select new UserVM() { 
                 Username = c.UserName,
@@ -115,7 +124,9 @@ namespace FoodOrder.API.Services
 
             users = Core.Helpers.Utilities<UserVM>.Sort(users, request.SortOrder, "Username");
 
-            return await PaginatedList<UserVM>.CreateAsync(users, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<UserVM>.CreateAsync(users, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+
+            return new SuccessedResult<PaginatedList<UserVM>>(created);
         }
     }
 }

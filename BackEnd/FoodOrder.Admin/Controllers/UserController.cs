@@ -43,7 +43,12 @@ namespace FoodOrder.Admin.Controllers
 
             var users = await _adminUserService.GetUserPaging(request, GetToken());
 
-            return View(users);
+            if(!users.IsSuccessed)
+            {
+                return View(users.ErrorMessage);
+            }
+
+            return View(users.PayLoad);
         }
 
         [HttpGet]
@@ -67,15 +72,18 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View();
+                // Todo: catch error ??
+                return View(ModelState);
             }
 
-            bool rs = await _adminUserService.CreateUser(request, GetToken());
-            if(rs)
+            var rs = await _adminUserService.CreateUser(request, GetToken());
+            if(rs.IsSuccessed)
             {
                 return RedirectToAction("Index", "User");
             }
-            return View();
+
+            // Todo: catch error ??
+            return View(rs.ErrorMessage);
         }
 
         [HttpPost]
@@ -105,7 +113,12 @@ namespace FoodOrder.Admin.Controllers
 
             var token = await _adminUserService.Authenticate(loginRequest);
 
-            var userPrincipal = this.ValidateToken(token);
+            if(!token.IsSuccessed)
+            {
+                return View(token.ErrorMessage);
+            }
+
+            var userPrincipal = this.ValidateToken(token.PayLoad);
             var authProperties = new AuthenticationProperties()
             {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
@@ -117,8 +130,9 @@ namespace FoodOrder.Admin.Controllers
                 userPrincipal,
                 authProperties
                 );
-            HttpContext.Session.Set("Token", Encoding.UTF8.GetBytes(token));
-            HttpContext.Response.Cookies.Append("Token", token, new Microsoft.AspNetCore.Http.CookieOptions()
+            //HttpContext.Session.Set("Token", Encoding.UTF8.GetBytes(token.PayLoad));
+
+            HttpContext.Response.Cookies.Append("Token", token.PayLoad, new Microsoft.AspNetCore.Http.CookieOptions()
             {
                 Expires = DateTime.Now.AddMinutes(10)
             });
