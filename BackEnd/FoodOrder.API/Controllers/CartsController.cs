@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.Inferstructer;
+using FoodOrder.API.Services;
+using FoodOrder.Core.ViewModels.Carts;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,117 +20,70 @@ namespace FoodOrder.API.Controllers
     [ApiController]
     public class CartsController : ControllerBase
     {
-        public class CartCreateRequest
-        {
-            public Guid AppUserId { get; set; }
-            public int FoodID { get; set; }
-            public int Quantity { get; set; }
-        }
+        private readonly CartServices _cartServices;
 
-        public class CartEditRequest
+        public CartsController(CartServices cartServices)
         {
-            public int Quantity { get; set; }
-        }
-
-        private readonly ApplicationDBContext m_dbContext;
-
-        public CartsController(ApplicationDBContext i_dbContext)
-        {
-            m_dbContext = i_dbContext;
+            _cartServices = cartServices;
         }
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<IEnumerable<Cart>> GetAsync(PagingRequestBase request)
+        public async Task<IActionResult> GetAsync(PagingRequestBase request)
         {
-            var carts = from c in m_dbContext.Carts select c;
-            if (!String.IsNullOrEmpty(request.SearchString))
+            var result = await _cartServices.GetCartPaging(request);
+            if(!result.IsSuccessed)
             {
-                request.PageNumber = 1;
+                return BadRequest(result);
             }
-            else
-            {
-                request.SearchString = request.CurrentFilter;
-            }
-
-            //if (!String.IsNullOrEmpty(searchString))
-            //{
-            //    carts = carts.Where(c => c..Contains(searchString) || c.Description.Contains(searchString));
-            //}
-
-            carts = Core.Helpers.Utilities<Cart>.Sort(carts, request.SortOrder, "AppUserId");
-
-            return await PaginatedList<Cart>.CreateAsync(carts, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            return Ok(result);
         }
 
         // GET api/<ValuesController>/5
-        [HttpGet("{userId}/{foodID}")]
-        public async Task<Cart> Get(Guid userId, int foodID)
+        [HttpGet("detail")]
+        public async Task<IActionResult> Get(Guid userId, int foodID)
         {
-            var cart = await m_dbContext.Carts.Include(c => c.AppUser).Include(c => c.Food).FirstOrDefaultAsync(c => c.AppUserId == userId && c.FoodID == foodID);
-            return cart;
+            var result = await _cartServices.GetByID(userId, foodID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CartCreateRequest cart)
+        public async Task<IActionResult> Post([FromBody] CartCreateVM cart)
         {
-            var result = await m_dbContext.Carts.AddAsync(new Cart 
+            var result = await _cartServices.Create(cart);
+            if (!result.IsSuccessed)
             {
-                FoodID = cart.FoodID,
-                AppUserId = cart.AppUserId,
-                Quantity = cart.Quantity
-            });
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{userId}/{foodID}")]
-        public async Task<IActionResult> PutAsync(Guid userId, int foodID, [FromBody] CartEditRequest value)
+        public async Task<IActionResult> PutAsync(Guid userId, int foodID, [FromBody] CartEditVM value)
         {
-            var cart = await m_dbContext.Carts.FirstOrDefaultAsync(c => c.AppUserId == userId && c.FoodID == foodID);
-            if(cart == null)
+            var result = await _cartServices.Edit(userId, foodID, value);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-            cart.Quantity = value.Quantity;
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{userId}/{foodID}")]
         public async Task<IActionResult> Delete(Guid userId, int foodID)
         {
-            var cart = await m_dbContext.Carts.FirstOrDefaultAsync(c => c.AppUserId == userId && c.FoodID == foodID);
-            if (cart == null)
+            var result = await _cartServices.Delete(userId, foodID);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-            try
-            {
-                m_dbContext.Carts.Remove(cart);
-                await m_dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
     }
 }

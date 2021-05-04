@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FoodOrder.Core.ViewModels
+namespace FoodOrder.Core.ViewModels.Users
 {
     public class LoginRequestValidator : AbstractValidator<LoginRequest>
     {

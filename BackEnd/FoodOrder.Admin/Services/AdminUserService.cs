@@ -1,6 +1,7 @@
 ﻿using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Users;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;

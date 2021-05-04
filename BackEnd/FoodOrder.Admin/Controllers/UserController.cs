@@ -1,5 +1,7 @@
-﻿using FoodOrder.Admin.Services;
+﻿using FoodOrder.Admin.Extensions;
+using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -21,12 +23,6 @@ namespace FoodOrder.Admin.Controllers
         private readonly AdminUserService _adminUserService;
         private readonly IConfiguration _config;
 
-        public bool ValidateTokenInCookie()
-        {
-            string token;
-            return HttpContext.Request.Cookies.TryGetValue("Token", out token);
-        }
-
         public UserController(AdminUserService adminUserService, IConfiguration configuration)
         {
             _adminUserService = adminUserService;
@@ -36,12 +32,12 @@ namespace FoodOrder.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync([FromQuery] PagingRequestBase request)
         {
-            if (!ValidateTokenInCookie())
+            if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var users = await _adminUserService.GetUserPaging(request, GetToken());
+            var users = await _adminUserService.GetUserPaging(request, this.GetTokenFromCookie());
 
             if (!users.IsSuccessed)
             {
@@ -54,7 +50,7 @@ namespace FoodOrder.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            if (!ValidateTokenInCookie())
+            if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
@@ -65,7 +61,7 @@ namespace FoodOrder.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] RegisterRequest request)
         {
-            if (!ValidateTokenInCookie())
+            if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
@@ -76,7 +72,7 @@ namespace FoodOrder.Admin.Controllers
                 return View(ModelState);
             }
 
-            var rs = await _adminUserService.CreateUser(request, GetToken());
+            var rs = await _adminUserService.CreateUser(request, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
                 return RedirectToAction("Index", "User");
@@ -89,7 +85,7 @@ namespace FoodOrder.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit([FromForm] UserUpdateRequest request)
         {
-            if (!ValidateTokenInCookie())
+            if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
@@ -100,7 +96,7 @@ namespace FoodOrder.Admin.Controllers
                 return View(ModelState);
             }
 
-            var rs = await _adminUserService.EditUser(request, GetToken());
+            var rs = await _adminUserService.EditUser(request, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
                 return View(rs.PayLoad);
@@ -113,12 +109,12 @@ namespace FoodOrder.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            if (!ValidateTokenInCookie())
+            if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var result = await _adminUserService.GetUserByID(id, GetToken());
+            var result = await _adminUserService.GetUserByID(id, this.GetTokenFromCookie());
             if(!result.IsSuccessed)
             {
                 return View(result.ErrorMessage);
@@ -193,12 +189,12 @@ namespace FoodOrder.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id, [FromBody] UserDeleteVM userDeleteVM)
         {
-            if (!ValidateTokenInCookie())
+            if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var result = await _adminUserService.DeleteUser(id, GetToken());
+            var result = await _adminUserService.DeleteUser(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 return View(result.ErrorMessage);
@@ -211,23 +207,23 @@ namespace FoodOrder.Admin.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Delete(string id)
         {
-            //if (!ValidateTokenInCookie())
-            //{
-            //    return RedirectToAction("Login", "User");
-            //}
-            //var result = await _adminUserService.GetUserByID(id, GetToken());
-            //if (!result.IsSuccessed)
-            //{
-            //    return View(result.ErrorMessage);
-            //}
+            if (!this.ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
+            var result = await _adminUserService.GetUserByID(id, this.GetTokenFromCookie());
+            if (!result.IsSuccessed)
+            {
+                return View(result.ErrorMessage);
+            }
 
             var userDeleteVM = new UserDeleteVM()
             {
-                Dob = new DateTime(),// result.PayLoad.DateOfBirth,
-                Email= "test@gmail.com", // result.PayLoad.Email,
-                UserID = new Guid(), //result.PayLoad.ID,
-                FirstName = "test", //result.PayLoad.FirstName,
-                LastName = "test", //result.PayLoad.LastName
+                Dob = /*new DateTime(),//*/ result.PayLoad.DateOfBirth,
+                Email= /*"test@gmail.com", //*/ result.PayLoad.Email,
+                UserID = /*new Guid(), //*/result.PayLoad.ID,
+                FirstName = /*"test", //*/result.PayLoad.FirstName,
+                LastName = /*"test", //*/result.PayLoad.LastName
             };
             return View(userDeleteVM);
         }
@@ -245,13 +241,6 @@ namespace FoodOrder.Admin.Controllers
             ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwt, validationParameters,out validatedToken);
 
             return principal;
-        }
-
-        private string GetToken()
-        {
-            string token = "";
-            HttpContext.Request.Cookies.TryGetValue("Token", out token);
-            return token;
         }
     }
 }

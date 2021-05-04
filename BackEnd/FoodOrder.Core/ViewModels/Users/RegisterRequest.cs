@@ -5,12 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FoodOrder.Core.ViewModels
+namespace FoodOrder.Core.ViewModels.Users
 {
-    public class UserDeleteVM
+    public class RegisterRequest
     {
-        public Guid UserID { get; set; }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -20,5 +18,13 @@ namespace FoodOrder.Core.ViewModels
 
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        public string Username { get; set; }
+
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        public string ConfirmPassword { get; set; }
     }
 }

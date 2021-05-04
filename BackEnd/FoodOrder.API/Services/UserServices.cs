@@ -2,6 +2,7 @@
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Users;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

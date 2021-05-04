@@ -2,7 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using FoodOrder.API.Services;
 using FoodOrder.Core.Models;
-using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Users;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

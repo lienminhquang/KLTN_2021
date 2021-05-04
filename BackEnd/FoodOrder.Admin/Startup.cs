@@ -1,6 +1,6 @@
 using FluentValidation.AspNetCore;
 using FoodOrder.Admin.Services;
-using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

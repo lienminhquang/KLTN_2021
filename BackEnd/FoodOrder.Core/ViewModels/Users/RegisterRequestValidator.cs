@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FoodOrder.Core.ViewModels
+namespace FoodOrder.Core.ViewModels.Users
 {
     public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
     {
@@ -18,7 +18,7 @@ namespace FoodOrder.Core.ViewModels
             RuleFor(x => x.Email).NotEmpty().WithMessage("This field must not be null!");
             RuleFor(x => x).Custom((request, context) =>
             {
-                if(request.Password != request.ConfirmPassword)
+                if (request.Password != request.ConfirmPassword)
                 {
                     context.AddFailure("ConfirmPassword is not match!");
                 }
