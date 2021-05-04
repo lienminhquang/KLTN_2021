@@ -190,6 +190,48 @@ namespace FoodOrder.Admin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id, [FromBody] UserDeleteVM userDeleteVM)
+        {
+            if (!ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            var result = await _adminUserService.DeleteUser(id, GetToken());
+            if (!result.IsSuccessed)
+            {
+                return View(result.ErrorMessage);
+            }
+
+            return RedirectToAction("Index", "User");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Delete(string id)
+        {
+            //if (!ValidateTokenInCookie())
+            //{
+            //    return RedirectToAction("Login", "User");
+            //}
+            //var result = await _adminUserService.GetUserByID(id, GetToken());
+            //if (!result.IsSuccessed)
+            //{
+            //    return View(result.ErrorMessage);
+            //}
+
+            var userDeleteVM = new UserDeleteVM()
+            {
+                Dob = new DateTime(),// result.PayLoad.DateOfBirth,
+                Email= "test@gmail.com", // result.PayLoad.Email,
+                UserID = new Guid(), //result.PayLoad.ID,
+                FirstName = "test", //result.PayLoad.FirstName,
+                LastName = "test", //result.PayLoad.LastName
+            };
+            return View(userDeleteVM);
+        }
+
         private ClaimsPrincipal ValidateToken(string jwt)
         {
             IdentityModelEventSource.ShowPII = true;

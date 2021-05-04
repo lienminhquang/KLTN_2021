@@ -83,5 +83,16 @@ namespace FoodOrder.Admin.Services
             var users = JsonConvert.DeserializeObject<ApiResult<UserVM>>(body);
             return users;
         }
+
+        public async Task<ApiResult<bool>> DeleteUser(string id, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = _config["BaseAddress"] + $"/api/Users/" + id;
+            var rs = await client.DeleteAsync(uri);
+            var body = await rs.Content.ReadAsStringAsync();
+            var users = JsonConvert.DeserializeObject<ApiResult<bool>>(body);
+            return users;
+        }
     }
 }

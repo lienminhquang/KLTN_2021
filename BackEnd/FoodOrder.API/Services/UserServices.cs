@@ -179,5 +179,27 @@ namespace FoodOrder.API.Services
                 LastName = user.LastName
             });
         }
+
+        public async Task<ApiResult<bool>> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return new FailedResult<bool>("User not found!");
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                String error = "";
+                foreach (var item in result.Errors)
+                {
+                    error += item.Description + "\n";
+                }
+                return new FailedResult<bool>(error);
+            }
+
+            return new SuccessedResult<bool>(true);
+        }
     }
 }
