@@ -77,7 +77,8 @@ namespace FoodOrder.API
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
 
             services.AddTransient<UserServices, UserServices>();
-            //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
+            services.AddTransient<CartServices, CartServices>();
+            services.AddTransient<CategoryServices, CategoryServices>();
             #endregion
 
 

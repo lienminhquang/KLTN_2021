@@ -88,7 +88,7 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<CartVM>(e.Message);
+                return new FailedResult<CartVM>(e.InnerException.ToString());
             }
             return new SuccessedResult<CartVM>(new CartVM() 
             { 

@@ -48,10 +48,10 @@ namespace FoodOrder.Admin.Controllers
         // GET: CartsController/Create
         public ActionResult Create()
         {
-            //if (!ValidateTokenInCookie())
-            //{
-            //    return RedirectToAction("Login", "User");
-            //}
+            if (!this.ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
 
             return View();
         }
@@ -59,7 +59,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([FromBody] CartCreateVM cartCreateVM)
+        public async Task<ActionResult> CreateAsync([FromForm] CartCreateVM cartCreateVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -109,7 +109,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(Guid userID, int foodID, [FromBody] CartEditVM cartEditVM)
+        public async Task<ActionResult> EditAsync([FromForm] CartEditVM cartEditVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -122,7 +122,7 @@ namespace FoodOrder.Admin.Controllers
                 return View(ModelState);
             }
 
-            var rs = await _cartServices.EditCart(userID, foodID, cartEditVM, this.GetTokenFromCookie());
+            var rs = await _cartServices.EditCart(cartEditVM.AppUserId, cartEditVM.FoodID, cartEditVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
                 return View(rs.PayLoad);
@@ -133,7 +133,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Delete/5
-        public async Task<ActionResult> DeleteAsync(Guid userID, int foodID, [FromBody] CartVM cartVM)
+        public async Task<ActionResult> DeleteAsync(Guid userID, int foodID)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -151,18 +151,19 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(Guid userID, int foodID)
+        public async Task<ActionResult> Delete(Guid userID, int foodID, IFormCollection vm)
         {
             if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
+            return NotFound();
 
-            var result = await _cartServices.Delete(userID, foodID, this.GetTokenFromCookie());
-            if (!result.IsSuccessed)
-            {
-                return View(result.ErrorMessage);
-            }
+            //var result = await _cartServices.Delete(vm.AppUserId, vm.FoodID, this.GetTokenFromCookie());
+            //if (!result.IsSuccessed)
+            //{
+            //    return View(result.ErrorMessage);
+            //}
 
             return RedirectToAction("Index", "Carts");
         }

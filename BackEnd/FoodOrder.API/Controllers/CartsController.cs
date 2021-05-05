@@ -28,7 +28,7 @@ namespace FoodOrder.API.Controllers
         }
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<IActionResult> GetAsync(PagingRequestBase request)
+        public async Task<IActionResult> GetAsync([FromQuery]PagingRequestBase request)
         {
             var result = await _cartServices.GetCartPaging(request);
             if(!result.IsSuccessed)
@@ -38,9 +38,9 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
-        // GET api/<ValuesController>/5
-        [HttpGet("detail")]
-        public async Task<IActionResult> Get(Guid userId, int foodID)
+        // GET api/<ValuesController>/details?
+        [HttpGet("details")]
+        public async Task<IActionResult> Get([FromQuery]Guid userId, [FromQuery]int foodID)
         {
             var result = await _cartServices.GetByID(userId, foodID);
             if (!result.IsSuccessed)
@@ -63,7 +63,7 @@ namespace FoodOrder.API.Controllers
         }
 
         // PUT api/<ValuesController>/5
-        [HttpPut("{userId}/{foodID}")]
+        [HttpPut]
         public async Task<IActionResult> PutAsync(Guid userId, int foodID, [FromBody] CartEditVM value)
         {
             var result = await _cartServices.Edit(userId, foodID, value);
@@ -75,7 +75,7 @@ namespace FoodOrder.API.Controllers
         }
 
         // DELETE api/<ValuesController>/5
-        [HttpDelete("{userId}/{foodID}")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(Guid userId, int foodID)
         {
             var result = await _cartServices.Delete(userId, foodID);

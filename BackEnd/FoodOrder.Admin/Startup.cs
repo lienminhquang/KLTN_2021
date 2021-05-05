@@ -45,6 +45,8 @@ namespace FoodOrder.Admin
 
             // DI
             services.AddTransient<AdminUserService, AdminUserService>();
+            services.AddTransient<CartServices, CartServices>();
+            services.AddTransient<CategoryServices, CategoryServices>();
 
 
             IMvcBuilder builder = services.AddRazorPages();

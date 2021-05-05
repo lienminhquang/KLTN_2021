@@ -41,7 +41,7 @@ namespace FoodOrder.Admin.Services
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var uri = BaseRoute + $"/{userID.ToString()}/{foodID}";
+            var uri = BaseRoute + $"/details?userID={userID.ToString()}&foodID={foodID}";
             var rs = await client.GetAsync(uri);
             var body = await rs.Content.ReadAsStringAsync();
             var cart = JsonConvert.DeserializeObject<ApiResult<CartVM>>(body);
