@@ -1,5 +1,8 @@
-﻿using FoodOrder.Core.Helpers;
+﻿using FoodOrder.API.Services;
+using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,126 +18,79 @@ namespace FoodOrder.API.Controllers
 
     public class FoodController : ControllerBase
     {
-        public class FoodCreateRequest
-        {
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public decimal Price { get; set; }
-            public int Count { get; set; }
-        }
+        private readonly FoodServices _foodServices;
 
-        private readonly ApplicationDBContext m_dbContext;
-
-        public FoodController(ApplicationDBContext i_context)
+        public FoodController(FoodServices foodServices)
         {
-            m_dbContext = i_context;
+            _foodServices = foodServices;
         }
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Food>> GetFoodByID(int id)
+        public async Task<ActionResult<FoodVM>> GetByID(int id)
         {
-            var food = await m_dbContext.Foods
-                .Include(f => f.Ratings)
-                .Include(f => f.Images)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(f => f.ID == id);
-            if (food == null)
+            var result = await _foodServices.GetByID(id);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-
-            return food;
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Food>> CreateFood([FromForm] FoodCreateRequest foodCreateRequest)
+        public async Task<ActionResult<Food>> Create([FromForm] FoodCreateVM foodCreateVM)
         {
-            if (!ModelState.IsValid)
+            var result = await _foodServices.Create(foodCreateVM);
+            if (!result.IsSuccessed)
             {
-                return BadRequest();
+                return BadRequest(result);
             }
-
-            var food = await m_dbContext.Foods.AddAsync(new Food { Description = foodCreateRequest.Description, Name = foodCreateRequest.Name, Price = foodCreateRequest.Price });
-
-            await m_dbContext.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetFoodByID), new { id = food.Entity.ID }, food.Entity);
-
+            return Ok(result);
         }
 
         [HttpPut]
-        public async Task<ActionResult> EditFood([FromForm] Food newFood)
+        public async Task<ActionResult> Edit(int id, [FromForm] FoodEditVM food)
         {
+            // Todo: please handle this kind of error
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var food = await m_dbContext.Foods.FirstOrDefaultAsync(x => x.ID == newFood.ID);
-            if(food == null)
+            var result = await _foodServices.Edit(id, food);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-            food.Name = newFood.Name;
-            food.Description = newFood.Description;
-            food.Count = newFood.Count;
-            food.Price = newFood.Price;
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteFood(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var food = await m_dbContext.Foods.FindAsync(id);
-            if (food == null)
+            var result = await _foodServices.Delete(id);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-            m_dbContext.Foods.Remove(food);
-            await m_dbContext.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(result);
         }
 
         [HttpGet]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
-        public async Task<ActionResult<IEnumerable<Food>>> GetAllFood(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        public async Task<ActionResult<PaginatedList<Food>>> GetAllPaging(PagingRequestBase request)
         {
-            var foods = from f in m_dbContext.Foods 
-                        select f;
-
-            // if search string change, reset the page number to 1
-            if(!String.IsNullOrEmpty(searchString))
+            var result = await _foodServices.GetAllPaging(request);
+            if (!result.IsSuccessed)
             {
-                pageNumber = 1;
+                return BadRequest(result);
             }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            if(!String.IsNullOrEmpty(searchString))
-            {
-                foods = foods.Where(f => f.Name.Contains(searchString) || f.Description.Contains(searchString));
-            }
-
-            foods = Core.Helpers.Utilities<Food>.Sort(foods, sortOrder, "ID");
-
-            return await PaginatedList<Food>.CreateAsync(foods.AsNoTracking(), pageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            return Ok(result);
         }
     }
 }

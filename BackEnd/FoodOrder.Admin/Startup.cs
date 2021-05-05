@@ -1,5 +1,6 @@
 using FluentValidation.AspNetCore;
 using FoodOrder.Admin.Services;
+using FoodOrder.Core.AutoMapper;
 using FoodOrder.Core.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +34,8 @@ namespace FoodOrder.Admin
             //{
             //    op.IdleTimeout = TimeSpan.FromMinutes(30);
             //});
+
+            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             services.AddHttpClient();
 

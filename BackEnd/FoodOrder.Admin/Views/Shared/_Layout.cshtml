@@ -92,6 +92,32 @@
                             </nav>
                         </div>
                         <!---------------------------- End Categories ----------------------------->
+                        <!---------------------------- Foods ----------------------------->
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFoods" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Foods
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseFoods" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-action="Index" asp-controller="Foods">List</a>
+                                <a class="nav-link" asp-action="Create" asp-controller="Foods">Create</a>
+                            </nav>
+                        </div>
+                        <!---------------------------- End Foods ----------------------------->
+                        <!---------------------------- OrderDetails ----------------------------->
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrderDetails" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            OrderDetails
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseOrderDetails" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-action="Index" asp-controller="OrderDetails">List</a>
+                                <a class="nav-link" asp-action="Create" asp-controller="OrderDetails">Create</a>
+                            </nav>
+                        </div>
+                        <!---------------------------- End OrderDetails ----------------------------->
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Pages

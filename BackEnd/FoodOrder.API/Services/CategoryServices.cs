@@ -80,7 +80,7 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<CategoryVM>(e.Message);
+                return new FailedResult<CategoryVM>(e.InnerException.ToString());
             }
             return new SuccessedResult<CategoryVM>(new CategoryVM()
             {
@@ -105,7 +105,7 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<CategoryVM>(e.Message);
+                return new FailedResult<CategoryVM>(e.InnerException.ToString());
             }
 
             return new SuccessedResult<CategoryVM>(categoryVM);
@@ -125,7 +125,7 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.Message);
+                return new FailedResult<bool>(e.InnerException.ToString());
             }
             return new SuccessedResult<bool>(true);
         }

@@ -37,7 +37,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: CategoryController
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> Index(PagingRequestBase request)
+        public async Task<ActionResult<PaginatedList<Category>>> GetAllPaging(PagingRequestBase request)
         {
             var result = await _categoryServices.GetAllPaging(request);
             if (!result.IsSuccessed)
@@ -48,7 +48,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> Details(int id)
+        public async Task<ActionResult<Category>> GetByID(int id)
         {
             var result = await _categoryServices.GetByID(id);
             if (!result.IsSuccessed)

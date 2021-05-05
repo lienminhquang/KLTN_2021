@@ -1,7 +1,8 @@
-﻿using FoodOrder.Admin.Extensions;
+﻿using AutoMapper;
+using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
-using FoodOrder.Core.ViewModels.Carts;
+using FoodOrder.Core.ViewModels.Foods;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,38 +12,40 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
-    public class CartsController : Controller
+    public class FoodsController : Controller
     {
-        private readonly CartServices _cartServices;
+        private readonly FoodServices _foodServices;
+        private readonly IMapper _mapper;
 
-        public CartsController(CartServices cartServices)
+        public FoodsController(FoodServices foodServices, IMapper mapper)
         {
-            _cartServices = cartServices;
+            _foodServices = foodServices;
+            _mapper = mapper;
         }
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
         {
-            var carts = await _cartServices.GetAllPaging(request, this.GetTokenFromCookie());
+            var vm = await _foodServices.GetAllPaging(request, this.GetTokenFromCookie());
 
-            if (!carts.IsSuccessed)
+            if (!vm.IsSuccessed)
             {
-                return View(carts.ErrorMessage);
+                return View(vm.ErrorMessage);
             }
 
-            return View(carts.PayLoad);
+            return View(vm.PayLoad);
         }
 
         // GET: CartsController/Details/5
-        public async Task<ActionResult> DetailsAsync(Guid userID, int foodID)
+        public async Task<ActionResult> DetailsAsync(int id)
         {
-            var cart = await _cartServices.GetByID(userID, foodID, this.GetTokenFromCookie());
+            var vm = await _foodServices.GetByID(id, this.GetTokenFromCookie());
 
-            if (!cart.IsSuccessed)
+            if (!vm.IsSuccessed)
             {
-                return View(cart.ErrorMessage);
+                return View(vm.ErrorMessage);
             }
 
-            return View(cart.PayLoad);
+            return View(vm.PayLoad);
         }
 
         // GET: CartsController/Create
@@ -59,7 +62,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([FromForm] CartCreateVM cartCreateVM)
+        public async Task<ActionResult> CreateAsync([FromForm] FoodCreateVM createVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -72,10 +75,11 @@ namespace FoodOrder.Admin.Controllers
                 return View(ModelState);
             }
 
-            var rs = await _cartServices.Create(cartCreateVM, this.GetTokenFromCookie());
+            var rs = await _foodServices.Create(createVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                return RedirectToAction("Index", "Carts");
+                // Todo: redirect to details instead?
+                return RedirectToAction("Index", "Foods");
             }
 
             // Todo: catch error ??
@@ -83,33 +87,28 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Edit/5
-        public async Task<ActionResult> EditAsync(Guid userID, int foodID)
+        public async Task<ActionResult> EditAsync(int id)
         {
             if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var result = await _cartServices.GetByID(userID, foodID, this.GetTokenFromCookie());
+            var result = await _foodServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 return View(result.ErrorMessage);
             }
 
-            CartVM cartVM = result.PayLoad;
+            var vm = result.PayLoad;
 
-            return View(new CartEditVM()
-            {
-                FoodID = cartVM.FoodID,
-                AppUserId = cartVM.AppUserId,
-                Quantity = cartVM.Quantity
-            });
+            return View(_mapper.Map<FoodEditVM>(vm));
         }
 
         // POST: CartsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync([FromForm] CartEditVM cartEditVM)
+        public async Task<ActionResult> EditAsync([FromForm] FoodEditVM editVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -122,7 +121,7 @@ namespace FoodOrder.Admin.Controllers
                 return View(ModelState);
             }
 
-            var rs = await _cartServices.EditCart(cartEditVM.AppUserId, cartEditVM.FoodID, cartEditVM, this.GetTokenFromCookie());
+            var rs = await _foodServices.Edit(editVM.ID, editVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
                 return View(rs.PayLoad);
@@ -133,13 +132,13 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Delete/5
-        public async Task<ActionResult> DeleteAsync(Guid userID, int foodID)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
-            var result = await _cartServices.GetByID(userID, foodID, this.GetTokenFromCookie());
+            var result = await _foodServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 return View(result.ErrorMessage);
@@ -151,20 +150,20 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(Guid userID, int foodID)
+        public async Task<ActionResult> Delete(int id)
         {
             if (!this.ValidateTokenInCookie())
             {
                 return RedirectToAction("Login", "User");
             }
-            
 
-            var result = await _cartServices.Delete(userID, foodID, this.GetTokenFromCookie());
+
+            var result = await _foodServices.Delete(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 return View(result.ErrorMessage);
             }
-            return RedirectToAction("Index", "Carts");
+            return RedirectToAction("Index", "Foods");
         }
     }
 }
