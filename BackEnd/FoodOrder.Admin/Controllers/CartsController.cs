@@ -1,4 +1,5 @@
-﻿using FoodOrder.Admin.Extensions;
+﻿using FoodOrder.Admin.Configs;
+using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Carts;
@@ -26,7 +27,8 @@ namespace FoodOrder.Admin.Controllers
 
             if (!carts.IsSuccessed)
             {
-                return View(carts.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = carts.ErrorMessage;
+                return RedirectToAction("Index", "Home");
             }
 
             return View(carts.PayLoad);
@@ -39,7 +41,8 @@ namespace FoodOrder.Admin.Controllers
 
             if (!cart.IsSuccessed)
             {
-                return View(cart.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = cart.ErrorMessage;
+                return RedirectToAction("Index","Carts");
             }
 
             return View(cart.PayLoad);
@@ -68,8 +71,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View(cartCreateVM);
             }
 
             var rs = await _cartServices.Create(cartCreateVM, this.GetTokenFromCookie());
@@ -78,8 +80,8 @@ namespace FoodOrder.Admin.Controllers
                 return RedirectToAction("Index", "Carts");
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.SuccessMessageString] = "User created!";
+            return RedirectToAction("Details", new { userID = cartCreateVM.AppUserId, foodID = cartCreateVM.FoodID });
         }
 
         // GET: CartsController/Edit/5
@@ -93,7 +95,8 @@ namespace FoodOrder.Admin.Controllers
             var result = await _cartServices.GetByID(userID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
+                return RedirectToAction("Index");
             }
 
             CartVM cartVM = result.PayLoad;
@@ -118,18 +121,18 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View(cartEditVM);
             }
 
             var rs = await _cartServices.EditCart(cartEditVM.AppUserId, cartEditVM.FoodID, cartEditVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                return View(rs.PayLoad);
+                TempData[AppConfigs.SuccessMessageString] = "Cart edited";
+                return RedirectToAction("Details", new { userID = cartEditVM.AppUserId, foodID = cartEditVM.FoodID });
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(cartEditVM);
         }
 
         // GET: CartsController/Delete/5
@@ -142,7 +145,8 @@ namespace FoodOrder.Admin.Controllers
             var result = await _cartServices.GetByID(userID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
+                return RedirectToAction("Details", new { userID = userID, foodID = foodID }); ;
             }
 
             return View(result.PayLoad);
@@ -162,8 +166,11 @@ namespace FoodOrder.Admin.Controllers
             var result = await _cartServices.Delete(userID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
+                return RedirectToAction("Index");
             }
+
+            TempData[AppConfigs.SuccessMessageString] = "Cart deleted!";
             return RedirectToAction("Index", "Carts");
         }
     }

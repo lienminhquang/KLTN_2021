@@ -68,7 +68,7 @@ namespace FoodOrder.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] PagingRequestBase request)
         {
-            var rs = await _userService.GetUserPaging(request);
+            var rs = await _userService.GetAllPaging(request);
             if (!rs.IsSuccessed)
             {
                 return BadRequest(rs);

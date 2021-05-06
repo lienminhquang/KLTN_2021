@@ -1,4 +1,5 @@
-﻿using FoodOrder.Admin.Extensions;
+﻿using FoodOrder.Admin.Configs;
+using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Categories;
@@ -27,7 +28,8 @@ namespace FoodOrder.Admin.Controllers
 
             if (!carts.IsSuccessed)
             {
-                return View(carts.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = carts.ErrorMessage;
+                return RedirectToAction("Index", "Home");
             }
 
             return View(carts.PayLoad);
@@ -40,7 +42,8 @@ namespace FoodOrder.Admin.Controllers
 
             if (!cart.IsSuccessed)
             {
-                return View(cart.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = cart.ErrorMessage;
+                return RedirectToAction("Index");
             }
 
             return View(cart.PayLoad);
@@ -64,18 +67,18 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View(categoryCreateVM);
             }
 
             var rs = await _categoryServices.Create(categoryCreateVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
+                TempData[AppConfigs.SuccessMessageString] = "Category created!";
                 return RedirectToAction("Index", "Categories");
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(categoryCreateVM);
         }
 
         // GET: CategoriesController/Edit/5
@@ -89,12 +92,13 @@ namespace FoodOrder.Admin.Controllers
             var result = await _categoryServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
+                return RedirectToAction("Index");
             }
 
             CategoryVM vm = result.PayLoad;
 
-            return View(vm);
+            return View();
         }
 
         // POST: CategoriesController/Edit/5
@@ -109,18 +113,18 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return RedirectToAction("Index");
             }
 
             var rs = await _categoryServices.Edit(id, vm, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                return View(rs.PayLoad);
+                TempData[AppConfigs.SuccessMessageString] = "Category edited!";
+                return RedirectToAction("Details", new { id = id });
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(vm);
         }
 
         // GET: CategoriesController/Delete/5
@@ -133,7 +137,9 @@ namespace FoodOrder.Admin.Controllers
             var result = await _categoryServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                //Todo: maybe we should return to error page instead?
+                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
+                return RedirectToAction("Index");
             }
 
             return View(result.PayLoad);
@@ -142,7 +148,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(int id, IFormCollection collection)
+        public async Task<ActionResult> DeleteAsync(int id, CategoryVM categoryVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -152,9 +158,11 @@ namespace FoodOrder.Admin.Controllers
             var result = await _categoryServices.Delete(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
+                return View(categoryVM);
             }
 
+            TempData[AppConfigs.SuccessMessageString] = "Category deleted!";
             return RedirectToAction("Index", "Categories");
         }
     }

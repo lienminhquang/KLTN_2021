@@ -127,7 +127,7 @@ namespace FoodOrder.API.Services
             return new SuccessedResult<UserUpdateRequest>(request);
         }
 
-        public async Task<ApiResult<PaginatedList<UserVM>>> GetUserPaging(PagingRequestBase request)
+        public async Task<ApiResult<PaginatedList<UserVM>>> GetAllPaging(PagingRequestBase request)
         {
             var users = from c in _dbContext.AppUsers select new UserVM() { 
                 Username = c.UserName,
