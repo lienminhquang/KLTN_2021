@@ -138,14 +138,6 @@ namespace FoodOrder.API.Services
                 Email = c.Email,
                 ID = c.Id
             };
-            if (!String.IsNullOrEmpty(request.SearchString))
-            {
-                request.PageNumber = 1;
-            }
-            else
-            {
-                request.SearchString = request.CurrentFilter;
-            }
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodOrder.API", "FoodOrder.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationExample", "WebApplication2\WebApplicationExample.csproj", "{1F9387AD-B62B-48A9-B9D1-C28980994D3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodOrder.Admin", "FoodOrder.Admin\FoodOrder.Admin.csproj", "{42D53349-D6FF-4F60-AB35-284357E707ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodOrder.Admin", "FoodOrder.Admin\FoodOrder.Admin.csproj", "{42D53349-D6FF-4F60-AB35-284357E707ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

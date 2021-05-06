@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FoodOrder.Core.ViewModels.Carts.CartVM>
+﻿@using FoodOrder.Core.Helpers;
+@model PaginatedList<FoodOrder.Core.ViewModels.Carts.CartVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -21,19 +22,19 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.AppUserId)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().AppUserId)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.FoodID)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().FoodID)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Quantity)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Quantity)
                             </th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.Items)
                         {
                             <tr>
                                 <td>
@@ -46,7 +47,7 @@
                                     @Html.DisplayFor(modelItem => item.Quantity)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Edit", "Edit", new {  userID=item.AppUserId, foodID=item.FoodID }) |
+                                    @Html.ActionLink("Edit", "Edit", new { userID = item.AppUserId, foodID = item.FoodID }) |
                                     @Html.ActionLink("Details", "Details", new { userID = item.AppUserId, foodID = item.FoodID }) |
                                     @Html.ActionLink("Delete", "Delete", new { userID = item.AppUserId, foodID = item.FoodID })
                                 </td>

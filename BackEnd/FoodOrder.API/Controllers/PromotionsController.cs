@@ -51,7 +51,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<IEnumerable<Promotion>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
+        public async Task<PaginatedList<Promotion>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             var promition = from c in m_dbContext.Promotions select c;
             if (!String.IsNullOrEmpty(searchString))

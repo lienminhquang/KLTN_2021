@@ -35,7 +35,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: api/<OrderStatusController>
         [HttpGet]
-        public async Task<IEnumerable<OrderStatus>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
+        public async Task<PaginatedList<OrderStatus>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             var orderStatus = from c in m_dbContext.OrderStatuses select c;
             if (!String.IsNullOrEmpty(searchString))

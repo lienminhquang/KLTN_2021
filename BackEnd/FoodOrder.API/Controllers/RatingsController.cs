@@ -37,7 +37,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: api/<RatingsController>
         [HttpGet]
-        public async Task<IEnumerable<Rating>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
+        public async Task<PaginatedList<Rating>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             var rating = from c in m_dbContext.Rating select c;
             if (!String.IsNullOrEmpty(searchString))

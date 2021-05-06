@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Core.Helpers
 {
-    public class PaginatedList<T> : List<T>
+    public class PaginatedList<T> :PaginatedBase
     {
-        public int PageIndex { get; set; }
-        public int TotalPage { get; set; }
+
+        public List<T> Items { get; set; }
 
         public PaginatedList()
         {
@@ -21,7 +21,7 @@ namespace FoodOrder.Core.Helpers
             PageIndex = pageIndex;
             TotalPage = (int)Math.Ceiling(count / (double)pageSize);
 
-            AddRange(items);
+            Items = items;
         }
 
         public bool HasPreviousPage

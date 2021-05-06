@@ -32,14 +32,6 @@ namespace FoodOrder.API.Services
                .Include(f => f.FoodCategories)
                .AsNoTracking().Select(f => _mapper.Map<FoodVM>(f));
 
-            if (!String.IsNullOrEmpty(request.SearchString))
-            {
-                request.PageNumber = 1;
-            }
-            else
-            {
-                request.SearchString = request.CurrentFilter;
-            }
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {

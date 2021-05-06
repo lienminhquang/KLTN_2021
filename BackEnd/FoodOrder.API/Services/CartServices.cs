@@ -32,15 +32,7 @@ namespace FoodOrder.API.Services
                             AppUserId = c.AppUserId,
                             Quantity = c.Quantity
                         };
-            if (!String.IsNullOrEmpty(request.SearchString))
-            {
-                request.PageNumber = 1;
-            }
-            else
-            {
-                request.SearchString = request.CurrentFilter;
-            }
-
+            
             // Todo: search cart?
             //if (!String.IsNullOrEmpty(request.SearchString))
             //{

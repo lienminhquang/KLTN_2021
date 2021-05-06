@@ -30,14 +30,6 @@ namespace FoodOrder.API.Services
                             ID = c.ID,
                             Name = c.Name
                         };
-            if (!String.IsNullOrEmpty(request.SearchString))
-            {
-                request.PageNumber = 1;
-            }
-            else
-            {
-                request.SearchString = request.CurrentFilter;
-            }
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {

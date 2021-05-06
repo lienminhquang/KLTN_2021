@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FoodOrder.Core.ViewModels.Categories.CategoryVM>
+﻿@using FoodOrder.Core.Helpers;
+@model PaginatedList<FoodOrder.Core.ViewModels.Categories.CategoryVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -21,19 +22,19 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.ID)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ID)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Name)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Name)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Description)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Description)
                             </th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.Items)
                         {
                             <tr>
                                 <td>
