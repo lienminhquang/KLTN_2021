@@ -55,7 +55,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([FromBody] CategoryCreateVM categoryCreateVM)
+        public async Task<ActionResult> CreateAsync([FromForm] CategoryCreateVM categoryCreateVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -100,7 +100,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, [FromBody] CategoryVM vm)
+        public async Task<ActionResult> EditAsync(int id, [FromForm] CategoryVM vm)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -116,7 +116,7 @@ namespace FoodOrder.Admin.Controllers
             var rs = await _categoryServices.Edit(id, vm, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                return View(rs.PayLoad);
+                return RedirectToAction("Details", new { id = id });
             }
 
             // Todo: catch error ??

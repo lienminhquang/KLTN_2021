@@ -83,7 +83,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
-        public async Task<ActionResult<PaginatedList<Food>>> GetAllPaging(PagingRequestBase request)
+        public async Task<ActionResult<PaginatedList<Food>>> GetAllPaging([FromQuery]PagingRequestBase request)
         {
             var result = await _foodServices.GetAllPaging(request);
             if (!result.IsSuccessed)

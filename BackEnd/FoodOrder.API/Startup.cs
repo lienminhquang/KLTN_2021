@@ -70,15 +70,19 @@ namespace FoodOrder.API
                 });
             #endregion
 
+            services.AddAutoMapper(typeof(Core.AutoMapper.AutoMapperProfile).Assembly);
 
             #region DI
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
 
+
             services.AddTransient<UserServices, UserServices>();
             services.AddTransient<CartServices, CartServices>();
             services.AddTransient<CategoryServices, CategoryServices>();
+            services.AddTransient<FoodServices, FoodServices>();
+            services.AddTransient<OrderDetailServices, OrderDetailServices>();
             #endregion
 
 
