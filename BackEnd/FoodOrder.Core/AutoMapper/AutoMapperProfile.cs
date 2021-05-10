@@ -14,7 +14,8 @@ namespace FoodOrder.Core.AutoMapper
     {
         public AutoMapperProfile()
         {
-            //CreateMap<Food, FoodVM>();
+            CreateMap<Food, FoodVM>()
+                .ForMember(dest => dest.Name, options => options.MapFrom(source => source.Name));
             //CreateMap<FoodCreateVM, Food>();
            // CreateMap<FoodEditVM, FoodVM>();
 

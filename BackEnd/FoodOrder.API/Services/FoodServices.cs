@@ -26,11 +26,11 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var foodVMs =  _dbContext.Foods
+            var foodVMs = _dbContext.Foods
                .Include(f => f.Ratings) //Todo: is this need for paging?
                .Include(f => f.Images)
                .Include(f => f.FoodCategories)
-               .AsNoTracking().Select(f => _mapper.Map<FoodVM>(f));
+               .AsNoTracking().Select(f => _mapper.Map<Food, FoodVM>(f));
 
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -38,8 +38,10 @@ namespace FoodOrder.API.Services
                 foodVMs = foodVMs.Where(c => c.Name.Contains(request.SearchString)
                 || c.Description.Contains(request.SearchString));
             }
-
-            foodVMs = Core.Helpers.Utilities<FoodVM>.Sort(foodVMs, request.SortOrder, "Name");
+            if (!String.IsNullOrEmpty(request.SortOrder))
+            {
+                foodVMs = Core.Helpers.Utilities<FoodVM>.Sort(foodVMs, request.SortOrder, "Name");
+            }
 
             var created = await PaginatedList<FoodVM>.CreateAsync(foodVMs, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
