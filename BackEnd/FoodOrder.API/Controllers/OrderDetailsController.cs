@@ -1,5 +1,9 @@
-﻿using FoodOrder.Core.Helpers;
+﻿using FoodOrder.API.Services;
+using FoodOrder.Core.Helpers;
+using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,119 +20,70 @@ namespace FoodOrder.API.Controllers
     [ApiController]
     public class OrderDetailsController : ControllerBase
     {
-        public class OrderDetailCreateRequest
-        {
-            public int OrderID { get; set; }
-            public int FoodID { get; set; }
-            public int Amount { get; set; }
-            public decimal Price { get; set; }
-        }
-        public class OrderDetailUpdateRequest
-        {
-            public int Amount { get; set; }
-            public decimal Price { get; set; }
-        }
+        private readonly OrderDetailServices _orderDetailServices;
 
-        private readonly ApplicationDBContext m_dbContext;
-        public OrderDetailsController(ApplicationDBContext i_dbContext)
+        public OrderDetailsController(OrderDetailServices orderDetailServices)
         {
-            m_dbContext = i_dbContext;
+            _orderDetailServices = orderDetailServices;
         }
-
-        // GET: api/<OrderDetailsController>
+        // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<PaginatedList<OrderDetail>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request)
         {
-            var orderDetail = from c in m_dbContext.OrderDetails select c;
-            if (!String.IsNullOrEmpty(searchString))
+            var result = await _orderDetailServices.GetAllPaging(request);
+            if (!result.IsSuccessed)
             {
-                pageNumber = 1;
+                return BadRequest(result);
             }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            orderDetail = Core.Helpers.Utilities<OrderDetail>.Sort(orderDetail, sortOrder, "OrderID");
-
-            return await PaginatedList<OrderDetail>.CreateAsync(orderDetail, pageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            return Ok(result);
         }
 
-        // GET api/<OrderDetailsController>/5
-        [HttpGet("{orderID}/{foodID}")]
-        public async Task<OrderDetail> Get(int orderID, int foodID)
+        // GET api/<ValuesController>/details?
+        [HttpGet("details")]
+        public async Task<IActionResult> Get([FromQuery] int orderID, [FromQuery] int foodID)
         {
-            var order = await m_dbContext.OrderDetails
-                .Include(od => od.Food)
-                .Include(od => od.Order)
-                .FirstOrDefaultAsync(od => od.OrderID == orderID && od.FoodID == foodID);
-            return order;
+            var result = await _orderDetailServices.GetByID(orderID, foodID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
-        // POST api/<OrderDetailsController>
+        // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] OrderDetailCreateRequest value)
+        public async Task<IActionResult> Post([FromBody] OrderDetailCreateVM vM)
         {
-            await m_dbContext.OrderDetails.AddAsync(new OrderDetail
+            var result = await _orderDetailServices.Create(vM);
+            if (!result.IsSuccessed)
             {
-                OrderID = value.OrderID,
-                FoodID = value.FoodID,
-                Amount = value.Amount,
-                Price = value.Price
-            });
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
-        // PUT api/<OrderDetailsController>/5
-        [HttpPut("{orderID}/{foodID}")]
-        public async Task<IActionResult> Put(int orderID, int foodID, [FromBody] OrderDetailUpdateRequest value)
+        // PUT api/<ValuesController>/5
+        [HttpPut]
+        public async Task<IActionResult> PutAsync(int orderID, int foodID, [FromBody] OrderDetailEditVM value)
         {
-            var orderDetail = await m_dbContext.OrderDetails.FirstOrDefaultAsync(od => od.FoodID == foodID && od.OrderID == orderID);
-            if(orderDetail == null)
+            var result = await _orderDetailServices.Edit(orderID, foodID, value);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-            orderDetail.Amount = value.Amount;
-            orderDetail.Price = value.Price;
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
-        // DELETE api/<OrderDetailsController>/5
-        [HttpDelete("{orderID}/{foodID}")]
+        // DELETE api/<ValuesController>/5
+        [HttpDelete]
         public async Task<IActionResult> Delete(int orderID, int foodID)
         {
-            var orderDetail = await m_dbContext.OrderDetails.FirstOrDefaultAsync(od => od.FoodID == foodID && od.OrderID == orderID);
-            if (orderDetail == null)
+            var result = await _orderDetailServices.Delete(orderID, foodID);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-           
-            try
-            {
-                m_dbContext.Remove(orderDetail);
-                await m_dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
     }
 
