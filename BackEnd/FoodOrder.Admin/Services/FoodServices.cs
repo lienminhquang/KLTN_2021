@@ -69,7 +69,7 @@ namespace FoodOrder.Admin.Services
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var res = await client.PutAsync(BaseRoute + $"/{id}", httpContent);
+            var res = await client.PutAsync(BaseRoute + $"?id={id}", httpContent);
 
             return JsonConvert.DeserializeObject<ApiResult<FoodVM>>(await res.Content.ReadAsStringAsync());
         }

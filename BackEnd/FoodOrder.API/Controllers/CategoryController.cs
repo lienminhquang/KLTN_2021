@@ -37,7 +37,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: CategoryController
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<Category>>> GetAllPaging(PagingRequestBase request)
+        public async Task<ActionResult<PaginatedList<Category>>> GetAllPaging([FromQuery]PagingRequestBase request)
         {
             var result = await _categoryServices.GetAllPaging(request);
             if (!result.IsSuccessed)
@@ -60,7 +60,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([FromForm] CategoryCreateVM request)
+        public async Task<ActionResult> CreateAsync([FromBody] CategoryCreateVM request)
         {
             var result = await _categoryServices.Create(request);
             if (!result.IsSuccessed)
@@ -71,8 +71,8 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPut]
-        //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, [FromForm] CategoryVM category)
+       // [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditAsync(int id, [FromBody] CategoryVM category)
         {
             var result = await _categoryServices.Edit(id ,category);
             if (!result.IsSuccessed)

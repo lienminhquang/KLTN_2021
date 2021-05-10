@@ -26,11 +26,11 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var foodVMs =  _dbContext.Foods
+            var foodVMs = _dbContext.Foods
                .Include(f => f.Ratings) //Todo: is this need for paging?
                .Include(f => f.Images)
                .Include(f => f.FoodCategories)
-               .AsNoTracking().Select(f => _mapper.Map<FoodVM>(f));
+               .AsNoTracking().Select(f => _mapper.Map<Food, FoodVM>(f));
 
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -39,7 +39,10 @@ namespace FoodOrder.API.Services
                 || c.Description.Contains(request.SearchString));
             }
 
-            foodVMs = Core.Helpers.Utilities<FoodVM>.Sort(foodVMs, request.SortOrder, "Name");
+            if (!String.IsNullOrEmpty(request.SortOrder))
+            {
+                foodVMs = Core.Helpers.Utilities<FoodVM>.Sort(foodVMs, request.SortOrder, "Name");
+            }
 
             var created = await PaginatedList<FoodVM>.CreateAsync(foodVMs, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
@@ -80,10 +83,11 @@ namespace FoodOrder.API.Services
             food.Name = foodVM.Name;
             food.Description = foodVM.Description;
             food.Price = foodVM.Price;
-            food.Ratings = foodVM.Ratings;
-            food.OrderDetails = foodVM.OrderDetails;
-            food.Images = foodVM.Images;
-            food.FoodCategories = foodVM.FoodCategories; // Todo: we need to use categories here, not foodcategories
+            food.Count = foodVM.Count;
+            //food.Ratings = foodVM.Ratings;
+            //food.OrderDetails = foodVM.OrderDetails;
+            //food.Images = foodVM.Images;
+            //food.FoodCategories = foodVM.FoodCategories; // Todo: we need to use categories here, not foodcategories
             try
             {
                 await _dbContext.SaveChangesAsync();

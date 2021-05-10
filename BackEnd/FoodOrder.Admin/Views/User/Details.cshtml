@@ -1,14 +1,15 @@
-﻿@model FoodOrder.Core.ViewModels.Foods.FoodVM
+﻿@model FoodOrder.Core.ViewModels.Users.UserVM
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <div class="container-fluid">
-    <h1 class="mt-4">Food detail</h1>
+    <h1 class="mt-4">User details</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-        <li class="breadcrumb-item active">Food detail</li>
+        <li class="breadcrumb-item active">User details</li>
     </ol>
     <div class="card mb-4">
         <div class="card-header">
@@ -24,31 +25,44 @@
                         @Html.DisplayFor(model => model.ID)
                     </dd>
                     <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.Name)
+                        @Html.DisplayNameFor(model => model.Username)
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.Name)
+                        @Html.DisplayFor(model => model.Username)
                     </dd>
                     <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.Description)
+                        @Html.DisplayNameFor(model => model.FirstName)
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.Description)
+                        @Html.DisplayFor(model => model.FirstName)
                     </dd>
                     <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.Price)
+                        @Html.DisplayNameFor(model => model.LastName)
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.Price)
+                        @Html.DisplayFor(model => model.LastName)
                     </dd>
                     <dt class="col-sm-2">
-                        @Html.DisplayNameFor(model => model.Count)
+                        @Html.DisplayNameFor(model => model.Address)
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.Count)
+                        @Html.DisplayFor(model => model.Address)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.DateOfBirth)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.DateOfBirth)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Email)
                     </dd>
                 </dl>
-
+            </div>
+            <div>
                 <div>
                     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
                     @Html.ActionLink("Delete", "Delete", new { id = Model.ID })

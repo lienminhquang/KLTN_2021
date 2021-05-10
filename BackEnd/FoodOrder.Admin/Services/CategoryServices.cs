@@ -30,7 +30,12 @@ namespace FoodOrder.Admin.Services
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var uri = BaseRoute + $"?{request.ToQueryString("&")}";
+            var query = request.ToQueryString("&");
+            var uri = BaseRoute;
+            if(!String.IsNullOrEmpty(query))
+            {
+                uri += $"?{query}";
+            }
             var rs = await client.GetAsync(uri);
             var body = await rs.Content.ReadAsStringAsync();
             var vms = JsonConvert.DeserializeObject<ApiResult<PaginatedList<CategoryVM>>>(body);
@@ -68,8 +73,8 @@ namespace FoodOrder.Admin.Services
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-            var res = await client.PutAsync(BaseRoute + $"/{id}", httpContent);
+            string uri = BaseRoute + $"?id={id.ToString()}";
+            var res = await client.PutAsync(uri, httpContent);
 
             return JsonConvert.DeserializeObject<ApiResult<CategoryVM>>(await res.Content.ReadAsStringAsync());
         }
