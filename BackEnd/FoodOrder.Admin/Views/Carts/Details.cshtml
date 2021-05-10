@@ -5,15 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
-
-
-
 <div class="container-fluid">
-    <h1 class="mt-4">Create Cart</h1>
+    <h1 class="mt-4">Cart Details</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-        <li class="breadcrumb-item active">Create Cart</li>
+        <li class="breadcrumb-item active">Cart Details</li>
     </ol>
     <div class="card mb-4">
         <div class="card-header">
@@ -42,8 +38,8 @@
             </dl>
 
             <div>
-                @Html.ActionLink("Edit", "Edit", new { userID = Model.AppUser, foodID = Model.FoodID }) |
-                @Html.ActionLink("Delete", "Delete", new { userID = Model.AppUser, foodID = Model.FoodID })
+                @Html.ActionLink("Edit", "Edit", new { userID = Model.AppUserId, foodID = Model.FoodID }) |
+                @Html.ActionLink("Delete", "Delete", new { userID = Model.AppUserId, foodID = Model.FoodID })
             </div>
         </div>
     </div>

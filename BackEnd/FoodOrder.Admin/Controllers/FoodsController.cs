@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
@@ -29,7 +30,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!vm.IsSuccessed)
             {
-                return View(vm.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = vm.ErrorMessage;
             }
 
             return View(vm.PayLoad);
@@ -42,7 +43,8 @@ namespace FoodOrder.Admin.Controllers
 
             if (!vm.IsSuccessed)
             {
-                return View(vm.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = vm.ErrorMessage;
+                return RedirectToAction("Index");
             }
 
             return View(vm.PayLoad);
@@ -71,19 +73,18 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View(createVM);
             }
 
             var rs = await _foodServices.Create(createVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                // Todo: redirect to details instead?
-                return RedirectToAction("Index", "Foods");
+                TempData[AppConfigs.SuccessMessageString] = "Food created!";
+                return RedirectToAction("Details", new { id = rs.PayLoad.ID });
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(createVM);
         }
 
         // GET: CartsController/Edit/5
@@ -91,7 +92,8 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                string returnUrl = this.Url.ActionLink("Edit", values: new { @id = id });
+                return RedirectToAction("Login", "User", new { returnUrl = returnUrl });
             }
 
             var result = await _foodServices.GetByID(id, this.GetTokenFromCookie());

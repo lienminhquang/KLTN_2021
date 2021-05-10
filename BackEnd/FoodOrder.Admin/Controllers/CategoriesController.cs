@@ -29,7 +29,6 @@ namespace FoodOrder.Admin.Controllers
             if (!carts.IsSuccessed)
             {
                 TempData[AppConfigs.ErrorMessageString] = carts.ErrorMessage;
-                return RedirectToAction("Index", "Home");
             }
 
             return View(carts.PayLoad);
@@ -98,7 +97,7 @@ namespace FoodOrder.Admin.Controllers
 
             CategoryVM vm = result.PayLoad;
 
-            return View();
+            return View(vm);
         }
 
         // POST: CategoriesController/Edit/5
@@ -113,7 +112,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                return View(vm);
             }
 
             var rs = await _categoryServices.Edit(id, vm, this.GetTokenFromCookie());

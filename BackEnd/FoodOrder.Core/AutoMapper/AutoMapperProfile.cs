@@ -22,7 +22,7 @@ namespace FoodOrder.Core.AutoMapper
 
             CreateMap<OrderDetail, OrderDetailVM>();
             CreateMap<OrderDetailCreateVM, OrderDetail>();
-            //CreateMap<OrderDetailCreateVM, OrderDetail>();
+            CreateMap<OrderDetailVM, OrderDetailEditVM>();
 
         }
     }

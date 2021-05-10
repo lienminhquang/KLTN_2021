@@ -35,7 +35,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Details/5
-        public async Task<ActionResult> DetailsAsync(Guid userID, int foodID)
+        public async Task<ActionResult> DetailsAsync(string userID, int foodID)
         {
             var cart = await _cartServices.GetByID(userID, foodID, this.GetTokenFromCookie());
 
@@ -85,7 +85,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Edit/5
-        public async Task<ActionResult> EditAsync(Guid userID, int foodID)
+        public async Task<ActionResult> EditAsync(string userID, int foodID)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -136,7 +136,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Delete/5
-        public async Task<ActionResult> DeleteAsync(Guid userID, int foodID)
+        public async Task<ActionResult> DeleteAsync(string userID, int foodID)
         {
             if (!this.ValidateTokenInCookie())
             {

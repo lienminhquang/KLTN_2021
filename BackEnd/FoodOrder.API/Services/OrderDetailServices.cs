@@ -29,7 +29,7 @@ namespace FoodOrder.API.Services
             var odVMs = _dbContext.OrderDetails
                .Include(f => f.Food) //Todo: is this need for paging?
                .Include(f => f.Order)
-               .AsNoTracking().Select(f => _mapper.Map<OrderDetailVM>(f));
+               .AsNoTracking().Select(f => _mapper.Map<OrderDetail, OrderDetailVM>(f));
 
 
             //if (!String.IsNullOrEmpty(request.SearchString))
@@ -38,7 +38,7 @@ namespace FoodOrder.API.Services
             //    || c.Description.Contains(request.SearchString));
             //}
 
-            odVMs = Core.Helpers.Utilities<OrderDetailVM>.Sort(odVMs, request.SortOrder, "OrderID");
+            //odVMs = Core.Helpers.Utilities<OrderDetailVM>.Sort(odVMs, request.SortOrder, "FoodID");
 
             var created = await PaginatedList<OrderDetailVM>.CreateAsync(odVMs, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 

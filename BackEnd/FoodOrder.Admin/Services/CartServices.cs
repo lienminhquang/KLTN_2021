@@ -37,7 +37,7 @@ namespace FoodOrder.Admin.Services
             return carts;
         }
 
-        public async Task<ApiResult<CartVM>> GetByID(Guid userID, int foodID, string token)
+        public async Task<ApiResult<CartVM>> GetByID(string userID, int foodID, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);

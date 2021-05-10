@@ -129,7 +129,7 @@ namespace FoodOrder.Admin.Controllers
             }
 
             var result = await _adminUserService.GetUserByID(id, this.GetTokenFromCookie());
-            if(!result.IsSuccessed)
+            if (!result.IsSuccessed)
             {
                 return View(result.ErrorMessage);
             }
@@ -155,25 +155,25 @@ namespace FoodOrder.Admin.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login([FromQuery] string returnUrl)
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-           
-            return View();
+
+            return View(new LoginRequest() { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(ModelState.IsValid);
             }
 
             var token = await _adminUserService.Authenticate(loginRequest);
 
-            if(!token.IsSuccessed)
+            if (!token.IsSuccessed)
             {
                 return View(token.ErrorMessage);
             }
@@ -197,6 +197,10 @@ namespace FoodOrder.Admin.Controllers
                 Expires = DateTime.Now.AddMinutes(10)
             });
 
+            if (!String.IsNullOrEmpty(loginRequest.ReturnUrl))
+            {
+                return Redirect(loginRequest.ReturnUrl);
+            }
             return RedirectToAction("Index", "Home");
         }
 
@@ -234,7 +238,7 @@ namespace FoodOrder.Admin.Controllers
             var userDeleteVM = new UserDeleteVM()
             {
                 Dob = /*new DateTime(),//*/ result.PayLoad.DateOfBirth,
-                Email= /*"test@gmail.com", //*/ result.PayLoad.Email,
+                Email = /*"test@gmail.com", //*/ result.PayLoad.Email,
                 UserID = /*new Guid(), //*/result.PayLoad.ID,
                 FirstName = /*"test", //*/result.PayLoad.FirstName,
                 LastName = /*"test", //*/result.PayLoad.LastName
@@ -252,7 +256,7 @@ namespace FoodOrder.Admin.Controllers
             validationParameters.ValidIssuer = _config["Tokens:Issuer"];
             validationParameters.ValidAudience = _config["Tokens:Issuer"];
             validationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-            ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwt, validationParameters,out validatedToken);
+            ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwt, validationParameters, out validatedToken);
 
             return principal;
         }

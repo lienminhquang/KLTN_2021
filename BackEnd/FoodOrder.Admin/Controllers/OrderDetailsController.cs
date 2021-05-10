@@ -78,8 +78,7 @@ namespace FoodOrder.Admin.Controllers
             var rs = await _oDServices.Create(createVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                // Todo: redirect to details instead?
-                return RedirectToAction("Index", "OrderDetails");
+                return RedirectToAction("Details", new { orderID = rs.PayLoad.OrderID, foodID = rs.PayLoad.FoodID });
             }
 
             // Todo: catch error ??
@@ -102,7 +101,7 @@ namespace FoodOrder.Admin.Controllers
 
             var vm = result.PayLoad;
 
-            return View(_mapper.Map<OrderDetailEditVM>(vm));
+            return View(_mapper.Map<OrderDetailVM, OrderDetailEditVM>(vm));
         }
 
         // POST: CartsController/Edit/5
@@ -118,13 +117,13 @@ namespace FoodOrder.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View();
             }
 
             var rs = await _oDServices.Edit(editVM.OrderID, editVM.FoodID, editVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                return View(rs.PayLoad);
+                return RedirectToAction("Details", new { orderID = rs.PayLoad.OrderID, foodID = rs.PayLoad.FoodID });
             }
 
             // Todo: catch error ??
