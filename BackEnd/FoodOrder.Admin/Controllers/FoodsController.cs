@@ -102,7 +102,7 @@ namespace FoodOrder.Admin.Controllers
 
             var vm = result.PayLoad;
 
-            return View(_mapper.Map<FoodEditVM>(vm));
+            return View(_mapper.Map<FoodVM, FoodEditVM>(vm));
         }
 
         // POST: CartsController/Edit/5
@@ -124,7 +124,7 @@ namespace FoodOrder.Admin.Controllers
             var rs = await _foodServices.Edit(editVM.ID, editVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                return View(rs.PayLoad);
+                return RedirectToAction("Details", new { id = editVM.ID });
             }
 
             // Todo: catch error ??

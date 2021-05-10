@@ -38,6 +38,7 @@ namespace FoodOrder.API.Services
                 foodVMs = foodVMs.Where(c => c.Name.Contains(request.SearchString)
                 || c.Description.Contains(request.SearchString));
             }
+
             if (!String.IsNullOrEmpty(request.SortOrder))
             {
                 foodVMs = Core.Helpers.Utilities<FoodVM>.Sort(foodVMs, request.SortOrder, "Name");
@@ -82,10 +83,11 @@ namespace FoodOrder.API.Services
             food.Name = foodVM.Name;
             food.Description = foodVM.Description;
             food.Price = foodVM.Price;
-            food.Ratings = foodVM.Ratings;
-            food.OrderDetails = foodVM.OrderDetails;
-            food.Images = foodVM.Images;
-            food.FoodCategories = foodVM.FoodCategories; // Todo: we need to use categories here, not foodcategories
+            food.Count = foodVM.Count;
+            //food.Ratings = foodVM.Ratings;
+            //food.OrderDetails = foodVM.OrderDetails;
+            //food.Images = foodVM.Images;
+            //food.FoodCategories = foodVM.FoodCategories; // Todo: we need to use categories here, not foodcategories
             try
             {
                 await _dbContext.SaveChangesAsync();

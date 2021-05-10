@@ -82,6 +82,20 @@ namespace FoodOrder.Admin.Controllers
             return View(rs.ErrorMessage);
         }
 
+        // GET: CartsController/Details/5
+
+        public async Task<ActionResult> DetailsAsync(string id)
+        {
+            var user = await _adminUserService.GetUserByID(id, this.GetTokenFromCookie());
+
+            if (!user.IsSuccessed)
+            {
+                return View(user.ErrorMessage);
+            }
+
+            return View(user.PayLoad);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Edit([FromForm] UserUpdateRequest request)
         {
