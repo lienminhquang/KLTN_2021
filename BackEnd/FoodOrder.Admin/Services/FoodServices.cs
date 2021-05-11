@@ -33,7 +33,7 @@ namespace FoodOrder.Admin.Services
             var uri = BaseRoute + $"?{request.ToQueryString("&")}";
             var rs = await client.GetAsync(uri);
             var body = await rs.Content.ReadAsStringAsync();
-            var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<FoodVM>>>(body);
+            ApiResult<PaginatedList<FoodVM>> vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<FoodVM>>>(body);
             return vm;
         }
 

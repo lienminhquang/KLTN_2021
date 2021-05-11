@@ -27,8 +27,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!carts.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = carts.ErrorMessage;
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToErrorPage(carts.ErrorMessage);
             }
 
             return View(carts.PayLoad);
@@ -41,8 +40,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!cart.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = cart.ErrorMessage;
-                return RedirectToAction("Index","Carts");
+                return this.RedirectToErrorPage(cart.ErrorMessage);
             }
 
             return View(cart.PayLoad);
@@ -53,7 +51,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             return View();
@@ -66,7 +64,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
@@ -75,9 +73,9 @@ namespace FoodOrder.Admin.Controllers
             }
 
             var rs = await _cartServices.Create(cartCreateVM, this.GetTokenFromCookie());
-            if (rs.IsSuccessed)
+            if (!rs.IsSuccessed)
             {
-                return RedirectToAction("Index", "Carts");
+                return this.RedirectToErrorPage(rs.ErrorMessage);                
             }
 
             TempData[AppConfigs.SuccessMessageString] = "User created!";
@@ -89,14 +87,13 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             var result = await _cartServices.GetByID(userID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
-                return RedirectToAction("Index");
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             CartVM cartVM = result.PayLoad;
@@ -116,7 +113,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
@@ -140,13 +137,12 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
             var result = await _cartServices.GetByID(userID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
-                return RedirectToAction("Details", new { userID = userID, foodID = foodID }); ;
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             return View(result.PayLoad);
@@ -159,15 +155,13 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
             
-
             var result = await _cartServices.Delete(userID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
-                return RedirectToAction("Index");
+                this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             TempData[AppConfigs.SuccessMessageString] = "Cart deleted!";

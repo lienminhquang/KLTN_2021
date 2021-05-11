@@ -1,4 +1,5 @@
-﻿@model ErrorViewModel
+﻿@using FoodOrder.Admin.Configs
+@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
 }
@@ -12,6 +13,13 @@
         <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
 }
+
+<div class="container-fluid">
+    <div class="alert alert-danger alert-dismissible">
+        @TempData[AppConfigs.ErrorMessageString]]
+    </div>
+</div>
+
 
 <h3>Development Mode</h3>
 <p>

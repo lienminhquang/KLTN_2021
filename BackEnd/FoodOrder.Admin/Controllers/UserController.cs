@@ -1,4 +1,5 @@
-﻿using FoodOrder.Admin.Extensions;
+﻿using FoodOrder.Admin.Configs;
+using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Users;
@@ -68,18 +69,18 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View(request);
             }
 
             var rs = await _adminUserService.CreateUser(request, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
+                TempData[AppConfigs.SuccessMessageString] = "User create succesed!";
                 return RedirectToAction("Index", "User");
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(request);
         }
 
         // GET: CartsController/Details/5
@@ -90,7 +91,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!user.IsSuccessed)
             {
-                return View(user.ErrorMessage);
+                return this.RedirectToErrorPage(user.ErrorMessage);
             }
 
             return View(user.PayLoad);
@@ -101,23 +102,22 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View(request);
             }
 
             var rs = await _adminUserService.EditUser(request, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                return View(rs.PayLoad);
+                return RedirectToAction("Details", new { userID = rs.PayLoad.UserID });
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(request);
         }
 
         [HttpGet]
@@ -125,13 +125,13 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             var result = await _adminUserService.GetUserByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             UserVM userVM = result.PayLoad;
@@ -168,14 +168,15 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(ModelState.IsValid);
+                return View(loginRequest);
             }
 
             var token = await _adminUserService.Authenticate(loginRequest);
 
             if (!token.IsSuccessed)
             {
-                return View(token.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = token.ErrorMessage;
+                return View(loginRequest);
             }
 
             var userPrincipal = this.ValidateToken(token.PayLoad);
@@ -209,15 +210,17 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             var result = await _adminUserService.DeleteUser(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
+                return View(userDeleteVM);
             }
 
+            TempData[AppConfigs.SuccessMessageString] = "User delete succesed!";
             return RedirectToAction("Index", "User");
         }
 
@@ -227,12 +230,12 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
             var result = await _adminUserService.GetUserByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             var userDeleteVM = new UserDeleteVM()

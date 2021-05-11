@@ -33,6 +33,11 @@ namespace FoodOrder.Admin.Services
             var client = _httpClientFactory.CreateClient();
             var res = await client.PostAsync(_config["BaseAddress"] + "/api/Users/Login", httpContent);
 
+            if(!res.IsSuccessStatusCode)
+            {
+                return new FailedResult<string>(await res.Content.ReadAsStringAsync());
+            }
+
             string resultString = await res.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ApiResult<string>>(resultString);
         }

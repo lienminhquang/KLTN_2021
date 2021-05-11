@@ -28,7 +28,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!carts.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = carts.ErrorMessage;
+                return this.RedirectToErrorPage(carts.ErrorMessage);
             }
 
             return View(carts.PayLoad);
@@ -41,8 +41,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!cart.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = cart.ErrorMessage;
-                return RedirectToAction("Index");
+                return this.RedirectToErrorPage(cart.ErrorMessage);
             }
 
             return View(cart.PayLoad);
@@ -61,7 +60,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
@@ -72,7 +71,7 @@ namespace FoodOrder.Admin.Controllers
             var rs = await _categoryServices.Create(categoryCreateVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                TempData[AppConfigs.SuccessMessageString] = "Category created!";
+                TempData[AppConfigs.SuccessMessageString] = "Category create succesed!";
                 return RedirectToAction("Index", "Categories");
             }
 
@@ -85,14 +84,13 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             var result = await _categoryServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
-                return RedirectToAction("Index");
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             CategoryVM vm = result.PayLoad;
@@ -107,7 +105,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
@@ -131,14 +129,12 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
             var result = await _categoryServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                //Todo: maybe we should return to error page instead?
-                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
-                return RedirectToAction("Index");
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             return View(result.PayLoad);
@@ -151,7 +147,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             var result = await _categoryServices.Delete(id, this.GetTokenFromCookie());
@@ -161,8 +157,8 @@ namespace FoodOrder.Admin.Controllers
                 return View(categoryVM);
             }
 
-            TempData[AppConfigs.SuccessMessageString] = "Category deleted!";
-            return RedirectToAction("Index", "Categories");
+            TempData[AppConfigs.SuccessMessageString] = "Category delete succesed!";
+            return RedirectToAction("Index");
         }
     }
 }

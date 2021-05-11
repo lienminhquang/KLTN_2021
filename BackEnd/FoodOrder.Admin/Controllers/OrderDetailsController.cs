@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
@@ -29,7 +30,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!vm.IsSuccessed)
             {
-                return View(vm.ErrorMessage);
+                return this.RedirectToErrorPage(vm.ErrorMessage);
             }
 
             return View(vm.PayLoad);
@@ -42,7 +43,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!vm.IsSuccessed)
             {
-                return View(vm.ErrorMessage);
+                return this.RedirectToErrorPage(vm.ErrorMessage);
             }
 
             return View(vm.PayLoad);
@@ -53,7 +54,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             return View();
@@ -66,23 +67,23 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View(createVM);
             }
 
             var rs = await _oDServices.Create(createVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
+                TempData[AppConfigs.SuccessMessageString] = "OrderDetail create succesed!";
                 return RedirectToAction("Details", new { orderID = rs.PayLoad.OrderID, foodID = rs.PayLoad.FoodID });
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(createVM);
         }
 
         // GET: CartsController/Edit/5
@@ -90,13 +91,13 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             var result = await _oDServices.GetByID(orderID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             var vm = result.PayLoad;
@@ -111,23 +112,23 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View();
+                return View(editVM);
             }
 
             var rs = await _oDServices.Edit(editVM.OrderID, editVM.FoodID, editVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
+                TempData[AppConfigs.SuccessMessageString] = "OrderDetail edit successed!";
                 return RedirectToAction("Details", new { orderID = rs.PayLoad.OrderID, foodID = rs.PayLoad.FoodID });
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(editVM);
         }
 
         // GET: CartsController/Delete/5
@@ -135,12 +136,12 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
             var result = await _oDServices.GetByID(orderID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             return View(result.PayLoad);
@@ -153,16 +154,17 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
 
             var result = await _oDServices.Delete(orderID, foodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
-            return RedirectToAction("Index", "Foods");
+            TempData[AppConfigs.SuccessMessageString] = "OrderDetail delete succesed!";
+            return RedirectToAction("Index");
         }
     }
 }

@@ -4,6 +4,7 @@ using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Foods;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
+    [Authorize]
     public class FoodsController : Controller
     {
         private readonly FoodServices _foodServices;
@@ -43,8 +45,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!vm.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = vm.ErrorMessage;
-                return RedirectToAction("Index");
+                return this.RedirectToErrorPage(vm.ErrorMessage);
             }
 
             return View(vm.PayLoad);
@@ -55,7 +56,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             return View();
@@ -68,7 +69,7 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
@@ -93,17 +94,16 @@ namespace FoodOrder.Admin.Controllers
             if (!this.ValidateTokenInCookie())
             {
                 string returnUrl = this.Url.ActionLink("Edit", values: new { @id = id });
-                return RedirectToAction("Login", "User", new { returnUrl = returnUrl });
+                return this.RedirectToLoginPage(returnUrl);
             }
 
             var result = await _foodServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             var vm = result.PayLoad;
-
             return View(_mapper.Map<FoodVM, FoodEditVM>(vm));
         }
 
@@ -114,23 +114,23 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                this.RedirectToLoginPage();
             }
 
             if (!ModelState.IsValid)
             {
-                // Todo: catch error ?? can we return apiresult as model and check success in view ?
-                return View(ModelState);
+                return View(editVM);
             }
 
             var rs = await _foodServices.Edit(editVM.ID, editVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
+                TempData[AppConfigs.SuccessMessageString] = "Food edit succesed!";
                 return RedirectToAction("Details", new { id = editVM.ID });
             }
 
-            // Todo: catch error ??
-            return View(rs.ErrorMessage);
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(editVM);
         }
 
         // GET: CartsController/Delete/5
@@ -138,12 +138,12 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
             var result = await _foodServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             return View(result.PayLoad);
@@ -156,15 +156,18 @@ namespace FoodOrder.Admin.Controllers
         {
             if (!this.ValidateTokenInCookie())
             {
-                return RedirectToAction("Login", "User");
+                return this.RedirectToLoginPage();
             }
 
 
             var result = await _foodServices.Delete(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                return View(result.ErrorMessage);
+                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
+                return View(result.PayLoad);
             }
+
+            TempData[AppConfigs.SuccessMessageString] = "Food delete succesed";
             return RedirectToAction("Index", "Foods");
         }
     }
