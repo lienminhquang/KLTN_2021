@@ -57,6 +57,18 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<OrderDetailVM>> Create(OrderDetailCreateVM vm)
         {
+            Food food = _dbContext.Foods.Find(vm.FoodID);
+            if(food == null)
+            {
+                return new FailedResult<OrderDetailVM>("Food not found!");
+            }
+
+            Order order = _dbContext.Orders.Find(vm.OrderID);
+            if(order == null)
+            {
+                return new FailedResult<OrderDetailVM>("Order not found!");
+            }
+
             var result = await _dbContext.OrderDetails.AddAsync(_mapper.Map<OrderDetail>(vm));
             try
             {

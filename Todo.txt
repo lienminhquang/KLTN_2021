@@ -1,1 +1,2 @@
 + kiem tra trung user khi register
++ check forigenkey in request
