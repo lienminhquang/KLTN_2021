@@ -26,7 +26,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<OrderVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var orders = from c in _dbContext.Orders select _mapper.Map<Order, OrderVM>(c);
+            var orders = from c in _dbContext.Orders select c;
 
             // Todo: search cart?
             //if (!String.IsNullOrEmpty(request.SearchString))
@@ -37,9 +37,9 @@ namespace FoodOrder.API.Services
             //    || c.Email.Contains(request.SearchString));
             //}
 
-            orders = Core.Helpers.Utilities<OrderVM>.Sort(orders, request.SortOrder, "ID");
+            orders = Core.Helpers.Utilities<Order>.Sort(orders, request.SortOrder, "ID");
 
-            var created = await PaginatedList<OrderVM>.CreateAsync(orders, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<OrderVM>.CreateAsync(orders.Select(c => _mapper.Map<Order, OrderVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
             return new SuccessedResult<PaginatedList<OrderVM>>(created);
         }

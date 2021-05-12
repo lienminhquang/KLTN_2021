@@ -151,14 +151,14 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(Guid userID, int foodID)
+        public async Task<ActionResult> Delete([FromForm] CartVM vM)
         {
             if (!this.ValidateTokenInCookie())
             {
                 return this.RedirectToLoginPage();
             }
             
-            var result = await _cartServices.Delete(userID, foodID, this.GetTokenFromCookie());
+            var result = await _cartServices.Delete(vM.AppUserId, vM.FoodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 this.RedirectToErrorPage(result.ErrorMessage);

@@ -78,7 +78,7 @@ namespace FoodOrder.Admin.Controllers
             if (rs.IsSuccessed)
             {
                 TempData[AppConfigs.SuccessMessageString] = "Rating create succesed!";
-                return RedirectToAction("Details", new { orderID = rs.PayLoad.AppUserID.ToString(), foodID = rs.PayLoad.FoodID });
+                return RedirectToAction("Details", new { userID = rs.PayLoad.AppUserID.ToString(), foodID = rs.PayLoad.FoodID });
             }
 
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
@@ -123,7 +123,8 @@ namespace FoodOrder.Admin.Controllers
             if (rs.IsSuccessed)
             {
                 TempData[AppConfigs.SuccessMessageString] = "Rating edit successed!";
-                return RedirectToAction("Details", new { orderID = rs.PayLoad.AppUserID.ToString(), foodID = rs.PayLoad.FoodID });
+                return RedirectToAction("Details", new { userID = rs.PayLoad.AppUserID.ToString(), foodID = rs.PayLoad.FoodID });
+                //return RedirectToAction("Details", new { userID = rs.PayLoad.AppUserID.ToString(), foodID = rs.PayLoad.FoodID });
             }
 
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
@@ -149,15 +150,14 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(string userID, int foodID)
+        public async Task<ActionResult> Delete([FromForm] RatingVM model)
         {
             if (!this.ValidateTokenInCookie())
             {
                 return this.RedirectToLoginPage();
             }
 
-
-            var result = await _ratingServices.Delete(userID, foodID, this.GetTokenFromCookie());
+            var result = await _ratingServices.Delete(model.AppUserID.ToString(), model.FoodID, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 return this.RedirectToErrorPage(result.ErrorMessage);

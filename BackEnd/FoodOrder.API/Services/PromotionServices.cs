@@ -26,7 +26,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var vMs = from c in _dbContext.Promotions select _mapper.Map<Promotion, PromotionVM>(c);
+            var vMs = from c in _dbContext.Promotions select c;
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {
@@ -35,9 +35,9 @@ namespace FoodOrder.API.Services
                 || c.Code.Contains(request.SearchString));
             }
 
-            vMs = Core.Helpers.Utilities<PromotionVM>.Sort(vMs, request.SortOrder, "ID");
+            vMs = Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "ID");
 
-            var created = await PaginatedList<PromotionVM>.CreateAsync(vMs, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<PromotionVM>.CreateAsync(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
             return new SuccessedResult<PaginatedList<PromotionVM>>(created);
         }

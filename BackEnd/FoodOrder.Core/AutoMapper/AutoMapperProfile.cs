@@ -2,6 +2,9 @@
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.OrderDetails;
+using FoodOrder.Core.ViewModels.Orders;
+using FoodOrder.Core.ViewModels.Promotions;
+using FoodOrder.Core.ViewModels.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +27,17 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<OrderDetailCreateVM, OrderDetail>();
             CreateMap<OrderDetailVM, OrderDetailEditVM>();
 
+            CreateMap<Order, OrderVM>();
+            CreateMap<OrderCreateVM, Order>();
+            CreateMap<OrderVM, OrderEditVM>();
+
+            CreateMap<Promotion, PromotionVM>();
+            CreateMap<PromotionCreateVM, Promotion>();
+            CreateMap<PromotionVM, PromotionEditVM>();
+
+            CreateMap<Rating, RatingVM>();
+            CreateMap<RatingCreateVM, Rating>();
+            CreateMap<RatingVM, RatingEditVM>();
         }
     }
 }

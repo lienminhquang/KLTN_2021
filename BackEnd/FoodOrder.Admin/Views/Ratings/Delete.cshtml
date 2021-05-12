@@ -50,6 +50,14 @@
             </dl>
 
             <form asp-action="Delete">
+                <div class="form-group">
+                    <label asp-for="AppUserID" class="control-label" hidden></label>
+                    <input asp-for="AppUserID" class="form-control" readonly hidden/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FoodID" class="control-label" hidden></label>
+                    <input asp-for="FoodID" class="form-control" readonly hidden/>
+                </div>
                 <input type="submit" value="Delete" class="btn btn-danger" /> |
                 <a asp-action="Index">Back to List</a>
             </form>

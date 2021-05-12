@@ -29,7 +29,7 @@ namespace FoodOrder.API.Services
             var vMs = _dbContext.Ratings
                //.Include(f => f.Food) //Todo: is this need for paging?
                //.Include(f => f.Order)
-               .AsNoTracking().Select(f => _mapper.Map<Rating, RatingVM>(f));
+               .AsNoTracking();
 
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -37,9 +37,9 @@ namespace FoodOrder.API.Services
                 vMs = vMs.Where(c => c.Comment.Contains(request.SearchString));
             }
 
-            //odVMs = Core.Helpers.Utilities<OrderDetailVM>.Sort(odVMs, request.SortOrder, "FoodID");
+            vMs = Core.Helpers.Utilities<Rating>.Sort(vMs, request.SortOrder, "FoodID");
 
-            var created = await PaginatedList<RatingVM>.CreateAsync(vMs, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<RatingVM>.CreateAsync(vMs.Select(f => _mapper.Map<Rating, RatingVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
             return new SuccessedResult<PaginatedList<RatingVM>>(created);
         }

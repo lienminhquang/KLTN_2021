@@ -27,11 +27,11 @@ namespace FoodOrder.Core.Helpers
             }
             if (descending)
             {
-                return source.OrderByDescending(c => EF.Property<T>(c, sortOrder));
+                return source.OrderByDescending(c => EF.Property<object>(c, sortOrder));
             }
             else
             {
-                return source.OrderBy(c => EF.Property<T>(c, sortOrder));
+                return source.OrderBy(c => EF.Property<object>(c, sortOrder));
             }
         }
     }

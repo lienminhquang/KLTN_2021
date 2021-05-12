@@ -42,8 +42,15 @@
                                 @Html.DisplayFor(model => model.Quantity)
                             </dd>
                         </dl>
-                        @Html.ActionLink("Delete","Delete","Carts",new { userID=Model.AppUserId, foodID=Model.FoodID })
                         <form asp-action="Delete">
+                            <div class="form-group">
+                                <label asp-for="AppUserId" class="control-label" hidden></label>
+                                <input asp-for="AppUserId" class="form-control" readonly hidden />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="FoodID" class="control-label" hidden></label>
+                                <input asp-for="FoodID" class="form-control" readonly hidden />
+                            </div>
                             <input type="submit" value="Delete" class="btn btn-danger" /> |
                             <a asp-action="Index">Back to List</a>
                         </form>

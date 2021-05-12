@@ -29,8 +29,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<AppRoleVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var vms = _dbContext.AppRoles
-               .Select(f => _mapper.Map<AppRole, AppRoleVM>(f));
+            var vms = from c in _dbContext.AppRoles select c;
 
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -41,10 +40,10 @@ namespace FoodOrder.API.Services
 
             if (!String.IsNullOrEmpty(request.SortOrder))
             {
-                vms = Core.Helpers.Utilities<AppRoleVM>.Sort(vms, request.SortOrder, "Name");
+                vms = Core.Helpers.Utilities<AppRole>.Sort(vms, request.SortOrder, "Name");
             }
 
-            var created = await PaginatedList<AppRoleVM>.CreateAsync(vms, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<AppRoleVM>.CreateAsync(vms.Select(f => _mapper.Map<AppRole, AppRoleVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
             return new SuccessedResult<PaginatedList<AppRoleVM>>(created);
         }
@@ -61,7 +60,8 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<AppRoleVM>> Create(AppRoleCreateVM vm)
         {
-            var result = await _roleManager.CreateAsync(_mapper.Map<AppRole>(vm));
+            AppRole appRole = _mapper.Map<AppRole>(vm);
+            var result = await _roleManager.CreateAsync(appRole);
             try
             {
                 await _dbContext.SaveChangesAsync();
@@ -70,7 +70,7 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<AppRoleVM>(e.InnerException.ToString());
             }
-            return new SuccessedResult<AppRoleVM>(_mapper.Map<AppRoleVM>(result.));
+            return new SuccessedResult<AppRoleVM>(_mapper.Map<AppRoleVM>(appRole));
         }
 
         public async Task<ApiResult<AppRoleVM>> Edit(Guid id, AppRoleEditVm editVM)
