@@ -1,5 +1,8 @@
-﻿using FoodOrder.Core.Helpers;
+﻿using FoodOrder.API.Services;
+using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Promotions;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,151 +18,79 @@ namespace FoodOrder.API.Controllers
     [ApiController]
     public class PromotionsController : ControllerBase
     {
-        public class PromotionCreateRequest
+        private readonly PromotionServices _promotionServices;
+
+        public PromotionsController(PromotionServices promotionServices)
         {
-            public string Name { get; set; }
-            public string Code { get; set; }
-            public string Desciption { get; set; }
-            public DateTime CreatedDate { get; set; }
-            public DateTime StartDate { get; set; }
-            public DateTime EndDate { get; set; }
-            public int Amount { get; set; }
-            public float Percent { get; set; }
-            public bool Enabled { get; set; }
-            public int Max { get; set; }
-            public int MinPrice { get; set; }
-        }
-        public class PromotionUpdateRequest
-        {
-            public string Name { get; set; }
-            public string Code { get; set; }
-            public string Desciption { get; set; }
-            public DateTime StartDate { get; set; }
-            public DateTime EndDate { get; set; }
-            public int Amount { get; set; }
-            public float Percent { get; set; }
-            public bool Enabled { get; set; }
-            public int Max { get; set; }
-            public int MinPrice { get; set; }
+            _promotionServices = promotionServices;
         }
 
-        private readonly ApplicationDBContext m_dbContext;
-        public PromotionsController(ApplicationDBContext i_dbContext)
-        {
-            m_dbContext = i_dbContext;
-        }
 
-        // GET: api/<ValuesController>
-        [HttpGet]
-        public async Task<PaginatedList<Promotion>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
-        {
-            var promition = from c in m_dbContext.Promotions select c;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                promition = promition.Where(c => c.Name.Contains(searchString) || c.Desciption.Contains(searchString));
-            }
-
-            promition = Core.Helpers.Utilities<Promotion>.Sort(promition, sortOrder, "ID");
-
-            return await PaginatedList<Promotion>.CreateAsync(promition, pageNumber ?? 1, Core.Helpers.Configs.PageSize);
-
-        }
-
-        // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public async Task<Promotion> Get(int id)
+        public async Task<ActionResult<PromotionVM>> GetByID(int id)
         {
-            return await m_dbContext.Promotions.FindAsync(id);
+            var result = await _promotionServices.GetByID(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
-        // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PromotionCreateRequest value)
+        public async Task<ActionResult<Food>> Create([FromBody] PromotionCreateVM createVM)
         {
-            var rs = m_dbContext.Promotions.AddAsync(new Promotion
+            var result = await _promotionServices.Create(createVM);
+            if (!result.IsSuccessed)
             {
-                Name = value.Name,
-                Code = value.Code,
-                Desciption = value.Desciption,
-                CreatedDate = value.CreatedDate,
-                StartDate = value.StartDate,
-                EndDate = value.EndDate,
-                Amount = value.Amount,
-                Percent = value.Percent,
-                Enabled = value.Enabled,
-                Max = value.Max,
-                MinPrice = value.MinPrice
-            });
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] PromotionUpdateRequest value)
+        [HttpPut]
+        public async Task<ActionResult> Edit(int id, [FromBody] PromotionEditVM editVM)
         {
-            var promotion = await m_dbContext.Promotions.FindAsync(id);
-            if(promotion == null)
+            // Todo: please handle this kind of error
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            promotion.Name = value.Name;
-            promotion.Code = value.Code;
-            promotion.Desciption = value.Desciption;
-            promotion.StartDate = value.StartDate;
-            promotion.EndDate = value.EndDate;
-            promotion.Amount = value.Amount;
-            promotion.Percent = value.Percent;
-            promotion.Enabled = value.Enabled;
-            promotion.Max = value.Max;
-            promotion.MinPrice = value.MinPrice;
-            try
+            var result = await _promotionServices.Edit(id, editVM);
+            if (!result.IsSuccessed)
             {
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
-        // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var promotion = await m_dbContext.Promotions.FindAsync(id);
-            if (promotion == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest();
             }
-            try
+
+            var result = await _promotionServices.Delete(id);
+            if (!result.IsSuccessed)
             {
-                m_dbContext.Promotions.Remove(promotion);
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
+            return Ok(result);
+        }
+
+        [HttpGet]
+        // TODO: return the sortorder, currentfilter, pagenumber to the client.
+        public async Task<ActionResult<PaginatedList<PromotionVM>>> GetAllPaging([FromQuery] PagingRequestBase request)
+        {
+            var result = await _promotionServices.GetAllPaging(request);
+            if (!result.IsSuccessed)
             {
-                return BadRequest(e.Message);
+                return BadRequest(result);
             }
-            return Ok();
+            return Ok(result);
         }
     }
 }
