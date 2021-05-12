@@ -1,5 +1,5 @@
 ﻿@using FoodOrder.Core.Helpers;
-@model PaginatedList<FoodOrder.Core.ViewModels.OrderDetails.OrderDetailVM>
+@model PaginatedList<FoodOrder.Core.ViewModels.Ratings.RatingVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,10 +7,10 @@
 }
 
 <div class="container-fluid">
-    <h1 class="mt-4">List OrderDetail</h1>
+    <h1 class="mt-4">List Ratings</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-        <li class="breadcrumb-item active">List OrderDetail</li>
+        <li class="breadcrumb-item active">List Ratings</li>
     </ol>
     <div class="card mb-4">
         <div class="card-header">
@@ -22,16 +22,19 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().OrderID)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().AppUserID)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().FoodID)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Amount)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Star)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Price)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Comment)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().LastCreatedTime)
                             </th>
                             <th></th>
                         </tr>
@@ -43,21 +46,24 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.OrderID)
+                                        @Html.DisplayFor(modelItem => item.AppUserID)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.FoodID)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Amount)
+                                        @Html.DisplayFor(modelItem => item.Star)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Price)
+                                        @Html.DisplayFor(modelItem => item.Comment)
                                     </td>
                                     <td>
-                                        @Html.ActionLink("Edit", "Edit", new { foodID = item.FoodID, orderID = item.OrderID }) |
-                                        @Html.ActionLink("Details", "Details", new { foodID = item.FoodID, orderID = item.OrderID }) |
-                                        @Html.ActionLink("Delete", "Delete", new { foodID = item.FoodID, orderID = item.OrderID })
+                                        @Html.DisplayFor(modelItem => item.LastCreatedTime)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { userID = item.AppUserID, foodID = item.FoodID }) |
+                                        @Html.ActionLink("Details", "Details", new { userID = item.AppUserID, foodID = item.FoodID }) |
+                                        @Html.ActionLink("Delete", "Delete", new { userID = item.AppUserID, foodID = item.FoodID })
                                     </td>
                                 </tr>
                             }

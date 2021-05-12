@@ -1,5 +1,8 @@
-﻿using FoodOrder.Core.Helpers;
+﻿using FoodOrder.API.Services;
+using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Ratings;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,125 +18,70 @@ namespace FoodOrder.API.Controllers
     [ApiController]
     public class RatingsController : ControllerBase
     {
-        public class RatingCreateRequest
-        { 
-            public Guid AppUserID { get; set; }
-            public int FoodID { get; set; }
-            public int Star { get; set; }
-            public string Comment { get; set; }
-        }
+        private readonly RatingServices _ratingServices;
 
-        public class RatingUpdateRequest
+        public RatingsController(RatingServices services)
         {
-            public int Star { get; set; }
-            public string Comment { get; set; }
+            _ratingServices = services;
         }
-
-        private readonly ApplicationDBContext m_dbContext;
-        public RatingsController(ApplicationDBContext i_dbContext)
-        {
-            m_dbContext = i_dbContext;
-        }
-
-        // GET: api/<RatingsController>
+        // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<PaginatedList<Rating>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request)
         {
-            var rating = from c in m_dbContext.Rating select c;
-            if (!String.IsNullOrEmpty(searchString))
+            var result = await _ratingServices.GetAllPaging(request);
+            if (!result.IsSuccessed)
             {
-                pageNumber = 1;
+                return BadRequest(result);
             }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                rating = rating.Where(c => c.Comment.Contains(searchString));
-            }
-
-            rating = Core.Helpers.Utilities<Rating>.Sort(rating, sortOrder, "AppUserID");
-
-            return await PaginatedList<Rating>.CreateAsync(rating, pageNumber ?? 1, Core.Helpers.Configs.PageSize);
-
+            return Ok(result);
         }
 
-        // GET api/<RatingsController>/5
-        [HttpGet("{userID}/{foodID}")]
-        public async Task<Rating> Get(Guid userID, int foodID)
+        // GET api/<ValuesController>/details?
+        [HttpGet("details")]
+        public async Task<IActionResult> Get([FromQuery] Guid userID, [FromQuery] int foodID)
         {
-            return await m_dbContext.Rating.FindAsync(new { userID, foodID });
+            var result = await _ratingServices.GetByID(userID, foodID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
-        // POST api/<RatingsController>
+        // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RatingCreateRequest value)
+        public async Task<IActionResult> Post([FromBody] RatingCreateVM vM)
         {
-            await m_dbContext.Rating.AddAsync(new Rating
+            var result = await _ratingServices.Create(vM);
+            if (!result.IsSuccessed)
             {
-                AppUserID = value.AppUserID,
-                FoodID = value.FoodID,
-                Comment = value.Comment,
-                LastCreatedTime = DateTime.Now,
-                Star = value.Star
-            });
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
-        // PUT api/<RatingsController>/5
-        [HttpPut("{userID}/{foodID}")]
-        public async Task<IActionResult> Put(Guid userID, int foodID, [FromBody] RatingUpdateRequest value)
+        // PUT api/<ValuesController>/5
+        [HttpPut]
+        public async Task<IActionResult> PutAsync(Guid userID, int foodID, [FromBody] RatingEditVM value)
         {
-            var rating = await m_dbContext.Rating.FindAsync(new { userID, foodID });
-            if (rating == null)
+            var result = await _ratingServices.Edit(userID, foodID, value);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-
-            rating.Comment = value.Comment;
-            rating.Star = value.Star;
-            rating.LastCreatedTime = DateTime.Now;
-
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
-        // DELETE api/<RatingsController>/5
-        [HttpDelete("{userID}/{foodID}")]
+        // DELETE api/<ValuesController>/5
+        [HttpDelete]
         public async Task<IActionResult> Delete(Guid userID, int foodID)
         {
-            var rating = await m_dbContext.Rating.FindAsync(new { userID, foodID });
-            if (rating == null)
+            var result = await _ratingServices.Delete(userID, foodID);
+            if (!result.IsSuccessed)
             {
-                return NotFound();
+                return BadRequest(result);
             }
-            try
-            {
-                m_dbContext.Rating.Remove(rating);
-                await m_dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
     }
 }

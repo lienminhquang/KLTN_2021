@@ -1,15 +1,15 @@
-﻿@model FoodOrder.Core.ViewModels.OrderDetails.OrderDetailEditVM
+﻿@model FoodOrder.Core.ViewModels.Ratings.RatingCreateVM
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container-fluid">
-    <h1 class="mt-4">Edit OrderDetail</h1>
+    <h1 class="mt-4">Create Rating</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-        <li class="breadcrumb-item active">Edit OrderDetail</li>
+        <li class="breadcrumb-item active">Create Rating</li>
     </ol>
     <div class="card mb-4">
         <div class="card-header">
@@ -18,12 +18,12 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-4">
-                    <form asp-action="Edit">
+                    <form asp-action="Create">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="OrderID" class="control-label"></label>
-                            <input asp-for="OrderID" class="form-control" />
-                            <span asp-validation-for="OrderID" class="text-danger"></span>
+                            <label asp-for="AppUserID" class="control-label"></label>
+                            <input asp-for="AppUserID" class="form-control" />
+                            <span asp-validation-for="AppUserID" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="FoodID" class="control-label"></label>
@@ -31,17 +31,17 @@
                             <span asp-validation-for="FoodID" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Amount" class="control-label"></label>
-                            <input asp-for="Amount" class="form-control" />
-                            <span asp-validation-for="Amount" class="text-danger"></span>
+                            <label asp-for="Star" class="control-label"></label>
+                            <input asp-for="Star" class="form-control" />
+                            <span asp-validation-for="Star" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Price" class="control-label"></label>
-                            <input asp-for="Price" class="form-control" />
-                            <span asp-validation-for="Price" class="text-danger"></span>
+                            <label asp-for="Comment" class="control-label"></label>
+                            <input asp-for="Comment" class="form-control" />
+                            <span asp-validation-for="Comment" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <input type="submit" value="Create" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>

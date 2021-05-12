@@ -56,6 +56,6 @@ namespace FoodOrder.Data
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<Rating> Rating { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
     }
 }
