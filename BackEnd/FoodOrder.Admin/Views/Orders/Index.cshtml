@@ -1,5 +1,5 @@
 ﻿@using FoodOrder.Core.Helpers;
-@model PaginatedList<FoodOrder.Core.ViewModels.Foods.FoodVM>
+@model PaginatedList<FoodOrder.Core.ViewModels.Orders.OrderVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,10 +7,10 @@
 }
 
 <div class="container-fluid">
-    <h1 class="mt-4">List Food</h1>
+    <h1 class="mt-4">List Order</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-        <li class="breadcrumb-item active">List Food</li>
+        <li class="breadcrumb-item active">List Order</li>
     </ol>
     <div class="card mb-4">
         <div class="card-header">
@@ -25,16 +25,25 @@
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ID)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Name)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().AppUserID)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Description)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().CreatedDate)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Price)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().IsPaid)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Count)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().DatePaid)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().OrderStatusID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().PromotionID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().PromotionAmount)
                             </th>
                             <th></th>
                         </tr>
@@ -49,16 +58,25 @@
                                         @Html.DisplayFor(modelItem => item.ID)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
+                                        @Html.DisplayFor(modelItem => item.AppUserID)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
+                                        @Html.DisplayFor(modelItem => item.CreatedDate)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Price)
+                                        @Html.DisplayFor(modelItem => item.IsPaid)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Count)
+                                        @Html.DisplayFor(modelItem => item.DatePaid)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OrderStatusID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PromotionID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PromotionAmount)
                                     </td>
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |

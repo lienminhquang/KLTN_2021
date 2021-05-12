@@ -1,5 +1,8 @@
-﻿using FoodOrder.Core.Helpers;
+﻿using FoodOrder.API.Services;
+using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Orders;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,128 +19,80 @@ namespace FoodOrder.API.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        public class OrderCreateRequest
+
+        private readonly OrderServices _orderServices;
+
+        public OrdersController(OrderServices orderServices)
         {
-            public Guid AppUserID { get; set; }
-            public DateTime CreatedDate { get; set; }
-            public int? PromotionID { get; set; }
-            public decimal? PromotionAmount { get; set; }
+            _orderServices = orderServices;
         }
 
-        public class OrderUpdateRequest
-        {
-            public int ID { get; set; }
-            public bool IsPaid { get; set; }
-            public DateTime? DatePaid { get; set; }
-            public int OrderStatusID { get; set; }
 
-            public List<OrderDetail> OrderDetails { get; set; }
-        }
-
-        private readonly ApplicationDBContext m_dbContext;
-
-        public OrdersController(ApplicationDBContext i_dbContext)
-        {
-            m_dbContext = i_dbContext;
-        }
-
-        // GET: api/<ValuesController>
-        [HttpGet]
-        public async Task<PaginatedList<Order>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
-        {
-            var order = from c in m_dbContext.Orders select c;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            order = Core.Helpers.Utilities<Order>.Sort(order, sortOrder, "ID");
-
-            return await PaginatedList<Order>.CreateAsync(order, pageNumber ?? 1, Core.Helpers.Configs.PageSize);
-        }
-
-        // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public async Task<Order> Get(int id)
+        public async Task<ActionResult<OrderVM>> GetByID(int id)
         {
-            var order = await m_dbContext.Orders
-                .Include(o => o.AppUser)
-                .FirstOrDefaultAsync(o => o.ID == id);
-            return order;
+            var result = await _orderServices.GetByID(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
-        // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] OrderCreateRequest value)
+        public async Task<ActionResult<Food>> Create([FromBody] OrderCreateVM createVM)
         {
-            var result = await m_dbContext.Orders.AddAsync(new Order
+            var result = await _orderServices.Create(createVM);
+            if (!result.IsSuccessed)
             {
-                AppUserID = value.AppUserID,
-                CreatedDate = value.CreatedDate,
-                //OrderStatusID = ?
-                PromotionID = value.PromotionID,
-                PromotionAmount = value.PromotionAmount
-            });
-            try
-            {
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] OrderUpdateRequest value)
+        [HttpPut]
+        public async Task<ActionResult> Edit(int id, [FromBody] OrderEditVM editVM)
         {
-            var order = await m_dbContext.Orders.FindAsync(value.ID);
-            if(order == null)
+            // Todo: please handle this kind of error
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest();
             }
-            order.IsPaid = value.IsPaid;
-            order.DatePaid = value.DatePaid;
-            order.OrderDetails = value.OrderDetails;
-            order.OrderStatusID = value.OrderStatusID;
 
-            try
+            var result = await _orderServices.Edit(id, editVM);
+            if (!result.IsSuccessed)
             {
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
+            return Ok(result);
         }
 
-        // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var order = await m_dbContext.Orders.FindAsync(id);
-            if (order == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest();
             }
-           
-            try
+
+            var result = await _orderServices.Delete(id);
+            if (!result.IsSuccessed)
             {
-                m_dbContext.Orders.Remove(order);
-                await m_dbContext.SaveChangesAsync();
+                return BadRequest(result);
             }
-            catch (Exception e)
+            return Ok(result);
+        }
+
+        [HttpGet]
+        // TODO: return the sortorder, currentfilter, pagenumber to the client.
+        public async Task<ActionResult<PaginatedList<OrderVM>>> GetAllPaging([FromQuery] PagingRequestBase request)
+        {
+            var result = await _orderServices.GetAllPaging(request);
+            if (!result.IsSuccessed)
             {
-                return BadRequest(e.Message);
+                return BadRequest(result);
             }
-            return Ok();
+            return Ok(result);
         }
     }
 }
