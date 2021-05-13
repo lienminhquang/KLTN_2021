@@ -1,11 +1,8 @@
 ﻿using FoodOrder.API.Services;
 using FoodOrder.Core.Helpers;
-using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
-using FoodOrder.Core.ViewModels.Foods;
-using FoodOrder.Data;
+using FoodOrder.Core.ViewModels.AppRoles;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,23 +10,20 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-
-    public class FoodController : ControllerBase
+    public class AppRolesController : Controller
     {
-        private readonly FoodServices _foodServices;
+        private readonly AppRoleServices _appRoleServices;
 
-        public FoodController(FoodServices foodServices)
+        public AppRolesController(AppRoleServices appRoleServices)
         {
-            _foodServices = foodServices;
+            _appRoleServices = appRoleServices;
         }
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByID(int id)
+        public async Task<IActionResult> GetByID(Guid id)
         {
-            var result = await _foodServices.GetByID(id);
+            var result = await _appRoleServices.GetByID(id);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -38,9 +32,9 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] FoodCreateVM foodCreateVM)
+        public async Task<IActionResult> Create([FromBody] AppRoleCreateVM createVM)
         {
-            var result = await _foodServices.Create(foodCreateVM);
+            var result = await _appRoleServices.Create(createVM);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -49,7 +43,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit(int id, [FromBody] FoodEditVM food)
+        public async Task<IActionResult> Edit(Guid id, [FromBody] AppRoleEditVm editVM)
         {
             // Todo: please handle this kind of error
             if (!ModelState.IsValid)
@@ -57,7 +51,7 @@ namespace FoodOrder.API.Controllers
                 return BadRequest();
             }
 
-            var result = await _foodServices.Edit(id, food);
+            var result = await _appRoleServices.Edit(id, editVM);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -66,14 +60,14 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var result = await _foodServices.Delete(id);
+            var result = await _appRoleServices.Delete(id);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -83,9 +77,9 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
-        public async Task<IActionResult> GetAllPaging([FromQuery]PagingRequestBase request)
+        public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
         {
-            var result = await _foodServices.GetAllPaging(request);
+            var result = await _appRoleServices.GetAllPaging(request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

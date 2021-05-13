@@ -37,7 +37,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: CategoryController
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<Category>>> GetAllPaging([FromQuery]PagingRequestBase request)
+        public async Task<IActionResult> GetAllPaging([FromQuery]PagingRequestBase request)
         {
             var result = await _categoryServices.GetAllPaging(request);
             if (!result.IsSuccessed)
@@ -48,7 +48,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetByID(int id)
+        public async Task<IActionResult> GetByID(int id)
         {
             var result = await _categoryServices.GetByID(id);
             if (!result.IsSuccessed)
@@ -60,7 +60,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([FromBody] CategoryCreateVM request)
+        public async Task<IActionResult> CreateAsync([FromBody] CategoryCreateVM request)
         {
             var result = await _categoryServices.Create(request);
             if (!result.IsSuccessed)
@@ -72,7 +72,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPut]
        // [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, [FromBody] CategoryVM category)
+        public async Task<IActionResult> EditAsync(int id, [FromBody] CategoryVM category)
         {
             var result = await _categoryServices.Edit(id ,category);
             if (!result.IsSuccessed)
@@ -84,7 +84,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpDelete("{id}")]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             var result = await _categoryServices.Delete(id);
             if (!result.IsSuccessed)

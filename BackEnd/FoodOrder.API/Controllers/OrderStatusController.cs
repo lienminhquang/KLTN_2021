@@ -35,7 +35,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: api/<OrderStatusController>
         [HttpGet]
-        public async Task<PaginatedList<OrderStatus>> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             var orderStatus = from c in m_dbContext.OrderStatuses select c;
             if (!String.IsNullOrEmpty(searchString))
@@ -54,16 +54,17 @@ namespace FoodOrder.API.Controllers
 
             orderStatus = Core.Helpers.Utilities<OrderStatus>.Sort(orderStatus, sortOrder, "ID");
 
-            return await PaginatedList<OrderStatus>.CreateAsync(orderStatus, pageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            return Ok(await PaginatedList<OrderStatus>.CreateAsync(orderStatus, pageNumber ?? 1, Core.Helpers.Configs.PageSize));
 
         }
 
         // GET api/<OrderStatusController>/5
         [HttpGet("{id}")]
-        public async Task<OrderStatus> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             var os = m_dbContext.OrderStatuses.FirstOrDefault(os => os.ID == id);
-            return os;
+            
+            return Ok(os);
         }
 
         // POST api/<OrderStatusController>

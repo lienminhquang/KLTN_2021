@@ -27,7 +27,7 @@ namespace FoodOrder.API.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PromotionVM>> GetByID(int id)
+        public async Task<IActionResult> GetByID(int id)
         {
             var result = await _promotionServices.GetByID(id);
             if (!result.IsSuccessed)
@@ -38,7 +38,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Food>> Create([FromBody] PromotionCreateVM createVM)
+        public async Task<IActionResult> Create([FromBody] PromotionCreateVM createVM)
         {
             var result = await _promotionServices.Create(createVM);
             if (!result.IsSuccessed)
@@ -49,7 +49,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Edit(int id, [FromBody] PromotionEditVM editVM)
+        public async Task<IActionResult> Edit(int id, [FromBody] PromotionEditVM editVM)
         {
             // Todo: please handle this kind of error
             if (!ModelState.IsValid)
@@ -66,7 +66,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
-        public async Task<ActionResult<PaginatedList<PromotionVM>>> GetAllPaging([FromQuery] PagingRequestBase request)
+        public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
         {
             var result = await _promotionServices.GetAllPaging(request);
             if (!result.IsSuccessed)
