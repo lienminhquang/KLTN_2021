@@ -55,6 +55,7 @@ namespace FoodOrder.Admin
             services.AddTransient<OrderServices, OrderServices>();
             services.AddTransient<PromotionServices, PromotionServices>();
             services.AddTransient<RatingServices, RatingServices>();
+            services.AddTransient<AppRoleServices, AppRoleServices>();
 
 
             IMvcBuilder builder = services.AddRazorPages();

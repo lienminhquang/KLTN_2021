@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AppRolesController : Controller
     {
         private readonly AppRoleServices _appRoleServices;
@@ -19,6 +21,16 @@ namespace FoodOrder.API.Controllers
             _appRoleServices = appRoleServices;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
+        {
+            var result = await _appRoleServices.GetAllPaging(request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(Guid id)
@@ -43,7 +55,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit(Guid id, [FromBody] AppRoleEditVm editVM)
+        public async Task<IActionResult> Edit(string id, [FromBody] AppRoleEditVm editVM)
         {
             // Todo: please handle this kind of error
             if (!ModelState.IsValid)
@@ -51,7 +63,7 @@ namespace FoodOrder.API.Controllers
                 return BadRequest();
             }
 
-            var result = await _appRoleServices.Edit(id, editVM);
+            var result = await _appRoleServices.Edit(new Guid(id), editVM);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -75,16 +87,6 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        // TODO: return the sortorder, currentfilter, pagenumber to the client.
-        public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
-        {
-            var result = await _appRoleServices.GetAllPaging(request);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
-        }
+        
     }
 }

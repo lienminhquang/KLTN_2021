@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels.AppRoles;
 using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Core.ViewModels.Orders;
@@ -38,6 +39,10 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<Rating, RatingVM>();
             CreateMap<RatingCreateVM, Rating>();
             CreateMap<RatingVM, RatingEditVM>();
+
+            CreateMap<AppRole, AppRoleVM>();
+            CreateMap<AppRoleCreateVM, AppRole>();
+            CreateMap<AppRoleVM, AppRoleEditVm>();
         }
     }
 }

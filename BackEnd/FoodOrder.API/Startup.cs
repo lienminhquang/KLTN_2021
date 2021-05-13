@@ -88,6 +88,7 @@ namespace FoodOrder.API
             services.AddTransient<OrderServices, OrderServices>();
             services.AddTransient<PromotionServices, PromotionServices>();
             services.AddTransient<RatingServices, RatingServices>();
+            services.AddTransient<AppRoleServices, AppRoleServices>();
             #endregion
 
 
