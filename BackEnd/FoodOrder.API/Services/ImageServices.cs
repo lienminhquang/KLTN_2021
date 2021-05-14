@@ -17,11 +17,13 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly FileServices _fileServices;
 
-        public ImageServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public ImageServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _fileServices = fileServices;
         }
 
         public async Task<ApiResult<PaginatedList<ImageVM>>> GetAllPaging(PagingRequestBase request)
@@ -34,9 +36,10 @@ namespace FoodOrder.API.Services
             }
 
             vms = Core.Helpers.Utilities<Image>.Sort(vms, request.SortOrder, "ID");
+            var mapped = vms.Select(i => _mapper.Map<ImageVM>(i));
 
-            var created = await PaginatedList<ImageVM>.CreateAsync(vms.Select(i => _mapper.Map<ImageVM>(i)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
-
+            var created = await PaginatedList<ImageVM>.CreateAsync(mapped, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            
             return new SuccessedResult<PaginatedList<ImageVM>>(created);
         }
 
@@ -47,24 +50,28 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<ImageVM>("Image not found!");
             }
-            return new SuccessedResult<ImageVM>(_mapper.Map<ImageVM>(c));
+            var image = _mapper.Map<ImageVM>(c);
+            
+            return new SuccessedResult<ImageVM>(image);
         }
 
         public async Task<ApiResult<ImageVM>> Create(ImageCreateVM vm)
         {
-            var result = await _dbContext.Images.AddAsync(_mapper.Map<Image>(vm));
             try
             {
+                var image = _mapper.Map<Image>(vm);
+                image.ImagePath = await _fileServices.SaveFile(vm.ImageData);
+                var result = await _dbContext.Images.AddAsync(image);
                 await _dbContext.SaveChangesAsync();
+                return new SuccessedResult<ImageVM>(_mapper.Map<ImageVM>(result.Entity));
             }
             catch (Exception e)
             {
-                return new FailedResult<ImageVM>(e.InnerException.ToString());
+                return new FailedResult<ImageVM>(e.Message.ToString());
             }
-            return new SuccessedResult<ImageVM>(_mapper.Map<ImageVM>(result.Entity));
         }
 
-        public async Task<ApiResult<ImageVM>> Edit(int id, ImageVM editVM)
+        public async Task<ApiResult<ImageVM>> Edit(int id, ImageEditVM editVM)
         {
             var vm = await _dbContext.Images.FirstOrDefaultAsync(c => c.ID == id);
             if (vm == null)
@@ -75,10 +82,11 @@ namespace FoodOrder.API.Services
             vm.Caption = editVM.Caption;
             vm.SortOrder = editVM.SortOrder;
             vm.FoodID = editVM.FoodID;
-            vm.ImagePath = editVM.ImagePath;
             
             try
             {
+                await _fileServices.DeleteFileAsync(vm.ImagePath);
+                vm.ImagePath =  await _fileServices.SaveFile(editVM.ImageData);
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -86,7 +94,7 @@ namespace FoodOrder.API.Services
                 return new FailedResult<ImageVM>(e.InnerException.ToString());
             }
 
-            return new SuccessedResult<ImageVM>(editVM);
+            return new SuccessedResult<ImageVM>(_mapper.Map<ImageVM>(vm));
         }
 
         public async Task<ApiResult<bool>> Delete(int id)
@@ -98,6 +106,7 @@ namespace FoodOrder.API.Services
             }
             try
             {
+                await _fileServices.DeleteFileAsync(image.ImagePath);
                 _dbContext.Images.Remove(image);
                 await _dbContext.SaveChangesAsync();
             }

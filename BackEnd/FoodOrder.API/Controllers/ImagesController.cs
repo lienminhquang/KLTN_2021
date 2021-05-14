@@ -1,4 +1,7 @@
-﻿using FoodOrder.Core.Models;
+﻿using FoodOrder.API.Services;
+using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Images;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -12,43 +15,72 @@ namespace FoodOrder.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        private readonly ApplicationDBContext m_dbContext;
-        public ImagesController(ApplicationDBContext i_dbContext)
+        private readonly ImageServices _imageServices;
+
+        public ImagesController(ImageServices imageServices)
         {
-            m_dbContext = i_dbContext;
+            _imageServices = imageServices;
         }
 
-        // GET: api/<ValuesController>
+        // GET: CategoryController
         [HttpGet]
-        public async Task<IEnumerable<Image>> Get()
+        public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
         {
-            //var image = m_dbContext.Images
-            return null;
+            var result = await _imageServices.GetAllPaging(request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
-        // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> GetByID(int id)
         {
-            return "value";
+            var result = await _imageServices.GetByID(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
-        // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Consumes("multipart/form-data")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAsync([FromForm] ImageCreateVM request)
         {
+            var result = await _imageServices.Create(request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        // [ValidateAntiForgeryToken]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> EditAsync(int id, [FromForm] ImageEditVM edit)
         {
+            var result = await _imageServices.Edit(id, edit);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
-        // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAsync(int id)
         {
+            var result = await _imageServices.Delete(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
     }
 }

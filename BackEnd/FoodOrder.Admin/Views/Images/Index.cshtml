@@ -1,0 +1,82 @@
+﻿@using FoodOrder.Core.Helpers;
+@model PaginatedList<FoodOrder.Core.ViewModels.Images.ImageVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">List Food</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+        <li class="breadcrumb-item active">List Food</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a asp-action="Create">Create New</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().FoodID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ImagePath)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Caption)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().IsDefault)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().SortOrder)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Items != null)
+                        {
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FoodID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ImagePath)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Caption)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsDefault)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SortOrder)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

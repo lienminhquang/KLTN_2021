@@ -2,10 +2,12 @@
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels.AppRoles;
 using FoodOrder.Core.ViewModels.Foods;
+using FoodOrder.Core.ViewModels.Images;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Core.ViewModels.Orders;
 using FoodOrder.Core.ViewModels.Promotions;
 using FoodOrder.Core.ViewModels.Ratings;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +45,19 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<AppRole, AppRoleVM>();
             CreateMap<AppRoleCreateVM, AppRole>();
             CreateMap<AppRoleVM, AppRoleEditVm>();
+
+            CreateMap<Image, ImageVM>();
+               // .ForMember(dest => dest.ImageData, options => options.MapFrom<ImageCustomeResolver>());
+            CreateMap<ImageCreateVM, Image>();
+            CreateMap<ImageVM, ImageEditVM>();
         }
+
+        //private class ImageCustomeResolver : IValueResolver<Image, ImageVM, IFormFile>
+        //{
+        //    public IFormFile Resolve(Image source, ImageVM destination, IFormFile destMember, ResolutionContext context)
+        //    {
+                
+        //    }
+        //}
     }
 }
