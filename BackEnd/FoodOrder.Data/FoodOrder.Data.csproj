@@ -14,4 +14,8 @@
     <ProjectReference Include="..\FoodOrder.Core\FoodOrder.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 </Project>
