@@ -43,13 +43,13 @@ namespace FoodOrder.API.Services
             var user = await _userManager.FindByNameAsync(loginRequest.Username);
             if(user == null)
             {
-                return new FailedResult<string>("User does not exist!");
+                return new FailedResult<string>("Username or password is incorrect!");
             }
 
             var signinResult = await _signInManager.PasswordSignInAsync(user, loginRequest.Password, loginRequest.RememberMe, true);
             if(!signinResult.Succeeded)
             {
-                return new FailedResult<string>("Can't signin!");
+                return new FailedResult<string>("Username or password is incorrect!");
             }
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]

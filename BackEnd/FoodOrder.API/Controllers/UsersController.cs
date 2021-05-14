@@ -38,7 +38,7 @@ namespace FoodOrder.API.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(new FailedResult<string>(ModelState.ToString()));
+                return Ok(new FailedResult<string>(ModelState.ToString()));
             }
             ApiResult<string> rs = await _userService.Authenticate(loginRequest);
             if(!rs.IsSuccessed)

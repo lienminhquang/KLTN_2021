@@ -11,9 +11,9 @@ namespace FoodOrder.Core.ViewModels.Users
     {
         public LoginRequestValidator()
         {
-            RuleFor(x => x.Username).NotEmpty().WithMessage("Username must not be null!");
-            RuleFor(x => x.Password).NotEmpty().WithMessage("Password must not be null!")
-                .MinimumLength(6).WithMessage("Password must longer atlast 6 characters!");
+            //RuleFor(x => x.Username).NotEmpty().WithMessage("Username must not be null!");
+            //RuleFor(x => x.Password).NotEmpty().WithMessage("Password must not be null!")
+            //    .MinimumLength(6).WithMessage("Password must longer atlast 6 characters!");
         }
     }
 }

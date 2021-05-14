@@ -1,2 +1,6 @@
+Documents:
+- Http request on flutter: https://flutter.dev/docs/cookbook#networking
+
+
 + kiem tra trung user khi register
 + check forigenkey in request

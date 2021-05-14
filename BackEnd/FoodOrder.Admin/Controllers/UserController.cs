@@ -159,7 +159,7 @@ namespace FoodOrder.Admin.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return View(new LoginRequest() { ReturnUrl = returnUrl });
+            return View(new LoginRequest() {});
         }
 
         [HttpPost]
@@ -198,10 +198,10 @@ namespace FoodOrder.Admin.Controllers
                 Expires = DateTime.Now.AddMinutes(10)
             });
 
-            if (!String.IsNullOrEmpty(loginRequest.ReturnUrl))
-            {
-                return Redirect(loginRequest.ReturnUrl);
-            }
+            //if (!String.IsNullOrEmpty(loginRequest.ReturnUrl))
+            //{
+            //    return Redirect(loginRequest.ReturnUrl);
+            //}
             return RedirectToAction("Index", "Home");
         }
 

@@ -69,6 +69,7 @@ namespace FoodOrder.API
                         IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
                     };
                 });
+            
             #endregion
 
             services.AddAutoMapper(typeof(Core.AutoMapper.AutoMapperProfile).Assembly);
