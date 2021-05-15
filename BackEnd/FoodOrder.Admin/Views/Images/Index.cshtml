@@ -1,5 +1,6 @@
 ﻿@using FoodOrder.Core.Helpers;
 @model PaginatedList<FoodOrder.Core.ViewModels.Images.ImageVM>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
 
 @{
     ViewData["Title"] = "Index";
@@ -28,6 +29,9 @@
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().FoodID)
                             </th>
                             <th>
+                                Image
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ImagePath)
                             </th>
                             <th>
@@ -53,6 +57,13 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.FoodID)
+                                    </td>
+                                    <td>
+                                        <div class="row-cols-sm-3">
+                                            <a href="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + item.ImagePath)" title="@item.ImagePath">
+                                                <img src="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + item.ImagePath)" style="width:100%" alt="@item.ImagePath" />
+                                            </a>
+                                        </div>
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ImagePath)
