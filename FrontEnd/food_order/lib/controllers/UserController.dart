@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/Users/LoginVM.dart';
 import 'package:food_delivery/models/commons/ApiResult.dart';
+import 'package:food_delivery/services/FileServices.dart';
 import 'package:food_delivery/services/HttpClientFactory.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -12,8 +15,54 @@ class UserController {
   static String? JWT;
   final String baseRoute = AppConfigs.URL_UserRouteAPI;
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
+  final String _userAccountFilename = "/Data.txt";
+
+  UserController();
+
+  Future<ApiResult<Map<String, dynamic>>> getUserAccountFromCache() async {
+    try {
+      final FileServices fileServices = new FileServices();
+      String cachePath = await fileServices.cachePath;
+      String fullFilePath = cachePath + _userAccountFilename;
+      File file = File(fullFilePath);
+      String fileContent = await file.readAsString();
+      dynamic json = jsonDecode(fileContent);
+      log("loaded user from cache: " + json.toString());
+      return ApiResult.succesedApiResult(json);
+    } catch (e) {
+      log("Failed to read useraccount form cache " + e.toString());
+      return ApiResult.failedApiResult(
+          "Failed to read useraccount form cache " + e.toString());
+    }
+  }
+
+  Future<ApiResult<void>> saveUserAccountToCache(
+      String username, String password) async {
+    try {
+      final FileServices fileServices = new FileServices();
+      String cachePath = await fileServices.cachePath;
+      String fullFilePath = cachePath + _userAccountFilename;
+
+      Map<String, String> map = Map<String, String>();
+      map["username"] = username;
+      map["password"] = password;
+      var json = jsonEncode(map);
+
+      File file = File(fullFilePath);
+      await file.writeAsString(json, mode: FileMode.write);
+
+      log("Saved user to cache: " + json.toString());
+      return ApiResult.succesedApiResult(json);
+    } catch (e) {
+      log("Failed to save useraccount to cache " + e.toString());
+      return ApiResult.failedApiResult(
+          "Failed to save useraccount to cache " + e.toString());
+    }
+  }
 
   Future<ApiResult<bool>> login(LoginVM loginVM) async {
+    saveUserAccountToCache(loginVM.username!, loginVM.password!);
+
     log("LoginVM " + jsonEncode(loginVM.toJson()));
     IOClient ioClient = _httpClientFactory.createIOClient();
     Response? response;
