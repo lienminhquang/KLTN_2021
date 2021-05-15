@@ -11,10 +11,11 @@ import 'package:http/io_client.dart';
 class UserController {
   static String? JWT;
   final String baseRoute = AppConfigs.URL_UserRouteAPI;
+  final HttpClientFactory _httpClientFactory = new HttpClientFactory();
 
   Future<ApiResult<bool>> login(LoginVM loginVM) async {
     log("LoginVM " + jsonEncode(loginVM.toJson()));
-    IOClient ioClient = HttpClientFactory.createIOClient();
+    IOClient ioClient = _httpClientFactory.createIOClient();
     Response? response;
     try {
       response = await ioClient.post(Uri.parse(baseRoute + '/Login'),
