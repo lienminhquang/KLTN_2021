@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FoodOrder.Core.ViewModels.Categories;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,5 +18,8 @@ namespace FoodOrder.Core.ViewModels.Foods
         public decimal Price { get; set; }
         public int Count { get; set; }
         public IFormFile ImageData { get; set; }
+
+        public MultiSelectList Categories { get; set; }
+        public List<string> CategoryIDs { get; set; }
     }
 }

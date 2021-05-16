@@ -7,6 +7,7 @@ using FoodOrder.Core.ViewModels.Foods;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,14 @@ namespace FoodOrder.Admin.Controllers
     public class FoodsController : Controller
     {
         private readonly FoodServices _foodServices;
+        private readonly CategoryServices _categoryServices;
         private readonly IMapper _mapper;
 
-        public FoodsController(FoodServices foodServices, IMapper mapper)
+        public FoodsController(FoodServices foodServices, IMapper mapper, CategoryServices categoryServices)
         {
             _foodServices = foodServices;
             _mapper = mapper;
+            _categoryServices = categoryServices;
         }
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
@@ -52,14 +55,28 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> CreateAsync()
         {
             if (!this.ValidateTokenInCookie())
             {
                 return this.RedirectToLoginPage();
             }
+            var result = await _categoryServices.GetAllPaging(new PagingRequestBase(), this.GetTokenFromCookie());
+            if(!result.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(result.ErrorMessage);
+            }
+            
+            List<SelectListItem> items = result.PayLoad.Items.Select(i => new SelectListItem() { Text = i.Name , Value = i.ID.ToString() }).ToList();
+            List<string> ids = result.PayLoad.Items.Select(i => i.ID.ToString()).ToList();
+            MultiSelectList selectList = new MultiSelectList(items, "Value", "Text");
 
-            return View();
+            FoodCreateVM foodCreateVM = new FoodCreateVM();
+
+            foodCreateVM.Categories = selectList;
+            foodCreateVM.CategoryIDs = ids;
+
+            return View(foodCreateVM);
         }
 
         // POST: CartsController/Create
@@ -81,6 +98,13 @@ namespace FoodOrder.Admin.Controllers
             var rs = await _foodServices.Create(createVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
+                var fcResult = await _foodServices.AddFoodToCategories(rs.PayLoad.ID, createVM.CategoryIDs, this.GetTokenFromCookie());
+                if(fcResult.IsSuccessed == false)
+                {
+                    TempData[AppConfigs.ErrorMessageString] = fcResult.ErrorMessage;
+                    return View(createVM);
+                }
+
                 TempData[AppConfigs.SuccessMessageString] = "Food created!";
                 return RedirectToAction("Details", new { id = rs.PayLoad.ID });
             }
@@ -88,9 +112,7 @@ namespace FoodOrder.Admin.Controllers
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
             return View(createVM);
         }
-
-        // GET: CartsController/Edit/5
-        [Consumes("multipart/form-data")]
+        
         public async Task<ActionResult> EditAsync(int id)
         {
             if (!this.ValidateTokenInCookie())
@@ -105,13 +127,28 @@ namespace FoodOrder.Admin.Controllers
                 return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
-            var vm = result.PayLoad;
-            return View(_mapper.Map<FoodVM, FoodEditVM>(vm));
+            var categoryResult = await _categoryServices.GetAllPaging(new PagingRequestBase(), this.GetTokenFromCookie());
+            if (!categoryResult.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(categoryResult.ErrorMessage);
+            }
+
+            FoodEditVM foodEditVM = _mapper.Map<FoodVM, FoodEditVM>(result.PayLoad);
+            List<string> listCategory = result.PayLoad.CategoryVMs.Select(c => c.ID.ToString()).ToList();
+            foodEditVM.CategoryIDs = listCategory;
+
+            List<SelectListItem> items = categoryResult.PayLoad.Items.Select(i => new SelectListItem() 
+            { Text = i.Name, Value = i.ID.ToString(), Selected = listCategory.Contains(i.ID.ToString()) }).ToList();
+            foodEditVM.Categories = new MultiSelectList(items, "Value", "Text");
+
+
+            return View(foodEditVM);
         }
 
         // POST: CartsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult> EditAsync([FromForm] FoodEditVM editVM)
         {
             if (!this.ValidateTokenInCookie())
@@ -121,6 +158,20 @@ namespace FoodOrder.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
+                return View(editVM);
+            }
+
+            var fcResult = await _foodServices.DeleteFoodFromAllCategory(editVM.ID, this.GetTokenFromCookie());
+            if(!fcResult.IsSuccessed)
+            {
+                TempData[AppConfigs.ErrorMessageString] = fcResult.ErrorMessage;
+                return View(editVM);
+            }
+
+            var fcAddResult = await _foodServices.AddFoodToCategories(editVM.ID, editVM.CategoryIDs, this.GetTokenFromCookie());
+            if (fcResult.IsSuccessed == false)
+            {
+                TempData[AppConfigs.ErrorMessageString] = fcAddResult.ErrorMessage;
                 return View(editVM);
             }
 

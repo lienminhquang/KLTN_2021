@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels.AppRoles;
+using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.Images;
 using FoodOrder.Core.ViewModels.OrderDetails;
@@ -29,6 +30,10 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<OrderDetail, OrderDetailVM>();
             CreateMap<OrderDetailCreateVM, OrderDetail>();
             CreateMap<OrderDetailVM, OrderDetailEditVM>();
+
+            CreateMap<Category, CategoryVM>();
+            CreateMap<CategoryCreateVM, Category>();
+            //CreateMap<CategoryVM, CategoryEditVM>();
 
             CreateMap<Order, OrderVM>();
             CreateMap<OrderCreateVM, Order>();

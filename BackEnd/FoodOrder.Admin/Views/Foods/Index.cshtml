@@ -53,9 +53,9 @@
                                         @Html.DisplayFor(modelItem => item.ID)
                                     </td>
                                     <td>
-                                        <div class="row-cols-sm-3">
+                                        <div class="row-cols-sm-3 row-cols-lg-1" style="width:100px;height:100px;overflow: hidden;">
                                             <a href="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + item.ImagePath)" title="@item.ImagePath">
-                                                <img src="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + item.ImagePath)" style="width:100%" alt="@item.ImagePath" />
+                                                <img class="img-thumbnail" src="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + item.ImagePath)" style="width:100%" alt="@item.ImagePath" />
                                             </a>
                                         </div>
                                     </td>

@@ -49,10 +49,26 @@
                     <dd class="col-sm-10">
                         @Html.DisplayFor(model => model.Count)
                     </dd>
-                    <dd class="col-sm-3">
+                    <dt class="col-sm-2">
+                        Image
+                    </dt>
+                    <dd class="col-sm-10">
                         <a href="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + Model.ImagePath)" title="@Model.ImagePath">
                             <img src="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + Model.ImagePath)" style="width:100%" alt="@Model.ImagePath" />
                         </a>
+                    </dd>
+                    <dt class="col-sm-2">
+                        Categories
+                    </dt>
+                    <dd class="col-sm-10">
+                        <ul class="list-group">
+                            @foreach (var item in Model.CategoryVMs)
+                            {
+                            <li class="list-group-item">
+                                @Html.ActionLink(item.Name, "Details","Categories", new { id = item.ID })
+                            </li>
+                            }
+                        </ul>
                     </dd>
                 </dl>
 

@@ -1,7 +1,9 @@
 ﻿using FoodOrder.API.Services;
 using FoodOrder.Core.Helpers;
+using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +48,31 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest(result);
             }
+           
+
             return Ok(result);
+        }
+
+        [HttpPost("{id}/categories")]
+        public async Task<IActionResult> AddFoodToCategories(int id, [FromBody] List<string> categoryIDs)
+        {
+            var fcResult = await _foodServices.AddFoodToCategories(categoryIDs, id);
+            if (fcResult.IsSuccessed == false)
+            {
+                return BadRequest(new FailedResult<bool>(fcResult.ErrorMessage));
+            }
+            return Ok(fcResult);
+        }
+
+        [HttpDelete("{id}/categories")]
+        public async Task<IActionResult> DeleteFoodFromCategory(int id)
+        {
+            var fcResult = await _foodServices.DeleteFoodFromAllCategory(id);
+            if (fcResult.IsSuccessed == false)
+            {
+                return BadRequest(new FailedResult<bool>(fcResult.ErrorMessage));
+            }
+            return Ok(fcResult);
         }
 
         [HttpPut]

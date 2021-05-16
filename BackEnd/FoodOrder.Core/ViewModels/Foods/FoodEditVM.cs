@@ -1,5 +1,6 @@
 ﻿using FoodOrder.Core.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace FoodOrder.Core.ViewModels.Foods
         public int Count { get; set; }
         public IFormFile ImageData { get; set; }
 
+        public MultiSelectList Categories { get; set; }
+        public List<string> CategoryIDs { get; set; }
 
-        public List<OrderDetail> OrderDetails { get; set; }
-        public List<Rating> Ratings { get; set; }
-        public List<FoodCategory> FoodCategories { get; set; }
-        public List<Cart> Carts { get; set; }
-        public List<Image> Images { get; set; }
+        //public List<OrderDetail> OrderDetails { get; set; }
+        //public List<Rating> Ratings { get; set; }
+        //public List<FoodCategory> FoodCategories { get; set; }
+        //public List<Cart> Carts { get; set; }
+        //public List<Image> Images { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -9,6 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,6 +52,19 @@ namespace FoodOrder.Admin.Services
             return vm;
         }
 
+        public async Task<ApiResult<bool>> AddFoodToCategories(int id, List<string> categoryIDs, string token)
+        {
+            var json = JsonConvert.SerializeObject(categoryIDs);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var res = await client.PostAsync(BaseRoute + $"/{id}/categories", httpContent);
+
+            return JsonConvert.DeserializeObject<ApiResult<bool>>(await res.Content.ReadAsStringAsync());
+        }
+
         public async Task<ApiResult<FoodVM>> Create(FoodCreateVM createVM, string token)
         {
             var requestContent = new MultipartFormDataContent();
@@ -65,6 +81,7 @@ namespace FoodOrder.Admin.Services
             requestContent.Add(new StringContent(createVM.Name.ToString()), "Name");
             requestContent.Add(new StringContent(createVM.Price.ToString()), "Price");
 
+
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -75,14 +92,18 @@ namespace FoodOrder.Admin.Services
 
         public async Task<ApiResult<FoodVM>> Edit(int id, FoodEditVM editVM, string token)
         {
+
             var requestContent = new MultipartFormDataContent();
-            byte[] data;
-            using (var br = new BinaryReader(editVM.ImageData.OpenReadStream()))
+            if(editVM.ImageData != null)
             {
-                data = br.ReadBytes((int)editVM.ImageData.Length);
+                byte[] data;
+                using (var br = new BinaryReader(editVM.ImageData.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)editVM.ImageData.Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "ImageData", editVM.ImageData.FileName);
             }
-            ByteArrayContent bytes = new ByteArrayContent(data);
-            requestContent.Add(bytes, "ImageData", editVM.ImageData.FileName);
 
             requestContent.Add(new StringContent(editVM.Count.ToString()), "Count");
             requestContent.Add(new StringContent(editVM.Description.ToString()), "Description");
@@ -97,6 +118,17 @@ namespace FoodOrder.Admin.Services
             var res = await client.PutAsync(BaseRoute + $"?id={id}", requestContent);
 
             return JsonConvert.DeserializeObject<ApiResult<FoodVM>>(await res.Content.ReadAsStringAsync());
+        }
+
+        public async Task<ApiResult<bool>> DeleteFoodFromAllCategory(int id, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = BaseRoute + $"/{id}/categories";
+            var rs = await client.DeleteAsync(uri);
+            var body = await rs.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ApiResult<bool>>(body);
+            return result;
         }
 
         public async Task<ApiResult<bool>> Delete(int id, string token)
