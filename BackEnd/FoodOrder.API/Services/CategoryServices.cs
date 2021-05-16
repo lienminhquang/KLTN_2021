@@ -1,8 +1,10 @@
-﻿using FoodOrder.Core.Helpers;
+﻿using AutoMapper;
+using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Categories;
+using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,10 +17,12 @@ namespace FoodOrder.API.Services
     public class CategoryServices
     {
         private readonly ApplicationDBContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public CategoryServices(ApplicationDBContext applicationDBContext)
+        public CategoryServices(ApplicationDBContext applicationDBContext, IMapper mapper)
         {
             _dbContext = applicationDBContext;
+            _mapper = mapper;
         }
 
         public async Task<ApiResult<PaginatedList<CategoryVM>>> GetAllPaging(PagingRequestBase request)
@@ -42,6 +46,26 @@ namespace FoodOrder.API.Services
             var created = await PaginatedList<CategoryVM>.CreateAsync(categoryVMs, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
             return new SuccessedResult<PaginatedList<CategoryVM>>(created);
+        }
+
+        public async Task<ApiResult<PaginatedList<FoodVM>>> GetFoodInCategory(int id, PagingRequestBase request)
+        {
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
+            if (category == null)
+            {
+                return new FailedResult<PaginatedList<FoodVM>>("Category not found!");
+            }
+
+            var foods = from c in _dbContext.Categories
+                        join fc in _dbContext.FoodCategories
+                        on c.ID equals fc.CategoryID
+                        join f in _dbContext.Foods
+                        on fc.FoodID equals f.ID
+                        where c.ID == id
+                        select f;
+
+            var created = await PaginatedList<FoodVM>.CreateAsync(foods.Select(f => _mapper.Map<Food, FoodVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            return new SuccessedResult<PaginatedList<FoodVM>>(created);
         }
 
         public async Task<ApiResult<CategoryVM>> GetByID(int id)

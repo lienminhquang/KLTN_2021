@@ -4,20 +4,20 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/Users/LoginVM.dart';
-import 'package:food_delivery/models/commons/ApiResult.dart';
+import 'package:food_delivery/view_models/Users/LoginVM.dart';
+import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/services/FileServices.dart';
 import 'package:food_delivery/services/HttpClientFactory.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
-class UserController {
+class UserServices {
   static String? JWT;
   final String baseRoute = AppConfigs.URL_UserRouteAPI;
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
   final String _userAccountFilename = "/Data.txt";
 
-  UserController();
+  UserServices();
 
   Future<ApiResult<Map<String, dynamic>>> getUserAccountFromCache() async {
     try {

@@ -49,6 +49,17 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}/foods")]
+        public async Task<IActionResult> GetFoodsInCategory(int id, [FromQuery]PagingRequestBase request)
+        {
+            var result = await _categoryServices.GetFoodInCategory(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync([FromBody] CategoryCreateVM request)

@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:food_delivery/controllers/UserController.dart';
-import 'package:food_delivery/models/Users/LoginVM.dart';
-import 'package:food_delivery/models/commons/ApiResult.dart';
+import 'package:food_delivery/services/UserServices.dart';
+import 'package:food_delivery/view_models/Users/LoginVM.dart';
+import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/login_signup/SignUp.dart';
@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  UserController _userController = new UserController();
+  UserServices _userServices = new UserServices();
 
   final _usenameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       LoginVM _loginVM = LoginVM(
           _usenameTextController.text, _passwordTextController.text, false);
-      var loginResult = await _userController.login(_loginVM);
+      var loginResult = await _userServices.login(_loginVM);
       if (loginResult.isSuccessed == false) {
         // show error
         log(loginResult.errorMessage!);
@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           FutureBuilder(
-            future: _userController.getUserAccountFromCache(),
+            future: _userServices.getUserAccountFromCache(),
             builder: (BuildContext context,
                 AsyncSnapshot<ApiResult<Map<String, dynamic>>> snapshot) {
               if (snapshot.hasData) {

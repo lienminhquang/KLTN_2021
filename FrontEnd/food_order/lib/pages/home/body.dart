@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/models/CategoryModel.dart';
+import 'package:provider/provider.dart';
 
 import '../categoty/Category.dart';
 
@@ -14,6 +16,9 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+    var category = context.read<CategoryModel>();
+    category.fetchAll();
+
     Widget fakeSearchBox = Container(
         child: GestureDetector(
       onTap: () {
@@ -72,25 +77,6 @@ class _BodyState extends State<Body> {
       ),
     );
 
-    Widget category = Container(
-        height: 200,
-        //color: Colors.grey,
-        child: GridView.count(
-          primary: false,
-          padding: const EdgeInsets.all(20),
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 4,
-          children: <Widget>[
-            CategoryItem("Promo", "image"),
-            CategoryItem("Nearby", "image"),
-            CategoryItem("Noodle", "image"),
-            CategoryItem("FREESHIP", "image"),
-            CategoryItem("Mua 2 tính tiền 1", "image"),
-            CategoryItem("Món ngon 8k", "image"),
-          ],
-        ));
-
     return Scaffold(
       body: Container(
         child: ListView(
@@ -98,7 +84,7 @@ class _BodyState extends State<Body> {
             fakeSearchBox,
             imageCarousel,
             offers,
-            category,
+            _CategoryList(),
             FastChoice(),
             FastChoice()
           ],
@@ -108,20 +94,48 @@ class _BodyState extends State<Body> {
   }
 }
 
+class _CategoryList extends StatelessWidget {
+  const _CategoryList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var categories = context.watch<CategoryModel>();
+
+    return Container(
+        height: 200,
+        //color: Colors.grey,
+        child: Container(
+          child: GridView.builder(
+              primary: false,
+              padding: const EdgeInsets.all(20),
+              itemCount: categories.items.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return CategoryItem(categories.items[index].name!, "image",
+                    categories.items[index].id!);
+              }),
+        ));
+  }
+}
+
 class CategoryItem extends StatelessWidget {
   final String name;
   final String image;
-  CategoryItem(
-    this.name,
-    this.image,
-  );
+  final int id;
+  CategoryItem(this.name, this.image, this.id);
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, CategoryPage.routeName);
+        onTap: () async {
+          var category =
+              await context.read<CategoryModel>().fetchFoodsInCategory(id);
+          Navigator.pushNamed(context, CategoryPage.routeName, arguments: id);
         },
         child: Column(
           children: [
