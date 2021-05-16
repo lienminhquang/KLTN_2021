@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,6 +15,6 @@ namespace FoodOrder.Core.ViewModels.Foods
         public string Description { get; set; }
         public decimal Price { get; set; }
         public int Count { get; set; }
-        public string ImagePath { get; set; }
+        public IFormFile ImageData { get; set; }
     }
 }

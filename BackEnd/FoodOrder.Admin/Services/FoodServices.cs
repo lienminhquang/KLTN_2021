@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -50,26 +51,50 @@ namespace FoodOrder.Admin.Services
 
         public async Task<ApiResult<FoodVM>> Create(FoodCreateVM createVM, string token)
         {
-            var json = JsonConvert.SerializeObject(createVM);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var requestContent = new MultipartFormDataContent();
+            byte[] data;
+            using (var br = new BinaryReader(createVM.ImageData.OpenReadStream()))
+            {
+                data = br.ReadBytes((int)createVM.ImageData.Length);
+            }
+            ByteArrayContent bytes = new ByteArrayContent(data);
+            requestContent.Add(bytes, "ImageData", createVM.ImageData.FileName);
+
+            requestContent.Add(new StringContent(createVM.Count.ToString()), "Count");
+            requestContent.Add(new StringContent(createVM.Description.ToString()), "Description");
+            requestContent.Add(new StringContent(createVM.Name.ToString()), "Name");
+            requestContent.Add(new StringContent(createVM.Price.ToString()), "Price");
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var res = await client.PostAsync(BaseRoute, httpContent);
+            var res = await client.PostAsync(BaseRoute, requestContent);
 
             return JsonConvert.DeserializeObject<ApiResult<FoodVM>>(await res.Content.ReadAsStringAsync());
         }
 
         public async Task<ApiResult<FoodVM>> Edit(int id, FoodEditVM editVM, string token)
         {
-            var json = JsonConvert.SerializeObject(editVM);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var requestContent = new MultipartFormDataContent();
+            byte[] data;
+            using (var br = new BinaryReader(editVM.ImageData.OpenReadStream()))
+            {
+                data = br.ReadBytes((int)editVM.ImageData.Length);
+            }
+            ByteArrayContent bytes = new ByteArrayContent(data);
+            requestContent.Add(bytes, "ImageData", editVM.ImageData.FileName);
+
+            requestContent.Add(new StringContent(editVM.Count.ToString()), "Count");
+            requestContent.Add(new StringContent(editVM.Description.ToString()), "Description");
+            requestContent.Add(new StringContent(editVM.Name.ToString()), "Name");
+            requestContent.Add(new StringContent(editVM.Price.ToString()), "Price");
+
+            
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var res = await client.PutAsync(BaseRoute + $"?id={id}", httpContent);
+            var res = await client.PutAsync(BaseRoute + $"?id={id}", requestContent);
 
             return JsonConvert.DeserializeObject<ApiResult<FoodVM>>(await res.Content.ReadAsStringAsync());
         }

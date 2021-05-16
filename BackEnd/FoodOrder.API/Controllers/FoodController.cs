@@ -38,7 +38,8 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] FoodCreateVM foodCreateVM)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm] FoodCreateVM foodCreateVM)
         {
             var result = await _foodServices.Create(foodCreateVM);
             if (!result.IsSuccessed)
@@ -49,7 +50,8 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit(int id, [FromBody] FoodEditVM food)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Edit(int id, [FromForm] FoodEditVM food)
         {
             // Todo: please handle this kind of error
             if (!ModelState.IsValid)

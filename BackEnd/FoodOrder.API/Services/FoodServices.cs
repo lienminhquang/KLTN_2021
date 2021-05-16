@@ -17,11 +17,13 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly FileServices _fileServices;
 
-        public FoodServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public FoodServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _fileServices = fileServices;
         }
 
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetAllPaging(PagingRequestBase request)
@@ -64,6 +66,9 @@ namespace FoodOrder.API.Services
             var result = await _dbContext.Foods.AddAsync(_mapper.Map<Food>(vm));
             try
             {
+                var image = _mapper.Map<Image>(vm);
+                image.ImagePath = await _fileServices.SaveFile(vm.ImageData);
+
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -90,6 +95,8 @@ namespace FoodOrder.API.Services
             //food.FoodCategories = foodVM.FoodCategories; // Todo: we need to use categories here, not foodcategories
             try
             {
+                await _fileServices.DeleteFileAsync(food.ImagePath);
+                food.ImagePath = await _fileServices.SaveFile(foodVM.ImageData);
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -109,6 +116,7 @@ namespace FoodOrder.API.Services
             }
             try
             {
+                await _fileServices.DeleteFileAsync(food.ImagePath);
                 _dbContext.Foods.Remove(food);
                 await _dbContext.SaveChangesAsync();
             }
