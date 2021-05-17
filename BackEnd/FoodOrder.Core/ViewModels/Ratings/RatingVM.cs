@@ -13,5 +13,6 @@ namespace FoodOrder.Core.ViewModels.Ratings
         public int Star { get; set; }
         public string Comment { get; set; }
         public DateTime LastCreatedTime { get; set; }
+        public string UserFullName { get; set; }
     }
 }

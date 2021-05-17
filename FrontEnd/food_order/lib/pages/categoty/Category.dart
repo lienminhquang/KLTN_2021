@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
+import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:provider/provider.dart';
@@ -183,7 +185,7 @@ class FoodCard extends StatelessWidget {
                       size: 18,
                     ),
                     Text(
-                      "${_foodVM.agvRating} (${_foodVM.totalRating})",
+                      "${_foodVM.agvRating.toStringAsPrecision(2)} (${_foodVM.totalRating})",
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.black54),
                     )
@@ -250,7 +252,16 @@ class FoodCard extends StatelessWidget {
                                 IconButton(
                                     icon: Icon(Icons.add_circle,
                                         size: 30, color: Colors.red),
-                                    onPressed: () {})
+                                    onPressed: () async {
+                                      await context
+                                          .read<FoodDetailModel>()
+                                          .fetchFoodDetail(_foodVM.id);
+                                      await context
+                                          .read<FoodDetailModel>()
+                                          .fetchUserRatings();
+                                      Navigator.pushNamed(
+                                          context, FoodDetail.routeName);
+                                    })
                               ],
                             ),
                           ),

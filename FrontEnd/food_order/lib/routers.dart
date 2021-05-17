@@ -3,6 +3,7 @@ import 'package:food_delivery/pages/adress/Adress.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/categoty/Category.dart';
 import 'package:food_delivery/pages/favorite/Favorite.dart';
+import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
 import 'package:flutter/widgets.dart';
@@ -24,5 +25,6 @@ final Map<String, WidgetBuilder> routes = {
   PromotionScreen.routeName: (context) => PromotionScreen(),
   AdressScreen.routeName: (context) => AdressScreen(),
   SignupPage.routeName: (context) => SignupPage(),
-  AddAdressScreen.routeName: (context) => AddAdressScreen()
+  AddAdressScreen.routeName: (context) => AddAdressScreen(),
+  FoodDetail.routeName: (context) => FoodDetail(),
 };

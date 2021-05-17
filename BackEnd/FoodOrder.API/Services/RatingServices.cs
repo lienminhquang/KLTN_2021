@@ -24,6 +24,31 @@ namespace FoodOrder.API.Services
             _mapper = mapper;
         }
 
+        public async Task<ApiResult<PaginatedList<RatingVM>>> GetRatingsOfFood(int foodID, PagingRequestBase request)
+        {
+            var vMs = _dbContext.Ratings.Where(r => r.FoodID == foodID)
+               //.Include(f => f.Food) //Todo: is this need for paging?
+               //.Include(f => f.Order)
+               .AsNoTracking();
+
+
+            if (!String.IsNullOrEmpty(request.SearchString))
+            {
+                vMs = vMs.Where(c => c.Comment.Contains(request.SearchString));
+            }
+
+            vMs = Core.Helpers.Utilities<Rating>.Sort(vMs, request.SortOrder, "FoodID");
+
+            var created = await PaginatedList<RatingVM>.CreateAsync(vMs.Select(f => _mapper.Map<Rating, RatingVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            foreach (var item in created.Items)
+            {
+                var user = _dbContext.Users.Find(item.AppUserID);
+                item.UserFullName = user.FirstName + " " + user.LastName;
+            }
+
+            return new SuccessedResult<PaginatedList<RatingVM>>(created);
+        }
+
         public async Task<ApiResult<PaginatedList<RatingVM>>> GetAllPaging(PagingRequestBase request)
         {
             var vMs = _dbContext.Ratings
@@ -68,6 +93,14 @@ namespace FoodOrder.API.Services
                 return new FailedResult<RatingVM>("User not found!");
             }
 
+            if(vm.Star > 5)
+            {
+                vm.Star = 5;
+            }
+            if (vm.Star < 0)
+            {
+                vm.Star = 0;
+            }
             var result = await _dbContext.Ratings.AddAsync(_mapper.Map<Rating>(vm));
             try
             {
@@ -89,7 +122,14 @@ namespace FoodOrder.API.Services
             }
             od.Comment = editVM.Comment;
             od.Star = editVM.Star;
-            
+            if (od.Star > 5)
+            {
+                od.Star = 5;
+            }
+            if (od.Star < 0)
+            {
+                od.Star = 0;
+            }
             try
             {
                 await _dbContext.SaveChangesAsync();

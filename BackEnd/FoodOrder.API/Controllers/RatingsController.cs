@@ -36,6 +36,17 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("food")]
+        public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request,[FromQuery] int foodID)
+        {
+            var result = await _ratingServices.GetRatingsOfFood(foodID, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         // GET api/<ValuesController>/details?
         [HttpGet("details")]
         public async Task<IActionResult> Get([FromQuery] Guid userID, [FromQuery] int foodID)

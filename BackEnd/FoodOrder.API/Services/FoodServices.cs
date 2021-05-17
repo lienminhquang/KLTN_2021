@@ -122,9 +122,16 @@ namespace FoodOrder.API.Services
             var ratings = from r in _dbContext.Ratings
                           where r.FoodID == id
                           select r;
-            foodVM.AgvRating = ratings.Average(a => a.Star);
-            foodVM.TotalRating = ratings.Count();
-
+            if(ratings != null && ratings.Count() > 0)
+            {
+                foodVM.AgvRating = ratings.Average(a => a.Star);
+                foodVM.TotalRating = ratings.Count();
+            }
+            else
+            {
+                foodVM.AgvRating = 0;
+                foodVM.TotalRating = 0;
+            }
 
             return new SuccessedResult<FoodVM>(foodVM);
         }

@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/DevHttpsOveride.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
+import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/home/Home.dart';
 // import 'package:food_delivery/pages/MainPages.dart';
 // import 'package:food_delivery/pages/Home.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
@@ -24,6 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CategoryModel()),
+        ChangeNotifierProvider(create: (context) => FoodDetailModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
