@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
+import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:provider/provider.dart';
 
 import '../categoty/Category.dart';
@@ -16,9 +19,6 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    var category = context.read<CategoryModel>();
-    category.fetchAll();
-
     Widget fakeSearchBox = Container(
         child: GestureDetector(
       onTap: () {
@@ -99,7 +99,9 @@ class _CategoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var categories = context.watch<CategoryModel>();
+    var categories =
+        context.select<CategoryModel, List<CategoryVM>>((value) => value.items);
+    log("Rebuild CategoryList with count = " + categories.length.toString());
 
     return Container(
         height: 200,
@@ -108,15 +110,15 @@ class _CategoryList extends StatelessWidget {
           child: GridView.builder(
               primary: false,
               padding: const EdgeInsets.all(20),
-              itemCount: categories.items.length,
+              itemCount: categories.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
               itemBuilder: (BuildContext context, int index) {
-                return CategoryItem(categories.items[index].name!, "image",
-                    categories.items[index].id!);
+                return CategoryItem(
+                    categories[index].name!, "image", categories[index].id!);
               }),
         ));
   }

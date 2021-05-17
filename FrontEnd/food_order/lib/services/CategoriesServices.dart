@@ -43,7 +43,7 @@ class CategoriesServices {
       });
 
       if (result.isSuccessed == true) {
-        log("Fetched: " + result.payLoad!.toString());
+        log("Fetched: " + result.payLoad!.items!.length.toString());
         return ApiResult.succesedApiResult(result.payLoad);
       } else {
         return ApiResult.failedApiResult(result.errorMessage);

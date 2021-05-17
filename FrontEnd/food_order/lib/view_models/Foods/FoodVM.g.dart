@@ -14,6 +14,8 @@ FoodVM _$FoodVMFromJson(Map<String, dynamic> json) {
     price: (json['price'] as num).toDouble(),
     count: json['count'] as int,
     imagePath: json['imagePath'] as String,
+    agvRating: (json['agvRating'] as num).toDouble(),
+    totalRating: json['totalRating'] as int,
   );
 }
 
@@ -24,4 +26,6 @@ Map<String, dynamic> _$FoodVMToJson(FoodVM instance) => <String, dynamic>{
       'price': instance.price,
       'count': instance.count,
       'imagePath': instance.imagePath,
+      'agvRating': instance.agvRating,
+      'totalRating': instance.totalRating,
     };

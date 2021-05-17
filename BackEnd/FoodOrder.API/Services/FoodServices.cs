@@ -110,12 +110,21 @@ namespace FoodOrder.API.Services
 
             var foodVM = _mapper.Map<FoodVM>(food);
 
+            // Get categories
             var categories = from c in _dbContext.Categories
                              join fc in _dbContext.FoodCategories on c.ID equals fc.CategoryID
                              join f in _dbContext.Foods on fc.FoodID equals f.ID
                              where f.ID == id
                              select _mapper.Map<CategoryVM>(c);
             foodVM.CategoryVMs = await categories.ToListAsync();
+
+            // Get ratings
+            var ratings = from r in _dbContext.Ratings
+                          where r.FoodID == id
+                          select r;
+            foodVM.AgvRating = ratings.Average(a => a.Star);
+            foodVM.TotalRating = ratings.Count();
+
 
             return new SuccessedResult<FoodVM>(foodVM);
         }

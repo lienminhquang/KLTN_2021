@@ -17,6 +17,9 @@ namespace FoodOrder.Core.ViewModels.Foods
         public int Count { get; set; }
         public string ImagePath { get; set; }
 
+        public double AgvRating { get; set; }
+        public int TotalRating { get; set; }
+
         public List<CategoryVM> CategoryVMs { get; set; }
 
         public List<OrderDetail> OrderDetails { get; set; }

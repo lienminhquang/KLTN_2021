@@ -64,7 +64,21 @@ namespace FoodOrder.API.Services
                         where c.ID == id
                         select f;
 
+
             var created = await PaginatedList<FoodVM>.CreateAsync(foods.Select(f => _mapper.Map<Food, FoodVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+
+            foreach (var item in created.Items)
+            {
+                var ratings = from r in _dbContext.Ratings
+                              where r.FoodID == item.ID
+                              select r;
+                if(ratings != null && ratings.Count() > 0)
+                {
+                    item.AgvRating = ratings.Average(a => a.Star);
+                    item.TotalRating = ratings.Count();
+                }
+            }
+
             return new SuccessedResult<PaginatedList<FoodVM>>(created);
         }
 

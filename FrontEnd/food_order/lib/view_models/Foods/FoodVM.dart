@@ -10,7 +10,9 @@ class FoodVM {
       this.description = "",
       this.price = 0,
       this.count = 0,
-      this.imagePath = ""});
+      this.imagePath = "",
+      this.agvRating = 0,
+      this.totalRating = 0});
 
   int id;
   String name;
@@ -18,6 +20,8 @@ class FoodVM {
   double price;
   int count;
   String imagePath;
+  double agvRating;
+  int totalRating;
 
   factory FoodVM.fromJson(Map<String, dynamic> json) => _$FoodVMFromJson(json);
   Map<String, dynamic> toJson() => _$FoodVMToJson(this);

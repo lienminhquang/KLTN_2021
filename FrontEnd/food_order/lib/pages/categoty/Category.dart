@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
+import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:provider/provider.dart';
 
@@ -20,10 +21,19 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     log("Context:" + context.hashCode.toString());
+    var categoryItems =
+        context.select<CategoryModel, List<CategoryVM>>((value) => value.items);
+    final int categoryID = ModalRoute.of(context)!.settings.arguments as int;
+    String categoryName = "";
+    for (var i = 0; i < categoryItems.length; i++) {
+      if (categoryItems[i].id == categoryID) {
+        categoryName = categoryItems[i].name!;
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Category'),
+        title: new Text(categoryName),
         actions: [
           IconButton(
               icon: Icon(Icons.search),
@@ -56,7 +66,8 @@ class _BestSellingState extends State<BestSelling> {
     final int categoryID = ModalRoute.of(context)!.settings.arguments as int;
     log("BestSelling: category: " + categoryID.toString());
     log("Context:" + context.hashCode.toString());
-    var categoryModel = context.watch<CategoryModel>();
+    var categoryMap = context
+        .select<CategoryModel, Map<int, List<FoodVM>>>((value) => value.map);
     return Container(
       //padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
       height: 150,
@@ -81,9 +92,9 @@ class _BestSellingState extends State<BestSelling> {
               child: ListView.builder(
                   //shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: categoryModel.maps[categoryID]!.length,
+                  itemCount: categoryMap[categoryID]!.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return FoodCard(categoryModel.maps[categoryID]![index]);
+                    return FoodCard(categoryMap[categoryID]![index]);
                   }),
             )
           ],
@@ -102,7 +113,8 @@ class _AllFoodState extends State<AllFood> {
   @override
   Widget build(BuildContext context) {
     final int categoryID = ModalRoute.of(context)!.settings.arguments as int;
-    var categoryModel = context.watch<CategoryModel>();
+    var categoryMap = context
+        .select<CategoryModel, Map<int, List<FoodVM>>>((value) => value.map);
     return Container(
       margin: const EdgeInsets.fromLTRB(15.0, 10.0, 10.0, 0.0),
       child: Column(
@@ -124,9 +136,9 @@ class _AllFoodState extends State<AllFood> {
           Expanded(
             child: ListView.builder(
                 //scrollDirection: Axis.vertical,
-                itemCount: categoryModel.maps[categoryID]!.length,
+                itemCount: categoryMap[categoryID]!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return FoodCard(categoryModel.maps[categoryID]![index]);
+                  return FoodCard(categoryMap[categoryID]![index]);
                 }),
           )
         ],
@@ -171,7 +183,7 @@ class FoodCard extends StatelessWidget {
                       size: 18,
                     ),
                     Text(
-                      "4.5 (999+)",
+                      "${_foodVM.agvRating} (${_foodVM.totalRating})",
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.black54),
                     )

@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:food_delivery/models/CategoryModel.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/login_signup/SignUp.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   static String routeName = "/login";
@@ -21,20 +23,27 @@ class _LoginPageState extends State<LoginPage> {
   final _usenameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLogin = false;
 
-  Future<void> login() async {
-    if (_formKey.currentState!.validate()) {
-      LoginVM _loginVM = LoginVM(
-          _usenameTextController.text, _passwordTextController.text, false);
-      var loginResult = await _userServices.login(_loginVM);
-      if (loginResult.isSuccessed == false) {
-        // show error
-        log(loginResult.errorMessage!);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(loginResult.errorMessage!)));
-      } else {
-        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+  Future<void> login(BuildContext context) async {
+    if (!_isLogin) {
+      _isLogin = true;
+      if (_formKey.currentState!.validate()) {
+        LoginVM _loginVM = LoginVM(
+            _usenameTextController.text, _passwordTextController.text, false);
+        var loginResult = await _userServices.login(_loginVM);
+        if (loginResult.isSuccessed == false) {
+          // show error
+          log(loginResult.errorMessage!);
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(loginResult.errorMessage!)));
+        } else {
+          var category = context.read<CategoryModel>();
+          category.fetchAll();
+          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        }
       }
+      _isLogin = false;
     }
   }
 
@@ -164,7 +173,9 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.blue,
                           elevation: 7.0,
                           child: GestureDetector(
-                            onTap: login,
+                            onTap: () {
+                              login(context);
+                            },
                             child: Center(
                               child: Text(
                                 'Đăng nhập',

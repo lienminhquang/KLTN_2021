@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/services/CategoriesServices.dart';
@@ -6,27 +7,24 @@ import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 class CategoryModel extends ChangeNotifier {
-  final List<CategoryVM> _items = [];
+  List<CategoryVM> items = [];
   final CategoriesServices _categoriesServices = CategoriesServices();
-  final Map<int, List<FoodVM>> _map = {};
-
-  UnmodifiableListView<CategoryVM> get items => UnmodifiableListView(_items);
-  UnmodifiableMapView<int, List<FoodVM>> get maps => UnmodifiableMapView(_map);
+  Map<int, List<FoodVM>> map = {};
 
   Future<void> fetchAll() async {
-    _items.clear();
+    //items.clear();
     var result = await _categoriesServices.getAllPaging();
     if (result.isSuccessed == true) {
-      _items.addAll(result.payLoad!.items!);
+      items = (result.payLoad!.items!);
     }
     notifyListeners();
   }
 
   Future<void> fetchFoodsInCategory(int id) async {
-    _map.remove(id);
+    map.remove(id);
     var result = await _categoriesServices.getFoodsInCategory(id);
     if (result.isSuccessed == true) {
-      _map[id] = result.payLoad!.items!;
+      map[id] = result.payLoad!.items!;
     }
     notifyListeners();
   }
