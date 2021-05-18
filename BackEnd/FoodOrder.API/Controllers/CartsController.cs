@@ -73,6 +73,18 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        // POST api/<ValuesController>
+        [HttpPost("edit_or_create")]
+        public async Task<IActionResult> EditOrCreate([FromBody] CartCreateVM cart)
+        {
+            var result = await _cartServices.EditOrCreate(cart);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         // PUT api/<ValuesController>/5
         [HttpPut]
         public async Task<IActionResult> PutAsync(Guid userId, int foodID, [FromBody] CartEditVM value)

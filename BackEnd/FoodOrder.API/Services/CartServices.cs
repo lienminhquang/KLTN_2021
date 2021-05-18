@@ -7,6 +7,7 @@ using FoodOrder.Core.ViewModels.Carts;
 using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,13 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<CartServices> _logger;
 
-        public CartServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public CartServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<CartServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<CartVM>>> GetCartPaging(PagingRequestBase request)
@@ -72,6 +75,15 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<CartVM>> GetByID(Guid userId, int foodID)
         {
+            if (_dbContext.Users.Find(userId) == null)
+            {
+                return new FailedResult<CartVM>("User not found!");
+            }
+            if (_dbContext.Foods.Find(foodID) == null)
+            {
+                return new FailedResult<CartVM>("Food not found!");
+            }
+
             var cart = await _dbContext.Carts.Include(c => c.AppUser).Include(c => c.Food).FirstOrDefaultAsync(c => c.AppUserId == userId && c.FoodID == foodID);
             if(cart == null)
             {
@@ -89,6 +101,19 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<CartVM>> Create(CartCreateVM vm)
         {
+            if (_dbContext.Users.Find(vm.AppUserId) == null)
+            {
+                return new FailedResult<CartVM>("User not found!");
+            }
+            if (_dbContext.Foods.Find(vm.FoodID) == null)
+            {
+                return new FailedResult<CartVM>("Food not found!");
+            }
+            if(_dbContext.Carts.Find(vm.FoodID, vm.AppUserId) != null)
+            {
+                return new FailedResult<CartVM>("Cart already existed!");
+            }
+
             var result = await _dbContext.Carts.AddAsync(new Cart
             {
                 FoodID = vm.FoodID,
@@ -105,6 +130,47 @@ namespace FoodOrder.API.Services
             }
             return new SuccessedResult<CartVM>(new CartVM() 
             { 
+                AppUser = result.Entity.AppUser,
+                AppUserId = result.Entity.AppUserId,
+                FoodVM = _mapper.Map<FoodVM>(result.Entity.Food),
+                FoodID = result.Entity.FoodID,
+                Quantity = result.Entity.Quantity
+            });
+        }
+
+        public async Task<ApiResult<CartVM>> EditOrCreate(CartCreateVM vm)
+        {
+            if (_dbContext.Users.Find(vm.AppUserId) == null)
+            {
+                return new FailedResult<CartVM>("User not found!");
+            }
+            if (_dbContext.Foods.Find(vm.FoodID) == null)
+            {
+                return new FailedResult<CartVM>("Food not found!");
+            }
+            if (_dbContext.Carts.Find(vm.FoodID, vm.AppUserId) != null)
+            {
+                _logger.LogInformation("Cart already existed! => Edit");
+                return await this.Edit(vm.AppUserId, vm.FoodID, new CartEditVM() { FoodID = vm.FoodID, AppUserId = vm.AppUserId, Quantity = vm.Quantity });
+            }
+
+            _logger.LogInformation("Cart not found => create new one");
+            var result = await _dbContext.Carts.AddAsync(new Cart
+            {
+                FoodID = vm.FoodID,
+                AppUserId = vm.AppUserId,
+                Quantity = vm.Quantity
+            });
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return new FailedResult<CartVM>(e.InnerException.ToString());
+            }
+            return new SuccessedResult<CartVM>(new CartVM()
+            {
                 AppUser = result.Entity.AppUser,
                 AppUserId = result.Entity.AppUserId,
                 FoodVM = _mapper.Map<FoodVM>(result.Entity.Food),

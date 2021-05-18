@@ -1,5 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/pages/cart/cart_screen.dart';
+import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:http/http.dart';
 
@@ -22,6 +27,12 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
   Widget bottomBtns(BuildContext context) {
     final price =
         context.select<FoodDetailModel, double>((value) => value.foodVM.price);
+    final cartVM =
+        context.select<FoodDetailModel, CartVM?>((value) => value.cartVM);
+    if (cartVM != null) {
+      count = cartVM.quantity;
+    }
+    log("rebuld bottomBtns");
 
     return new Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -31,7 +42,18 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
           new Expanded(
             flex: 2,
             child: new InkWell(
-              onTap: () {},
+              onTap: () async {
+                var result = await context.read<CartModel>().editOrCreate(
+                    context.read<FoodDetailModel>().currentFoodID, count);
+                if (!result.isSuccessed) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(result.errorMessage!)));
+                } else {
+                  context.read<CartModel>().fetchAll();
+                  Navigator.pushReplacementNamed(
+                      context, CartItemsPage.routeName);
+                }
+              },
               child: new ClipRRect(
                 borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
                 child: new Container(
@@ -66,6 +88,9 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
               onPressed: () {
                 setState(() {
                   if (count > 1) count--;
+                  if (cartVM != null) {
+                    cartVM.quantity = count;
+                  }
                 });
               },
               child: new Container(
@@ -93,15 +118,6 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
             child: new Container(
               width: 40.0,
               height: 40.0,
-              // decoration: new BoxDecoration(
-              //     gradient: btnGradient,
-              //     shape: BoxShape.circle,
-              //     boxShadow: <BoxShadow>[
-              //       new BoxShadow(
-              //           blurRadius: 10.0,
-              //           color: Colors.black12,
-              //           offset: new Offset(0.0, 10.0))
-              //     ]),
               child: Center(
                   child: Text("$count",
                       style: new TextStyle(
@@ -116,6 +132,9 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
               onPressed: () {
                 setState(() {
                   count++;
+                  if (cartVM != null) {
+                    cartVM.quantity = count;
+                  }
                 });
               },
               child: new Container(

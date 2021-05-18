@@ -54,6 +54,7 @@ namespace FoodOrder.API.Services
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
             {
+                new Claim("UserID", user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.GivenName, user.FirstName),
@@ -74,6 +75,8 @@ namespace FoodOrder.API.Services
 
             return new SuccessedResult<string>(tokenString);
         }
+
+        //public async Task<ApiResult<UserVM>> GetUserInfo()
 
         public async Task<ApiResult<bool>> Register(RegisterRequest registerRequest)
         {

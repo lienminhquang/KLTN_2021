@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/helper/TokenParser.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/services/FileServices.dart';
@@ -13,11 +15,16 @@ import 'package:http/io_client.dart';
 
 class UserServices {
   static String? JWT;
+  static Map<String, dynamic> PayloadMap = {};
   final String baseRoute = AppConfigs.URL_UserRouteAPI;
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
   final String _userAccountFilename = "/Data.txt";
 
   UserServices();
+
+  static String getUserID() {
+    return PayloadMap["UserID"];
+  }
 
   Future<ApiResult<Map<String, dynamic>>> getUserAccountFromCache() async {
     try {
@@ -83,6 +90,8 @@ class UserServices {
         log("Signin succesed!");
         log("JWT: " + result.payLoad!);
         JWT = result.payLoad;
+        PayloadMap = parseJWT(result.payLoad!);
+        print(PayloadMap);
         return ApiResult.succesedApiResult(true);
       } else {
         return ApiResult.failedApiResult(result.errorMessage);

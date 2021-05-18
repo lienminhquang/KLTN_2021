@@ -48,9 +48,41 @@ class CartServices {
     return ApiResult.failedApiResult("Error!!");
   }
 
-  Future<ApiResult<bool>> addToCart(
-      String userID, int foodID, int quantity) async {
-    log("Add to cart: $userID $foodID $quantity");
+  Future<ApiResult<CartVM>> getByID(int foodID, String userID) async {
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    final String url = baseRoute + "/details?foodID=$foodID&userId=$userID";
+    Response? response;
+    try {
+      log("GET: " + url);
+      response = await ioClient.get(Uri.parse(url));
+    } catch (e) {
+      print(e);
+      return ApiResult<CartVM>.failedApiResult(
+          "Could not connect to server! Please re-try later!");
+    }
+    try {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<CartVM>.fromJson(json, (foodJson) {
+        return CartVM.fromJson(foodJson as Map<String, dynamic>);
+      });
+
+      if (result.isSuccessed == true) {
+        print("Fetched CartVM: ");
+        print(result.payLoad);
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return ApiResult.failedApiResult("Error!!");
+  }
+
+  Future<ApiResult<CartVM>> editOrCreate(
+      int foodID, int quantity, String userID) async {
+    log("editOrCreate cart: $userID $foodID $quantity");
     IOClient ioClient = _httpClientFactory.createIOClient();
     Response? response;
     CartCreateVM cartCreateVM = CartCreateVM();
@@ -58,13 +90,15 @@ class CartServices {
     cartCreateVM.foodID = foodID;
     cartCreateVM.quantity = quantity;
     try {
-      response = await ioClient.post(Uri.parse(baseRoute),
+      String url = baseRoute + "/edit_or_create";
+      log("Post $url");
+      response = await ioClient.post(Uri.parse(url),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           },
           body: jsonEncode(cartCreateVM));
     } catch (e) {
-      return ApiResult<bool>.failedApiResult(
+      return ApiResult<CartVM>.failedApiResult(
           "Server error! Please re-try later!");
     }
     try {
@@ -74,12 +108,10 @@ class CartServices {
       if (result.isSuccessed == true) {
         log("Cart create succesed!");
         log("Cart: " + result.payLoad!.toString());
-        return ApiResult.succesedApiResult(true);
-      } else {
-        return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {}
-
-    return ApiResult.failedApiResult("Error!!");
+      return result;
+    } catch (e) {
+      return ApiResult.failedApiResult(e.toString());
+    }
   }
 }

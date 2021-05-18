@@ -38,9 +38,7 @@ class Appbar extends StatelessWidget {
             padding: const EdgeInsets.only(right: 20.0),
             child: TextButton(
               onPressed: () {
-                context
-                    .read<CartModel>()
-                    .fetchAll(context.read<AppModel>().userID);
+                context.read<CartModel>().fetchAll();
                 Navigator.pushNamed(context, CartItemsPage.routeName);
               },
               child: new Icon(

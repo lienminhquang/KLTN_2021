@@ -253,10 +253,17 @@ class FoodCard extends StatelessWidget {
                                     icon: Icon(Icons.add_circle,
                                         size: 30, color: Colors.red),
                                     onPressed: () async {
-                                      await context
-                                          .read<FoodDetailModel>()
-                                          .fetchFoodDetail(_foodVM.id);
-                                      await context
+                                      if (await context
+                                              .read<FoodDetailModel>()
+                                              .fetchFoodDetail(_foodVM.id) ==
+                                          false) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    "Failed to get food details!")));
+                                        return;
+                                      }
+                                      context
                                           .read<FoodDetailModel>()
                                           .fetchUserRatings();
                                       Navigator.pushNamed(
