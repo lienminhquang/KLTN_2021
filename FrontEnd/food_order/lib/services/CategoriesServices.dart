@@ -68,7 +68,7 @@ class CategoriesServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server! Please re-try later!");
     }
     try {
       var json = jsonDecode(response.body);

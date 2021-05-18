@@ -1,8 +1,10 @@
-﻿using FoodOrder.Core.Helpers;
+﻿using AutoMapper;
+using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Carts;
+using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,19 +17,22 @@ namespace FoodOrder.API.Services
     public class CartServices
     {
         private readonly ApplicationDBContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public CartServices(ApplicationDBContext applicationDBContext)
+        public CartServices(ApplicationDBContext applicationDBContext, IMapper mapper)
         {
             _dbContext = applicationDBContext;
+            _mapper = mapper;
         }
 
         public async Task<ApiResult<PaginatedList<CartVM>>> GetCartPaging(PagingRequestBase request)
         {
             var carts = from c in _dbContext.Carts
+                        .Include(a => a.Food)
                         select new CartVM()
                         {
                             FoodID = c.FoodID,
-                            Food = c.Food,
+                            FoodVM = _mapper.Map<FoodVM>(c.Food),
                             AppUser = c.AppUser,
                             AppUserId = c.AppUserId,
                             Quantity = c.Quantity
@@ -49,6 +54,22 @@ namespace FoodOrder.API.Services
             return new SuccessedResult<PaginatedList<CartVM>>(created);
         }
 
+        public async Task<ApiResult<PaginatedList<CartVM>>> GetByUserID(string userID)
+        {
+            var carts = from c in _dbContext.Carts where c.AppUserId.ToString() == userID
+                        select new CartVM()
+                        {
+                            FoodVM = _mapper.Map<FoodVM>(c.Food),
+                            FoodID = c.FoodID,
+                            AppUserId = c.AppUserId,
+                            Quantity = c.Quantity
+                        };
+
+            var created = await PaginatedList<CartVM>.CreateAsync(carts, 1, Core.Helpers.Configs.PageSize);
+
+            return new SuccessedResult<PaginatedList<CartVM>>(created);
+        }
+
         public async Task<ApiResult<CartVM>> GetByID(Guid userId, int foodID)
         {
             var cart = await _dbContext.Carts.Include(c => c.AppUser).Include(c => c.Food).FirstOrDefaultAsync(c => c.AppUserId == userId && c.FoodID == foodID);
@@ -60,7 +81,7 @@ namespace FoodOrder.API.Services
             {
                 AppUser = cart.AppUser,
                 AppUserId = cart.AppUserId,
-                Food = cart.Food,
+                FoodVM = _mapper.Map<FoodVM>(cart.Food),
                 FoodID = cart.FoodID,
                 Quantity = cart.Quantity
             });
@@ -86,7 +107,7 @@ namespace FoodOrder.API.Services
             { 
                 AppUser = result.Entity.AppUser,
                 AppUserId = result.Entity.AppUserId,
-                Food = result.Entity.Food,
+                FoodVM = _mapper.Map<FoodVM>(result.Entity.Food),
                 FoodID = result.Entity.FoodID,
                 Quantity = result.Entity.Quantity
             });
@@ -113,7 +134,7 @@ namespace FoodOrder.API.Services
             {
                 AppUser = cart.AppUser,
                 AppUserId = cart.AppUserId,
-                Food = cart.Food,
+                FoodVM = _mapper.Map<FoodVM>(cart.Food),
                 FoodID = cart.FoodID,
                 Quantity = cart.Quantity
             });

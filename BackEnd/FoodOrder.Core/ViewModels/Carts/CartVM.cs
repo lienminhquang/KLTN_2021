@@ -1,4 +1,5 @@
 ﻿using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels.Foods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,6 @@ namespace FoodOrder.Core.ViewModels.Carts
         public int Quantity { get; set; }
 
         public AppUser AppUser { get; set; }
-        public Food Food { get; set; }
+        public FoodVM FoodVM { get; set; }
     }
 }

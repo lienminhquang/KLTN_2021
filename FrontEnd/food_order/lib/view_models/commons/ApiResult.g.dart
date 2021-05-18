@@ -12,7 +12,7 @@ ApiResult<T> _$ApiResultFromJson<T>(
 ) {
   return ApiResult<T>(
     _$nullableGenericFromJson(json['payLoad'], fromJsonT),
-    json['isSuccessed'] as bool?,
+    json['isSuccessed'] as bool,
     json['errorMessage'] as String?,
   );
 }

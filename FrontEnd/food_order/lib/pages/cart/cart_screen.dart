@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'Cart.dart';
+import 'package:food_delivery/models/CartModel.dart';
 import 'body.dart';
+import 'package:provider/provider.dart';
 
 class CartItemsPage extends StatelessWidget {
   static String routeName = "/cart";
@@ -100,6 +101,7 @@ class CheckoutCart extends StatelessWidget {
 }
 
 AppBar buildAppBar(BuildContext context) {
+  var count = context.select<CartModel, int>((value) => value.items.length);
   return AppBar(
     centerTitle: true,
     backgroundColor: Colors.blue.shade100,
@@ -110,7 +112,7 @@ AppBar buildAppBar(BuildContext context) {
           style: TextStyle(color: Colors.black),
         ),
         Text(
-          '${demoCarts.length} sản phẩm',
+          '$count sản phẩm',
           style: Theme.of(context).textTheme.caption,
         )
       ],

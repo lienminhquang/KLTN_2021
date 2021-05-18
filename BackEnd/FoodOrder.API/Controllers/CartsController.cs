@@ -38,6 +38,17 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("user")]
+        public async Task<IActionResult> GetAsync([FromQuery]string userID)
+        {
+            var result = await _cartServices.GetByUserID(userID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         // GET api/<ValuesController>/details?
         [HttpGet("details")]
         public async Task<IActionResult> Get([FromQuery]Guid userId, [FromQuery]int foodID)

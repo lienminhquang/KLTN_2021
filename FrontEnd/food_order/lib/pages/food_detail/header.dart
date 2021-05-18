@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/models/AppModel.dart';
+import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'clipper.dart';
 import 'gredients.dart';
@@ -33,9 +36,17 @@ class Appbar extends StatelessWidget {
           ),
           new Padding(
             padding: const EdgeInsets.only(right: 20.0),
-            child: new Icon(
-              Icons.shopping_cart,
-              color: Colors.black87,
+            child: TextButton(
+              onPressed: () {
+                context
+                    .read<CartModel>()
+                    .fetchAll(context.read<AppModel>().userID);
+                Navigator.pushNamed(context, CartItemsPage.routeName);
+              },
+              child: new Icon(
+                Icons.shopping_cart,
+                color: Colors.black87,
+              ),
             ),
           )
         ],

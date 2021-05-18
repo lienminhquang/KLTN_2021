@@ -5,7 +5,7 @@ part 'ApiResult.g.dart';
 @JsonSerializable(genericArgumentFactories: true, explicitToJson: true)
 class ApiResult<T> {
   T? payLoad;
-  bool? isSuccessed;
+  bool isSuccessed = false;
   String? errorMessage;
 
   ApiResult(this.payLoad, this.isSuccessed, this.errorMessage);

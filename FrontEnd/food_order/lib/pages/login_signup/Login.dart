@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:food_delivery/models/AppModel.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
       if (_formKey.currentState!.validate()) {
         LoginVM _loginVM = LoginVM(
             _usenameTextController.text, _passwordTextController.text, false);
-        var loginResult = await _userServices.login(_loginVM);
+        var loginResult = await context.read<AppModel>().login(_loginVM);
         if (loginResult.isSuccessed == false) {
           // show error
           log(loginResult.errorMessage!);
