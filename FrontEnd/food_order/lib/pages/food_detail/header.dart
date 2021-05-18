@@ -7,6 +7,7 @@ import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'clipper.dart';
+import 'food_detail.dart';
 import 'gredients.dart';
 import 'customIcon.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,11 @@ import 'package:provider/provider.dart';
 class Appbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var temp = ModalRoute.of(context)!.settings.arguments;
+    final routeArgs = temp != null
+        ? ModalRoute.of(context)!.settings.arguments as FoodDetailArguments
+        : FoodDetailArguments();
+
     return Align(
       heightFactor: 0.35,
       child: new Row(
@@ -36,16 +42,18 @@ class Appbar extends StatelessWidget {
           ),
           new Padding(
             padding: const EdgeInsets.only(right: 20.0),
-            child: TextButton(
-              onPressed: () {
-                context.read<CartModel>().fetchAll();
-                Navigator.pushNamed(context, CartItemsPage.routeName);
-              },
-              child: new Icon(
-                Icons.shopping_cart,
-                color: Colors.black87,
-              ),
-            ),
+            child: routeArgs.displayCartBtn
+                ? TextButton(
+                    onPressed: () {
+                      context.read<CartModel>().fetchAll();
+                      Navigator.pushNamed(context, CartItemsPage.routeName);
+                    },
+                    child: new Icon(
+                      Icons.shopping_cart,
+                      color: Colors.black87,
+                    ),
+                  )
+                : Container(),
           )
         ],
       ),

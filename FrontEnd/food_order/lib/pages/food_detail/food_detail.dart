@@ -5,13 +5,16 @@ import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
-import 'package:food_delivery/view_models/Foods/FoodVM.dart';
-import 'package:http/http.dart';
 
 import 'footer.dart';
 import 'gredients.dart';
 import 'package:provider/provider.dart';
 import 'header.dart';
+
+class FoodDetailArguments {
+  bool displayCartBtn;
+  FoodDetailArguments({this.displayCartBtn = true});
+}
 
 class FoodDetail extends StatefulWidget {
   static String routeName = "/food_detail";

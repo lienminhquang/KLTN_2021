@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/helper/commons.dart';
+import 'package:food_delivery/helper/Commons.dart';
 import 'package:intl/intl.dart';
 
 class UserDetails extends StatelessWidget {

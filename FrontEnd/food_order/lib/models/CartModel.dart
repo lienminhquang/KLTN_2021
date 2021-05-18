@@ -20,6 +20,16 @@ class CartModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> delete(int foodID) async {
+    final String userID = UserServices.getUserID();
+    var result = await _cartServices.delete(foodID, userID);
+    if (result.isSuccessed == true) {
+      return true;
+    }
+    notifyListeners();
+    return false;
+  }
+
   Future<ApiResult<CartVM>> editOrCreate(int foodID, int quantity) async {
     final String userID = UserServices.getUserID();
     var result = await _cartServices.editOrCreate(foodID, quantity, userID);

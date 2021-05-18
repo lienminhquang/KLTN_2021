@@ -80,6 +80,37 @@ class CartServices {
     return ApiResult.failedApiResult("Error!!");
   }
 
+  Future<ApiResult<bool>> delete(int foodID, String userID) async {
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    final String url = baseRoute + "?foodID=$foodID&userId=$userID";
+    Response? response;
+    try {
+      log("DELETE: " + url);
+      response = await ioClient.delete(Uri.parse(url));
+    } catch (e) {
+      print(e);
+      return ApiResult<bool>.failedApiResult(
+          "Could not connect to server! Please re-try later!");
+    }
+    try {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<bool>.fromJson(json, (child) {
+        return child as bool;
+      });
+
+      if (result.isSuccessed == true) {
+        print("Deleted CartVM: foodID = $foodID, userID = $userID");
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return ApiResult.failedApiResult("Error!!");
+  }
+
   Future<ApiResult<CartVM>> editOrCreate(
       int foodID, int quantity, String userID) async {
     log("editOrCreate cart: $userID $foodID $quantity");

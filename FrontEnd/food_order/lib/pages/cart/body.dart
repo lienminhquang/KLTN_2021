@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CartModel.dart';
+import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:provider/provider.dart';
@@ -12,62 +14,70 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  Widget _item(CartVM model) {
-    return Container(
-      height: 80,
-      child: Row(
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: 1.2,
-            child: Container(
-                padding: EdgeInsets.all(10.0),
-                height: 70,
-                width: 70,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    imageUrl:
-                        AppConfigs.URL_Images + "/${model.foodVM.imagePath}",
-                  ),
-                )),
-          ),
-          Expanded(
-              child: ListTile(
-                  title: Text(
-                    model.foodVM.name,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
+  Widget _item(CartVM model, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        context.read<FoodDetailModel>().fetchFoodDetail(model.foodID);
+        Navigator.pushNamed(context, FoodDetail.routeName,
+            arguments: FoodDetailArguments(displayCartBtn: false));
+      },
+      child: Container(
+        height: 80,
+        child: Row(
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 1.2,
+              child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  height: 70,
+                  width: 70,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      imageUrl:
+                          AppConfigs.URL_Images + "/${model.foodVM.imagePath}",
                     ),
-                  ),
-                  subtitle: Row(
-                    children: <Widget>[
-                      Text('\$ ',
+                  )),
+            ),
+            Expanded(
+                child: ListTile(
+                    title: Text(
+                      model.foodVM.name,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    subtitle: Row(
+                      children: <Widget>[
+                        Text('\$ ',
+                            style: TextStyle(
+                              color: LightColor.red,
+                              fontSize: 12,
+                            )),
+                        Text(model.foodVM.price.toString(),
+                            style: TextStyle(
+                              fontSize: 14,
+                            )),
+                      ],
+                    ),
+                    trailing: Container(
+                      width: 35,
+                      height: 35,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: LightColor.lightGrey.withAlpha(150),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text('x${model.quantity}',
                           style: TextStyle(
-                            color: LightColor.red,
                             fontSize: 12,
                           )),
-                      Text(model.foodVM.price.toString(),
-                          style: TextStyle(
-                            fontSize: 14,
-                          )),
-                    ],
-                  ),
-                  trailing: Container(
-                    width: 35,
-                    height: 35,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: LightColor.lightGrey.withAlpha(150),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text('x${model.quantity}',
-                        style: TextStyle(
-                          fontSize: 12,
-                        )),
-                  )))
-        ],
+                    )))
+          ],
+        ),
       ),
     );
   }
@@ -100,12 +110,13 @@ class _BodyState extends State<Body> {
                     )
                   ],
                 )),
-            onDismissed: (direction) {
-              setState(() {
-                carts.removeAt(index);
-              });
+            onDismissed: (direction) async {
+              var cartModel = context.read<CartModel>();
+              if (await cartModel.delete(carts[index].foodID)) {
+                cartModel.fetchAll();
+              }
             },
-            child: _item(carts[index]),
+            child: _item(carts[index], context),
           ),
         ),
       ),
