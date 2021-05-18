@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
+import 'package:http/http.dart';
 
 import 'footer.dart';
 import 'gredients.dart';
@@ -16,19 +17,23 @@ class FoodDetail extends StatefulWidget {
 
 class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
   ScrollController _scrollController = new ScrollController();
+  int count = 1;
 
-  @override
-  Widget build(BuildContext context) {
-    var bottomBtns = new Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+  Widget bottomBtns(BuildContext context) {
+    final price =
+        context.select<FoodDetailModel, double>((value) => value.foodVM.price);
+
+    return new Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           new Expanded(
+            flex: 2,
             child: new InkWell(
               onTap: () {},
               child: new ClipRRect(
-                borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
                 child: new Container(
                   decoration: new BoxDecoration(
                       gradient: btnGradient,
@@ -40,10 +45,10 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                       ]),
                   height: 60.0,
                   child: new Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 48.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: new Center(
                       child: new Text(
-                        "Buy Now",
+                        "\$ ${price * count}",
                         style: new TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -56,30 +61,90 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
             ),
           ),
           new Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(0.0),
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  if (count > 1) count--;
+                });
+              },
+              child: new Container(
+                width: 40.0,
+                height: 40.0,
+                decoration: new BoxDecoration(
+                    gradient: btnGradient,
+                    shape: BoxShape.circle,
+                    boxShadow: <BoxShadow>[
+                      new BoxShadow(
+                          blurRadius: 10.0,
+                          color: Colors.black12,
+                          offset: new Offset(0.0, 10.0))
+                    ]),
+                child: new Icon(
+                  Icons.remove,
+                  size: 25.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          new Padding(
+            padding: const EdgeInsets.all(0.0),
             child: new Container(
-              width: 60.0,
-              height: 60.0,
-              decoration: new BoxDecoration(
-                  gradient: btnGradient,
-                  shape: BoxShape.circle,
-                  boxShadow: <BoxShadow>[
-                    new BoxShadow(
-                        blurRadius: 10.0,
-                        color: Colors.black12,
-                        offset: new Offset(0.0, 10.0))
-                  ]),
-              child: new Icon(
-                Icons.add_shopping_cart,
-                size: 25.0,
-                color: Colors.white,
+              width: 40.0,
+              height: 40.0,
+              // decoration: new BoxDecoration(
+              //     gradient: btnGradient,
+              //     shape: BoxShape.circle,
+              //     boxShadow: <BoxShadow>[
+              //       new BoxShadow(
+              //           blurRadius: 10.0,
+              //           color: Colors.black12,
+              //           offset: new Offset(0.0, 10.0))
+              //     ]),
+              child: Center(
+                  child: Text("$count",
+                      style: new TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600))),
+            ),
+          ),
+          new Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  count++;
+                });
+              },
+              child: new Container(
+                width: 40.0,
+                height: 40.0,
+                decoration: new BoxDecoration(
+                    gradient: btnGradient,
+                    shape: BoxShape.circle,
+                    boxShadow: <BoxShadow>[
+                      new BoxShadow(
+                          blurRadius: 10.0,
+                          color: Colors.black12,
+                          offset: new Offset(0.0, 10.0))
+                    ]),
+                child: new Icon(
+                  Icons.add,
+                  size: 25.0,
+                  color: Colors.white,
+                ),
               ),
             ),
           )
         ],
       ),
     );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return new Scaffold(
       body: new ListView(
         controller: _scrollController,
@@ -111,7 +176,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
         ],
       ),
       bottomNavigationBar: Container(
-        child: bottomBtns,
+        child: bottomBtns(context),
       ),
     );
   }
