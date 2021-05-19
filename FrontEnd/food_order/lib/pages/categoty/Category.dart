@@ -13,29 +13,25 @@ import 'package:provider/provider.dart';
 class CategoryPage extends StatefulWidget {
   static String routeName = "/category";
 
-  const CategoryPage({Key? key}) : super(key: key);
+  CategoryPage({Key? key}) : super(key: key);
 
   @override
   _CategoryPageState createState() => _CategoryPageState();
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+  _CategoryPageState();
   @override
   Widget build(BuildContext context) {
     log("Context:" + context.hashCode.toString());
-    var categoryItems =
-        context.select<CategoryModel, List<CategoryVM>>((value) => value.items);
-    final int categoryID = ModalRoute.of(context)!.settings.arguments as int;
-    String categoryName = "";
-    for (var i = 0; i < categoryItems.length; i++) {
-      if (categoryItems[i].id == categoryID) {
-        categoryName = categoryItems[i].name!;
-      }
-    }
+    final categoryID = context.read<CategoryModel>().currentID;
+    var category = context
+        .select<CategoryModel, List<CategoryVM>>((value) => value.items)
+        .firstWhere((element) => element.id == categoryID);
 
     return Scaffold(
       appBar: AppBar(
-        title: new Text(categoryName),
+        title: new Text((category.name == null ? "Category" : category.name)!),
         actions: [
           IconButton(
               icon: Icon(Icons.search),
@@ -65,7 +61,7 @@ class BestSelling extends StatefulWidget {
 class _BestSellingState extends State<BestSelling> {
   @override
   Widget build(BuildContext context) {
-    final int categoryID = ModalRoute.of(context)!.settings.arguments as int;
+    final categoryID = context.read<CategoryModel>().currentID;
     log("BestSelling: category: " + categoryID.toString());
     log("Context:" + context.hashCode.toString());
     var categoryMap = context
@@ -114,7 +110,7 @@ class AllFood extends StatefulWidget {
 class _AllFoodState extends State<AllFood> {
   @override
   Widget build(BuildContext context) {
-    final int categoryID = ModalRoute.of(context)!.settings.arguments as int;
+    final categoryID = context.read<CategoryModel>().currentID;
     var categoryMap = context
         .select<CategoryModel, Map<int, List<FoodVM>>>((value) => value.map);
     return Container(
@@ -266,8 +262,11 @@ class FoodCard extends StatelessWidget {
                                       context
                                           .read<FoodDetailModel>()
                                           .fetchUserRatings();
-                                      Navigator.pushNamed(
-                                          context, FoodDetail.routeName);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FoodDetail()));
                                     })
                               ],
                             ),

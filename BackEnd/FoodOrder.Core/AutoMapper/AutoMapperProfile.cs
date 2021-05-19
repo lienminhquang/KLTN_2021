@@ -33,7 +33,7 @@ namespace FoodOrder.Core.AutoMapper
 
             CreateMap<Category, CategoryVM>();
             CreateMap<CategoryCreateVM, Category>();
-            //CreateMap<CategoryVM, CategoryEditVM>();
+            CreateMap<CategoryVM, CategoryEditVM>();
 
             CreateMap<Order, OrderVM>();
             CreateMap<OrderCreateVM, Order>();

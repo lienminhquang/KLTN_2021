@@ -9,6 +9,7 @@ class CategoryVM {
   int? id;
   String? name;
   String? description;
+  String? imagePath = "";
 
   factory CategoryVM.fromJson(Map<String, dynamic> json) =>
       _$CategoryVMFromJson(json);

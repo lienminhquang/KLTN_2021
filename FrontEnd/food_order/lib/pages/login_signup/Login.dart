@@ -7,13 +7,10 @@ import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
-import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/login_signup/SignUp.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  static String routeName = "/login";
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -41,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           var category = context.read<CategoryModel>();
           category.fetchAll();
-          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
         }
       }
       _isLogin = false;

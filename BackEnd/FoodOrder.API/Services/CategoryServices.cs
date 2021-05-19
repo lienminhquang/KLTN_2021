@@ -18,22 +18,19 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly FileServices _fileServices;
 
-        public CategoryServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public CategoryServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _fileServices = fileServices;
         }
 
         public async Task<ApiResult<PaginatedList<CategoryVM>>> GetAllPaging(PagingRequestBase request)
         {
             var categoryVMs = from c in _dbContext.Categories
-                        select new CategoryVM()
-                        {
-                            Description = c.Description,
-                            ID = c.ID,
-                            Name = c.Name
-                        };
+                              select c;
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {
@@ -41,9 +38,9 @@ namespace FoodOrder.API.Services
                 || c.Description.Contains(request.SearchString));
             }
 
-            categoryVMs = Core.Helpers.Utilities<CategoryVM>.Sort(categoryVMs, request.SortOrder, "ID");
+            categoryVMs = Core.Helpers.Utilities<Category>.Sort(categoryVMs, request.SortOrder, "ID");
 
-            var created = await PaginatedList<CategoryVM>.CreateAsync(categoryVMs, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<CategoryVM>.CreateAsync(categoryVMs.Select(a => _mapper.Map<CategoryVM>(a)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
             return new SuccessedResult<PaginatedList<CategoryVM>>(created);
         }
@@ -72,7 +69,7 @@ namespace FoodOrder.API.Services
                 var ratings = from r in _dbContext.Ratings
                               where r.FoodID == item.ID
                               select r;
-                if(ratings != null && ratings.Count() > 0)
+                if (ratings != null && ratings.Count() > 0)
                 {
                     item.AgvRating = ratings.Average(a => a.Star);
                     item.TotalRating = ratings.Count();
@@ -89,16 +86,15 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<CategoryVM>("Category not found!");
             }
-            return new SuccessedResult<CategoryVM>(new CategoryVM()
-            {
-                Description = c.Description,
-                ID = c.ID,
-                Name = c.Name
-            });
+            return new SuccessedResult<CategoryVM>(_mapper.Map<CategoryVM>(c));
         }
 
         public async Task<ApiResult<CategoryVM>> Create(CategoryCreateVM vm)
         {
+            if (vm.ImageBinary == null)
+            {
+                return new FailedResult<CategoryVM>("Invalid image!");
+            }
             var result = await _dbContext.Categories.AddAsync(new Category
             {
                 Description = vm.Description,
@@ -106,6 +102,7 @@ namespace FoodOrder.API.Services
             });
             try
             {
+                result.Entity.ImagePath = await _fileServices.SaveFile(vm.ImageBinary);
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -116,11 +113,12 @@ namespace FoodOrder.API.Services
             {
                 Description = result.Entity.Description,
                 ID = result.Entity.ID,
-                Name = result.Entity.Name
+                Name = result.Entity.Name,
+                ImagePath = result.Entity.ImagePath
             });
         }
 
-        public async Task<ApiResult<CategoryVM>> Edit(int id, CategoryVM categoryVM)
+        public async Task<ApiResult<CategoryVM>> Edit(int id, CategoryEditVM categoryVM)
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
             if (category == null)
@@ -131,6 +129,14 @@ namespace FoodOrder.API.Services
             category.Description = categoryVM.Description;
             try
             {
+                if (categoryVM.ImageBinary != null)
+                {
+                    if (category.ImagePath != null)
+                    {
+                        await _fileServices.DeleteFileAsync(category.ImagePath);
+                    }
+                    category.ImagePath = await _fileServices.SaveFile(categoryVM.ImageBinary);
+                }
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -138,7 +144,7 @@ namespace FoodOrder.API.Services
                 return new FailedResult<CategoryVM>(e.InnerException.ToString());
             }
 
-            return new SuccessedResult<CategoryVM>(categoryVM);
+            return new SuccessedResult<CategoryVM>(_mapper.Map<CategoryVM>(category));
         }
 
         public async Task<ApiResult<bool>> Delete(int id)
@@ -150,6 +156,7 @@ namespace FoodOrder.API.Services
             }
             try
             {
+                await _fileServices.DeleteFileAsync(category.ImagePath);
                 _dbContext.Categories.Remove(category);
                 await _dbContext.SaveChangesAsync();
             }

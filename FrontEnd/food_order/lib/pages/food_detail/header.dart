@@ -1,60 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/AppModel.dart';
-import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
-import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'clipper.dart';
-import 'food_detail.dart';
 import 'gredients.dart';
-import 'customIcon.dart';
 import 'package:provider/provider.dart';
 
 class Appbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var temp = ModalRoute.of(context)!.settings.arguments;
-    final routeArgs = temp != null
-        ? ModalRoute.of(context)!.settings.arguments as FoodDetailArguments
-        : FoodDetailArguments();
-
     return Align(
       heightFactor: 0.35,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: new IconButton(
-                icon: new Icon(
-                  CustomIcons.menu,
-                  color: Colors.black87,
-                ),
-                onPressed: () {
-                  print("menu Clicked");
-                },
-                splashColor: Colors.black,
-              )),
           new Expanded(
             child: new Container(),
           ),
-          new Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: routeArgs.displayCartBtn
-                ? TextButton(
-                    onPressed: () {
-                      context.read<CartModel>().fetchAll();
-                      Navigator.pushNamed(context, CartItemsPage.routeName);
-                    },
-                    child: new Icon(
-                      Icons.shopping_cart,
-                      color: Colors.black87,
-                    ),
-                  )
-                : Container(),
-          )
         ],
       ),
     );
@@ -73,66 +36,26 @@ class Content extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CachedNetworkImage(
+            Container(
               width: 140.0,
               height: 140.0,
-              fit: BoxFit.fill,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
             ),
             new Padding(
               padding: const EdgeInsets.only(top: 30.0),
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  new Container(
-                    width: 70.0,
-                    height: 30.0,
-                    decoration: new BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            new BorderRadius.all(new Radius.circular(30.0)),
-                        boxShadow: <BoxShadow>[
-                          new BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 10.0,
-                              offset: new Offset(0.0, 10.0))
-                        ]),
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        ),
-                        new Text(foodVM.agvRating.toStringAsPrecision(2) +
-                            " (${foodVM.totalRating})")
-                      ],
-                    ),
+                  Container(
+                    width: 80,
                   ),
-                  new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Text(foodVM.name,
-                            style: new TextStyle(
-                                fontSize: 20.0,
-                                fontFamily: "OpenSans",
-                                fontWeight: FontWeight.w300,
-                                fontStyle: FontStyle.normal)),
-                        new Padding(
-                          padding: const EdgeInsets.only(left: 28.0, top: 12.0),
-                          child: new Text(foodVM.name,
-                              style: new TextStyle(
-                                color: Colors.black87.withOpacity(.3),
-                              )),
-                        ),
-                      ]),
                   new Container(
                     width: 60.0,
                     height: 60.0,
                     decoration: new BoxDecoration(
-                        gradient: btnGradient,
+                        //gradient: btnGradient,
+                        color: Colors.white,
                         shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
                               blurRadius: 10.0,
@@ -140,9 +63,9 @@ class Content extends StatelessWidget {
                               offset: new Offset(0.0, 10.0))
                         ]),
                     child: new Icon(
-                      Icons.share,
+                      Icons.favorite_sharp,
                       size: 25.0,
-                      color: Colors.white,
+                      color: Colors.red,
                     ),
                   ),
                 ],
@@ -154,27 +77,97 @@ class Content extends StatelessWidget {
 }
 
 class MHeader extends StatelessWidget {
+  final FoodVM foodVM;
+  MHeader({required this.foodVM});
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      height: 280.0,
-      child: new Stack(
-        children: <Widget>[
-          new ClipPath(
-            clipper: new ArcClipper(),
-            child: new Container(
-              height: double.infinity,
-              decoration: new BoxDecoration(gradient: bgGradient),
-            ),
+    return Column(
+      children: [
+        Container(
+          height: 280.0,
+          child: new Stack(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 10,
+                          color: Colors.grey.withOpacity(0.7),
+                          spreadRadius: 7,
+                          offset: Offset(0, 3),
+                        )
+                      ]),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15.0),
+                        child: CachedNetworkImage(
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.fill,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          imageUrl:
+                              AppConfigs.URL_Images + "/${foodVM.imagePath}",
+                        ),
+                      ),
+                      // Positioned(
+                      //     bottom: 100,
+                      //     left: 0,
+                      //     child: Container(
+                      //         height: 100,
+                      //         decoration: BoxDecoration(
+                      //           gradient: LinearGradient(
+                      //               colors: [
+                      //                 Colors.grey,
+                      //                 Colors.grey.withOpacity(0.1)
+                      //               ],
+                      //               begin: Alignment.bottomCenter,
+                      //               end: Alignment.center,
+                      //               stops: [0, 1]),
+                      //         ))),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(child: Content(), bottom: 0, right: 30),
+              Positioned(
+                left: 30,
+                bottom: 30,
+                child: Container(
+                  width: 70.0,
+                  height: 30.0,
+                  decoration: new BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          new BorderRadius.all(new Radius.circular(30.0)),
+                      boxShadow: <BoxShadow>[
+                        new BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10.0,
+                            offset: new Offset(0.0, 10.0))
+                      ]),
+                  child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                      ),
+                      new Text(foodVM.agvRating.toStringAsPrecision(2) +
+                          " (${foodVM.totalRating})")
+                    ],
+                  ),
+                ),
+              ),
+              Appbar()
+            ],
           ),
-          new Align(
-            alignment: FractionalOffset.center,
-            heightFactor: 3.5,
-            child: Content(),
-          ),
-          Appbar()
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

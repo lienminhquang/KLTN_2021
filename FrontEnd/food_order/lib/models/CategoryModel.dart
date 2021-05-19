@@ -7,6 +7,7 @@ class CategoryModel extends ChangeNotifier {
   List<CategoryVM> items = [];
   final CategoriesServices _categoriesServices = CategoriesServices();
   Map<int, List<FoodVM>> map = {};
+  late int currentID;
 
   Future<void> fetchAll() async {
     //items.clear();
@@ -18,6 +19,7 @@ class CategoryModel extends ChangeNotifier {
   }
 
   Future<void> fetchFoodsInCategory(int id) async {
+    currentID = id;
     map.remove(id);
     var result = await _categoriesServices.getFoodsInCategory(id);
     if (result.isSuccessed == true) {

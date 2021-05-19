@@ -182,7 +182,7 @@ namespace FoodOrder.Admin.Controllers
             var userPrincipal = this.ValidateToken(token.PayLoad);
             var authProperties = new AuthenticationProperties()
             {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
                 IsPersistent = true
             };
 
@@ -195,7 +195,7 @@ namespace FoodOrder.Admin.Controllers
 
             HttpContext.Response.Cookies.Append("Token", token.PayLoad, new Microsoft.AspNetCore.Http.CookieOptions()
             {
-                Expires = DateTime.Now.AddMinutes(10)
+                Expires = DateTime.Now.AddHours(1)
             });
 
             //if (!String.IsNullOrEmpty(loginRequest.ReturnUrl))

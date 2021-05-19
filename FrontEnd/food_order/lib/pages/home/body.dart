@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,11 @@ class _BodyState extends State<Body> {
   Widget imageCarousel = Container(
     height: 150,
   );
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,23 +111,24 @@ class _CategoryList extends StatelessWidget {
     log("Rebuild CategoryList with count = " + categories.length.toString());
 
     return Container(
-        height: 200,
-        //color: Colors.grey,
-        child: Container(
-          child: GridView.builder(
-              primary: false,
-              padding: const EdgeInsets.all(20),
-              itemCount: categories.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return CategoryItem(
-                    categories[index].name!, "image", categories[index].id!);
-              }),
-        ));
+        height: 150,
+        child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            //primary: false,
+            //padding: const EdgeInsets.all(20),
+            itemCount: categories.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                margin: EdgeInsets.all(10),
+                // padding: EdgeInsets.all(5),
+                // height: 20,
+                // width: 20,
+                // color: Colors.red,
+                //width: 100,
+                child: CategoryItem(categories[index].name!,
+                    categories[index].imagePath!, categories[index].id!),
+              );
+            }));
   }
 }
 
@@ -129,31 +137,66 @@ class CategoryItem extends StatelessWidget {
   final String image;
   final int id;
   CategoryItem(this.name, this.image, this.id);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+          blurRadius: 5,
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 4,
+          offset: Offset(0, 3),
+        )
+      ]),
       child: GestureDetector(
         onTap: () async {
-          var category =
-              await context.read<CategoryModel>().fetchFoodsInCategory(id);
-          Navigator.pushNamed(context, CategoryPage.routeName, arguments: id);
+          await context.read<CategoryModel>().fetchFoodsInCategory(id);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CategoryPage()));
         },
-        child: Column(
-          children: [
-            Expanded(
-              child: Image.asset('images/yelloweyecat.jpg'),
-              flex: 3,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(7),
+          child: Container(
+            width: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(7.0),
+              color: Colors.teal[100],
             ),
-            Text(
-              "$name",
-              style: TextStyle(fontSize: 12.0),
-              textAlign: TextAlign.center,
-            )
-          ],
+            padding: const EdgeInsets.all(0),
+            child: Stack(fit: StackFit.expand, children: [
+              CachedNetworkImage(
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.fill,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                imageUrl: AppConfigs.URL_Images + "/$image",
+              ),
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  height: 50,
+                  width: 200,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          tileMode: TileMode.clamp,
+                          colors: [Colors.grey, Colors.grey.withOpacity(0.3)])),
+                  //color: Colors.grey.withOpacity(0.7),
+                  child: Center(
+                    child: Text(
+                      "$name",
+                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              )
+            ]),
+          ),
         ),
       ),
-      color: Colors.teal[100],
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
-import 'pages/specification.dart';
 import 'pages/productDesc.dart';
 import 'pages/userReviews.dart';
 import 'package:provider/provider.dart';
@@ -13,59 +12,28 @@ class FavnPrice extends StatelessWidget {
         context.select<FoodDetailModel, FoodVM>((value) => value.foodVM);
     return new Padding(
       padding: const EdgeInsets.only(
-          left: 20.0, right: 20.0, top: 25.0, bottom: 12.0),
+          left: 20.0, right: 20.0, top: 10.0, bottom: 12.0),
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new Row(
-            children: <Widget>[
-              new Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new Icon(
-                  Icons.favorite,
-                  color: Colors.red,
-                ),
-              ),
-              new Text("Add to favorive")
-            ],
+          Flexible(
+            flex: 5,
+            child: Text(
+              foodVM.name,
+              style: new TextStyle(
+                  fontSize: 25.0,
+                  fontFamily: "OpenSans",
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.normal),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          Column(
-            children: [
-              new Row(
-                children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: new Text(
-                      "\$",
-                      style: new TextStyle(fontSize: 20.0),
-                    ),
-                  ),
-                  new Text(
-                    foodVM.price.toString(),
-                    style: new TextStyle(fontSize: 35.0),
-                  )
-                ],
-              ),
-              new Row(
-                children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: new Text(
-                      "\$",
-                      style: new TextStyle(fontSize: 10.0),
-                    ),
-                  ),
-                  new Text(
-                    foodVM.price.toString(),
-                    style: new TextStyle(
-                        fontSize: 15.0,
-                        decoration: TextDecoration.lineThrough,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w300),
-                  )
-                ],
-              ),
-            ],
+          Flexible(
+            flex: 2,
+            child: Text(
+              "\$" + foodVM.price.toString(),
+              style: new TextStyle(fontSize: 20.0),
+            ),
           )
         ],
       ),
@@ -89,13 +57,7 @@ class _MfooterState extends State<Mfooter> with SingleTickerProviderStateMixin {
     _tabs = [
       new Tab(
         child: new Text(
-          "Product Description",
-          style: new TextStyle(color: Colors.black),
-        ),
-      ),
-      new Tab(
-        child: new Text(
-          "specification",
+          "Food details",
           style: new TextStyle(color: Colors.black),
         ),
       ),
@@ -106,7 +68,7 @@ class _MfooterState extends State<Mfooter> with SingleTickerProviderStateMixin {
         ),
       ),
     ];
-    _pages = [new ProductDesc(), new Specification(), new UserReview()];
+    _pages = [new ProductDesc(), new UserReview()];
     _controller = new TabController(
       length: _tabs.length,
       vsync: this,
@@ -115,25 +77,28 @@ class _MfooterState extends State<Mfooter> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return new Column(
-      children: <Widget>[
-        new TabBar(
-          isScrollable: true,
-          controller: _controller,
-          tabs: _tabs,
-          indicatorColor: Colors.white,
-        ),
-        new Divider(
-          height: 1.0,
-        ),
-        new SizedBox.fromSize(
-          size: const Size.fromHeight(500.0),
-          child: new TabBarView(
+    return Container(
+      color: Colors.black12,
+      child: Column(
+        children: <Widget>[
+          TabBar(
+            isScrollable: true,
             controller: _controller,
-            children: _pages,
+            tabs: _tabs,
+            indicatorColor: Colors.black26,
           ),
-        ),
-      ],
+          new Divider(
+            height: 1.0,
+          ),
+          new SizedBox.fromSize(
+            size: const Size.fromHeight(500.0),
+            child: new TabBarView(
+              controller: _controller,
+              children: _pages,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

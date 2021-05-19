@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -55,26 +56,47 @@ namespace FoodOrder.Admin.Services
 
         public async Task<ApiResult<CategoryVM>> Create(CategoryCreateVM categoryCreateVM, string token)
         {
-            var json = JsonConvert.SerializeObject(categoryCreateVM);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var requestContent = new MultipartFormDataContent();
+            byte[] data;
+            using (var br = new BinaryReader(categoryCreateVM.ImageBinary.OpenReadStream()))
+            {
+                data = br.ReadBytes((int)categoryCreateVM.ImageBinary.Length);
+            }
+            ByteArrayContent bytes = new ByteArrayContent(data);
+            requestContent.Add(bytes, "ImageBinary", categoryCreateVM.ImageBinary.FileName);
+
+            requestContent.Add(new StringContent(categoryCreateVM.Description.ToString()), "Description");
+            requestContent.Add(new StringContent(categoryCreateVM.Name.ToString()), "Name");
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-            var res = await client.PostAsync(BaseRoute, httpContent);
+            var res = await client.PostAsync(BaseRoute, requestContent);
 
             return JsonConvert.DeserializeObject<ApiResult<CategoryVM>>(await res.Content.ReadAsStringAsync());
         }
 
-        public async Task<ApiResult<CategoryVM>> Edit(int id, CategoryVM cartEditVM, string token)
+        public async Task<ApiResult<CategoryVM>> Edit(int id, CategoryEditVM cartEditVM, string token)
         {
-            var json = JsonConvert.SerializeObject(cartEditVM);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var requestContent = new MultipartFormDataContent();
+            if (cartEditVM.ImageBinary != null)
+            {
+                byte[] data;
+                using (var br = new BinaryReader(cartEditVM.ImageBinary.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)cartEditVM.ImageBinary.Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "ImageBinary", cartEditVM.ImageBinary.FileName);
+            }
+
+            requestContent.Add(new StringContent(cartEditVM.Description.ToString()), "Description");
+            requestContent.Add(new StringContent(cartEditVM.Name.ToString()), "Name");
+
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             string uri = BaseRoute + $"?id={id.ToString()}";
-            var res = await client.PutAsync(uri, httpContent);
+            var res = await client.PutAsync(uri, requestContent);
 
             return JsonConvert.DeserializeObject<ApiResult<CategoryVM>>(await res.Content.ReadAsStringAsync());
         }

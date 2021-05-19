@@ -138,6 +138,10 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<FoodVM>> Create(FoodCreateVM vm)
         {
+            if(vm.ImageData == null)
+            {
+                return new FailedResult<FoodVM>("Invalid image!");
+            }
             var result = await _dbContext.Foods.AddAsync(_mapper.Map<Food>(vm));
             
             try

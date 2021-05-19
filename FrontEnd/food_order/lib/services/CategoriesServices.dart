@@ -48,7 +48,9 @@ class CategoriesServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
 
     return ApiResult.failedApiResult("Error!!");
   }

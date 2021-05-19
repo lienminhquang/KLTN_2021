@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/components/custom_bottom_nav_bar.dart';
 
-import '../../enums.dart';
 import 'body.dart';
 
 class OderScreen extends StatelessWidget {
@@ -9,8 +7,8 @@ class OderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Orders')),
       body: Body(),
-      bottomNavigationBar: CustomBottomNavBar(selectedMenu: Menustate.oders),
     );
   }
 }

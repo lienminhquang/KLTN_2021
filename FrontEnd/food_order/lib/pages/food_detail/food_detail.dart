@@ -5,6 +5,7 @@ import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
+import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 import 'footer.dart';
 import 'gredients.dart';
@@ -35,7 +36,6 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
     if (cartVM != null) {
       count = cartVM.quantity;
     }
-    log("rebuld bottomBtns");
 
     return new Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -52,9 +52,9 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(result.errorMessage!)));
                 } else {
-                  context.read<CartModel>().fetchAll();
-                  Navigator.pushReplacementNamed(
-                      context, CartItemsPage.routeName);
+                  // context.read<CartModel>().fetchAll();
+                  // Navigator.pushReplacementNamed(
+                  //     context, CartItemsPage.routeName);
                 }
               },
               child: new ClipRRect(
@@ -167,13 +167,18 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var foodVM =
+        context.select<FoodDetailModel, FoodVM>((value) => value.foodVM);
+    log("rebuild bottomBtns");
     return new Scaffold(
       body: new ListView(
         controller: _scrollController,
         children: <Widget>[
-          new MHeader(),
+          new MHeader(
+            foodVM: foodVM,
+          ),
           FavnPrice(),
-          Divider(),
+          //Divider(),
           NotificationListener<OverscrollNotification>(
               onNotification: (OverscrollNotification value) {
                 if (value.overscroll < 0 &&

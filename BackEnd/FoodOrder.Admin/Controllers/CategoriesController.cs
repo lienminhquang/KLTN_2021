@@ -1,4 +1,5 @@
-﻿using FoodOrder.Admin.Configs;
+﻿using AutoMapper;
+using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
@@ -15,10 +16,12 @@ namespace FoodOrder.Admin.Controllers
     public class CategoriesController : Controller
     {
         private readonly CategoryServices _categoryServices;
+        private readonly IMapper _mapper;
 
-        public CategoriesController(CategoryServices categoryServices)
+        public CategoriesController(CategoryServices categoryServices, IMapper mapper)
         {
             _categoryServices = categoryServices;
+            _mapper = mapper;
         }
 
         // GET: CategoriesController
@@ -56,6 +59,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateAsync([FromForm] CategoryCreateVM categoryCreateVM)
         {
             if (!this.ValidateTokenInCookie())
@@ -93,7 +97,7 @@ namespace FoodOrder.Admin.Controllers
                 return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
-            CategoryVM vm = result.PayLoad;
+            CategoryEditVM vm = _mapper.Map< CategoryEditVM >( result.PayLoad);
 
             return View(vm);
         }
@@ -101,7 +105,8 @@ namespace FoodOrder.Admin.Controllers
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, [FromForm] CategoryVM vm)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult> EditAsync([FromForm] CategoryEditVM vm)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -113,11 +118,11 @@ namespace FoodOrder.Admin.Controllers
                 return View(vm);
             }
 
-            var rs = await _categoryServices.Edit(id, vm, this.GetTokenFromCookie());
+            var rs = await _categoryServices.Edit(vm.ID, vm, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
                 TempData[AppConfigs.SuccessMessageString] = "Category edited!";
-                return RedirectToAction("Details", new { id = id });
+                return RedirectToAction("Details", new { id = vm.ID });
             }
 
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;

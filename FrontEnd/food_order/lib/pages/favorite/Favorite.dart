@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/components/custom_bottom_nav_bar.dart';
 
-import '../../enums.dart';
 import 'body.dart';
 
 class FavoriteScreen extends StatelessWidget {
@@ -9,8 +7,8 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Favorite')),
       body: Body(),
-      bottomNavigationBar: CustomBottomNavBar(selectedMenu: Menustate.favorite),
     );
   }
 }

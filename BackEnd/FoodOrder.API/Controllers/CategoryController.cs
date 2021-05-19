@@ -61,8 +61,8 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync([FromBody] CategoryCreateVM request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreateAsync([FromForm] CategoryCreateVM request)
         {
             var result = await _categoryServices.Create(request);
             if (!result.IsSuccessed)
@@ -73,8 +73,8 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPut]
-       // [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(int id, [FromBody] CategoryVM category)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> EditAsync(int id, [FromForm] CategoryEditVM category)
         {
             var result = await _categoryServices.Edit(id ,category);
             if (!result.IsSuccessed)
