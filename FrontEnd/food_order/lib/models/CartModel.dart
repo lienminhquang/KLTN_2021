@@ -10,6 +10,15 @@ class CartModel extends ChangeNotifier {
   List<CartVM> items = [];
   final CartServices _cartServices = CartServices();
 
+  double getTotalPrice() {
+    // Todo: apply promotions
+    double total = 0;
+    for (var item in items) {
+      total += item.quantity * item.foodVM.price;
+    }
+    return total;
+  }
+
   Future<void> fetchAll() async {
     //items.clear();
     final String userID = UserServices.getUserID();

@@ -1,10 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CartModel.dart';
+import 'package:food_delivery/view_models/Carts/CartVM.dart';
+import 'package:intl/intl.dart';
 import 'body.dart';
 import 'package:provider/provider.dart';
 
-class CartItemsPage extends StatelessWidget {
+class CartScreen extends StatelessWidget {
   static String routeName = "/cart";
 
   @override
@@ -23,6 +26,9 @@ class CheckoutCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.select<CartModel, List<CartVM>>((value) => value.items);
+    final totalPrice = context.read<CartModel>().getTotalPrice();
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       height: 174,
@@ -74,7 +80,8 @@ class CheckoutCart extends StatelessWidget {
                 Text.rich(
                   TextSpan(text: 'Tổng:\n', children: [
                     TextSpan(
-                        text: '\$10.12',
+                        text:
+                            '\$${AppConfigs.AppNumberFormat.format(totalPrice)}',
                         style: TextStyle(fontSize: 16, color: Colors.black))
                   ]),
                 ),

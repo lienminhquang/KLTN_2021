@@ -146,8 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: EdgeInsets.only(top: 15.0, left: 20.0),
                         child: InkWell(
                           onTap: () {
-                            Navigator.pushNamed(
-                                context, CartItemsPage.routeName);
+                            Navigator.pushNamed(context, CartScreen.routeName);
                           },
                           child: Text(
                             'Forgot password?',

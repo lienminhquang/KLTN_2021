@@ -1,14 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
-import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 import 'footer.dart';
-import 'gredients.dart';
 import 'package:provider/provider.dart';
 import 'header.dart';
 
@@ -52,9 +51,11 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(result.errorMessage!)));
                 } else {
-                  // context.read<CartModel>().fetchAll();
+                  context.read<CartModel>().fetchAll();
                   // Navigator.pushReplacementNamed(
                   //     context, CartItemsPage.routeName);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Added item into your cart!")));
                 }
               },
               child: ClipRRect(
@@ -68,7 +69,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: new Center(
                       child: new Text(
-                        "\$ ${price * count}",
+                        "\$ ${AppConfigs.AppNumberFormat.format(price * count)}",
                         style: new TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,

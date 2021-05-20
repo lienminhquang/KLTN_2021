@@ -13,7 +13,7 @@ import 'package:food_delivery/pages/profile/Profile.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
 
 final Map<String, WidgetBuilder> routes = {
-  CartItemsPage.routeName: (context) => CartItemsPage(),
+  CartScreen.routeName: (context) => CartScreen(),
   HomeScreen.routeName: (context) => HomeScreen(),
   OderScreen.routeName: (context) => OderScreen(),
   FavoriteScreen.routeName: (context) => FavoriteScreen(),

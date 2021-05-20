@@ -6,6 +6,7 @@ import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Body extends StatefulWidget {
@@ -14,12 +15,15 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  final NumberFormat _numberFormat = NumberFormat();
+
   Widget _item(CartVM model, BuildContext context) {
     return GestureDetector(
       onTap: () {
         context.read<FoodDetailModel>().fetchFoodDetail(model.foodID);
-        Navigator.pushNamed(context, FoodDetail.routeName,
-            arguments: FoodDetailArguments(displayCartBtn: false));
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return FoodDetail();
+        }));
       },
       child: Container(
         height: 80,
@@ -58,7 +62,9 @@ class _BodyState extends State<Body> {
                               color: LightColor.red,
                               fontSize: 12,
                             )),
-                        Text(model.foodVM.price.toString(),
+                        Text(
+                            AppConfigs.AppNumberFormat.format(
+                                model.foodVM.price),
                             style: TextStyle(
                               fontSize: 14,
                             )),
@@ -85,7 +91,6 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     var carts = context.select<CartModel, List<CartVM>>((value) => value.items);
-    //context.watch<CartModel>().fetchAll("5d597675-8179-4575-7872-08d90b25fb90");
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),

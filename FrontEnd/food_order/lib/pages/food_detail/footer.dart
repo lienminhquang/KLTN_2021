@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'pages/productDesc.dart';
@@ -31,7 +32,7 @@ class FavnPrice extends StatelessWidget {
           Flexible(
             flex: 2,
             child: Text(
-              "\$" + foodVM.price.toString(),
+              "\$" + AppConfigs.AppNumberFormat.format(foodVM.price),
               style: new TextStyle(fontSize: 20.0),
             ),
           )

@@ -5,6 +5,7 @@ import 'package:food_delivery/models/AppModel.dart';
 import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/favorite/Favorite.dart';
 import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
@@ -56,7 +57,7 @@ class _MotherBoardState extends State<MotherBoard> {
   final List<Widget> _children = [
     HomeScreen(),
     OderScreen(),
-    FavoriteScreen(),
+    CartScreen(),
     NoficationScreen(),
     ProfileScreen()
   ];
@@ -86,8 +87,8 @@ class _MotherBoardState extends State<MotherBoard> {
               label: "Order"),
           new BottomNavigationBarItem(
               backgroundColor: Colors.black87,
-              icon: Icon(Icons.favorite_border),
-              label: "Favorite"),
+              icon: Icon(Icons.shopping_cart),
+              label: "Cart"),
           new BottomNavigationBarItem(
               backgroundColor: Colors.black87,
               icon: Icon(Icons.notifications_active_outlined),

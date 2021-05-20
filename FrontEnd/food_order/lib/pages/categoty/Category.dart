@@ -245,7 +245,8 @@ class FoodCard extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    _foodVM.price.toString(),
+                                    AppConfigs.AppNumberFormat.format(
+                                        _foodVM.price),
                                     style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w300,
@@ -263,7 +264,8 @@ class FoodCard extends StatelessWidget {
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            _foodVM.price.toString(),
+                                            AppConfigs.AppNumberFormat.format(
+                                                _foodVM.price),
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold),
