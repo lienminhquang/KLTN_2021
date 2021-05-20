@@ -158,141 +158,131 @@ class FoodCard extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Container(
-          color: Colors.grey[300],
-          //margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-          child: Row(
-            children: [
-              ClipRRect(
-                //borderRadius: BorderRadius.circular(10),
-                child: Container(
-                    child: Stack(children: [
-                  Container(
-                    width: 110,
-                    height: 110,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      imageUrl: AppConfigs.URL_Images + "/${_foodVM.imagePath}",
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    child: Container(
+        child: GestureDetector(
+          onTap: () async {
+            if (await context
+                    .read<FoodDetailModel>()
+                    .fetchFoodDetail(_foodVM.id) ==
+                false) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Failed to get food details!")));
+              return;
+            }
+            context.read<FoodDetailModel>().fetchUserRatings();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => FoodDetail()));
+          },
+          child: Container(
+            color: Colors.grey[300],
+            //margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+            child: Row(
+              children: [
+                ClipRRect(
+                  //borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                      child: Stack(children: [
+                    Container(
                       width: 110,
-                      color: Colors.white38,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 18,
-                          ),
-                          Text(
-                            "${_foodVM.agvRating.toStringAsPrecision(2)} (${_foodVM.totalRating})",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black54),
-                          )
-                        ],
+                      height: 110,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.fill,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        imageUrl:
+                            AppConfigs.URL_Images + "/${_foodVM.imagePath}",
                       ),
                     ),
-                  )
-                ])),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                width: 170,
-                height: 100,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 10, 5, 10),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          _foodVM.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 16),
+                    Positioned(
+                      left: 0,
+                      bottom: 0,
+                      child: Container(
+                        width: 110,
+                        color: Colors.white38,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                              size: 18,
+                            ),
+                            Text(
+                              "${_foodVM.agvRating.toStringAsPrecision(2)} (${_foodVM.totalRating})",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black54),
+                            )
+                          ],
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  _foodVM.price.toString(),
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w300,
-                                    decoration: TextDecoration.lineThrough,
+                    )
+                  ])),
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  width: 170,
+                  height: 100,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 5, 10),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            _foodVM.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    _foodVM.price.toString(),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w300,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      //width: 100,
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          _foodVM.price.toString(),
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
+                                Container(
+                                  height: 40,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        //width: 100,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            _foodVM.price.toString(),
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    //Expanded(child: Container()),
-                                    //Spacer(),
-                                    IconButton(
-                                        icon: Icon(Icons.add_circle,
-                                            size: 30, color: Colors.red),
-                                        onPressed: () async {
-                                          if (await context
-                                                  .read<FoodDetailModel>()
-                                                  .fetchFoodDetail(
-                                                      _foodVM.id) ==
-                                              false) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        "Failed to get food details!")));
-                                            return;
-                                          }
-                                          context
-                                              .read<FoodDetailModel>()
-                                              .fetchUserRatings();
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      FoodDetail()));
-                                        })
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
