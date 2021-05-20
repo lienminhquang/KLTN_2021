@@ -5,6 +5,10 @@ import 'LightColor.dart';
 class AppTheme {
   const AppTheme();
   static ThemeData lightTheme = ThemeData(
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+            primary: Colors.purple, backgroundColor: Colors.blue),
+      ),
       backgroundColor: LightColor.background,
       primaryColor: Colors.lightBlue[600],
       cardTheme: CardTheme(color: LightColor.background),

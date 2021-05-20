@@ -4,8 +4,6 @@ import 'dart:developer';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Carts/CartCreateVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
-import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
-import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/view_models/commons/PaginatedList.dart';
 import 'package:food_delivery/services/HttpClientFactory.dart';

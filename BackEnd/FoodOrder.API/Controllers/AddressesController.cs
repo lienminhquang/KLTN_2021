@@ -32,10 +32,22 @@ namespace FoodOrder.API.Controllers
         }
 
         // GET api/<ValuesController>/details?
-        [HttpGet("details")]
-        public async Task<IActionResult> Get([FromQuery] int id)
+        [HttpGet("user")]
+        public async Task<IActionResult> GetByUserID([FromQuery] string userID)
         {
-            var result = await _addressServices.GetByID(id);
+            var result = await _addressServices.GetByUserID(userID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        // GET api/<ValuesController>/details?
+        [HttpGet("details")]
+        public IActionResult Get([FromQuery] int id)
+        {
+            var result = _addressServices.GetByID(id);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

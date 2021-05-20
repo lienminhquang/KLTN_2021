@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/DevHttpsOveride.dart';
+import 'package:food_delivery/models/AddressModel.dart';
 import 'package:food_delivery/models/AppModel.dart';
 import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => FoodDetailModel()),
         ChangeNotifierProvider(create: (context) => AppModel()),
         ChangeNotifierProvider(create: (context) => CartModel()),
+        ChangeNotifierProvider(create: (context) => AddressModel()),
       ],
       child: MaterialApp(
         title: 'Food Delivery',

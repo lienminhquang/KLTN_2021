@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/models/AddressModel.dart';
+import 'package:provider/provider.dart';
 
 class AddAdressScreen extends StatefulWidget {
   static String routeName = "/addadress";
@@ -12,7 +14,7 @@ class _AddAdressState extends State<AddAdressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Them dia chi'),
+        title: Text('Thêm địa chỉ'),
       ),
       body: BodyAdressScreen(),
     );
@@ -28,6 +30,7 @@ class _BodyAdressScreenState extends State<BodyAdressScreen> {
   final _adressController = TextEditingController();
   final _nameController = TextEditingController();
   final _sdtController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,30 +41,43 @@ class _BodyAdressScreenState extends State<BodyAdressScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               TextField(
-                decoration: InputDecoration(labelText: 'Địa chỉ mới'),
-                controller: _adressController,
-                onChanged: (text) {},
-              ),
-              TextField(
                 decoration: InputDecoration(labelText: 'Tên'),
                 controller: _nameController,
                 onChanged: (text) {},
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Số điện thoại'),
-                controller: _sdtController,
+                decoration: InputDecoration(labelText: 'Địa chỉ'),
+                controller: _adressController,
                 onChanged: (text) {},
               ),
               Padding(padding: const EdgeInsets.symmetric(vertical: 30)),
-              ButtonTheme(
-                height: 60,
-                minWidth: 200,
-                child: FlatButton(
-                  child: Text('Thêm địa chỉ'),
-                  textColor: Colors.white,
-                  color: Colors.orange,
-                  onPressed: () {},
-                ),
+              TextButton(
+                child: Container(
+                    alignment: Alignment.center,
+                    height: 40,
+                    width: 150,
+                    child: Text(
+                      'Thêm địa chỉ',
+                      style: TextStyle(color: Colors.white),
+                    )),
+                onPressed: () async {
+                  if (_nameController.text.isEmpty ||
+                      _adressController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Name and address could not be null!")));
+                    return;
+                  }
+                  var rs = await context
+                      .read<AddressModel>()
+                      .create(_nameController.text, _adressController.text);
+                  await context.read<AddressModel>().fetchAll();
+                  if (rs.isSuccessed == false) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Failed to create address!")));
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
               ),
             ],
           ),

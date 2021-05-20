@@ -11,7 +11,7 @@ namespace FoodOrder.Core.Helpers
 {
     public class Configs
     {
-        public static int PageSize = 10;
+        public static int PageSize = -1; // -1 mean get all
     }
 
     public class Utilities<T>

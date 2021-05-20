@@ -17,9 +17,9 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly ILogger<CartServices> _logger;
+        private readonly ILogger<AddressServices> _logger;
 
-        public AddressServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<CartServices> logger)
+        public AddressServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<AddressServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
@@ -47,8 +47,8 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<AddressVM>>> GetByUserID(string userID)
         {
-            var addresses = from c in _dbContext.Carts
-                        where c.AppUserId.ToString() == userID
+            var addresses = from c in _dbContext.Addresses
+                        where c.AppUserID.ToString() == userID
                         select _mapper.Map<AddressVM>(c);
 
             var created = await PaginatedList<AddressVM>.CreateAsync(addresses, 1, Core.Helpers.Configs.PageSize);
@@ -56,10 +56,10 @@ namespace FoodOrder.API.Services
             return new SuccessedResult<PaginatedList<AddressVM>>(created);
         }
 
-        public async Task<ApiResult<AddressVM>> GetByID(int id)
+        public ApiResult<AddressVM> GetByID(int id)
         {
-           
-            var address =  _dbContext.Addresses.Find(id);
+
+            var address = _dbContext.Addresses.Find(id);
             if (address == null)
             {
                 return new FailedResult<AddressVM>("Address not found!");

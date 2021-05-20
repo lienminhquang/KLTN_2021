@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/models/AddressModel.dart';
 import 'package:food_delivery/pages/adress/Adress.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
+import 'package:provider/provider.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -19,7 +21,11 @@ class Body extends StatelessWidget {
         ProfileMenu(
           icon: Icon(Icons.location_on_outlined),
           text: 'Địa chỉ',
-          press: () => Navigator.pushNamed(context, AdressScreen.routeName),
+          press: () {
+            context.read<AddressModel>().fetchAll();
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AdressScreen()));
+          },
         ),
         ProfileMenu(
           icon: Icon(Icons.settings),

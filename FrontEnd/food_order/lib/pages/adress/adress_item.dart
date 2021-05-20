@@ -1,60 +1,42 @@
 import 'package:flutter/material.dart';
-
-import 'testdata_adress.dart';
+import 'package:food_delivery/pages/presentation/themes.dart';
+import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 
 class AdressItem extends StatelessWidget {
   const AdressItem({
     Key? key,
     required this.adress,
   }) : super(key: key);
-  final Adress adress;
+  final AddressVM adress;
   @override
   Widget build(BuildContext context) {
     return FlatButton(
       padding: EdgeInsets.all(10),
       onPressed: () {},
       color: Color(0xFFFFFFFF),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.home_outlined,
-                size: 25,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text('Nhà'),
-            ],
+          Container(
+            child: Icon(
+              Icons.location_pin,
+              color: Colors.green,
+            ),
+            width: 50,
           ),
-          Row(
-            children: [
-              SizedBox(
-                width: 35,
-              ),
-              Flexible(
-                child: Text(
-                  adress.adress,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 35,
-              ),
-              Text(adress.name),
-              SizedBox(
-                width: 15,
-              ),
-              Text(adress.sdt)
-            ],
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      adress.name,
+                      style: AppTheme.titleStyle,
+                    )),
+                Text(adress.addressString, style: AppTheme.subTitleStyle)
+              ],
+            ),
           ),
         ],
       ),
