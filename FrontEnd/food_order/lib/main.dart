@@ -73,39 +73,46 @@ class _MotherBoardState extends State<MotherBoard> {
     return Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        items: [
-          new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
-              icon: Icon(
-                Icons.home_outlined,
-              ),
-              label: "Home"),
-          new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
-              icon: Icon(Icons.menu),
-              label: "Order"),
-          new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
-              icon: Icon(Icons.shopping_cart),
-              label: "Cart"),
-          new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
-              icon: Icon(Icons.notifications_active_outlined),
-              label: "Notification"),
-          new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
-              icon: Icon(Icons.person_outline_outlined),
-              label: "Profile")
-        ],
-        onTap: onTabTapped,
-      ),
+          currentIndex: _currentIndex,
+          items: [
+            new BottomNavigationBarItem(
+                backgroundColor: Colors.black87,
+                icon: Icon(
+                  Icons.home_outlined,
+                ),
+                label: "Home"),
+            new BottomNavigationBarItem(
+                backgroundColor: Colors.black87,
+                icon: Icon(Icons.menu),
+                label: "Order"),
+            new BottomNavigationBarItem(
+                backgroundColor: Colors.black87,
+                icon: Icon(Icons.shopping_cart),
+                label: "Cart"),
+            new BottomNavigationBarItem(
+                backgroundColor: Colors.black87,
+                icon: Icon(Icons.notifications_active_outlined),
+                label: "Notification"),
+            new BottomNavigationBarItem(
+                backgroundColor: Colors.black87,
+                icon: Icon(Icons.person_outline_outlined),
+                label: "Profile")
+          ],
+          onTap: (int index) {
+            onTabTapped(index, context);
+          }),
     );
   }
 
-  void onTabTapped(int index) {
+  void onTabTapped(int index, BuildContext context) {
     setState(() {
       _currentIndex = index;
+      switch (_currentIndex) {
+        case 2:
+          context.read<CartModel>().fetchAll();
+          break;
+        default:
+      }
     });
   }
 }

@@ -23,6 +23,7 @@ namespace FoodOrder.Data
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new AppRoleConfig());
+            builder.ApplyConfiguration(new AddressConfig());
             builder.ApplyConfiguration(new AppUserConfig());
             builder.ApplyConfiguration(new CartConfig());
             builder.ApplyConfiguration(new CategoryConfig());
@@ -57,5 +58,6 @@ namespace FoodOrder.Data
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Address> Addresses { get; set; }
     }
 }

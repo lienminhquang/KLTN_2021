@@ -48,6 +48,7 @@ namespace FoodOrder.Admin
 
             // DI
             services.AddTransient<AdminUserService, AdminUserService>();
+            services.AddTransient<AddressServices, AddressServices>();
             services.AddTransient<CartServices, CartServices>();
             services.AddTransient<CategoryServices, CategoryServices>();
             services.AddTransient<FoodServices, FoodServices>();

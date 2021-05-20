@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels.Addresses;
 using FoodOrder.Core.ViewModels.AppRoles;
 using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
@@ -50,6 +51,10 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<AppRole, AppRoleVM>();
             CreateMap<AppRoleCreateVM, AppRole>();
             CreateMap<AppRoleVM, AppRoleEditVm>();
+
+            CreateMap<Address, AddressVM>();
+            CreateMap<AddressCreateVM, Address>();
+            CreateMap<AddressVM, AddressEditVM>();
 
             CreateMap<Image, ImageVM>();
                // .ForMember(dest => dest.ImageData, options => options.MapFrom<ImageCustomeResolver>());

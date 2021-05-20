@@ -5,6 +5,7 @@ import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
+import 'package:food_delivery/pages/presentation/themes.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,13 @@ class _BodyState extends State<Body> {
         }));
       },
       child: Container(
+        decoration: BoxDecoration(color: Colors.white, boxShadow: <BoxShadow>[
+          new BoxShadow(
+            blurRadius: 3.0,
+            color: Colors.black12,
+            //offset: new Offset(0.0, 10.0))
+          )
+        ]),
         height: 80,
         child: Row(
           children: <Widget>[
@@ -64,7 +72,7 @@ class _BodyState extends State<Body> {
                             )),
                         Text(
                             AppConfigs.AppNumberFormat.format(
-                                model.foodVM.price),
+                                model.foodVM.price * model.quantity),
                             style: TextStyle(
                               fontSize: 14,
                             )),
@@ -88,44 +96,112 @@ class _BodyState extends State<Body> {
     );
   }
 
+  Widget addressSession(BuildContext context) {
+    return Container(
+      //height: 150,
+      child: Column(
+        children: [
+          Container(
+            height: 100,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 10, 0, 5),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Địa điểm nhận hàng",
+                              style: AppTheme.subTitleStyle,
+                            )),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "140/11 Đường Bình Quới",
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Container(
+                      width: 70,
+                      child: Text(
+                        "Thay đổi",
+                        style: TextStyle(fontSize: 13),
+                      )),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            thickness: 2,
+            height: 16,
+            //indent: 20,
+            //endIndent: 20,
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
+            child: Align(
+              child: Text(
+                "Đơn hàng",
+                style: AppTheme.subTitleStyle,
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var carts = context.select<CartModel, List<CartVM>>((value) => value.items);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ListView.builder(
-        itemCount: carts.length,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Dismissible(
-            key: ObjectKey(carts[index]),
-            direction: DismissDirection.endToStart,
-            background: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFE6E6),
-                ),
-                child: Row(
-                  children: [
-                    Spacer(),
-                    Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    )
-                  ],
-                )),
-            onDismissed: (direction) async {
-              var cartModel = context.read<CartModel>();
-              if (await cartModel.delete(carts[index].foodID)) {
-                cartModel.fetchAll();
-              }
-            },
-            child: _item(carts[index], context),
-          ),
-        ),
-      ),
-      // child: _cartItems()
+    return ListView.builder(
+      itemCount: carts.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return addressSession(context);
+        }
+
+        return Dismissible(
+          key: ObjectKey(carts[index - 1]),
+          direction: DismissDirection.endToStart,
+          background: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: Color(0xFFFFE6E6),
+              ),
+              child: Row(
+                children: [
+                  Spacer(),
+                  Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  )
+                ],
+              )),
+          onDismissed: (direction) async {
+            var cartModel = context.read<CartModel>();
+            if (await cartModel.delete(carts[index - 1].foodID)) {
+              cartModel.fetchAll();
+            }
+          },
+          child: _item(carts[index - 1], context),
+        );
+      },
     );
   }
 }

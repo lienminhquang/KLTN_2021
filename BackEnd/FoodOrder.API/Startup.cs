@@ -82,6 +82,7 @@ namespace FoodOrder.API
 
 
             services.AddTransient<UserServices, UserServices>();
+            services.AddTransient<AddressServices, AddressServices>();
             services.AddTransient<CartServices, CartServices>();
             services.AddTransient<CategoryServices, CategoryServices>();
             services.AddTransient<FoodServices, FoodServices>();

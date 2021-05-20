@@ -137,7 +137,7 @@ namespace FoodOrder.API.Services
                 FirstName = c.FirstName,
                 LastName = c.LastName,
                 DateOfBirth = c.DateOfBirth,
-                Address = c.Address,
+                
                 Email = c.Email,
                 ID = c.Id
             };
@@ -168,7 +168,7 @@ namespace FoodOrder.API.Services
             {
                 ID = user.Id,
                 Username = user.UserName,
-                Address = user.Address,
+                
                 DateOfBirth = user.DateOfBirth,
                 Email = user.Email,
                 FirstName = user.FirstName,

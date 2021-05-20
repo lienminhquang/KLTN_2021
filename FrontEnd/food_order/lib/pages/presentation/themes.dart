@@ -15,10 +15,11 @@ class AppTheme {
       primaryTextTheme:
           TextTheme(bodyText2: TextStyle(color: LightColor.titleTextColor)));
 
+  //static TextStyle
   static TextStyle titleStyle =
       const TextStyle(color: LightColor.titleTextColor, fontSize: 16);
   static TextStyle subTitleStyle =
-      const TextStyle(color: LightColor.subTitleTextColor, fontSize: 12);
+      const TextStyle(color: LightColor.subTitleTextColor, fontSize: 13);
 
   static TextStyle h1Style =
       const TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
