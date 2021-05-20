@@ -55,7 +55,7 @@ class Content extends StatelessWidget {
                         //gradient: btnGradient,
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.black),
+                        //border: Border.all(color: Colors.black),
                         boxShadow: <BoxShadow>[
                           new BoxShadow(
                               blurRadius: 10.0,

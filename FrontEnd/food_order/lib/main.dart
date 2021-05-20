@@ -10,6 +10,7 @@ import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
 import 'package:food_delivery/pages/nofication/Nofication.dart';
 import 'package:food_delivery/pages/oders/Orders.dart';
+import 'package:food_delivery/pages/presentation/themes.dart';
 import 'package:food_delivery/pages/profile/Profile.dart';
 
 import 'package:provider/provider.dart';
@@ -34,10 +35,11 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Food Delivery',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        // theme: ThemeData(
+        //   primarySwatch: Colors.blue,
+        //   visualDensity: VisualDensity.adaptivePlatformDensity,
+        // ),
+        theme: AppTheme.lightTheme,
         home: MotherBoard(),
       ),
     );

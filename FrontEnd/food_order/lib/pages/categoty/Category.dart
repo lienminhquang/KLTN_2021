@@ -117,8 +117,11 @@ class _AllFoodState extends State<AllFood> {
       margin: const EdgeInsets.fromLTRB(15.0, 10.0, 10.0, 0.0),
       child: Column(
         children: [
+          Divider(
+            thickness: 2,
+          ),
           SizedBox(
-            height: 100,
+            height: 30,
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -151,135 +154,147 @@ class FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[300],
-      margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-      child: Row(
-        children: [
-          Container(
-              child: Stack(children: [
-            Container(
-              width: 110,
-              height: 110,
-              child: CachedNetworkImage(
-                fit: BoxFit.fill,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                imageUrl: AppConfigs.URL_Images + "/${_foodVM.imagePath}",
-              ),
-            ),
-            Positioned(
-              left: 0,
-              bottom: 0,
-              child: Container(
-                width: 110,
-                color: Colors.white38,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 18,
-                    ),
-                    Text(
-                      "${_foodVM.agvRating.toStringAsPrecision(2)} (${_foodVM.totalRating})",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black54),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ])),
-          Container(
-            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            width: 170,
-            height: 100,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 10, 5, 10),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      _foodVM.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 16),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          color: Colors.grey[300],
+          //margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+          child: Row(
+            children: [
+              ClipRRect(
+                //borderRadius: BorderRadius.circular(10),
+                child: Container(
+                    child: Stack(children: [
+                  Container(
+                    width: 110,
+                    height: 110,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      imageUrl: AppConfigs.URL_Images + "/${_foodVM.imagePath}",
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  Positioned(
+                    left: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 110,
+                      color: Colors.white38,
+                      child: Row(
                         children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              _foodVM.price.toString(),
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
+                          Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                            size: 18,
                           ),
-                          Container(
-                            height: 40,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  //width: 100,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      _foodVM.price.toString(),
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                          Text(
+                            "${_foodVM.agvRating.toStringAsPrecision(2)} (${_foodVM.totalRating})",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black54),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ])),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                width: 170,
+                height: 100,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 10, 5, 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          _foodVM.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  _foodVM.price.toString(),
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w300,
+                                    decoration: TextDecoration.lineThrough,
                                   ),
                                 ),
-                                //Expanded(child: Container()),
-                                //Spacer(),
-                                IconButton(
-                                    icon: Icon(Icons.add_circle,
-                                        size: 30, color: Colors.red),
-                                    onPressed: () async {
-                                      if (await context
+                              ),
+                              Container(
+                                height: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      //width: 100,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          _foodVM.price.toString(),
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                    //Expanded(child: Container()),
+                                    //Spacer(),
+                                    IconButton(
+                                        icon: Icon(Icons.add_circle,
+                                            size: 30, color: Colors.red),
+                                        onPressed: () async {
+                                          if (await context
+                                                  .read<FoodDetailModel>()
+                                                  .fetchFoodDetail(
+                                                      _foodVM.id) ==
+                                              false) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "Failed to get food details!")));
+                                            return;
+                                          }
+                                          context
                                               .read<FoodDetailModel>()
-                                              .fetchFoodDetail(_foodVM.id) ==
-                                          false) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    "Failed to get food details!")));
-                                        return;
-                                      }
-                                      context
-                                          .read<FoodDetailModel>()
-                                          .fetchUserRatings();
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  FoodDetail()));
-                                    })
-                              ],
-                            ),
+                                              .fetchUserRatings();
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FoodDetail()));
+                                        })
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
