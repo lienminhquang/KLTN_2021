@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
@@ -15,13 +16,50 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  Widget imageCarousel = Container(
-    height: 150,
-  );
+  List<String> _appBannerImages = [];
 
   @override
   void initState() {
+    _appBannerImages = [
+      "images/app_banner/giam_10k.jpeg",
+      "images/app_banner/giam_50.jpeg",
+      "images/app_banner/khao_50_phan_tram.jpg",
+      "images/app_banner/khao_60_phan_tram.png",
+      "images/app_banner/sieu_deal_thu_5_chi_1D.jpeg",
+    ];
     super.initState();
+  }
+
+  Widget buidImageCarousel(List<String> images) {
+    return Container(
+      height: 150,
+      child: CarouselSlider(
+        options: CarouselOptions(
+          //height: 400.0,
+          enlargeCenterPage: true,
+          aspectRatio: 16 / 9,
+          viewportFraction: 0.8,
+          autoPlay: true,
+          autoPlayInterval: Duration(seconds: 3),
+          autoPlayAnimationDuration: Duration(milliseconds: 800),
+          autoPlayCurve: Curves.fastOutSlowIn,
+        ),
+        items: images.map((i) {
+          return Builder(
+            builder: (BuildContext context) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(7),
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.symmetric(horizontal: 1.0),
+                    decoration: BoxDecoration(color: Colors.amber),
+                    child: Image.asset(i)),
+              );
+            },
+          );
+        }).toList(),
+      ),
+    );
   }
 
   @override
@@ -89,7 +127,7 @@ class _BodyState extends State<Body> {
         child: ListView(
           children: [
             fakeSearchBox,
-            imageCarousel,
+            buidImageCarousel(_appBannerImages),
             offers,
             _CategoryList(),
             FastChoice(),

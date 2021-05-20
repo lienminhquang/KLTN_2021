@@ -41,6 +41,7 @@ dependencies:
   intl: ^0.17.0
 
   #google_fonts: ^2.1.0
+  carousel_slider: ^4.0.0-nullsafety.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -73,6 +74,11 @@ flutter:
     - images/iconfacebook.png
     - images/item.png
     - images/googlehome.png
+    - images/app_banner/giam_10k.jpeg
+    - images/app_banner/giam_50.jpeg
+    - images/app_banner/khao_50_phan_tram.jpg
+    - images/app_banner/khao_60_phan_tram.png
+    - images/app_banner/sieu_deal_thu_5_chi_1D.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
