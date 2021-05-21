@@ -2,10 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CartModel.dart';
-import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/pages/presentation/themes.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
-import 'package:intl/intl.dart';
 import 'body.dart';
 import 'package:provider/provider.dart';
 

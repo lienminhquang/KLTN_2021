@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/models/AddressModel.dart';
-import 'package:food_delivery/pages/adress/Adress.dart';
+import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
@@ -23,8 +23,12 @@ class Body extends StatelessWidget {
           text: 'Địa chỉ',
           press: () {
             context.read<AddressModel>().fetchAll();
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AdressScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddressScreen(
+                          addressScreenCallBack: null,
+                        )));
           },
         ),
         ProfileMenu(

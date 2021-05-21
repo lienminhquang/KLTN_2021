@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/models/AddressModel.dart';
 import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/pages/adress/AddAdressScreen.dart';
+import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/pages/presentation/themes.dart';
+import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -17,11 +21,12 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   final NumberFormat _numberFormat = NumberFormat();
+  AddressVM? _addressVM;
 
   Widget _item(CartVM model, BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        context.read<FoodDetailModel>().fetchFoodDetail(model.foodID);
+      onTap: () async {
+        await context.read<FoodDetailModel>().fetchAll(model.foodID);
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return FoodDetail();
         }));
@@ -122,7 +127,9 @@ class _BodyState extends State<Body> {
                         child: Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "140/11 Đường Bình Quới",
+                              _addressVM == null
+                                  ? "Không tìm thấy địa chỉ nào!"
+                                  : _addressVM!.addressString,
                               style: TextStyle(
                                   fontSize: 25, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
@@ -132,13 +139,26 @@ class _BodyState extends State<Body> {
                     ],
                   ),
                 ),
-                TextButton(
-                  onPressed: () {},
+                GestureDetector(
+                  onTap: () async {
+                    await context.read<AddressModel>().fetchAll();
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return AddressScreen(
+                        addressScreenCallBack:
+                            (AddressVM addressVM, BuildContext context) {
+                          _addressVM = addressVM;
+                          Navigator.of(context).pop();
+                          setState(() {});
+                        },
+                      );
+                    }));
+                  },
                   child: Container(
-                      width: 70,
+                      width: 80,
                       child: Text(
                         "Thay đổi",
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 13, color: Colors.blue),
                       )),
                 ),
               ],
@@ -166,8 +186,17 @@ class _BodyState extends State<Body> {
   }
 
   @override
+  void initState() {
+    _addressVM =
+        context.select<CartModel, AddressVM?>((value) => value.address);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var carts = context.select<CartModel, List<CartVM>>((value) => value.items);
+    // var address =
+    //     context.select<CartModel, AddressVM?>((value) => value.address);
 
     return ListView.builder(
       itemCount: carts.length + 1,

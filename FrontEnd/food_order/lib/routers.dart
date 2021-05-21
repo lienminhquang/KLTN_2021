@@ -1,5 +1,5 @@
-import 'package:food_delivery/pages/adress/Add_AdressScreen.dart';
-import 'package:food_delivery/pages/adress/Adress.dart';
+import 'package:food_delivery/pages/adress/AddAdressScreen.dart';
+import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/categoty/Category.dart';
 import 'package:food_delivery/pages/favorite/Favorite.dart';
@@ -20,7 +20,7 @@ final Map<String, WidgetBuilder> routes = {
   NoficationScreen.routeName: (context) => NoficationScreen(),
   ProfileScreen.routeName: (context) => ProfileScreen(),
   PromotionScreen.routeName: (context) => PromotionScreen(),
-  AdressScreen.routeName: (context) => AdressScreen(),
+  //AddressScreen.routeName: (context) => AddressScreen(),
   SignupPage.routeName: (context) => SignupPage(),
   AddAdressScreen.routeName: (context) => AddAdressScreen(),
   FoodDetail.routeName: (context) => FoodDetail(),

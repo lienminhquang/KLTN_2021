@@ -19,6 +19,11 @@ class FoodDetailModel extends ChangeNotifier {
 
   FoodDetailModel();
 
+  Future<void> fetchAll(int id) async {
+    await fetchFoodDetail(id);
+    await fetchUserRatings();
+  }
+
   Future<bool> fetchFoodDetail(int id) async {
     currentFoodID = id;
     var result = await _foodServices.getFoodByID(id);

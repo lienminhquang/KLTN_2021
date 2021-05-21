@@ -23,14 +23,21 @@ class AddressModel extends ChangeNotifier {
   Future<ApiResult<bool>> delete(int addressID) async {
     //final String userID = UserServices.getUserID();
     var result = await _addressServices.delete(addressID);
-
-    notifyListeners();
     return result;
   }
 
   Future<ApiResult<AddressVM>> create(String name, String addressString) async {
     final String userID = UserServices.getUserID();
     var result = await _addressServices.create(name, addressString, userID);
+    if (result.isSuccessed == false) {
+      log(result.errorMessage!);
+    }
+    return result;
+  }
+
+  Future<ApiResult<AddressVM>> edit(
+      int id, String userID, String name, String addressString) async {
+    var result = await _addressServices.edit(id, userID, name, addressString);
     if (result.isSuccessed == false) {
       log(result.errorMessage!);
     }

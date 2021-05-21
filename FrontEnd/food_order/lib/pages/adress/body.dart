@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/models/AddressModel.dart';
-import 'package:food_delivery/pages/adress/Add_AdressScreen.dart';
-import 'package:food_delivery/pages/adress/testdata_adress.dart';
+import 'package:food_delivery/pages/adress/AddAdressScreen.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:provider/provider.dart';
-import 'adress_item.dart';
+import 'Address.dart';
+import 'AddressItem.dart';
 
 class Body extends StatefulWidget {
+  AddressScreenCallBack? addressScreenCallBack;
+  Body(this.addressScreenCallBack);
   @override
-  _BodyState createState() => _BodyState();
+  _BodyState createState() => _BodyState(addressScreenCallBack);
 }
 
 class _BodyState extends State<Body> {
+  AddressScreenCallBack? addressScreenCallBack;
+  _BodyState(this.addressScreenCallBack);
   @override
   void initState() {
     // TODO: implement initState
@@ -65,7 +69,10 @@ class _BodyState extends State<Body> {
             itemCount: addresses.length,
             itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 7),
-              child: AdressItem(adress: addresses[index]),
+              child: AdressItem(
+                adress: addresses[index],
+                addressScreenCallBack: addressScreenCallBack,
+              ),
             ),
           ),
         ),

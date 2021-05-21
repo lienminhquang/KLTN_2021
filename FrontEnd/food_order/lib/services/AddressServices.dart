@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Addresses/AddressCreateVM.dart';
+import 'package:food_delivery/view_models/Addresses/AddressEditVM.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/view_models/commons/PaginatedList.dart';
@@ -51,10 +52,6 @@ class AddressServices {
     return ApiResult.failedApiResult("Error!!");
   }
 
-  Future<ApiResult<bool>> delete(id) async {
-    return ApiResult.failedApiResult("errorMessage");
-  }
-
   Future<ApiResult<AddressVM>> create(
       String name, String addressString, String userID) async {
     log("Create address: $userID $name $addressString");
@@ -88,5 +85,72 @@ class AddressServices {
     } catch (e) {
       return ApiResult.failedApiResult(e.toString());
     }
+  }
+
+  Future<ApiResult<AddressVM>> edit(
+      int id, String userID, String name, String addressString) async {
+    log("Edit address: $userID $name $addressString");
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    Response? response;
+    AddressEditVM editVM = AddressEditVM();
+    editVM.id = id;
+    editVM.appUserID = userID;
+    editVM.name = name;
+    editVM.addressString = addressString;
+    try {
+      String url = baseRoute + "?id=$id";
+      log("PUT $url");
+      response = await ioClient.put(Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(editVM));
+    } catch (e) {
+      return ApiResult<AddressVM>.failedApiResult(
+          "Server error! Please re-try later!");
+    }
+    try {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<AddressVM>.fromJson(
+          json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
+      if (result.isSuccessed == true) {
+        log("AddressVM Edit succesed!");
+        log("AddressVM: " + result.payLoad!.toString());
+      }
+      return result;
+    } catch (e) {
+      return ApiResult.failedApiResult(e.toString());
+    }
+  }
+
+  Future<ApiResult<bool>> delete(int id) async {
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    final String url = baseRoute + "?id=$id";
+    Response? response;
+    try {
+      log("DELETE: " + url);
+      response = await ioClient.delete(Uri.parse(url));
+    } catch (e) {
+      print(e);
+      return ApiResult<bool>.failedApiResult(
+          "Could not connect to server! Please re-try later!");
+    }
+    try {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<bool>.fromJson(json, (child) {
+        return child as bool;
+      });
+
+      if (result.isSuccessed == true) {
+        print("Deleted Address: id = $id");
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return ApiResult.failedApiResult("Error!!");
   }
 }
