@@ -16,6 +16,9 @@ namespace FoodOrder.Core.Models
         public int? PromotionID { get; set; }
         public decimal? PromotionAmount { get; set; }
 
+        public string AddressString { get; set; }
+        public string AddressName { get; set; }
+
         public List<OrderDetail> OrderDetails { get; set; }
         public Promotion Promotion { get; set; }
         public AppUser AppUser { get; set; }

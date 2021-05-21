@@ -17,5 +17,10 @@ namespace FoodOrder.Core.ViewModels.Orders
         public int OrderStatusID { get; set; }
         public int? PromotionID { get; set; }
         public decimal? PromotionAmount { get; set; }
+
+        public string AddressString { get; set; }
+        public string AddressName { get; set; }
+
+        //public List<int> CartIDs { get; set; }
     }
 }

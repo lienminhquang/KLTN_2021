@@ -8,6 +8,7 @@ class AppConfigs {
   static final String URL_RatingsRouteAPI = URL_BaseAPI + "/api/Ratings";
   static final String URL_CartsRouteAPI = URL_BaseAPI + "/api/Carts";
   static final String URL_AddressesRouteAPI = URL_BaseAPI + "/api/Addresses";
+  static final String URL_OrdersRouteAPI = URL_BaseAPI + "/api/Orders";
 
   static final String URL_Images = URL_BaseAPI + "/user-content";
 

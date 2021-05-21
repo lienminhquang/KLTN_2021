@@ -51,7 +51,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(result.errorMessage!)));
                 } else {
-                  context.read<CartModel>().fetchAll();
+                  context.read<CartModel>().fetchCartItems();
                   // Navigator.pushReplacementNamed(
                   //     context, CartItemsPage.routeName);
                   ScaffoldMessenger.of(context).showSnackBar(

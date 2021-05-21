@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 
 import 'body.dart';
+import 'package:provider/provider.dart';
 
 typedef AddressScreenCallBack = void Function(
     AddressVM addressVM, BuildContext context);
@@ -14,7 +16,20 @@ class AddressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Địa chỉ')),
+        appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await context.read<CartModel>().fetchAddress();
+              }),
+          centerTitle: true,
+          backgroundColor: Colors.blue.shade100,
+          title: Text(
+            'Địa chỉ',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
         body: Body(addressScreenCallBack));
   }
 }

@@ -39,6 +39,17 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("user")]
+        public async Task<IActionResult> GetByUserID([FromQuery] string userID)
+        {
+            var result = await _orderServices.GetByUserID(userID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] OrderCreateVM createVM)
         {

@@ -84,7 +84,7 @@ namespace FoodOrder.Data.Extentions
                 new FoodCategory { CategoryID = 1, FoodID = 3 }
                 );
             modelBuilder.Entity<Order>().HasData(
-                new Order { ID = 1, AppUserID = new Guid(userID), CreatedDate = DateTime.Now, DatePaid = null, IsPaid = false, OrderStatusID = 1, PromotionID = 1 }
+                new Order { ID = 1, AppUserID = new Guid(userID), CreatedDate = DateTime.Now, DatePaid = null, IsPaid = false, OrderStatusID = 1, PromotionID = 1 , AddressName = "Nha", AddressString = "ABC"}
                 );
             modelBuilder.Entity<OrderDetail>().HasData(
                 new OrderDetail { FoodID = 1, Amount = 1, OrderID = 1, Price = 12000 },

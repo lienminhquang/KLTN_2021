@@ -7,6 +7,7 @@ using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.Images;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Core.ViewModels.Orders;
+using FoodOrder.Core.ViewModels.OrderStatuses;
 using FoodOrder.Core.ViewModels.Promotions;
 using FoodOrder.Core.ViewModels.Ratings;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,10 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<OrderDetail, OrderDetailVM>();
             CreateMap<OrderDetailCreateVM, OrderDetail>();
             CreateMap<OrderDetailVM, OrderDetailEditVM>();
+
+            CreateMap<OrderStatus, OrderStatusVM>();
+            //CreateMap<OrderDetailCreateVM, OrderDetail>();
+            //CreateMap<OrderDetailVM, OrderDetailEditVM>();
 
             CreateMap<Category, CategoryVM>();
             CreateMap<CategoryCreateVM, Category>();

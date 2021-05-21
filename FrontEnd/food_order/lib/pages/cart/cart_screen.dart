@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CartModel.dart';
-import 'package:food_delivery/pages/presentation/themes.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'body.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +101,19 @@ class CheckoutCart extends StatelessWidget {
                       'Thanh toán',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      var result =
+                          await context.read<CartModel>().confirmOrder();
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            if (result == true)
+                              return buildSuccessedOrderDialog(context);
+
+                            return buildFailedOrderDialog(context);
+                          });
+                      context.read<CartModel>().fetchCartItems();
+                    },
                   ),
                 ),
               ],
@@ -111,6 +123,33 @@ class CheckoutCart extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildSuccessedOrderDialog(BuildContext context) {
+  return AlertDialog(
+    title: Text("Đặt hàng thành công!"),
+    content: Text("Chúng tôi sẽ giao hàng đến bạn trong chốc lát."),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context, 'Ok'),
+        child: const Text('Ok'),
+      ),
+    ],
+  );
+}
+
+Widget buildFailedOrderDialog(BuildContext context) {
+  return AlertDialog(
+    title: Text("Đặt hàng không thành công!"),
+    content: Text(
+        "Vui lòng kiểm tra lại thông tin hoặc liên hệ chúng tôi để được hỗ trợ."),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context, 'Ok'),
+        child: const Text('Ok'),
+      ),
+    ],
+  );
 }
 
 AppBar buildAppBar(BuildContext context) {

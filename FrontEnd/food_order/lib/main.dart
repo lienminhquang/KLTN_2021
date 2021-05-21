@@ -6,13 +6,14 @@ import 'package:food_delivery/models/AppModel.dart';
 import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/models/OrderHistoryModel.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/favorite/Favorite.dart';
 import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
 import 'package:food_delivery/pages/nofication/Nofication.dart';
 import 'package:food_delivery/pages/oders/Orders.dart';
-import 'package:food_delivery/pages/presentation/themes.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/pages/profile/Profile.dart';
 
 import 'package:provider/provider.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AppModel()),
         ChangeNotifierProvider(create: (context) => CartModel()),
         ChangeNotifierProvider(create: (context) => AddressModel()),
+        ChangeNotifierProvider(create: (context) => OrderHistoryModel()),
       ],
       child: MaterialApp(
         title: 'Food Delivery',
@@ -96,9 +98,10 @@ class _MotherBoardState extends State<MotherBoard> {
                 icon: Icon(Icons.notifications_active_outlined),
                 label: "Notification"),
             new BottomNavigationBarItem(
-                backgroundColor: Colors.black87,
-                icon: Icon(Icons.person_outline_outlined),
-                label: "Profile")
+              backgroundColor: Colors.black87,
+              icon: Icon(Icons.person_outline_outlined),
+              label: "Profile",
+            )
           ],
           onTap: (int index) {
             onTabTapped(index, context);
@@ -106,15 +109,20 @@ class _MotherBoardState extends State<MotherBoard> {
     );
   }
 
-  void onTabTapped(int index, BuildContext context) {
-    setState(() {
-      _currentIndex = index;
-      switch (_currentIndex) {
-        case 2:
-          context.read<CartModel>().fetchAll();
-          break;
-        default:
-      }
-    });
+  Future<void> onTabTapped(int index, BuildContext context) async {
+    _currentIndex = index;
+    switch (_currentIndex) {
+      case 1:
+        await context.read<OrderHistoryModel>().fetchAll();
+        break;
+      case 2:
+        await context.read<CartModel>().fetchCartItems();
+        await context.read<CartModel>().fetchAddress();
+        // context.read<ad>().fetchAll();
+        break;
+      default:
+    }
+
+    setState(() {});
   }
 }

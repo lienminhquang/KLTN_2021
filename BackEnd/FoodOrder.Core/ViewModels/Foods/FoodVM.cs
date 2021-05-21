@@ -22,7 +22,7 @@ namespace FoodOrder.Core.ViewModels.Foods
 
         public List<CategoryVM> CategoryVMs { get; set; }
 
-        public List<OrderDetail> OrderDetails { get; set; }
+        //public List<OrderDetail> OrderDetails { get; set; }
         public List<Rating> Ratings { get; set; }
         public List<Cart> Carts { get; set; }
     }

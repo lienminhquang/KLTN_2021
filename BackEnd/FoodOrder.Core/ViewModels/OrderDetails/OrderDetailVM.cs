@@ -1,4 +1,6 @@
 ﻿using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels.Foods;
+using FoodOrder.Core.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace FoodOrder.Core.ViewModels.OrderDetails
         public int Amount { get; set; }
         public decimal Price { get; set; }
 
-        public Order Order { get; set; }
-        public Food Food { get; set; }
+        public OrderVM OrderVM { get; set; }
+        public FoodVM FoodVM { get; set; }
     }
 }

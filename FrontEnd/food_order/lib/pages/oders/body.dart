@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/models/OrderHistoryModel.dart';
+import 'package:food_delivery/view_models/Orders/OrderVM.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -10,10 +15,10 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
 
   final List<Tab> myTabs = [
     Tab(
-      text: 'Incomming',
+      text: 'Đang xử lý',
     ),
     Tab(
-      text: 'History',
+      text: 'Lịch sử',
     ),
   ];
   @override
@@ -30,6 +35,10 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var orderHistory = context.watch<OrderHistoryModel>();
+    var incomingItems = orderHistory.incomingItems;
+    var completedItems = orderHistory.completedItems;
+
     return Container(
       child: Container(
         child: Column(
@@ -44,8 +53,8 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
             Expanded(
               child: TabBarView(
                 children: [
-                  Container(child: Center(child: Text('people'))),
-                  Text('Person')
+                  IncomingOrder(incomingItems),
+                  HistoryOrder(completedItems)
                 ],
                 controller: _tabController,
               ),
@@ -53,6 +62,163 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
+    );
+  }
+}
+
+class Item extends StatelessWidget {
+  final OrderVM orderVM;
+  Item(this.orderVM);
+  @override
+  Widget build(BuildContext context) {
+    String name = "";
+    int foodCount = orderVM.orderDetailVMs.length;
+    double price = 0;
+    DateTime? datetime;
+    if (orderVM.orderStatusID == 4 || orderVM.orderStatusID == 5) {
+      datetime = orderVM.datePaid;
+    } else {
+      datetime = orderVM.createdDate;
+    }
+    for (var item in orderVM.orderDetailVMs) {
+      name += item.foodVM!.name + ", ";
+      price += item.price * item.amount;
+    }
+
+    return Container(
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(5), boxShadow: [
+        BoxShadow(blurRadius: 2, color: Colors.grey.shade300, spreadRadius: 2)
+      ]),
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: Container(
+          height: 100,
+          //color: Colors.red,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                color: Colors.white,
+                height: 30,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      size: 15,
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
+                      child: Text(
+                        orderVM.orderStatusVM.name,
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13),
+                      ),
+                    ),
+                    Icon(
+                      Icons.remove,
+                      size: 15,
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
+                      child: Text(
+                        datetime == null
+                            ? ""
+                            : DateFormat.yMMMd().format(datetime),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                height: 45,
+                color: Colors.white,
+                //color: Colors.grey.shade200,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    name,
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                color: Colors.white,
+                height: 25,
+                child: Row(
+                  children: [
+                    Text(
+                      "\$${AppConfigs.AppNumberFormat.format(price)}",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      " ($foodCount Món)",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    // GestureDetector(
+                    //   onTap: () {},
+                    //   child: Center(
+                    //     child: Icon(
+                    //       Icons.more_horiz,
+                    //       color: Colors.grey,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class HistoryOrder extends StatelessWidget {
+  final List<OrderVM> items;
+  HistoryOrder(this.items);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return Item(items[index]);
+          }),
+    );
+  }
+}
+
+class IncomingOrder extends StatelessWidget {
+  final List<OrderVM> items;
+  IncomingOrder(this.items);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return Item(items[index]);
+          }),
     );
   }
 }

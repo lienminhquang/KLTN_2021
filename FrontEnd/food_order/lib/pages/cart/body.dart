@@ -8,7 +8,7 @@ import 'package:food_delivery/pages/adress/AddAdressScreen.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
-import 'package:food_delivery/pages/presentation/themes.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:intl/intl.dart';
@@ -146,10 +146,12 @@ class _BodyState extends State<Body> {
                         .push(MaterialPageRoute(builder: (context) {
                       return AddressScreen(
                         addressScreenCallBack:
-                            (AddressVM addressVM, BuildContext context) {
-                          _addressVM = addressVM;
+                            (AddressVM addressVM, BuildContext context) async {
+                          //_addressVM = addressVM;
+                          context.read<CartModel>().setAddress(addressVM);
+                          //await context.read<CartModel>().fetchAll();
                           Navigator.of(context).pop();
-                          setState(() {});
+                          //setState(() {});
                         },
                       );
                     }));
@@ -187,16 +189,13 @@ class _BodyState extends State<Body> {
 
   @override
   void initState() {
-    _addressVM =
-        context.select<CartModel, AddressVM?>((value) => value.address);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var carts = context.select<CartModel, List<CartVM>>((value) => value.items);
-    // var address =
-    //     context.select<CartModel, AddressVM?>((value) => value.address);
+    var carts = context.watch<CartModel>().items;
+    _addressVM = context.read<CartModel>().address;
 
     return ListView.builder(
       itemCount: carts.length + 1,
@@ -225,7 +224,7 @@ class _BodyState extends State<Body> {
           onDismissed: (direction) async {
             var cartModel = context.read<CartModel>();
             if (await cartModel.delete(carts[index - 1].foodID)) {
-              cartModel.fetchAll();
+              cartModel.fetchCartItems();
             }
           },
           child: _item(carts[index - 1], context),
