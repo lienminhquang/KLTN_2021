@@ -7,6 +7,7 @@ using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Core.ViewModels.Orders;
 using FoodOrder.Core.ViewModels.OrderStatuses;
+using FoodOrder.Core.ViewModels.Users;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -33,31 +34,30 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<OrderVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var orders = from c in _dbContext.Orders select c;
+            var orders = (from c in _dbContext.Orders select c)
+                .Include(a => a.OrderStatus)
+                .Include(a => a.AppUser);
 
-            // Todo: search cart?
-            //if (!String.IsNullOrEmpty(request.SearchString))
+            var sorted = Core.Helpers.Utilities<Order>.Sort(orders, request.SortOrder, "ID");
+
+            var created = await PaginatedList<OrderVM>.CreateAsync(sorted.Select(c => _mapper.Map<Order, OrderVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            //for(int i = 0; i < created.Items.Count; i++)
             //{
-            //    carts = carts.Where(c => c.Username.Contains(request.SearchString)
-            //    || c.FirstName.Contains(request.SearchString)
-            //    || c.LastName.Contains(request.SearchString)
-            //    || c.Email.Contains(request.SearchString));
+            //    created.Items[i].OrderStatusVM = sorted
             //}
-
-            orders = Core.Helpers.Utilities<Order>.Sort(orders, request.SortOrder, "ID");
-
-            var created = await PaginatedList<OrderVM>.CreateAsync(orders.Select(c => _mapper.Map<Order, OrderVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
-
             return new SuccessedResult<PaginatedList<OrderVM>>(created);
         }
 
         public async Task<ApiResult<OrderVM>> GetByID(int id)
         {
-            var c = await _dbContext.Orders.FirstOrDefaultAsync(c => c.ID == id);
+            var c = _dbContext.Orders.Find(id);
+
             if (c == null)
             {
                 return new FailedResult<OrderVM>("Order not found!");
             }
+            c.OrderStatus = _dbContext.OrderStatuses.Find(c.OrderStatusID);
+            
 
             var orderDetails = (from od in _dbContext.OrderDetails
                                where od.OrderID == id
@@ -70,8 +70,14 @@ namespace FoodOrder.API.Services
                 Price = od.Price,
                 FoodVM = _mapper.Map<FoodVM>(od.Food)
             });
+
+            var userVM = _mapper.Map<UserVM>(_dbContext.AppUsers.Find(c.AppUserID));
             var orderVM = _mapper.Map<Order, OrderVM>(c);
+
+
+            orderVM.OrderStatusVM = _mapper.Map<OrderStatusVM>(c.OrderStatus);
             orderVM.OrderDetailVMs = orderDetailVMs.ToList();
+            orderVM.UserVM = userVM;
 
             return new SuccessedResult<OrderVM>(orderVM);
         }
@@ -99,39 +105,7 @@ namespace FoodOrder.API.Services
             }
 
             return new SuccessedResult<List<OrderVM>>(orderVMs);
-            //var created = await PaginatedList<OrderVM>.CreateAsync(orderVMs.Select(a => a),
-            //    1, 
-            //    Core.Helpers.Configs.PageSize);
-
-            //var orders = c.ToList();
-            //var orderVMs = new List<OrderVM>();
-
-            //foreach (var item in orders)
-            //{
-            //    var orderDetails = (from od in _dbContext.OrderDetails
-            //                        where od.OrderID == item.ID
-            //                        select od).Include(a => a.Food);
-            //    var orderDetailVMs = orderDetails.Select(od => new OrderDetailVM()
-            //    {
-            //        Amount = od.Amount,
-            //        FoodID = od.FoodID,
-            //        OrderID = od.OrderID,
-            //        Price = od.Price,
-            //        FoodVM = _mapper.Map<FoodVM>(od.Food)
-            //    });
-            //    var orderVM = _mapper.Map<Order, OrderVM>(item);
-            //    orderVM.OrderDetailVMs = orderDetailVMs.ToList();
-            //    orderVMs.Add(orderVM);
-            //}
-
-            //PaginatedList<OrderVM> list = new PaginatedList<OrderVM>();
-            //list.Items = orderVMs;
-            //list.PageIndex = 1;
-            //list.TotalPage = 1;
-            //list.HasNextPage = false;
-            //list.
-
-            //return new SuccessedResult<PaginatedList<OrderVM>>(created);
+            
         }
 
 
@@ -204,6 +178,39 @@ namespace FoodOrder.API.Services
             vm.PromotionID = editVM.PromotionID;
             vm.AddressString = editVM.AddressString;
             vm.AddressName = editVM.AddressName;
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return new FailedResult<OrderVM>(e.InnerException.ToString());
+            }
+
+            return new SuccessedResult<OrderVM>(_mapper.Map<OrderVM>(vm));
+        }
+
+        public async Task<ApiResult<OrderVM>> ChangOrderStatus(ChangeOrderStatusVM changeVM)
+        {
+            var vm = await _dbContext.Orders.FirstOrDefaultAsync(c => c.ID == changeVM.ID);
+            if (vm == null)
+            {
+                return new FailedResult<OrderVM>("Order not found!");
+            }
+
+            var orderStatus = await _dbContext.OrderStatuses.FirstOrDefaultAsync(c => c.ID == changeVM.OrderStatusID);
+            if (orderStatus == null)
+            {
+                return new FailedResult<OrderVM>("OrderStatus not found!");
+            }
+
+            vm.OrderStatusID = changeVM.OrderStatusID;
+            if (vm.OrderStatusID == 4)
+            {// da nhan hang
+                vm.IsPaid = true;
+                vm.DatePaid = DateTime.Now;
+            }
 
             try
             {

@@ -17,15 +17,82 @@
             <a asp-action="Create">Create New</a>
         </div>
         <div class="card-body">
+            <h3>Đơn hàng đang xử lý</h3>
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered display" id="example" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ID)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().AppUserID)
+                                Receiver
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().CreatedDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().OrderStatusVM.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().PromotionID)
+                            </th>
+                            
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Items != null)
+                        {
+                            @foreach (var item in Model.Items)
+                            {
+                                if (item.OrderStatusID != 4 && item.OrderStatusID != 5)
+                                {
+                                    string fullName = item.UserVM.FirstName + " " + item.UserVM.LastName;
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ID)
+                                        </td>
+                                        <td>
+                                            @fullName
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.OrderStatusVM.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PromotionID)
+                                        </td>
+                                       
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                                            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+            <div style="height:100px"></div>
+            <h3>Tất cả các đơn hàng</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered display" id="example1" @*width="100%"*@ cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ID)
+                            </th>
+                            <th>
+                                Receiver
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().CreatedDate)
@@ -37,14 +104,12 @@
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().DatePaid)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().OrderStatusID)
+                                Order status
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().PromotionID)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().PromotionAmount)
-                            </th>
+                           
                             <th></th>
                         </tr>
                     </thead>
@@ -53,12 +118,13 @@
                         {
                             @foreach (var item in Model.Items)
                             {
+                                string fullName = item.UserVM.FirstName + " " + item.UserVM.LastName;
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ID)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.AppUserID)
+                                        @fullName
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.CreatedDate)
@@ -70,14 +136,12 @@
                                         @Html.DisplayFor(modelItem => item.DatePaid)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.OrderStatusID)
+                                        @Html.DisplayFor(modelItem => item.OrderStatusVM.Name)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.PromotionID)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PromotionAmount)
-                                    </td>
+                                   
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
                                         @Html.ActionLink("Details", "Details", new { id = item.ID }) |
@@ -89,6 +153,60 @@
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        //$(document).ready(function () {
+        //    $('table.display').DataTable();
+        //});
+
+        $(document).ready(function () {
+            // Setup - add a text input to each footer cell
+            $('#example thead tr').clone(true).appendTo('#example thead');
+            $('#example thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+
+            var table = $('#example').DataTable({
+                orderCellsTop: true,
+                fixedHeader: true
+            });
+        });
+        $(document).ready(function () {
+            // Setup - add a text input to each footer cell
+            $('#example1 thead tr').clone(true).appendTo('#example1 thead');
+            $('#example1 thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+
+            var table = $('#example1').DataTable({
+                orderCellsTop: true,
+                fixedHeader: true
+            });
+        });
+    </script>
+}

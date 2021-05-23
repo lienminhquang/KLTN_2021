@@ -6,6 +6,7 @@ import 'package:food_delivery/models/AppModel.dart';
 import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
 import 'package:food_delivery/models/FoodDetailModel.dart';
+import 'package:food_delivery/models/NotificationModel.dart';
 import 'package:food_delivery/models/OrderHistoryModel.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/favorite/Favorite.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartModel()),
         ChangeNotifierProvider(create: (context) => AddressModel()),
         ChangeNotifierProvider(create: (context) => OrderHistoryModel()),
+        ChangeNotifierProvider(create: (context) => NotificationModel()),
       ],
       child: MaterialApp(
         title: 'Food Delivery',
@@ -62,7 +64,7 @@ class _MotherBoardState extends State<MotherBoard> {
     HomeScreen(),
     OderScreen(),
     CartScreen(),
-    NoficationScreen(),
+    // NoficationScreen(),
     ProfileScreen()
   ];
 
@@ -74,6 +76,8 @@ class _MotherBoardState extends State<MotherBoard> {
       return LoginPage();
     }
 
+    context.read<NotificationModel>().scheduleFetchNotification();
+
     return Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -82,24 +86,24 @@ class _MotherBoardState extends State<MotherBoard> {
             new BottomNavigationBarItem(
                 backgroundColor: Colors.black87,
                 icon: Icon(
-                  Icons.home_outlined,
+                  Icons.home,
                 ),
                 label: "Home"),
             new BottomNavigationBarItem(
                 backgroundColor: Colors.black87,
-                icon: Icon(Icons.menu),
+                icon: Icon(Icons.receipt_long),
                 label: "Order"),
             new BottomNavigationBarItem(
                 backgroundColor: Colors.black87,
                 icon: Icon(Icons.shopping_cart),
                 label: "Cart"),
-            new BottomNavigationBarItem(
-                backgroundColor: Colors.black87,
-                icon: Icon(Icons.notifications_active_outlined),
-                label: "Notification"),
+            // new BottomNavigationBarItem(
+            //     backgroundColor: Colors.black87,
+            //     icon: Icon(Icons.notifications_active_outlined),
+            //     label: "Notification"),
             new BottomNavigationBarItem(
               backgroundColor: Colors.black87,
-              icon: Icon(Icons.person_outline_outlined),
+              icon: Icon(Icons.person),
               label: "Profile",
             )
           ],

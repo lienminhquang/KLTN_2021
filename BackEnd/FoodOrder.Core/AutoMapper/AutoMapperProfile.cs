@@ -5,11 +5,13 @@ using FoodOrder.Core.ViewModels.AppRoles;
 using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.Images;
+using FoodOrder.Core.ViewModels.Notifications;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Core.ViewModels.Orders;
 using FoodOrder.Core.ViewModels.OrderStatuses;
 using FoodOrder.Core.ViewModels.Promotions;
 using FoodOrder.Core.ViewModels.Ratings;
+using FoodOrder.Core.ViewModels.Users;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -33,6 +35,14 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<OrderDetailCreateVM, OrderDetail>();
             CreateMap<OrderDetailVM, OrderDetailEditVM>();
 
+            CreateMap<Notification, NotificationVM>();
+            CreateMap<NotificationCreateVM, Notification>();
+            //CreateMap<OrderDetailVM, OrderDetailEditVM>();
+
+            CreateMap<AppUser, UserVM>();
+            //CreateMap<OrderDetailCreateVM, OrderDetail>();
+            //CreateMap<User, OrderDetailEditVM>();
+
             CreateMap<OrderStatus, OrderStatusVM>();
             //CreateMap<OrderDetailCreateVM, OrderDetail>();
             //CreateMap<OrderDetailVM, OrderDetailEditVM>();
@@ -41,7 +51,9 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<CategoryCreateVM, Category>();
             CreateMap<CategoryVM, CategoryEditVM>();
 
-            CreateMap<Order, OrderVM>();
+            CreateMap<Order, OrderVM>()
+                .ForMember(dest => dest.OrderStatusVM, options => options.MapFrom(source => source.OrderStatus))
+                .ForMember(dest => dest.UserVM, options => options.MapFrom(source => source.AppUser));
             CreateMap<OrderCreateVM, Order>();
             CreateMap<OrderVM, OrderEditVM>();
 

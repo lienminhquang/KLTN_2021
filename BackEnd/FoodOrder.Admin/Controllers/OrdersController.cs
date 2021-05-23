@@ -4,7 +4,9 @@ using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Orders;
+using FoodOrder.Core.ViewModels.OrderStatuses;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +17,15 @@ namespace FoodOrder.Admin.Controllers
     public class OrdersController : Controller
     {
         private readonly OrderServices _orderServices;
-        private readonly IMapper _mapper;
 
-        public OrdersController(OrderServices services, IMapper mapper)
+        private readonly IMapper _mapper;
+        private readonly OrderStatusServices _orderStatusServices;
+
+        public OrdersController(OrderServices services, IMapper mapper, OrderStatusServices orderStatusServices)
         {
             _orderServices = services;
             _mapper = mapper;
+            _orderStatusServices = orderStatusServices;
         }
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
@@ -45,8 +50,19 @@ namespace FoodOrder.Admin.Controllers
                 return this.RedirectToErrorPage(vm.ErrorMessage);
             }
 
+            var orderStatuses = await _orderStatusServices.GetAllPaging(new PagingRequestBase() { PageNumber = 1 }, this.GetTokenFromCookie());
+
+           if(orderStatuses.IsSuccessed)
+            {
+                List < OrderStatusVM > orderStatusVMs= orderStatuses.PayLoad.Items;
+                SelectList selectListItems = new SelectList(orderStatusVMs, "ID", "Name", vm.PayLoad.OrderStatusID);
+                ViewBag.OrderStatusList = selectListItems;
+            }
+
             return View(vm.PayLoad);
         }
+
+
 
         // GET: CartsController/Create
         public ActionResult Create()
@@ -83,6 +99,31 @@ namespace FoodOrder.Admin.Controllers
 
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
             return View(createVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeStatus([FromForm] ChangeOrderStatusVM changeOrderStatus)
+        {
+            if (!this.ValidateTokenInCookie())
+            {
+                return this.RedirectToLoginPage();
+            }
+
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(createVM);
+            //}
+
+            var rs = await _orderServices.ChangeOrderStatus(changeOrderStatus, this.GetTokenFromCookie());
+            if (rs.IsSuccessed)
+            {
+                TempData[AppConfigs.SuccessMessageString] = "Order status changed!";
+                
+            }
+
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return RedirectToAction("Details", new { id = rs.PayLoad.ID });
         }
 
         // GET: CartsController/Edit/5

@@ -1,5 +1,8 @@
-﻿using FoodOrder.Core.Helpers;
+﻿using AutoMapper;
+using FoodOrder.Core.Helpers;
+using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
+using FoodOrder.Core.ViewModels.OrderStatuses;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -28,9 +31,12 @@ namespace FoodOrder.API.Controllers
         }
 
         private readonly ApplicationDBContext m_dbContext;
-        public OrderStatusController(ApplicationDBContext i_dbContext)
+        private readonly IMapper _mapper;
+
+        public OrderStatusController(ApplicationDBContext i_dbContext, IMapper mapper)
         {
             m_dbContext = i_dbContext;
+            _mapper = mapper;
         }
 
         // GET: api/<OrderStatusController>
@@ -38,23 +44,13 @@ namespace FoodOrder.API.Controllers
         public async Task<IActionResult> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             var orderStatus = from c in m_dbContext.OrderStatuses select c;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
+           
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                orderStatus = orderStatus.Where(c => c.Name.Contains(searchString) || c.Description.Contains(searchString));
-            }
+           
 
             orderStatus = Core.Helpers.Utilities<OrderStatus>.Sort(orderStatus, sortOrder, "ID");
 
-            return Ok(await PaginatedList<OrderStatus>.CreateAsync(orderStatus, pageNumber ?? 1, Core.Helpers.Configs.PageSize));
+            return Ok(new SuccessedResult<PaginatedList<OrderStatusVM>>(await PaginatedList<OrderStatusVM>.CreateAsync(orderStatus.Select(c => _mapper.Map<OrderStatusVM>(c)), pageNumber ?? 1, Core.Helpers.Configs.PageSize)));
 
         }
 
@@ -64,7 +60,7 @@ namespace FoodOrder.API.Controllers
         {
             var os = m_dbContext.OrderStatuses.FirstOrDefault(os => os.ID == id);
             
-            return Ok(os);
+            return Ok(new SuccessedResult<OrderStatusVM>( _mapper.Map<OrderStatusVM>(os)));
         }
 
         // POST api/<OrderStatusController>

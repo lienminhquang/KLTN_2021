@@ -1,5 +1,6 @@
 ﻿using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Core.ViewModels.OrderStatuses;
+using FoodOrder.Core.ViewModels.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace FoodOrder.Core.ViewModels.Orders
 
         public string AddressString { get; set; }
         public string AddressName { get; set; }
+
+        public UserVM UserVM { get; set; }
 
         public OrderStatusVM OrderStatusVM { get; set; }
         public List<OrderDetailVM> OrderDetailVMs { get; set; }

@@ -93,6 +93,8 @@ namespace FoodOrder.API
             services.AddTransient<AppRoleServices, AppRoleServices>();
             services.AddTransient<ImageServices, ImageServices>();
             services.AddTransient<FileServices, FileServices>();
+            services.AddTransient<NotificationServices, NotificationServices>();
+
             #endregion
 
 

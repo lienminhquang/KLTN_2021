@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/CategoryModel.dart';
+import 'package:food_delivery/models/NotificationModel.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:provider/provider.dart';
 
@@ -126,6 +127,7 @@ class _BodyState extends State<Body> {
       body: Container(
         child: ListView(
           children: [
+            //NotificationWidget(),
             fakeSearchBox,
             buidImageCarousel(_appBannerImages),
             offers,
@@ -324,5 +326,34 @@ class FastChoice extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class NotificationWidget extends StatefulWidget {
+  @override
+  _NotificationWidgetState createState() => _NotificationWidgetState();
+}
+
+class _NotificationWidgetState extends State<NotificationWidget> {
+  @override
+  Widget build(BuildContext context) {
+    var model = context.watch<NotificationModel>();
+    if (model.unreadedNotification.isNotEmpty) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(model.unreadedNotification[0].title),
+              content: Text(model.unreadedNotification[0].message),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Ok'),
+                  child: const Text('Ok'),
+                ),
+              ],
+            );
+          });
+    }
+    return Container();
   }
 }

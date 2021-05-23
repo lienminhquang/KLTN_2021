@@ -25,5 +25,6 @@ namespace FoodOrder.Core.Models
         public List<Rating> Ratings { get; set; }
         public List<Cart> Carts { get; set; }
         public List<Address> Addresses { get; set; }
+        public List<Notification> Notifications { get; set; }
     }
 }

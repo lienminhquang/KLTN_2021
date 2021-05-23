@@ -61,6 +61,17 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("changestatus")]
+        public async Task<IActionResult> ChangOrderStatus([FromBody] ChangeOrderStatusVM vm)
+        {
+            var result = await _orderServices.ChangOrderStatus(vm);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpPut]
         public async Task<IActionResult> Edit(int id, [FromBody] OrderEditVM editVM)
         {
