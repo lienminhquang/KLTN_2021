@@ -1,0 +1,1 @@
+mssql-scripter -S localhost -d FoodOrder --schema-and-data > ./FoodOrder.sql
