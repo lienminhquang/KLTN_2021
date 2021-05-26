@@ -79,6 +79,7 @@ flutter:
     - images/app_banner/khao_50_phan_tram.jpg
     - images/app_banner/khao_60_phan_tram.png
     - images/app_banner/sieu_deal_thu_5_chi_1D.jpeg
+    - images/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

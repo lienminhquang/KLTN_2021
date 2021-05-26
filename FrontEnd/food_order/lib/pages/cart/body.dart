@@ -128,10 +128,10 @@ class _BodyState extends State<Body> {
                             alignment: Alignment.topLeft,
                             child: Text(
                               _addressVM == null
-                                  ? "Không tìm thấy địa chỉ nào!"
+                                  ? "Không tìm thấy địa chỉ nào!!"
                                   : _addressVM!.addressString,
                               style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
+                                  fontSize: 10, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             )),

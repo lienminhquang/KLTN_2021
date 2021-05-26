@@ -17,7 +17,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   UserServices _userServices = new UserServices();
-
+  bool isHiddenPassword = true;
   final _usenameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -51,35 +51,15 @@ class _LoginPageState extends State<LoginPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.fromLTRB(15.0, 90.0, 0.0, 0.0),
-                  child: Text(
-                    'Xin',
-                    style:
-                        TextStyle(fontSize: 80.0, fontWeight: FontWeight.bold),
-                  ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: Center(
+              child: SizedBox(
+                height: 155,
+                child: Image.asset(
+                  'images/logo.png',
                 ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(15.0, 175.0, 0.0, 0.0),
-                  child: Text(
-                    'Chào',
-                    style:
-                        TextStyle(fontSize: 80.0, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(225.0, 175.0, 0.0, 0.0),
-                    child: Text(
-                      '!',
-                      style: TextStyle(
-                          fontSize: 80.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue),
-                    ))
-              ],
+              ),
             ),
           ),
           FutureBuilder(
@@ -95,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 }
               }
               return Container(
-                padding: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+                padding: EdgeInsets.only(top: 0.0, left: 40.0, right: 40.0),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -109,7 +89,8 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            labelText: 'Username',
+                            hintText: 'Số điện thoại',
+                            prefix: Icon(Icons.phone),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -129,32 +110,40 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            labelText: 'Password',
+                            hintText: 'Mật khẩu ',
+                            prefix: Icon(Icons.lock),
+                            suffixIcon: InkWell(
+                                onTap: _togglePasswordView,
+                                child: Icon(Icons.visibility)),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.blue))),
-                        obscureText: true,
+                        obscureText: isHiddenPassword,
                       ),
                       SizedBox(
                         height: 5.0,
                       ),
                       Container(
                         alignment: Alignment(1.0, 0.0),
-                        padding: EdgeInsets.only(top: 15.0, left: 20.0),
+                        padding: EdgeInsets.only(
+                          top: 15.0,
+                        ),
                         child: InkWell(
                           onTap: () {
                             Navigator.pushNamed(context, CartScreen.routeName);
                           },
-                          child: Text(
-                            'Forgot password?',
-                            style: TextStyle(
+                          child: Center(
+                            child: Text(
+                              'Quên mật khẩu',
+                              style: TextStyle(
                                 color: Colors.blue,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.normal,
                                 fontFamily: 'Montserrat',
-                                decoration: TextDecoration.underline),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -187,37 +176,37 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      Container(
-                        height: 40.0,
-                        color: Colors.transparent,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.black,
-                                style: BorderStyle.solid,
-                                width: 1.0),
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Center(
-                                  child: ImageIcon(
-                                      AssetImage('images/iconfacebook.png'))),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Center(
-                                child: Text('Đăng nhập bằng Facebook',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Montserrat')),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
+                      // Container(
+                      //   height: 40.0,
+                      //   color: Colors.transparent,
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //       border: Border.all(
+                      //           color: Colors.black,
+                      //           style: BorderStyle.solid,
+                      //           width: 1.0),
+                      //       color: Colors.transparent,
+                      //       borderRadius: BorderRadius.circular(20.0),
+                      //     ),
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: <Widget>[
+                      //         Center(
+                      //             child: ImageIcon(
+                      //                 AssetImage('images/iconfacebook.png'))),
+                      //         SizedBox(
+                      //           width: 10,
+                      //         ),
+                      //         Center(
+                      //           child: Text('Đăng nhập bằng Facebook',
+                      //               style: TextStyle(
+                      //                   fontWeight: FontWeight.bold,
+                      //                   fontFamily: 'Montserrat')),
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
@@ -255,5 +244,10 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  void _togglePasswordView() {
+    isHiddenPassword = !isHiddenPassword;
+    setState(() {});
   }
 }
