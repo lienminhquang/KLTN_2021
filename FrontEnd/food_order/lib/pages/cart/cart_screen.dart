@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Cart/CartBloc.dart';
+import 'package:food_delivery/bloc/Cart/CartEvent.dart';
+import 'package:food_delivery/bloc/Cart/CartState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/CartModel.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
-import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'body.dart';
 import 'package:provider/provider.dart';
 
@@ -24,10 +26,9 @@ class CheckoutCart extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    context.select<CartModel, List<CartVM>>((value) => value.items);
-    final totalPrice = context.read<CartModel>().getTotalPrice();
+  Widget _buildLoadedState(BuildContext context, CartLoadedState state) {
+    // context.select<CartModel, List<CartVM>>((value) => value.items);
+    final totalPrice = state.getTotalPrice();
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -102,17 +103,35 @@ class CheckoutCart extends StatelessWidget {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
-                      var result =
-                          await context.read<CartModel>().confirmOrder();
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            if (result == true)
-                              return buildSuccessedOrderDialog(context);
+                      if (state.address == null) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Error!"),
+                                content:
+                                    Text("Vui lòng thêm địa chỉ giao hàng!"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: const Text('Ok'),
+                                  ),
+                                ],
+                              );
+                            });
+                        return;
+                      }
+                      context
+                          .read<CartBloc>()
+                          .add(CartConfirmEvent(state.address!));
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (context) {
+                      //       if (result == true)
+                      //         return buildSuccessedOrderDialog(context);
 
-                            return buildFailedOrderDialog(context);
-                          });
-                      context.read<CartModel>().fetchCartItems();
+                      //       return buildFailedOrderDialog(context);
+                      //     });
                     },
                   ),
                 ),
@@ -122,6 +141,30 @@ class CheckoutCart extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildErrorState(BuildContext context, CartErrorState state) {
+    return Container(
+      child: Center(
+        child: Text(state.error),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
+      if (state is CartLoadingState) {
+        return CircularProgressIndicator();
+      }
+      if (state is CartLoadedState) {
+        return _buildLoadedState(context, state);
+      }
+      if (state is CartErrorState) {
+        return _buildErrorState(context, state);
+      }
+      throw "Unknow state";
+    });
   }
 }
 
@@ -153,7 +196,8 @@ Widget buildFailedOrderDialog(BuildContext context) {
 }
 
 AppBar buildAppBar(BuildContext context) {
-  var count = context.select<CartModel, int>((value) => value.items.length);
+  //var count = context.select<CartModel, int>((value) => value.items.length);
+  int count = 0;
   return AppBar(
     centerTitle: true,
     backgroundColor: Colors.blue.shade100,

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'pages/productDesc.dart';
 import 'pages/userReviews.dart';
-import 'package:provider/provider.dart';
 
 class FavnPrice extends StatelessWidget {
+  final FoodDetailLoadedState _loadedState;
+  FavnPrice(this._loadedState);
   @override
   Widget build(BuildContext context) {
-    FoodVM foodVM =
-        context.select<FoodDetailModel, FoodVM>((value) => value.foodVM);
+    FoodVM foodVM = _loadedState.foodVM;
     return new Padding(
       padding: const EdgeInsets.only(
           left: 20.0, right: 20.0, top: 10.0, bottom: 12.0),
@@ -43,11 +43,15 @@ class FavnPrice extends StatelessWidget {
 }
 
 class Mfooter extends StatefulWidget {
+  final FoodDetailLoadedState _loadedState;
+  Mfooter(this._loadedState);
   @override
-  _MfooterState createState() => new _MfooterState();
+  _MfooterState createState() => new _MfooterState(_loadedState);
 }
 
 class _MfooterState extends State<Mfooter> with SingleTickerProviderStateMixin {
+  final FoodDetailLoadedState _loadedState;
+  _MfooterState(this._loadedState);
   late List<Tab> _tabs;
   late List<Widget> _pages;
   static late TabController _controller;
@@ -69,7 +73,10 @@ class _MfooterState extends State<Mfooter> with SingleTickerProviderStateMixin {
         ),
       ),
     ];
-    _pages = [new ProductDesc(), new UserReview()];
+    _pages = [
+      new ProductDesc(_loadedState.foodVM),
+      new UserReview(_loadedState.userRatingList)
+    ];
     _controller = new TabController(
       length: _tabs.length,
       vsync: this,

@@ -3,8 +3,12 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
+import 'package:food_delivery/bloc/Category/CategoryEvent.dart';
+import 'package:food_delivery/bloc/Home/HomeBloc.dart';
+import 'package:food_delivery/bloc/Home/HomeState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/CategoryModel.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +69,39 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    Widget fakeSearchBox = Container(
+    return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+      if (state is HomeLoadingState) {
+        return Container(
+            color: Colors.amber,
+            child: Center(child: CircularProgressIndicator()));
+      }
+      if (state is HomeLoadedState) {
+        return _buildLoadedState(context, state);
+      }
+      throw "Unknown state!";
+    });
+  }
+
+  Widget _buildLoadedState(BuildContext context, HomeLoadedState state) {
+    return Scaffold(
+      body: Container(
+        child: ListView(
+          children: [
+            //NotificationWidget(),
+            fakeSearchBox(),
+            buidImageCarousel(_appBannerImages),
+            offers(),
+            _categoryList(state.listCategory),
+            FastChoice(),
+            FastChoice()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget fakeSearchBox() {
+    return Container(
         child: GestureDetector(
       onTap: () {
         //TODO: Navigate to real search page
@@ -94,8 +130,10 @@ class _BodyState extends State<Body> {
         ),
       ),
     ));
+  }
 
-    Widget offers = Container(
+  Widget offers() {
+    return Container(
       height: 50,
       margin: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
@@ -122,32 +160,9 @@ class _BodyState extends State<Body> {
         ],
       ),
     );
-
-    return Scaffold(
-      body: Container(
-        child: ListView(
-          children: [
-            //NotificationWidget(),
-            fakeSearchBox,
-            buidImageCarousel(_appBannerImages),
-            offers,
-            _CategoryList(),
-            FastChoice(),
-            FastChoice()
-          ],
-        ),
-      ),
-    );
   }
-}
 
-class _CategoryList extends StatelessWidget {
-  const _CategoryList({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var categories =
-        context.select<CategoryModel, List<CategoryVM>>((value) => value.items);
+  Widget _categoryList(List<CategoryVM> categories) {
     log("Rebuild CategoryList with count = " + categories.length.toString());
 
     return Container(
@@ -191,7 +206,7 @@ class CategoryItem extends StatelessWidget {
       ]),
       child: GestureDetector(
         onTap: () async {
-          await context.read<CategoryModel>().fetchFoodsInCategory(id);
+          context.read<CategoryBloc>().add(CategoryStatedEvent(id));
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => CategoryPage()));
         },
@@ -326,34 +341,5 @@ class FastChoice extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class NotificationWidget extends StatefulWidget {
-  @override
-  _NotificationWidgetState createState() => _NotificationWidgetState();
-}
-
-class _NotificationWidgetState extends State<NotificationWidget> {
-  @override
-  Widget build(BuildContext context) {
-    var model = context.watch<NotificationModel>();
-    if (model.unreadedNotification.isNotEmpty) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(model.unreadedNotification[0].title),
-              content: Text(model.unreadedNotification[0].message),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'Ok'),
-                  child: const Text('Ok'),
-                ),
-              ],
-            );
-          });
-    }
-    return Container();
   }
 }

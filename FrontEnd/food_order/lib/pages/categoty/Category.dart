@@ -2,13 +2,14 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
+import 'package:food_delivery/bloc/Category/CategoryState.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/CategoryModel.dart';
-import 'package:food_delivery/models/FoodDetailModel.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
-import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
-import 'package:provider/provider.dart';
 
 class CategoryPage extends StatefulWidget {
   static String routeName = "/category";
@@ -21,17 +22,13 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   _CategoryPageState();
-  @override
-  Widget build(BuildContext context) {
-    log("Context:" + context.hashCode.toString());
-    final categoryID = context.read<CategoryModel>().currentID;
-    var category = context
-        .select<CategoryModel, List<CategoryVM>>((value) => value.items)
-        .firstWhere((element) => element.id == categoryID);
 
+  Widget _buildLoadedState(BuildContext context, CategoryLoadedState state) {
     return Scaffold(
       appBar: AppBar(
-        title: new Text((category.name == null ? "Category" : category.name)!),
+        title: new Text((state.categoryVM.name == null
+            ? "Category"
+            : state.categoryVM.name)!),
         actions: [
           IconButton(
               icon: Icon(Icons.search),
@@ -45,27 +42,55 @@ class _CategoryPageState extends State<CategoryPage> {
       body: Container(
           //color: Colors.grey,
           child: Column(
-        children: [BestSelling(), Expanded(child: AllFood())],
+        children: [BestSelling(state), Expanded(child: AllFood(state))],
       )
           //TODO: [bestSelling] what is this???
           ),
     );
   }
+
+  Widget _buildErrorState(BuildContext context, CategoryErrorState state) {
+    return Text(state.error);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //log("Context:" + context.hashCode.toString());
+    //final categoryID = context.read<CategoryModel>().currentID;
+    // var category = context
+    //     .select<CategoryModel, List<CategoryVM>>((value) => value.items)
+    //     .firstWhere((element) => element.id == categoryID);
+    return BlocBuilder<CategoryBloc, CategoryState>(builder: (context, state) {
+      if (state is CategoryLoadingState) {
+        return CircularProgressIndicator();
+      }
+      if (state is CategoryLoadedState) {
+        return _buildLoadedState(context, state);
+      }
+      if (state is CategoryErrorState) {
+        return _buildErrorState(context, state);
+      }
+      throw "Unknow state";
+    });
+  }
 }
 
 class BestSelling extends StatefulWidget {
+  final CategoryLoadedState _categoryLoadedState;
+  BestSelling(this._categoryLoadedState);
   @override
-  _BestSellingState createState() => _BestSellingState();
+  _BestSellingState createState() => _BestSellingState(_categoryLoadedState);
 }
 
 class _BestSellingState extends State<BestSelling> {
+  final CategoryLoadedState _categoryLoadedState;
+  _BestSellingState(this._categoryLoadedState);
   @override
   Widget build(BuildContext context) {
-    final categoryID = context.read<CategoryModel>().currentID;
+    final categoryID = _categoryLoadedState.categoryVM.id;
     log("BestSelling: category: " + categoryID.toString());
     log("Context:" + context.hashCode.toString());
-    var categoryMap = context
-        .select<CategoryModel, Map<int, List<FoodVM>>>((value) => value.map);
+
     return Container(
       //padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
       height: 150,
@@ -90,9 +115,9 @@ class _BestSellingState extends State<BestSelling> {
               child: ListView.builder(
                   //shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: categoryMap[categoryID]!.length,
+                  itemCount: _categoryLoadedState.listFood.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return FoodCard(categoryMap[categoryID]![index]);
+                    return FoodCard(_categoryLoadedState.listFood[index]);
                   }),
             )
           ],
@@ -102,17 +127,11 @@ class _BestSellingState extends State<BestSelling> {
   }
 }
 
-class AllFood extends StatefulWidget {
-  @override
-  _AllFoodState createState() => _AllFoodState();
-}
-
-class _AllFoodState extends State<AllFood> {
+class AllFood extends StatelessWidget {
+  final CategoryLoadedState _categoryLoadedState;
+  AllFood(this._categoryLoadedState);
   @override
   Widget build(BuildContext context) {
-    final categoryID = context.read<CategoryModel>().currentID;
-    var categoryMap = context
-        .select<CategoryModel, Map<int, List<FoodVM>>>((value) => value.map);
     return Container(
       margin: const EdgeInsets.fromLTRB(15.0, 10.0, 10.0, 0.0),
       child: Column(
@@ -137,9 +156,9 @@ class _AllFoodState extends State<AllFood> {
           Expanded(
             child: ListView.builder(
                 //scrollDirection: Axis.vertical,
-                itemCount: categoryMap[categoryID]!.length,
+                itemCount: _categoryLoadedState.listFood.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return FoodCard(categoryMap[categoryID]![index]);
+                  return FoodCard(_categoryLoadedState.listFood[index]);
                 }),
           )
         ],
@@ -160,15 +179,20 @@ class FoodCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: GestureDetector(
           onTap: () async {
-            if (await context
-                    .read<FoodDetailModel>()
-                    .fetchFoodDetail(_foodVM.id) ==
-                false) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Failed to get food details!")));
-              return;
-            }
-            context.read<FoodDetailModel>().fetchUserRatings();
+            // if (await context
+            //         .read<FoodDetailModel>()
+            //         .fetchFoodDetail(_foodVM.id) ==
+            //     false) {
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //       SnackBar(content: Text("Failed to get food details!")));
+            //   return;
+            // }
+            // context.read<FoodDetailModel>().fetchUserRatings();
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => FoodDetail()));
+            context
+                .read<FoodDetailBloc>()
+                .add(FoodDetailStartedEvent(_foodVM.id));
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => FoodDetail()));
           },

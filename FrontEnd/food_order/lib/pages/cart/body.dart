@@ -1,17 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Cart/CartBloc.dart';
+import 'package:food_delivery/bloc/Cart/CartEvent.dart';
+import 'package:food_delivery/bloc/Cart/CartState.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/AddressModel.dart';
-import 'package:food_delivery/models/CartModel.dart';
-import 'package:food_delivery/models/FoodDetailModel.dart';
-import 'package:food_delivery/pages/adress/AddAdressScreen.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Body extends StatefulWidget {
@@ -20,13 +21,12 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  final NumberFormat _numberFormat = NumberFormat();
-  AddressVM? _addressVM;
-
   Widget _item(CartVM model, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await context.read<FoodDetailModel>().fetchAll(model.foodID);
+        context
+            .read<FoodDetailBloc>()
+            .add(FoodDetailStartedEvent(model.foodID));
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return FoodDetail();
         }));
@@ -101,7 +101,7 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget addressSession(BuildContext context) {
+  Widget addressSession(BuildContext context, AddressVM? addressVM) {
     return Container(
       //height: 150,
       child: Column(
@@ -127,9 +127,9 @@ class _BodyState extends State<Body> {
                         child: Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              _addressVM == null
+                              addressVM == null
                                   ? "Không tìm thấy địa chỉ nào!"
-                                  : _addressVM!.addressString,
+                                  : addressVM.addressString,
                               style: TextStyle(
                                   fontSize: 25, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
@@ -141,17 +141,17 @@ class _BodyState extends State<Body> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    await context.read<AddressModel>().fetchAll();
+                    //await context.read<AddressBloc>().fetchAll();
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return AddressScreen(
                         addressScreenCallBack:
                             (AddressVM addressVM, BuildContext context) async {
-                          //_addressVM = addressVM;
-                          context.read<CartModel>().setAddress(addressVM);
-                          //await context.read<CartModel>().fetchAll();
+                          context
+                              .read<CartBloc>()
+                              .add(CartSetAddressEvent(addressVM));
+
                           Navigator.of(context).pop();
-                          //setState(() {});
                         },
                       );
                     }));
@@ -192,16 +192,14 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var carts = context.watch<CartModel>().items;
-    _addressVM = context.read<CartModel>().address;
+  _buildLoadedState(BuildContext context, CartLoadedState state) {
+    var carts = state.listCartVM;
 
     return ListView.builder(
       itemCount: carts.length + 1,
       itemBuilder: (context, index) {
         if (index == 0) {
-          return addressSession(context);
+          return addressSession(context, state.address);
         }
 
         return Dismissible(
@@ -222,14 +220,38 @@ class _BodyState extends State<Body> {
                 ],
               )),
           onDismissed: (direction) async {
-            var cartModel = context.read<CartModel>();
-            if (await cartModel.delete(carts[index - 1].foodID)) {
-              cartModel.fetchCartItems();
-            }
+            // var cartModel = context.read<CartModel>();
+            // if (await cartModel.delete(carts[index - 1].foodID)) {
+            //   cartModel.fetchCartItems();
+            // }
           },
           child: _item(carts[index - 1], context),
         );
       },
     );
+  }
+
+  _buildErrorState(BuildContext context, CartErrorState state) {
+    return Container(
+      child: Center(
+        child: Text(state.error),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
+      if (state is CartLoadingState) {
+        return CircularProgressIndicator();
+      }
+      if (state is CartLoadedState) {
+        return _buildLoadedState(context, state);
+      }
+      if (state is CartErrorState) {
+        return _buildErrorState(context, state);
+      }
+      throw "Unknow state";
+    });
   }
 }

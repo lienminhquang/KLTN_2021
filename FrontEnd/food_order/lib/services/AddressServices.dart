@@ -52,15 +52,11 @@ class AddressServices {
     return ApiResult.failedApiResult("Error!!");
   }
 
-  Future<ApiResult<AddressVM>> create(
-      String name, String addressString, String userID) async {
-    log("Create address: $userID $name $addressString");
+  Future<ApiResult<AddressVM>> create(AddressCreateVM addressCreateVM) async {
+    log("Create address: ${addressCreateVM.toJson()}");
     IOClient ioClient = _httpClientFactory.createIOClient();
     Response? response;
-    AddressCreateVM createVM = AddressCreateVM();
-    createVM.appUserID = userID;
-    createVM.name = name;
-    createVM.addressString = addressString;
+
     try {
       String url = baseRoute;
       log("Post $url");
@@ -68,7 +64,7 @@ class AddressServices {
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           },
-          body: jsonEncode(createVM));
+          body: jsonEncode(addressCreateVM));
     } catch (e) {
       return ApiResult<AddressVM>.failedApiResult(
           "Server error! Please re-try later!");
@@ -87,24 +83,19 @@ class AddressServices {
     }
   }
 
-  Future<ApiResult<AddressVM>> edit(
-      int id, String userID, String name, String addressString) async {
-    log("Edit address: $userID $name $addressString");
+  Future<ApiResult<AddressVM>> edit(AddressEditVM addressEditVM) async {
+    log("Edit address: ${addressEditVM.toJson()}");
     IOClient ioClient = _httpClientFactory.createIOClient();
     Response? response;
-    AddressEditVM editVM = AddressEditVM();
-    editVM.id = id;
-    editVM.appUserID = userID;
-    editVM.name = name;
-    editVM.addressString = addressString;
+
     try {
-      String url = baseRoute + "?id=$id";
+      String url = baseRoute + "?id=${addressEditVM.id}";
       log("PUT $url");
       response = await ioClient.put(Uri.parse(url),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           },
-          body: jsonEncode(editVM));
+          body: jsonEncode(addressEditVM));
     } catch (e) {
       return ApiResult<AddressVM>.failedApiResult(
           "Server error! Please re-try later!");

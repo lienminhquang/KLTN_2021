@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/models/AddressModel.dart';
+import 'package:food_delivery/bloc/Address/AddressBloc.dart';
+import 'package:food_delivery/bloc/Address/AddressEvent.dart';
 import 'package:food_delivery/pages/adress/EditAddressScreen.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
@@ -64,8 +65,7 @@ class AdressItem extends StatelessWidget {
                   return EditAdressScreen(adress);
                 }));
               } else if (index == 1) {
-                await context.read<AddressModel>().delete(adress.id);
-                await context.read<AddressModel>().fetchAll();
+                context.read<AddressBloc>().add(AddressDeleted(adress.id));
               }
             },
             itemBuilder: (context) {

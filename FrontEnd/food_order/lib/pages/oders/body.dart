@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
+import 'package:food_delivery/bloc/OrderHistory/OrderHistoryState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/OrderHistoryModel.dart';
 import 'package:food_delivery/view_models/Orders/OrderVM.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -33,12 +35,8 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var orderHistory = context.watch<OrderHistoryModel>();
-    var incomingItems = orderHistory.incomingItems;
-    var completedItems = orderHistory.completedItems;
-
+  Widget _buildLoadedState(
+      BuildContext context, OrderHistoryLoadedState state) {
     return Container(
       child: Container(
         child: Column(
@@ -53,8 +51,8 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
             Expanded(
               child: TabBarView(
                 children: [
-                  IncomingOrder(incomingItems),
-                  HistoryOrder(completedItems)
+                  IncomingOrder(state.incomingItems),
+                  HistoryOrder(state.completedItems)
                 ],
                 controller: _tabController,
               ),
@@ -63,6 +61,30 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Widget _buildErrorState(BuildContext context, OrderHistoryErrorState state) {
+    return Container(
+      child: Center(
+        child: Text(state.error),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrderHistoryBloc, OrderHistoryState>(
+        builder: (context, state) {
+      if (state is OrderHistoryLoadingState) {
+        return CircularProgressIndicator();
+      } else if (state is OrderHistoryLoadedState) {
+        return _buildLoadedState(context, state);
+      } else if (state is OrderHistoryErrorState) {
+        return _buildErrorState(context, state);
+      } else {
+        throw "Unknow state!";
+      }
+    });
   }
 }
 
