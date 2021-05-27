@@ -10,6 +10,7 @@ import 'package:food_delivery/bloc/Home/HomeBloc.dart';
 import 'package:food_delivery/bloc/Home/HomeState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
+import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:provider/provider.dart';
 
@@ -104,7 +105,8 @@ class _BodyState extends State<Body> {
     return Container(
         child: GestureDetector(
       onTap: () {
-        //TODO: Navigate to real search page
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => Search()));
       },
       child: Container(
         decoration: BoxDecoration(

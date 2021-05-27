@@ -28,6 +28,12 @@ namespace FoodOrder.Core.Helpers
                 descending = true;
                 sortOrder = sortOrder.Substring(0, sortOrder.Length - "_desc".Length);
             }
+
+            var property = typeof(T).GetProperty(sortOrder);
+            if (property == null)
+            {
+                return source;
+            }
             if (descending)
             {
                 return source.OrderByDescending(c => EF.Property<object>(c, sortOrder));

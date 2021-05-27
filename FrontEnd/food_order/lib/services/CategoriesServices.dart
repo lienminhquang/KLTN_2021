@@ -17,13 +17,13 @@ class CategoriesServices {
 
   Future<ApiResult<PaginatedList<CategoryVM>>> getAllPaging() async {
     PagingRequest pagingRequest = PagingRequest();
-    pagingRequest.PageNumber = 1;
-    pagingRequest.SearchString = "";
-    pagingRequest.SortOrder = "";
+    pagingRequest.pageNumber = 1;
+    pagingRequest.searchString = "";
+    pagingRequest.sortOrder = "";
 
     IOClient ioClient = _httpClientFactory.createIOClient();
     final String url = baseRoute +
-        "?pageNumber=${pagingRequest.PageNumber}&searchString=${pagingRequest.SearchString}&sortOrder=${pagingRequest.SortOrder}";
+        "?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
     Response? response;
     try {
       log("GET: " + url);
@@ -87,13 +87,13 @@ class CategoriesServices {
 
   Future<ApiResult<PaginatedList<FoodVM>>> getFoodsInCategory(int id) async {
     PagingRequest pagingRequest = PagingRequest();
-    pagingRequest.PageNumber = 1;
-    pagingRequest.SearchString = "";
-    pagingRequest.SortOrder = "";
+    pagingRequest.pageNumber = 1;
+    pagingRequest.searchString = "";
+    pagingRequest.sortOrder = "";
 
     IOClient ioClient = _httpClientFactory.createIOClient();
     final String url = baseRoute +
-        "/$id/foods?pageNumber=${pagingRequest.PageNumber}&searchString=${pagingRequest.SearchString}&sortOrder=${pagingRequest.SortOrder}";
+        "/$id/foods?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
     Response? response;
     try {
       log("GET: " + url);

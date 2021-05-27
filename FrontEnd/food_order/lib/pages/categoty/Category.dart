@@ -35,7 +35,7 @@ class _CategoryPageState extends State<CategoryPage> {
               onPressed: () {
                 showSearch(
                     context: context,
-                    delegate: Search(["cau luong", "com cho"]));
+                    delegate: _Search(["cau luong", "com cho"]));
               }),
         ],
       ),
@@ -316,10 +316,10 @@ class FoodCard extends StatelessWidget {
   }
 }
 
-class Search extends SearchDelegate {
+class _Search extends SearchDelegate {
   String selectedResult = "";
   final List<String> listExample;
-  Search(this.listExample);
+  _Search(this.listExample);
 
   @override
   List<Widget> buildActions(BuildContext context) {

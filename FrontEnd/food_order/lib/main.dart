@@ -11,19 +11,12 @@ import 'package:food_delivery/bloc/Home/HomeBloc.dart';
 import 'package:food_delivery/bloc/Home/HomeEvent.dart';
 import 'package:food_delivery/bloc/Login/LoginBloc.dart';
 import 'package:food_delivery/bloc/Login/LoginEvent.dart';
-import 'package:food_delivery/bloc/Login/LoginState.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
+import 'package:food_delivery/bloc/Search/SearchBloc.dart';
 import 'package:food_delivery/configs/DevHttpsOveride.dart';
-import 'package:food_delivery/models/NotificationModel.dart';
-import 'package:food_delivery/pages/cart/cart_screen.dart';
-import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
-import 'package:food_delivery/pages/oders/Orders.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
-import 'package:food_delivery/pages/profile/Profile.dart';
-
-import 'package:provider/provider.dart';
 
 void main() {
   //acept bad certificate request
@@ -52,6 +45,7 @@ class MyApp extends StatelessWidget {
             create: (_) => OrderHistoryBloc()..add(orderHistoryStartedEvent())),
         BlocProvider<LoginBloc>(
             create: (_) => LoginBloc()..add(LoginStartedEvent())),
+        BlocProvider<SearchBloc>(create: (_) => SearchBloc()),
       ],
       child: MaterialApp(
         title: 'Food Delivery',
