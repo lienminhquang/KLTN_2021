@@ -32,7 +32,6 @@ class ProfileMenu extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
-            Icon(Icons.arrow_forward_ios)
           ],
         ),
       ),
