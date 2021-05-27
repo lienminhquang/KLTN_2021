@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<HomeBloc>(
             create: (_) => HomeBloc()..add(HomeStartedEvent())),
         BlocProvider<OrderHistoryBloc>(
-            create: (_) => OrderHistoryBloc()..add(orderHistoryStartedEvent())),
+            create: (_) => OrderHistoryBloc()..add(OrderHistoryStartedEvent())),
         BlocProvider<LoginBloc>(
             create: (_) => LoginBloc()..add(LoginStartedEvent())),
         BlocProvider<SearchBloc>(create: (_) => SearchBloc()),

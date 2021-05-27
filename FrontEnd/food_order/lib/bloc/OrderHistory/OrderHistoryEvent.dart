@@ -1,3 +1,5 @@
 abstract class OrderHistoryEvent {}
 
-class orderHistoryStartedEvent extends OrderHistoryEvent {}
+class OrderHistoryStartedEvent extends OrderHistoryEvent {}
+
+class OrderHistoryRefreshEvent extends OrderHistoryEvent {}

@@ -10,14 +10,27 @@ class OrderHistoryBloc extends Bloc<OrderHistoryEvent, OrderHistoryState> {
   final OrderServices _orderServices = OrderServices();
   @override
   Stream<OrderHistoryState> mapEventToState(OrderHistoryEvent event) async* {
-    if (event is orderHistoryStartedEvent) {
+    if (event is OrderHistoryStartedEvent) {
       yield* _mapStartedEventToState(event);
+    }
+    if (event is OrderHistoryRefreshEvent) {
+      yield* _mapRefeshEventToState(event);
     }
   }
 
   Stream<OrderHistoryState> _mapStartedEventToState(
       OrderHistoryEvent event) async* {
     yield OrderHistoryLoadingState();
+    try {
+      yield await _fetchAll();
+    } catch (e) {
+      print(e);
+      yield OrderHistoryErrorState("Error!");
+    }
+  }
+
+  Stream<OrderHistoryState> _mapRefeshEventToState(
+      OrderHistoryEvent event) async* {
     try {
       yield await _fetchAll();
     } catch (e) {

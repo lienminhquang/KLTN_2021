@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
+import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Orders/OrderVM.dart';
@@ -76,7 +77,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
     return BlocBuilder<OrderHistoryBloc, OrderHistoryState>(
         builder: (context, state) {
       if (state is OrderHistoryLoadingState) {
-        return CircularProgressIndicator();
+        return Center(child: Container(child: CircularProgressIndicator()));
       } else if (state is OrderHistoryLoadedState) {
         return _buildLoadedState(context, state);
       } else if (state is OrderHistoryErrorState) {
@@ -221,11 +222,16 @@ class HistoryOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return Item(items[index]);
-          }),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<OrderHistoryBloc>().add(OrderHistoryRefreshEvent());
+        },
+        child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return Item(items[index]);
+            }),
+      ),
     );
   }
 }
@@ -236,11 +242,16 @@ class IncomingOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return Item(items[index]);
-          }),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<OrderHistoryBloc>().add(OrderHistoryRefreshEvent());
+        },
+        child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return Item(items[index]);
+            }),
+      ),
     );
   }
 }
