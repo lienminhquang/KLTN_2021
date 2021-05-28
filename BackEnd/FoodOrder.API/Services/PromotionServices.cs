@@ -36,9 +36,19 @@ namespace FoodOrder.API.Services
                 || c.Code.Contains(request.SearchString));
             }
 
-            vMs = Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "ID");
+            vMs = Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority_desc");
 
             var created = await PaginatedList<PromotionVM>.CreateAsync(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+
+            foreach (var item in created.Items)
+            {
+                var foodVMs = await (from f in _dbContext.Foods
+                                     join fp in _dbContext.PromotionFoods on f.ID equals fp.FoodID
+                                     where fp.PromotionID == item.ID
+                                     select _mapper.Map<FoodVM>(f)).ToListAsync();
+              
+                item.FoodVMs = foodVMs;
+            }
 
             return new SuccessedResult<PaginatedList<PromotionVM>>(created);
         }
@@ -54,6 +64,8 @@ namespace FoodOrder.API.Services
                                  join fp in _dbContext.PromotionFoods on f.ID equals fp.FoodID
                                  where fp.PromotionID == id
                                  select _mapper.Map<FoodVM>(f)).ToListAsync();
+           
+
             var vm = _mapper.Map<Promotion, PromotionVM>(c);
             vm.FoodVMs = foodVMs;
 
@@ -115,6 +127,8 @@ namespace FoodOrder.API.Services
                 promotion.Max = editVM.Max;
                 promotion.MinPrice = editVM.MinPrice;
                 promotion.Percent = editVM.Percent;
+                promotion.IsGlobal = editVM.IsGlobal;
+                promotion.Priority = editVM.Priority;
 
                 var pf = _dbContext.PromotionFoods.Where(x => x.PromotionID == editVM.ID).ToList();
                 _dbContext.PromotionFoods.RemoveRange(pf);

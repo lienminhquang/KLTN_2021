@@ -20,6 +20,7 @@ namespace FoodOrder.Core.Models
         public int Max { get; set; }
         public int MinPrice { get; set; }
         public bool IsGlobal { get; set; }
+        public int Priority { get; set; }
 
         public List<Order> Orders { get; set; }
         public List<PromotionFood>  PromotionFoods { get; set; }

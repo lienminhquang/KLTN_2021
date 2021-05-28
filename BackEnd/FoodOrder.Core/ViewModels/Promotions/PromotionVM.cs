@@ -22,6 +22,7 @@ namespace FoodOrder.Core.ViewModels.Promotions
         public int Max { get; set; }
         public int MinPrice { get; set; }
         public bool IsGlobal { get; set; }
+        public int Priority { get; set; }
 
 
         public List<FoodVM> FoodVMs { get; set; }

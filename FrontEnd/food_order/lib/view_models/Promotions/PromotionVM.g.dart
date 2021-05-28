@@ -8,7 +8,7 @@ part of 'PromotionVM.dart';
 
 PromotionVM _$PromotionVMFromJson(Map<String, dynamic> json) {
   return PromotionVM()
-    ..iD = json['iD'] as int
+    ..id = json['id'] as int
     ..name = json['name'] as String
     ..code = json['code'] as String
     ..desciption = json['desciption'] as String?
@@ -19,12 +19,16 @@ PromotionVM _$PromotionVMFromJson(Map<String, dynamic> json) {
     ..percent = (json['percent'] as num).toDouble()
     ..enabled = json['enabled'] as bool
     ..max = json['max'] as int?
-    ..minPrice = json['minPrice'] as int?;
+    ..minPrice = json['minPrice'] as int?
+    ..isGlobal = json['isGlobal'] as bool
+    ..foodVMs = (json['foodVMs'] as List<dynamic>)
+        .map((e) => FoodVM.fromJson(e as Map<String, dynamic>))
+        .toList();
 }
 
 Map<String, dynamic> _$PromotionVMToJson(PromotionVM instance) =>
     <String, dynamic>{
-      'iD': instance.iD,
+      'id': instance.id,
       'name': instance.name,
       'code': instance.code,
       'desciption': instance.desciption,
@@ -36,4 +40,6 @@ Map<String, dynamic> _$PromotionVMToJson(PromotionVM instance) =>
       'enabled': instance.enabled,
       'max': instance.max,
       'minPrice': instance.minPrice,
+      'isGlobal': instance.isGlobal,
+      'foodVMs': instance.foodVMs,
     };

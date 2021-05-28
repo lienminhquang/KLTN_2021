@@ -35,7 +35,7 @@ namespace FoodOrder.API.Services
                //.Include(f => f.Images)
                //.Include(f => f.FoodCategories)
                .AsNoTracking();
-            
+
 
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -54,17 +54,41 @@ namespace FoodOrder.API.Services
             return new SuccessedResult<PaginatedList<FoodVM>>(created);
         }
 
+        public ApiResult<PaginatedList<FoodVM>> GetBestSelling(PagingRequestBase request)
+        {
+            var food = from f in _dbContext.Foods
+                       join od in _dbContext.OrderDetails
+                       on f.ID equals od.FoodID into joined
+                       from p in joined.DefaultIfEmpty()
+                       select new { f, p };
+            var a = from x in food
+                    group x by x.f.ID
+                    into grouped
+                    select new { grouped.Key, Count = grouped.Count() };
+            var listID = a.OrderByDescending(x => x.Count).ToList();
+            List<FoodVM> listFoodVM = new List<FoodVM>();
+
+            foreach (var item in listID)
+            {
+                listFoodVM.Add(_mapper.Map<FoodVM>(_dbContext.Foods.Find(item.Key)));
+            }
+
+            var created = PaginatedList<FoodVM>.CreateFromList(listFoodVM, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+
+            return new SuccessedResult<PaginatedList<FoodVM>>(created);
+        }
+
         public async Task<ApiResult<bool>> AddFoodToCategories(List<string> categoryIDs, int foodID)
         {
             var food = _dbContext.Foods.Find(foodID);
-            if(food == null)
+            if (food == null)
             {
                 return new FailedResult<bool>("Food not found!");
             }
             foreach (var cID in categoryIDs)
             {
                 int id = 0;
-                if(int.TryParse(cID, out id) == false)
+                if (int.TryParse(cID, out id) == false)
                 {
                     return new FailedResult<bool>("Category not found!");
                 }
@@ -74,7 +98,7 @@ namespace FoodOrder.API.Services
 
             return new SuccessedResult<bool>(true);
         }
-        
+
         public async Task<ApiResult<bool>> DeleteFoodFromAllCategory(int foodID)
         {
             var food = _dbContext.Foods.Find(foodID);
@@ -84,8 +108,8 @@ namespace FoodOrder.API.Services
             }
 
             var listFC = await (from fc in _dbContext.FoodCategories
-                     where fc.FoodID == foodID
-                     select fc).ToListAsync();
+                                where fc.FoodID == foodID
+                                select fc).ToListAsync();
             _dbContext.FoodCategories.RemoveRange(listFC);
 
             try
@@ -122,7 +146,7 @@ namespace FoodOrder.API.Services
             var ratings = from r in _dbContext.Ratings
                           where r.FoodID == id
                           select r;
-            if(ratings != null && ratings.Count() > 0)
+            if (ratings != null && ratings.Count() > 0)
             {
                 foodVM.AgvRating = ratings.Average(a => a.Star);
                 foodVM.TotalRating = ratings.Count();
@@ -138,12 +162,12 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<FoodVM>> Create(FoodCreateVM vm)
         {
-            if(vm.ImageData == null)
+            if (vm.ImageData == null)
             {
                 return new FailedResult<FoodVM>("Invalid image!");
             }
             var result = await _dbContext.Foods.AddAsync(_mapper.Map<Food>(vm));
-            
+
             try
             {
                 result.Entity.ImagePath = await _fileServices.SaveFile(vm.ImageData);
@@ -174,7 +198,7 @@ namespace FoodOrder.API.Services
             //food.FoodCategories = foodVM.FoodCategories; // Todo: we need to use categories here, not foodcategories
             try
             {
-                if(foodVM.ImageData!=null)
+                if (foodVM.ImageData != null)
                 {
                     await _fileServices.DeleteFileAsync(food.ImagePath);
                     food.ImagePath = await _fileServices.SaveFile(foodVM.ImageData);

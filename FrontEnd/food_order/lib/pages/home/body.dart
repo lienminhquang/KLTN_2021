@@ -7,11 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryEvent.dart';
 import 'package:food_delivery/bloc/Home/HomeBloc.dart';
+import 'package:food_delivery/bloc/Home/HomeEvent.dart';
 import 'package:food_delivery/bloc/Home/HomeState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
 import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
+import 'package:food_delivery/view_models/Foods/FoodVM.dart';
+import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 import 'package:provider/provider.dart';
 
 import '../categoty/Category.dart';
@@ -86,16 +89,24 @@ class _BodyState extends State<Body> {
   Widget _buildLoadedState(BuildContext context, HomeLoadedState state) {
     return Scaffold(
       body: Container(
-        child: ListView(
-          children: [
-            //NotificationWidget(),
-            fakeSearchBox(),
-            buidImageCarousel(_appBannerImages),
-            offers(),
-            _categoryList(state.listCategory),
-            FastChoice(),
-            FastChoice()
-          ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<HomeBloc>().add(HomeRefeshEvent());
+          },
+          child: ListView(
+            children: [
+              //NotificationWidget(),
+              fakeSearchBox(),
+              buidImageCarousel(_appBannerImages),
+              offers(),
+              _categoryList(state.listCategory),
+              Divider(
+                height: 30,
+              ),
+              FastChoice(state.listPromotion[0]),
+              FastChoice(state.listPromotion[1])
+            ],
+          ),
         ),
       ),
     );
@@ -225,7 +236,7 @@ class CategoryItem extends StatelessWidget {
               CachedNetworkImage(
                 width: double.infinity,
                 height: double.infinity,
-                fit: BoxFit.fill,
+                fit: BoxFit.contain,
                 placeholder: (context, url) => CircularProgressIndicator(),
                 imageUrl: AppConfigs.URL_Images + "/$image",
               ),
@@ -259,6 +270,8 @@ class CategoryItem extends StatelessWidget {
 }
 
 class FastChoice extends StatelessWidget {
+  final PromotionVM _promotionVM;
+  FastChoice(this._promotionVM);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -271,7 +284,7 @@ class FastChoice extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Chill Tết Siêu Đã | Giảm 45K",
+                _promotionVM.name,
                 textAlign: TextAlign.left,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
@@ -280,17 +293,23 @@ class FastChoice extends StatelessWidget {
           Container(
             //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
             child: Align(
-              child: Text("Nhập mã CHILLTET giảm 45K cho đơn từ 100K.",
-                  textAlign: TextAlign.left),
+              child: Text(
+                _promotionVM.desciption!,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+              ),
               alignment: Alignment.centerLeft,
             ),
           ),
           Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
             height: 250,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 10,
+                itemCount: _promotionVM.foodVMs.length,
                 itemBuilder: (BuildContext context, int index) {
+                  final foodVM = _promotionVM.foodVMs[index];
+
                   return Container(
                     child: Card(
                       clipBehavior: Clip.antiAlias,
@@ -298,40 +317,64 @@ class FastChoice extends StatelessWidget {
                         width: 200,
                         child: Column(
                           children: [
+                            Expanded(
+                              //padding: const EdgeInsets.all(16.0),
+                              child: CachedNetworkImage(
+                                // width: double.infinity,
+                                //height: 150,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                imageUrl: AppConfigs.URL_Images +
+                                    "/${foodVM.imagePath}",
+                              ),
+                            ),
                             ListTile(
-                              leading: Icon(Icons.arrow_drop_down_circle),
-                              title: const Text('Card title 1'),
-                              subtitle: Text(
-                                'Secondary Text',
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(0.6)),
+                              //leading: Icon(Icons.arrow_drop_down_circle),
+                              title: Text(foodVM.name),
+                              subtitle: Row(
+                                children: [
+                                  Text(
+                                    AppConfigs.AppNumberFormat.format(
+                                        foodVM.price *
+                                            _promotionVM.percent /
+                                            100),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black.withOpacity(0.9)),
+                                  ),
+                                  Container(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    AppConfigs.AppNumberFormat.format(
+                                        foodVM.price),
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black.withOpacity(0.6),
+                                        decoration: TextDecoration.lineThrough),
+                                  ),
+                                ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                'Greyhound divisively hello coldly wonderfully marginally far upon excluding.',
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(0.6)),
-                              ),
-                            ),
-                            ButtonBar(
-                              alignment: MainAxisAlignment.start,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    // Perform some action
-                                  },
-                                  child: const Text('ACTION 1'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Perform some action
-                                  },
-                                  child: const Text('ACTION 2'),
-                                ),
-                              ],
-                            ),
+                            // ButtonBar(
+                            //   alignment: MainAxisAlignment.start,
+                            //   children: [
+                            //     TextButton(
+                            //       onPressed: () {
+                            //         // Perform some action
+                            //       },
+                            //       child: const Text('ACTION 1'),
+                            //     ),
+                            //     TextButton(
+                            //       onPressed: () {
+                            //         // Perform some action
+                            //       },
+                            //       child: const Text('ACTION 2'),
+                            //     ),
+                            //   ],
+                            // ),
                             // Image.asset('assets/card-sample-image.jpg'),
                           ],
                         ),
