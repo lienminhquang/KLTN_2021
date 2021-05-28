@@ -3,6 +3,7 @@ using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
+using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.Promotions;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
@@ -49,51 +50,104 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<PromotionVM>("Order not found!");
             }
-            return new SuccessedResult<PromotionVM>(_mapper.Map<Promotion, PromotionVM>(c));
+            var foodVMs = await (from f in _dbContext.Foods
+                                 join fp in _dbContext.PromotionFoods on f.ID equals fp.FoodID
+                                 where fp.PromotionID == id
+                                 select _mapper.Map<FoodVM>(f)).ToListAsync();
+            var vm = _mapper.Map<Promotion, PromotionVM>(c);
+            vm.FoodVMs = foodVMs;
+
+            return new SuccessedResult<PromotionVM>(vm);
         }
 
         public async Task<ApiResult<PromotionVM>> Create(PromotionCreateVM vm)
         {
-            var result = await _dbContext.Promotions.AddAsync(_mapper.Map<PromotionCreateVM, Promotion>(vm));
+            using var transaction = _dbContext.Database.BeginTransaction();
+
             try
             {
+                var result = await _dbContext.Promotions.AddAsync(_mapper.Map<PromotionCreateVM, Promotion>(vm));
                 await _dbContext.SaveChangesAsync();
+
+                List<FoodVM> foodVMs = new List<FoodVM>();
+                foreach (var item in vm.FoodIDs)
+                {
+                    var food = await _dbContext.Foods.FindAsync(item);
+                    if (food == null)
+                    {
+                        transaction.Rollback();
+                        return new FailedResult<PromotionVM>("Food not found!");
+                    }
+                    var rs = _dbContext.PromotionFoods.Add(new PromotionFood { FoodID = item, PromotionID = result.Entity.ID });
+                    await _dbContext.SaveChangesAsync();
+                    foodVMs.Add(_mapper.Map<FoodVM>(food));
+                }
+                transaction.Commit();
+
+                var promotionVM = _mapper.Map<PromotionVM>(result.Entity);
+                promotionVM.FoodVMs = foodVMs;
+                return new SuccessedResult<PromotionVM>(promotionVM);
             }
             catch (Exception e)
             {
-                return new FailedResult<PromotionVM>(e.InnerException.ToString());
+                return new FailedResult<PromotionVM>(e.Message.ToString());
             }
-            return new SuccessedResult<PromotionVM>(_mapper.Map<PromotionVM>(result.Entity));
+
         }
 
         public async Task<ApiResult<PromotionVM>> Edit(int id, PromotionEditVM editVM)
         {
-            var vm = await _dbContext.Promotions.FirstOrDefaultAsync(c => c.ID == id);
-            if (vm == null)
-            {
-                return new FailedResult<PromotionVM>("Promotion not found!");
-            }
-            vm.Name = editVM.Name;
-            vm.Desciption = editVM.Desciption;
-            vm.Code = editVM.Code;
-            vm.Amount = editVM.Amount;
-            vm.EndDate = editVM.EndDate;
-            vm.Enabled = editVM.Enabled;
-            vm.StartDate = editVM.StartDate;
-            vm.Max = editVM.Max;
-            vm.MinPrice = editVM.MinPrice;
-            vm.Percent = editVM.Percent;
-
+            using var transaction = _dbContext.Database.BeginTransaction();
             try
             {
+                var promotion = await _dbContext.Promotions.FirstOrDefaultAsync(c => c.ID == id);
+                if (promotion == null)
+                {
+                    return new FailedResult<PromotionVM>("Promotion not found!");
+                }
+                promotion.Name = editVM.Name;
+                promotion.Desciption = editVM.Desciption;
+                promotion.Code = editVM.Code;
+                promotion.Amount = editVM.Amount;
+                promotion.EndDate = editVM.EndDate;
+                promotion.Enabled = editVM.Enabled;
+                promotion.StartDate = editVM.StartDate;
+                promotion.Max = editVM.Max;
+                promotion.MinPrice = editVM.MinPrice;
+                promotion.Percent = editVM.Percent;
+
+                var pf = _dbContext.PromotionFoods.Where(x => x.PromotionID == editVM.ID).ToList();
+                _dbContext.PromotionFoods.RemoveRange(pf);
+                _dbContext.SaveChanges();
+
+                List<FoodVM> foodVMs = new List<FoodVM>();
+                if (editVM.FoodIDs != null)
+                {
+                    foreach (var item in editVM.FoodIDs)
+                    {
+                        var food = await _dbContext.Foods.FindAsync(item);
+                        if (food == null)
+                        {
+                            transaction.Rollback();
+                            return new FailedResult<PromotionVM>("Food not found!");
+                        }
+                        var rs = _dbContext.PromotionFoods.Add(new PromotionFood { FoodID = item, PromotionID = promotion.ID });
+                        var writed = await _dbContext.SaveChangesAsync();
+                        foodVMs.Add(_mapper.Map<FoodVM>(food));
+                    }
+                }
+
                 await _dbContext.SaveChangesAsync();
+                transaction.Commit();
+
+                var promotionVM = _mapper.Map<PromotionVM>(promotion);
+                promotionVM.FoodVMs = foodVMs;
+                return new SuccessedResult<PromotionVM>(promotionVM);
             }
             catch (Exception e)
             {
-                return new FailedResult<PromotionVM>(e.InnerException.ToString());
+                return new FailedResult<PromotionVM>(e.Message.ToString());
             }
-
-            return new SuccessedResult<PromotionVM>(_mapper.Map<PromotionVM>(vm));
         }
 
         public async Task<ApiResult<bool>> Delete(int id)

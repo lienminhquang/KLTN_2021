@@ -81,7 +81,7 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             Id = new Guid("b9e08f48-883c-42dc-a700-da5cf1d81aa3"),
-                            ConcurrencyStamp = "e0246349-b427-4089-a93b-f55fe690354f",
+                            ConcurrencyStamp = "b235833e-d7c7-4f44-8431-d9dc4dd35ec2",
                             Description = "This is Admintrator role.",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -89,7 +89,7 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             Id = new Guid("74d17d8b-3f91-4d3a-893f-09b4e51e3834"),
-                            ConcurrencyStamp = "34784487-640f-4d87-ad51-b66505dddedd",
+                            ConcurrencyStamp = "a2a34aa7-c2f3-48a4-9196-e8c97c9cedbe",
                             Description = "This is User role.",
                             Name = "user",
                             NormalizedName = "User"
@@ -180,7 +180,7 @@ namespace FoodOrder.API.Migrations
                         {
                             Id = new Guid("b4e253b2-756e-48b8-9c42-b5acb139bed4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e95345fb-15d5-47cd-8f05-b67ae4fc3908",
+                            ConcurrencyStamp = "2f6e4b06-5cc2-40fe-bf88-c5190484c3a9",
                             DateOfBirth = new DateTime(1999, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jame@gmail.com",
                             EmailConfirmed = false,
@@ -188,7 +188,7 @@ namespace FoodOrder.API.Migrations
                             LastName = "Jame",
                             LockoutEnabled = false,
                             NormalizedEmail = "JAME@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFbUilFRGbmUc0hpmRY/xmww9ZqxRhuAfraFPrnbEOkNfnh+ibg+5U+p6VkQFJ8GKA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELkbjtU/jQRRxG1AgCmJ9b+PdUitHgmPa42zBZUfnmES5Ak9LDZwm4sbopeQtdqguA==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -198,7 +198,7 @@ namespace FoodOrder.API.Migrations
                         {
                             Id = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c022030e-880e-4cee-aa65-e7d165b0eb33",
+                            ConcurrencyStamp = "dc8b0f60-1bfa-4d3f-9063-08a64b2355ed",
                             DateOfBirth = new DateTime(1990, 7, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "messi10@gmail.com",
                             EmailConfirmed = false,
@@ -206,7 +206,7 @@ namespace FoodOrder.API.Migrations
                             LastName = "Messi",
                             LockoutEnabled = false,
                             NormalizedEmail = "MESSI10@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEl0b4F5ZET6A8KUOBuOkz0s5IgwPK6tqete26pLH4GuLHL+XknVoyuttpsAGeWUzw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEO07sZuhc4VJNLTRf1y4a7N1kevC7GxirnWMl3TVyYZhhnF/k2FVrot6Yfo6uYNxnQ==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -572,7 +572,7 @@ namespace FoodOrder.API.Migrations
                             AddressName = "Nha",
                             AddressString = "ABC",
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
-                            CreatedDate = new DateTime(2021, 5, 22, 21, 55, 33, 903, DateTimeKind.Local).AddTicks(9457),
+                            CreatedDate = new DateTime(2021, 5, 27, 22, 4, 56, 337, DateTimeKind.Local).AddTicks(3431),
                             IsPaid = false,
                             OrderStatusID = 1,
                             PromotionID = 1
@@ -695,7 +695,7 @@ namespace FoodOrder.API.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 5, 22, 21, 55, 33, 869, DateTimeKind.Local).AddTicks(585));
+                        .HasDefaultValue(new DateTime(2021, 5, 27, 22, 4, 56, 292, DateTimeKind.Local).AddTicks(8032));
 
                     b.Property<string>("Desciption")
                         .HasMaxLength(300)
@@ -709,7 +709,10 @@ namespace FoodOrder.API.Migrations
                     b.Property<DateTime>("EndDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 5, 22, 21, 55, 33, 870, DateTimeKind.Local).AddTicks(3110));
+                        .HasDefaultValue(new DateTime(2021, 5, 27, 22, 4, 56, 294, DateTimeKind.Local).AddTicks(449));
+
+                    b.Property<bool>("IsGlobal")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Max")
                         .HasColumnType("int");
@@ -731,7 +734,7 @@ namespace FoodOrder.API.Migrations
                     b.Property<DateTime>("StartDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 5, 22, 21, 55, 33, 870, DateTimeKind.Local).AddTicks(2815));
+                        .HasDefaultValue(new DateTime(2021, 5, 27, 22, 4, 56, 294, DateTimeKind.Local).AddTicks(166));
 
                     b.HasKey("ID");
 
@@ -743,15 +746,31 @@ namespace FoodOrder.API.Migrations
                             ID = 1,
                             Amount = 100,
                             Code = "THANHVIENMOI",
-                            CreatedDate = new DateTime(2021, 5, 22, 21, 55, 33, 904, DateTimeKind.Local).AddTicks(9077),
+                            CreatedDate = new DateTime(2021, 5, 27, 22, 4, 56, 338, DateTimeKind.Local).AddTicks(3352),
                             Enabled = true,
                             EndDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsGlobal = false,
                             Max = 5000,
                             MinPrice = 50000,
                             Name = "Chao thanh vien moi",
                             Percent = 0.25f,
-                            StartDate = new DateTime(2021, 5, 22, 21, 55, 33, 905, DateTimeKind.Local).AddTicks(1671)
+                            StartDate = new DateTime(2021, 5, 27, 22, 4, 56, 338, DateTimeKind.Local).AddTicks(5974)
                         });
+                });
+
+            modelBuilder.Entity("FoodOrder.Core.Models.PromotionFood", b =>
+                {
+                    b.Property<int>("FoodID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromotionID")
+                        .HasColumnType("int");
+
+                    b.HasKey("FoodID", "PromotionID");
+
+                    b.HasIndex("PromotionID");
+
+                    b.ToTable("PromotionFood");
                 });
 
             modelBuilder.Entity("FoodOrder.Core.Models.Rating", b =>
@@ -785,7 +804,7 @@ namespace FoodOrder.API.Migrations
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             FoodID = 1,
                             Comment = "Good",
-                            LastCreatedTime = new DateTime(2021, 5, 22, 21, 55, 33, 905, DateTimeKind.Local).AddTicks(4447),
+                            LastCreatedTime = new DateTime(2021, 5, 27, 22, 4, 56, 338, DateTimeKind.Local).AddTicks(8481),
                             Star = 5
                         });
                 });
@@ -1004,6 +1023,25 @@ namespace FoodOrder.API.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("FoodOrder.Core.Models.PromotionFood", b =>
+                {
+                    b.HasOne("FoodOrder.Core.Models.Food", "Food")
+                        .WithMany("PromotionFoods")
+                        .HasForeignKey("FoodID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodOrder.Core.Models.Promotion", "Promotion")
+                        .WithMany("PromotionFoods")
+                        .HasForeignKey("PromotionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Food");
+
+                    b.Navigation("Promotion");
+                });
+
             modelBuilder.Entity("FoodOrder.Core.Models.Rating", b =>
                 {
                     b.HasOne("FoodOrder.Core.Models.AppUser", "AppUser")
@@ -1102,6 +1140,8 @@ namespace FoodOrder.API.Migrations
 
                     b.Navigation("OrderDetails");
 
+                    b.Navigation("PromotionFoods");
+
                     b.Navigation("Ratings");
                 });
 
@@ -1118,6 +1158,8 @@ namespace FoodOrder.API.Migrations
             modelBuilder.Entity("FoodOrder.Core.Models.Promotion", b =>
                 {
                     b.Navigation("Orders");
+
+                    b.Navigation("PromotionFoods");
                 });
 #pragma warning restore 612, 618
         }

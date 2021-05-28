@@ -23,6 +23,7 @@ namespace FoodOrder.Data.Configurations
             builder.Property(x => x.Percent).IsRequired().HasDefaultValue(10.0);
 
             builder.HasMany(x => x.Orders).WithOne(x => x.Promotion).HasForeignKey(x => x.PromotionID);
+            builder.HasMany(x => x.PromotionFoods).WithOne(x => x.Promotion).HasForeignKey(x => x.PromotionID);
         }
     }
 }

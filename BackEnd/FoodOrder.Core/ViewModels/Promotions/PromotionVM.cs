@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FoodOrder.Core.ViewModels.Foods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,5 +21,9 @@ namespace FoodOrder.Core.ViewModels.Promotions
         public bool Enabled { get; set; }
         public int Max { get; set; }
         public int MinPrice { get; set; }
+        public bool IsGlobal { get; set; }
+
+
+        public List<FoodVM> FoodVMs { get; set; }
     }
 }

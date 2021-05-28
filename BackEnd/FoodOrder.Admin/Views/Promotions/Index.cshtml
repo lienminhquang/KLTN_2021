@@ -30,12 +30,8 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Code)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Desciption)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().CreatedDate)
-                            </th>
+                           
+                           
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().StartDate)
                             </th>
@@ -51,12 +47,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Enabled)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Max)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().MinPrice)
-                            </th>
+                           
                             <th></th>
                         </tr>
                     </thead>
@@ -76,16 +67,10 @@
                                         @Html.DisplayFor(modelItem => item.Code)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Desciption)
+                                        @Html.DisplayFor(modelItem => item.StartDate.Date)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.CreatedDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.StartDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                        @Html.DisplayFor(modelItem => item.EndDate.Date)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Amount)
@@ -96,12 +81,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Enabled)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Max)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.MinPrice)
-                                    </td>
+                                   
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
                                         @Html.ActionLink("Details", "Details", new { id = item.ID }) |

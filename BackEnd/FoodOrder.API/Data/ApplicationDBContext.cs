@@ -36,6 +36,7 @@ namespace FoodOrder.Data
             builder.ApplyConfiguration(new PromotionConfig());
             builder.ApplyConfiguration(new RatingConfig());
             builder.ApplyConfiguration(new NotificationConfig());
+            builder.ApplyConfiguration(new PromotionFoodConfig());
 
             // config Identity
             builder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaim").HasKey(x => x.Id);
@@ -61,5 +62,6 @@ namespace FoodOrder.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<PromotionFood> PromotionFoods { get; set; }
     }
 }
