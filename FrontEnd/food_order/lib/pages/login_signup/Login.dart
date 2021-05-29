@@ -9,6 +9,7 @@ import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/login_signup/SignUp.dart';
+import 'package:food_delivery/view_models/commons/ApiResult.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -112,21 +113,14 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 15.0,
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                    height: 40.0,
-                    child: Material(
-                      borderRadius: BorderRadius.circular(20),
-                      shadowColor: Colors.blueAccent,
-                      color: Colors.blue,
-                      elevation: 7.0,
-                      child: GestureDetector(
-                        onTap: () {
-                          login(context);
+
+                      TextFormField(
+                        controller: _passwordTextController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Password!';
+                          }
+                          return null;
                         },
                         decoration: InputDecoration(
                             hintText: 'Mật khẩu ',
@@ -141,6 +135,33 @@ class _LoginPageState extends State<LoginPage> {
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.blue))),
                         obscureText: isHiddenPassword,
+                      ),
+                      SizedBox(
+                        height: 25.0,
+                      ),
+
+                      Container(
+                        height: 40.0,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(20),
+                          shadowColor: Colors.blueAccent,
+                          color: Colors.blue,
+                          elevation: 7.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              login(context);
+                            },
+                            child: Center(
+                              child: Text(
+                                'Đăng nhập',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Montserrat'),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 5.0,
@@ -166,39 +187,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                    height: 40.0,
-                    color: Colors.transparent,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.black,
-                            style: BorderStyle.solid,
-                            width: 1.0),
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Center(
-                              child: ImageIcon(
-                                  AssetImage('images/iconfacebook.png'))),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Center(
-                            child: Text('Đăng nhập bằng Facebook',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat')),
-                          )
-                        ],
+                      SizedBox(
+                        height: 20.0,
                       ),
                       // Container(
                       //   height: 40.0,
@@ -270,11 +260,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   void _togglePasswordView() {
     isHiddenPassword = !isHiddenPassword;
     setState(() {});
   }
+
   Widget _buildErrorState(BuildContext context, LoginErrorState state) {
     return Container(
         child: Center(
