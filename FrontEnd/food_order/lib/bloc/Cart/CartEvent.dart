@@ -6,6 +6,13 @@ abstract class CartEvent {}
 
 class CartStartedEvent extends CartEvent {}
 
+class CartAddPromotionEvent extends CartEvent {
+  final int promotionID;
+  CartAddPromotionEvent(this.promotionID);
+}
+
+class CartRefreshdEvent extends CartEvent {}
+
 class CartDeletedEvent extends CartEvent {
   final int cartID;
   CartDeletedEvent(this.cartID);

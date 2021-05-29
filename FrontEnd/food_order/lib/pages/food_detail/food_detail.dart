@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Cart/CartBloc.dart';
+import 'package:food_delivery/bloc/Cart/CartEvent.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
@@ -39,12 +41,14 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
     context
         .read<FoodDetailBloc>()
         .add(FoodDetailStartedEvent(foodID: foodID, promotionID: promotionID));
+
     super.initState();
   }
 
   Widget bottomBtns(BuildContext context, FoodDetailLoadedState state) {
     final price = state.foodVM.price;
     final cartVM = state.cartVM;
+    final promotion = state.promotionVM;
     double discount = 0;
     if (cartVM != null) {
       count = cartVM.quantity;
@@ -63,19 +67,32 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
             flex: 2,
             child: new InkWell(
               onTap: () async {
+                if (promotion != null) {
+                  await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Container(
+                            child: Text(
+                                "Bạn có muốn áp dụng mã giảm giá ${promotion.code} cho đơn hàng không?"),
+                          ),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  context
+                                      .read<CartBloc>()
+                                      .add(CartAddPromotionEvent(promotionID!));
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("OK"))
+                          ],
+                        );
+                      });
+                }
+
                 // Todo we need to move this function to FoodDetailBloc to check error when create inside food detail
-                context.read<FoodDetailBloc>().add(
-                    FoodDetailCreateCartEvent(state.foodVM.id, count, null));
-                // if (!result.isSuccessed) {
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //       SnackBar(content: Text(result.errorMessage!)));
-                // } else {
-                //   context.read<CartModel>().fetchCartItems();
-                //   // Navigator.pushReplacementNamed(
-                //   //     context, CartItemsPage.routeName);
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //       SnackBar(content: Text("Added item into your cart!")));
-                // }
+                context.read<FoodDetailBloc>().add(FoodDetailCreateCartEvent(
+                    state.foodVM.id, count, promotionID, context));
               },
               child: ClipRRect(
                 borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
@@ -217,6 +234,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
     return BlocBuilder<FoodDetailBloc, FoodDetailState>(
         builder: (context, state) {
       if (state is FoodDetailLoadingState) {
+        print("FoodDetailLoadingState");
         return Container(
             color: Colors.white,
             child: Center(child: CircularProgressIndicator()));

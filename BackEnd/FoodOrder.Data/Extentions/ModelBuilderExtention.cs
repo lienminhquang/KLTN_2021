@@ -98,7 +98,7 @@ namespace FoodOrder.Data.Extentions
                 new OrderStatus { ID = 5, Name = "Da huy", Description = "" }
                 );
             modelBuilder.Entity<Promotion>().HasData(
-                new Promotion { ID = 1, Name = "Chao thanh vien moi", Amount = 100, Code = "THANHVIENMOI", CreatedDate = DateTime.Now, Enabled = true, EndDate = new DateTime(2022, 1, 1), Percent = 0.25f, MinPrice = 50000, Max = 5000, StartDate = DateTime.Now }
+                new Promotion { ID = 1, Name = "Chao thanh vien moi", UseTimes = 100, Code = "THANHVIENMOI", Enabled = true, EndDate = new DateTime(2022, 1, 1), Percent = 0.25f, MinPrice = 50000, Max = 5000, StartDate = DateTime.Now }
                 );
             modelBuilder.Entity<Rating>().HasData(
                 new Rating { AppUserID = new Guid(userID), Comment = "Good", FoodID = 1, LastCreatedTime = DateTime.Now, Star = 5 }

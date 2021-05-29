@@ -40,16 +40,6 @@ namespace FoodOrder.API.Services
 
             var created = await PaginatedList<PromotionVM>.CreateAsync(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
-            foreach (var item in created.Items)
-            {
-                var foodVMs = await (from f in _dbContext.Foods
-                                     join fp in _dbContext.PromotionFoods on f.ID equals fp.FoodID
-                                     where fp.PromotionID == item.ID
-                                     select _mapper.Map<FoodVM>(f)).ToListAsync();
-              
-                item.FoodVMs = foodVMs;
-            }
-
             return new SuccessedResult<PaginatedList<PromotionVM>>(created);
         }
 
@@ -60,14 +50,9 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<PromotionVM>("Order not found!");
             }
-            var foodVMs = await (from f in _dbContext.Foods
-                                 join fp in _dbContext.PromotionFoods on f.ID equals fp.FoodID
-                                 where fp.PromotionID == id
-                                 select _mapper.Map<FoodVM>(f)).ToListAsync();
            
-
             var vm = _mapper.Map<Promotion, PromotionVM>(c);
-            vm.FoodVMs = foodVMs;
+           
 
             return new SuccessedResult<PromotionVM>(vm);
         }
@@ -81,23 +66,11 @@ namespace FoodOrder.API.Services
                 var result = await _dbContext.Promotions.AddAsync(_mapper.Map<PromotionCreateVM, Promotion>(vm));
                 await _dbContext.SaveChangesAsync();
 
-                List<FoodVM> foodVMs = new List<FoodVM>();
-                foreach (var item in vm.FoodIDs)
-                {
-                    var food = await _dbContext.Foods.FindAsync(item);
-                    if (food == null)
-                    {
-                        transaction.Rollback();
-                        return new FailedResult<PromotionVM>("Food not found!");
-                    }
-                    var rs = _dbContext.PromotionFoods.Add(new PromotionFood { FoodID = item, PromotionID = result.Entity.ID });
-                    await _dbContext.SaveChangesAsync();
-                    foodVMs.Add(_mapper.Map<FoodVM>(food));
-                }
+               
                 transaction.Commit();
 
                 var promotionVM = _mapper.Map<PromotionVM>(result.Entity);
-                promotionVM.FoodVMs = foodVMs;
+               
                 return new SuccessedResult<PromotionVM>(promotionVM);
             }
             catch (Exception e)
@@ -120,7 +93,7 @@ namespace FoodOrder.API.Services
                 promotion.Name = editVM.Name;
                 promotion.Desciption = editVM.Desciption;
                 promotion.Code = editVM.Code;
-                promotion.Amount = editVM.Amount;
+                promotion.UseTimes = editVM.UseTimes;
                 promotion.EndDate = editVM.EndDate;
                 promotion.Enabled = editVM.Enabled;
                 promotion.StartDate = editVM.StartDate;
@@ -130,32 +103,11 @@ namespace FoodOrder.API.Services
                 promotion.IsGlobal = editVM.IsGlobal;
                 promotion.Priority = editVM.Priority;
 
-                var pf = _dbContext.PromotionFoods.Where(x => x.PromotionID == editVM.ID).ToList();
-                _dbContext.PromotionFoods.RemoveRange(pf);
-                _dbContext.SaveChanges();
-
-                List<FoodVM> foodVMs = new List<FoodVM>();
-                if (editVM.FoodIDs != null)
-                {
-                    foreach (var item in editVM.FoodIDs)
-                    {
-                        var food = await _dbContext.Foods.FindAsync(item);
-                        if (food == null)
-                        {
-                            transaction.Rollback();
-                            return new FailedResult<PromotionVM>("Food not found!");
-                        }
-                        var rs = _dbContext.PromotionFoods.Add(new PromotionFood { FoodID = item, PromotionID = promotion.ID });
-                        var writed = await _dbContext.SaveChangesAsync();
-                        foodVMs.Add(_mapper.Map<FoodVM>(food));
-                    }
-                }
-
                 await _dbContext.SaveChangesAsync();
                 transaction.Commit();
 
                 var promotionVM = _mapper.Map<PromotionVM>(promotion);
-                promotionVM.FoodVMs = foodVMs;
+               
                 return new SuccessedResult<PromotionVM>(promotionVM);
             }
             catch (Exception e)

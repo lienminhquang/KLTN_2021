@@ -6,10 +6,12 @@ import 'package:food_delivery/bloc/Cart/CartState.dart';
 import 'package:food_delivery/services/AddressServices.dart';
 import 'package:food_delivery/services/CartServices.dart';
 import 'package:food_delivery/services/OrderServices.dart';
+import 'package:food_delivery/services/PromotionServices.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderCreateVM.dart';
+import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(CartLoadingState());
@@ -17,6 +19,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final CartServices _cartServices = CartServices();
   final AddressServices _addressServices = AddressServices();
   final OrderServices _orderServices = OrderServices();
+  final PromotionServices _promotionServices = PromotionServices();
+  int? _promotionID;
 
   @override
   Stream<CartState> mapEventToState(CartEvent event) async* {
@@ -30,6 +34,23 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield* _mapConfirmEventToState(event, state);
     } else if (event is CartSetAddressEvent) {
       yield* _mapSetAddressEventToState(event, state);
+    } else if (event is CartRefreshdEvent) {
+      yield* _mapRefreshEventToState();
+    } else if (event is CartAddPromotionEvent) {
+      yield* _mapAddPromotionEventToState(event, state);
+    }
+  }
+
+  Stream<CartState> _mapAddPromotionEventToState(
+      CartAddPromotionEvent event, CartState state) async* {
+    _promotionID = event.promotionID;
+    if (state is CartLoadedState) {
+      try {
+        yield await _fetchAll();
+      } catch (e) {
+        print(e);
+        yield CartErrorState("Error");
+      }
     }
   }
 
@@ -51,7 +72,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     if (state is CartLoadedState) {
       try {
         var loadedState = await _fetchAll();
-        yield CartLoadedState(event.addressVM, loadedState.listCartVM);
+        yield CartLoadedState(
+            event.addressVM, loadedState.listCartVM, loadedState.promotionVM);
       } catch (e) {
         print(e);
         yield CartErrorState("Error");
@@ -82,6 +104,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  Stream<CartState> _mapRefreshEventToState() async* {
+    try {
+      yield await _fetchAll();
+    } catch (e) {
+      print(e);
+      yield CartErrorState("Error");
+    }
+  }
+
   Future<void> _delete(int foodID) async {
     final String userID = UserServices.getUserID();
     var result = await _cartServices.delete(foodID, userID);
@@ -94,7 +125,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<CartLoadedState> _fetchAll() async {
     var listCartVM = await _fetchCartItems();
     var address = await _fetchAddress();
-    return CartLoadedState(address, listCartVM);
+    var promotionVM = await _fetchPromotion(_promotionID);
+    return CartLoadedState(address, listCartVM, promotionVM);
   }
 
   Future<List<CartVM>> _fetchCartItems() async {
@@ -106,6 +138,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
 
     throw result.errorMessage!;
+  }
+
+  Future<PromotionVM?> _fetchPromotion(int? promotionID) async {
+    if (promotionID != null) {
+      var promotion = await _promotionServices.getByID(promotionID);
+      if (promotion.isSuccessed) {
+        return promotion.payLoad;
+      }
+    }
+
+    return null;
   }
 
   Future<AddressVM?> _fetchAddress() async {

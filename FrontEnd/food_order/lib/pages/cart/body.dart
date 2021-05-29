@@ -193,39 +193,44 @@ class _BodyState extends State<Body> {
   _buildLoadedState(BuildContext context, CartLoadedState state) {
     var carts = state.listCartVM;
 
-    return ListView.builder(
-      itemCount: carts.length + 1,
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return addressSession(context, state.address);
-        }
-
-        return Dismissible(
-          key: ObjectKey(carts[index - 1]),
-          direction: DismissDirection.endToStart,
-          background: Container(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              decoration: BoxDecoration(
-                color: Color(0xFFFFE6E6),
-              ),
-              child: Row(
-                children: [
-                  Spacer(),
-                  Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  )
-                ],
-              )),
-          onDismissed: (direction) async {
-            // var cartModel = context.read<CartModel>();
-            // if (await cartModel.delete(carts[index - 1].foodID)) {
-            //   cartModel.fetchCartItems();
-            // }
-          },
-          child: _item(carts[index - 1], context),
-        );
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<CartBloc>().add(CartRefreshdEvent());
       },
+      child: ListView.builder(
+        itemCount: carts.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return addressSession(context, state.address);
+          }
+
+          return Dismissible(
+            key: ObjectKey(carts[index - 1]),
+            direction: DismissDirection.endToStart,
+            background: Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFE6E6),
+                ),
+                child: Row(
+                  children: [
+                    Spacer(),
+                    Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    )
+                  ],
+                )),
+            onDismissed: (direction) async {
+              // var cartModel = context.read<CartModel>();
+              // if (await cartModel.delete(carts[index - 1].foodID)) {
+              //   cartModel.fetchCartItems();
+              // }
+            },
+            child: _item(carts[index - 1], context),
+          );
+        },
+      ),
     );
   }
 

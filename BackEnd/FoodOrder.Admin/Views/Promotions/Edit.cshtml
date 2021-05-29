@@ -52,9 +52,9 @@
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Amount" class="control-label"></label>
-                            <input asp-for="Amount" class="form-control" />
-                            <span asp-validation-for="Amount" class="text-danger"></span>
+                            <label asp-for="UseTimes" class="control-label"></label>
+                            <input asp-for="UseTimes" class="form-control" />
+                            <span asp-validation-for="UseTimes" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Percent" class="control-label"></label>
@@ -86,17 +86,7 @@
                             <input asp-for="Priority" class="form-control" />
                             <span asp-validation-for="Priority" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <div class="demo-section k-content">
-                                <label for="required">Foods</label>
-                                <select id="required" asp-for="FoodIDs" multiple="multiple" data-placeholder="Select Foods...">
-                                    @foreach (var item in (ViewBag.FoodVMs as List<FoodVM>))
-                                    {
-                                        <option value="@item.ID">@item.Name</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                        
 
                         <div class="form-group">
                             <input type="submit" value="Save" class="btn btn-primary" />

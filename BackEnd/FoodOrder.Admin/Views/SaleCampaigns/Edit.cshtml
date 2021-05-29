@@ -1,16 +1,16 @@
-﻿@model FoodOrder.Core.ViewModels.Promotions.PromotionCreateVM
+﻿@model FoodOrder.Core.ViewModels.SaleCampaigns.SaleCampaignEditVM
 @using FoodOrder.Core.ViewModels.Foods
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container-fluid">
-    <h1 class="mt-4">Create Promotion</h1>
+    <h1 class="mt-4">Edit SaleCampaign</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-        <li class="breadcrumb-item active">Create Promotion</li>
+        <li class="breadcrumb-item active">Edit SaleCampaign</li>
     </ol>
     <div class="card mb-4">
         <div class="card-header">
@@ -18,19 +18,20 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-8">
-                    <form asp-action="Create">
+                <div class="col-md-4">
+                    <form asp-action="Edit">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="ID" class="control-label"></label>
+                            <input asp-for="ID" class="form-control" readonly />
+                            <span asp-validation-for="ID" class="text-danger"></span>
+                        </div>
                         <div class="form-group">
                             <label asp-for="Name" class="control-label"></label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Code" class="control-label"></label>
-                            <input asp-for="Code" class="form-control" />
-                            <span asp-validation-for="Code" class="text-danger"></span>
-                        </div>
+
                         <div class="form-group">
                             <label asp-for="Desciption" class="control-label"></label>
                             <input asp-for="Desciption" class="form-control" />
@@ -46,11 +47,7 @@
                             <input asp-for="EndDate" class="form-control" />
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="UseTimes" class="control-label"></label>
-                            <input asp-for="UseTimes" class="form-control" />
-                            <span asp-validation-for="UseTimes" class="text-danger"></span>
-                        </div>
+
                         <div class="form-group">
                             <label asp-for="Percent" class="control-label"></label>
                             <input asp-for="Percent" class="form-control" />
@@ -61,29 +58,28 @@
                                 <input class="form-check-input" asp-for="Enabled" /> @Html.DisplayNameFor(model => model.Enabled)
                             </label>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Max" class="control-label"></label>
-                            <input asp-for="Max" class="form-control" />
-                            <span asp-validation-for="Max" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="MinPrice" class="control-label"></label>
-                            <input asp-for="MinPrice" class="form-control" />
-                            <span asp-validation-for="MinPrice" class="text-danger"></span>
-                        </div>
+
+
                         <div class="form-group">
                             <label asp-for="Priority" class="control-label"></label>
                             <input asp-for="Priority" class="form-control" />
                             <span asp-validation-for="Priority" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="IsGlobal" /> @Html.DisplayNameFor(model => model.IsGlobal)
-                            </label>
-                        </div>
                         <div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-primary" />
+                            <div class="demo-section k-content">
+                                <label for="required">Foods</label>
+                                <select id="required" asp-for="FoodIDs" multiple="multiple" data-placeholder="Select Foods...">
+                                    @foreach (var item in (ViewBag.FoodVMs as List<FoodVM>))
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>
@@ -93,6 +89,9 @@
                 <a asp-action="Index">Back to List</a>
             </div>
 
+            @section Scripts {
+                @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            }
             @section CustomScripts {
                 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 

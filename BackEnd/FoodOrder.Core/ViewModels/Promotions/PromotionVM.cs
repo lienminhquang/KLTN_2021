@@ -16,15 +16,12 @@ namespace FoodOrder.Core.ViewModels.Promotions
         public DateTime CreatedDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int Amount { get; set; }
+        public int UseTimes { get; set; }
         public float Percent { get; set; }
         public bool Enabled { get; set; }
         public int Max { get; set; }
         public int MinPrice { get; set; }
         public bool IsGlobal { get; set; }
         public int Priority { get; set; }
-
-
-        public List<FoodVM> FoodVMs { get; set; }
     }
 }

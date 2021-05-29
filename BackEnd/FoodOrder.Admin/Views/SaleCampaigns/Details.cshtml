@@ -1,15 +1,15 @@
-﻿@model FoodOrder.Core.ViewModels.Promotions.PromotionVM
+﻿@model FoodOrder.Core.ViewModels.SaleCampaigns.SaleCampaignVM
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container-fluid">
-    <h1 class="mt-4">Delete Promotion</h1>
+    <h1 class="mt-4">SaleCampaign detail</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-        <li class="breadcrumb-item active">Delete Promotion</li>
+        <li class="breadcrumb-item active">SaleCampaign detail</li>
     </ol>
     <div class="card mb-4">
         <div class="card-header">
@@ -29,24 +29,15 @@
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.Name)
                 </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Code)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Code)
-                </dd>
+
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.Desciption)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.Desciption)
                 </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.CreatedDate)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.CreatedDate)
-                </dd>
+
+
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.StartDate)
                 </dt>
@@ -59,12 +50,7 @@
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.EndDate)
                 </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.UseTimes)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.UseTimes)
-                </dd>
+
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.Percent)
                 </dt>
@@ -78,23 +64,43 @@
                     @Html.DisplayFor(model => model.Enabled)
                 </dd>
                 <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Max)
+                    @Html.DisplayNameFor(model => model.Priority)
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Max)
+                    @Html.DisplayFor(model => model.Priority)
                 </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.MinPrice)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.MinPrice)
-                </dd>
-            </dl>
 
-            <form asp-action="Delete">
-                <input type="submit" value="Delete" class="btn btn-danger" /> |
-                <a asp-action="Index">Back to List</a>
-            </form>
+                <dt class="col-sm-2">
+                    Foods
+                </dt>
+                <dd class="col-sm-10">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.FoodVMs)
+                            {
+                                <tr>
+
+                                    <td>@item.ID</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Price</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </dd>
+
+            </dl>
+        </div>
+        <div>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = Model.ID })
         </div>
     </div>
 </div>

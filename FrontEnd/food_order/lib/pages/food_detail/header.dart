@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/view_models/Foods/FoodVM.dart';
-import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 import 'package:provider/provider.dart';
 
 class Appbar extends StatelessWidget {

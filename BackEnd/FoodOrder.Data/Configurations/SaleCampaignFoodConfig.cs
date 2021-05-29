@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Data.Configurations
 {
-    public class PromotionFoodConfig : IEntityTypeConfiguration<PromotionFood>
+    public class SaleCampaignFoodConfig : IEntityTypeConfiguration<SaleCampaignFood>
     {
-        public void Configure(EntityTypeBuilder<PromotionFood> builder)
+        public void Configure(EntityTypeBuilder<SaleCampaignFood> builder)
         {
-            builder.ToTable("PromotionFood");
-            builder.HasKey(x => new { x.FoodID, x.PromotionID });
+            builder.ToTable("SaleCampaignFood");
+            builder.HasKey(x => new { x.FoodID, x.SaleCampaignID });
         }
     }
 }

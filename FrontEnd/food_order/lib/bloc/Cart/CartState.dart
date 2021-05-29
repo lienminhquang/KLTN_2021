@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
+import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 
 @immutable
 abstract class CartState {}
@@ -15,7 +16,8 @@ class CartErrorState extends CartState {
 class CartLoadedState extends CartState {
   final AddressVM? address;
   final List<CartVM> listCartVM;
-  CartLoadedState(this.address, this.listCartVM);
+  final PromotionVM? promotionVM;
+  CartLoadedState(this.address, this.listCartVM, this.promotionVM);
 
   double getTotalPrice() {
     // Todo: apply promotions

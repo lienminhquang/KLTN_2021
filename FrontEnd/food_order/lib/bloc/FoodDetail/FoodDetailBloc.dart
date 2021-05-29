@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
@@ -37,6 +38,11 @@ class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
     if (state is FoodDetailLoadedState)
       try {
         await _create(event.foodID, event.count);
+        ScaffoldMessenger.of(event.context).showSnackBar(
+          const SnackBar(
+            content: Text('Đã thêm vào giỏ hàng!'),
+          ),
+        );
         yield await _fetchAll(event.foodID, event.promotionID);
       } catch (e) {}
   }

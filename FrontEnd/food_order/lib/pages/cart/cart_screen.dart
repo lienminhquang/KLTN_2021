@@ -28,7 +28,12 @@ class CheckoutCart extends StatelessWidget {
 
   Widget _buildLoadedState(BuildContext context, CartLoadedState state) {
     // context.select<CartModel, List<CartVM>>((value) => value.items);
-    final totalPrice = state.getTotalPrice();
+    double totalPrice = state.getTotalPrice();
+    String? promotionCode;
+    if (state.promotionVM != null) {
+      promotionCode = state.promotionVM!.code;
+      totalPrice = totalPrice * (100 - state.promotionVM!.percent) / 100;
+    }
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -61,6 +66,11 @@ class CheckoutCart extends StatelessWidget {
                     size: 25,
                   ),
                 ),
+                Container(
+                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: promotionCode == null
+                        ? Container()
+                        : Text(promotionCode)),
                 Spacer(),
                 Text('Mã khuyến mãi'),
                 const SizedBox(

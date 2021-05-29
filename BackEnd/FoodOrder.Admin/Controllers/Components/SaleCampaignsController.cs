@@ -3,7 +3,7 @@ using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
-using FoodOrder.Core.ViewModels.Promotions;
+using FoodOrder.Core.ViewModels.SaleCampaigns;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,24 +11,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FoodOrder.Admin.Controllers
+namespace FoodOrder.Admin.Controllers.Components
 {
-    public class PromotionsController : Controller
+    public class SaleCampaignsController : Controller
     {
-        private readonly PromotionServices _promotionServices;
+        private readonly SaleCampaignServices _saleCampaignServices;
         private readonly FoodServices _foodServices;
         private readonly IMapper _mapper;
 
-        public PromotionsController(PromotionServices services, IMapper mapper, FoodServices foodServices)
+        public SaleCampaignsController(SaleCampaignServices services, IMapper mapper, FoodServices foodServices)
         {
             _foodServices = foodServices;
-            _promotionServices = services;
+            _saleCampaignServices = services;
             _mapper = mapper;
         }
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
         {
-            var vm = await _promotionServices.GetAllPaging(request, this.GetTokenFromCookie());
+            var vm = await _saleCampaignServices.GetAllPaging(request, this.GetTokenFromCookie());
 
             if (!vm.IsSuccessed)
             {
@@ -41,7 +41,7 @@ namespace FoodOrder.Admin.Controllers
         // GET: CartsController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            var vm = await _promotionServices.GetByID(id, this.GetTokenFromCookie());
+            var vm = await _saleCampaignServices.GetByID(id, this.GetTokenFromCookie());
 
             if (!vm.IsSuccessed)
             {
@@ -71,7 +71,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([FromForm] PromotionCreateVM createVM)
+        public async Task<ActionResult> CreateAsync([FromForm] SaleCampaignCreateVM createVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -83,10 +83,10 @@ namespace FoodOrder.Admin.Controllers
                 return View(createVM);
             }
 
-            var rs = await _promotionServices.Create(createVM, this.GetTokenFromCookie());
+            var rs = await _saleCampaignServices.Create(createVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                TempData[AppConfigs.SuccessMessageString] = "Promotion create succesed!";
+                TempData[AppConfigs.SuccessMessageString] = "SaleCampaign create succesed!";
                 return RedirectToAction("Details", new { id = rs.PayLoad.ID });
             }
 
@@ -111,7 +111,7 @@ namespace FoodOrder.Admin.Controllers
                 return this.RedirectToLoginPage(returnUrl);
             }
 
-            var result = await _promotionServices.GetByID(id, this.GetTokenFromCookie());
+            var result = await _saleCampaignServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 return this.RedirectToErrorPage(result.ErrorMessage);
@@ -124,15 +124,15 @@ namespace FoodOrder.Admin.Controllers
             }
             ViewBag.FoodVMs = listFoodVM.PayLoad.Items;
 
-            var vm = _mapper.Map<PromotionVM, PromotionEditVM>(result.PayLoad);
-            
+            var vm = _mapper.Map<SaleCampaignVM, SaleCampaignEditVM>(result.PayLoad);
+
             return View(vm);
         }
 
         // POST: CartsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync([FromForm] PromotionEditVM editVM)
+        public async Task<ActionResult> EditAsync([FromForm] SaleCampaignEditVM editVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -144,10 +144,10 @@ namespace FoodOrder.Admin.Controllers
                 return View(editVM);
             }
 
-            var rs = await _promotionServices.Edit(editVM.ID, editVM, this.GetTokenFromCookie());
+            var rs = await _saleCampaignServices.Edit(editVM.ID, editVM, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                TempData[AppConfigs.SuccessMessageString] = "Promotion edit succesed!";
+                TempData[AppConfigs.SuccessMessageString] = "SaleCampaign edit succesed!";
                 return RedirectToAction("Details", new { id = editVM.ID });
             }
 
@@ -169,7 +169,7 @@ namespace FoodOrder.Admin.Controllers
             {
                 return this.RedirectToLoginPage();
             }
-            var result = await _promotionServices.GetByID(id, this.GetTokenFromCookie());
+            var result = await _saleCampaignServices.GetByID(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 return this.RedirectToErrorPage(result.ErrorMessage);
@@ -189,15 +189,16 @@ namespace FoodOrder.Admin.Controllers
             }
 
 
-            var result = await _promotionServices.Delete(id, this.GetTokenFromCookie());
+            var result = await _saleCampaignServices.Delete(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
                 TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
                 return View(result.PayLoad);
             }
 
-            TempData[AppConfigs.SuccessMessageString] = "Promotion delete succesed";
+            TempData[AppConfigs.SuccessMessageString] = "SaleCampaign delete succesed";
             return RedirectToAction("Index");
         }
+
     }
 }

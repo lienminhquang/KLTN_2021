@@ -60,10 +60,10 @@
                     @Html.DisplayFor(model => model.EndDate)
                 </dd>
                 <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Amount)
+                    @Html.DisplayNameFor(model => model.UseTimes)
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Amount)
+                    @Html.DisplayFor(model => model.UseTimes)
                 </dd>
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.Percent)
@@ -101,31 +101,7 @@
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.Priority)
                 </dd>
-                <dt class="col-sm-2">
-                    Foods
-                </dt>
-                <dd class="col-sm-10">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.FoodVMs)
-                            {
-                                <tr>
-
-                                    <td>@item.ID</td>
-                                    <td>@item.Name</td>
-                                    <td>@item.Price</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </dd>
+               
 
 
             </dl>
