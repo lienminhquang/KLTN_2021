@@ -11,6 +11,7 @@ import 'package:food_delivery/bloc/Home/HomeEvent.dart';
 import 'package:food_delivery/bloc/Home/HomeState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
+import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
@@ -313,70 +314,82 @@ class FastChoice extends StatelessWidget {
                   return Container(
                     child: Card(
                       clipBehavior: Clip.antiAlias,
-                      child: Container(
-                        width: 200,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              //padding: const EdgeInsets.all(16.0),
-                              child: CachedNetworkImage(
-                                // width: double.infinity,
-                                //height: 150,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    CircularProgressIndicator(),
-                                imageUrl: AppConfigs.URL_Images +
-                                    "/${foodVM.imagePath}",
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FoodDetail(
+                              foodID: foodVM.id,
+                              promotionID: _promotionVM.id,
+                            );
+                          }));
+                        },
+                        child: Container(
+                          width: 200,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                //padding: const EdgeInsets.all(16.0),
+                                child: CachedNetworkImage(
+                                  // width: double.infinity,
+                                  //height: 150,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  imageUrl: AppConfigs.URL_Images +
+                                      "/${foodVM.imagePath}",
+                                ),
                               ),
-                            ),
-                            ListTile(
-                              //leading: Icon(Icons.arrow_drop_down_circle),
-                              title: Text(foodVM.name),
-                              subtitle: Row(
-                                children: [
-                                  Text(
-                                    AppConfigs.AppNumberFormat.format(
-                                        foodVM.price *
-                                            _promotionVM.percent /
-                                            100),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black.withOpacity(0.9)),
-                                  ),
-                                  Container(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    AppConfigs.AppNumberFormat.format(
-                                        foodVM.price),
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black.withOpacity(0.6),
-                                        decoration: TextDecoration.lineThrough),
-                                  ),
-                                ],
+                              ListTile(
+                                //leading: Icon(Icons.arrow_drop_down_circle),
+                                title: Text(foodVM.name),
+                                subtitle: Row(
+                                  children: [
+                                    Text(
+                                      AppConfigs.AppNumberFormat.format(
+                                          foodVM.price *
+                                              (100 - _promotionVM.percent) /
+                                              100),
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black.withOpacity(0.9)),
+                                    ),
+                                    Container(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      AppConfigs.AppNumberFormat.format(
+                                          foodVM.price),
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.black.withOpacity(0.6),
+                                          decoration:
+                                              TextDecoration.lineThrough),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            // ButtonBar(
-                            //   alignment: MainAxisAlignment.start,
-                            //   children: [
-                            //     TextButton(
-                            //       onPressed: () {
-                            //         // Perform some action
-                            //       },
-                            //       child: const Text('ACTION 1'),
-                            //     ),
-                            //     TextButton(
-                            //       onPressed: () {
-                            //         // Perform some action
-                            //       },
-                            //       child: const Text('ACTION 2'),
-                            //     ),
-                            //   ],
-                            // ),
-                            // Image.asset('assets/card-sample-image.jpg'),
-                          ],
+                              // ButtonBar(
+                              //   alignment: MainAxisAlignment.start,
+                              //   children: [
+                              //     TextButton(
+                              //       onPressed: () {
+                              //         // Perform some action
+                              //       },
+                              //       child: const Text('ACTION 1'),
+                              //     ),
+                              //     TextButton(
+                              //       onPressed: () {
+                              //         // Perform some action
+                              //       },
+                              //       child: const Text('ACTION 2'),
+                              //     ),
+                              //   ],
+                              // ),
+                              // Image.asset('assets/card-sample-image.jpg'),
+                            ],
+                          ),
                         ),
                       ),
                     ),

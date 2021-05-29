@@ -49,4 +49,35 @@ class PromotionServices {
 
     return ApiResult.failedApiResult("Error!!");
   }
+
+  Future<ApiResult<PromotionVM>> getByID(int id) async {
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    final String url = baseRoute + "/$id";
+    Response? response;
+    try {
+      log("GET: " + url);
+      response = await ioClient.get(Uri.parse(url));
+    } catch (e) {
+      return ApiResult<PromotionVM>.failedApiResult(
+          "Server error! Please re-try later!");
+    }
+    try {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<PromotionVM>.fromJson(json, (foodJson) {
+        return PromotionVM.fromJson(foodJson as Map<String, dynamic>);
+      });
+
+      if (result.isSuccessed == true) {
+        print("Fetched PromotionVM: ");
+        print(result.payLoad);
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return ApiResult.failedApiResult("Error!!");
+  }
 }

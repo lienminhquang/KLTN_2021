@@ -2,11 +2,13 @@ abstract class FoodDetailEvent {}
 
 class FoodDetailStartedEvent extends FoodDetailEvent {
   final int foodID;
-  FoodDetailStartedEvent(this.foodID);
+  final int? promotionID;
+  FoodDetailStartedEvent({required this.foodID, this.promotionID});
 }
 
 class FoodDetailCreateCartEvent extends FoodDetailEvent {
   final int foodID;
   final int count;
-  FoodDetailCreateCartEvent(this.foodID, this.count);
+  final int? promotionID;
+  FoodDetailCreateCartEvent(this.foodID, this.count, this.promotionID);
 }

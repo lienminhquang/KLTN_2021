@@ -5,10 +5,12 @@ import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/services/CartServices.dart';
 import 'package:food_delivery/services/FoodServices.dart';
+import 'package:food_delivery/services/PromotionServices.dart';
 import 'package:food_delivery/services/RatingServices.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
+import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 import 'package:food_delivery/view_models/ratings/RatingVM.dart';
 
 class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
@@ -17,12 +19,13 @@ class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
   final FoodServices _foodServices = FoodServices();
   final _ratingServices = RatingServices();
   final _cartServices = CartServices();
+  final _promotionServices = PromotionServices();
 
   Stream<FoodDetailState> _mapStatedEventToState(
       FoodDetailStartedEvent event, FoodDetailState currentState) async* {
     yield FoodDetailLoadingState();
     try {
-      yield await _fetchAll(event.foodID);
+      yield await _fetchAll(event.foodID, event.promotionID);
     } catch (e) {
       print(e);
       yield FoodDetailErrorState("Error");
@@ -34,7 +37,7 @@ class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
     if (state is FoodDetailLoadedState)
       try {
         await _create(event.foodID, event.count);
-        yield await _fetchAll(event.foodID);
+        yield await _fetchAll(event.foodID, event.promotionID);
       } catch (e) {}
   }
 
@@ -58,15 +61,28 @@ class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
     }
   }
 
-  Future<FoodDetailState> _fetchAll(int id) async {
+  Future<FoodDetailState> _fetchAll(int foodID, int? promotionID) async {
     try {
-      var foodDetail = await _fetchFoodDetail(id);
-      var userRatings = await _fetchUserRatings(id);
-      var cartVM = await _fetchCartVMIfExist(id);
-      return FoodDetailLoadedState(foodDetail, userRatings, cartVM);
+      var foodDetail = await _fetchFoodDetail(foodID);
+      var userRatings = await _fetchUserRatings(foodID);
+      var cartVM = await _fetchCartVMIfExist(foodID);
+      var promotionVM = await _fetchPromotion(promotionID);
+      return FoodDetailLoadedState(
+          foodDetail, userRatings, cartVM, promotionVM);
     } catch (e) {
       return FoodDetailErrorState(e.toString());
     }
+  }
+
+  Future<PromotionVM?> _fetchPromotion(int? promotionID) async {
+    if (promotionID == null) {
+      return null;
+    }
+    var result = await _promotionServices.getByID(promotionID);
+    if (result.isSuccessed == true) {
+      return (result.payLoad!);
+    }
+    throw result.errorMessage!;
   }
 
   Future<FoodVM> _fetchFoodDetail(int id) async {

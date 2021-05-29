@@ -124,9 +124,12 @@ class _ResultItem extends StatelessWidget {
       ),
       title: Text(_foodVM.name),
       onTap: () {
-        context.read<FoodDetailBloc>().add(FoodDetailStartedEvent(_foodVM.id));
+        //context.read<FoodDetailBloc>().add(FoodDetailStartedEvent(_foodVM.id));
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return FoodDetail();
+          return FoodDetail(
+            foodID: _foodVM.id,
+            promotionID: null,
+          );
         }));
       },
     );

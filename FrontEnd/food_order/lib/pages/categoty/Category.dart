@@ -179,22 +179,16 @@ class FoodCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: GestureDetector(
           onTap: () async {
-            // if (await context
-            //         .read<FoodDetailModel>()
-            //         .fetchFoodDetail(_foodVM.id) ==
-            //     false) {
-            //   ScaffoldMessenger.of(context).showSnackBar(
-            //       SnackBar(content: Text("Failed to get food details!")));
-            //   return;
-            // }
-            // context.read<FoodDetailModel>().fetchUserRatings();
-            // Navigator.push(
-            //     context, MaterialPageRoute(builder: (context) => FoodDetail()));
-            context
-                .read<FoodDetailBloc>()
-                .add(FoodDetailStartedEvent(_foodVM.id));
+            // context
+            //     .read<FoodDetailBloc>()
+            //     .add(FoodDetailStartedEvent(_foodVM.id));
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => FoodDetail()));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FoodDetail(
+                          foodID: _foodVM.id,
+                          promotionID: null,
+                        )));
           },
           child: Container(
             color: Colors.grey[300],

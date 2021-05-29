@@ -23,5 +23,5 @@ final Map<String, WidgetBuilder> routes = {
   //AddressScreen.routeName: (context) => AddressScreen(),
   SignupPage.routeName: (context) => SignupPage(),
   AddAdressScreen.routeName: (context) => AddAdressScreen(),
-  FoodDetail.routeName: (context) => FoodDetail(),
+  //FoodDetail.routeName: (context) => FoodDetail(),
 };

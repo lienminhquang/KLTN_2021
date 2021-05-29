@@ -4,6 +4,7 @@ import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
+import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 import 'package:provider/provider.dart';
 
 class Appbar extends StatelessWidget {
@@ -76,10 +77,17 @@ class Content extends StatelessWidget {
 }
 
 class MHeader extends StatelessWidget {
-  final FoodVM foodVM;
-  MHeader({required this.foodVM});
+  final FoodDetailLoadedState state;
+  MHeader({required this.state});
   @override
   Widget build(BuildContext context) {
+    final foodVM = state.foodVM;
+    final promotion = state.promotionVM;
+    int discount = 0;
+    if (promotion != null) {
+      discount = promotion.percent.toInt();
+    }
+
     return Column(
       children: [
         Container(
@@ -90,7 +98,7 @@ class MHeader extends StatelessWidget {
                 padding: EdgeInsets.all(20),
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(7.0),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 10,
@@ -102,7 +110,7 @@ class MHeader extends StatelessWidget {
                   child: Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(7.0),
                         child: CachedNetworkImage(
                           width: double.infinity,
                           height: double.infinity,
@@ -113,26 +121,33 @@ class MHeader extends StatelessWidget {
                               AppConfigs.URL_Images + "/${foodVM.imagePath}",
                         ),
                       ),
-                      // Positioned(
-                      //     bottom: 100,
-                      //     left: 0,
-                      //     child: Container(
-                      //         height: 100,
-                      //         decoration: BoxDecoration(
-                      //           gradient: LinearGradient(
-                      //               colors: [
-                      //                 Colors.grey,
-                      //                 Colors.grey.withOpacity(0.1)
-                      //               ],
-                      //               begin: Alignment.bottomCenter,
-                      //               end: Alignment.center,
-                      //               stops: [0, 1]),
-                      //         ))),
                     ],
                   ),
                 ),
               ),
-              Positioned(child: Content(), bottom: 0, right: 30),
+              promotion != null
+                  ? Positioned(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.yellow,
+                        ),
+                        width: 70,
+                        height: 30,
+                        child: Center(
+                          child: Text(
+                            "-$discount%",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      bottom: 30,
+                      right: 30,
+                    )
+                  : Container(),
               Positioned(
                 left: 30,
                 bottom: 30,

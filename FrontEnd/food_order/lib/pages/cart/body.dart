@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Cart/CartBloc.dart';
 import 'package:food_delivery/bloc/Cart/CartEvent.dart';
 import 'package:food_delivery/bloc/Cart/CartState.dart';
-import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
-import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
@@ -24,11 +22,11 @@ class _BodyState extends State<Body> {
   Widget _item(CartVM model, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        context
-            .read<FoodDetailBloc>()
-            .add(FoodDetailStartedEvent(model.foodID));
+        // context
+        //     .read<FoodDetailBloc>()
+        //     .add(FoodDetailStartedEvent(model.foodID));
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return FoodDetail();
+          return FoodDetail(foodID: model.foodID, promotionID: null);
         }));
       },
       child: Container(

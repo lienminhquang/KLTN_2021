@@ -15,22 +15,44 @@ class FoodDetailArguments {
 }
 
 class FoodDetail extends StatefulWidget {
+  final int foodID;
+  final int? promotionID;
+  FoodDetail({required this.foodID, this.promotionID});
+
   static String routeName = "/food_detail";
 
   @override
-  _FoodDetailState createState() => new _FoodDetailState();
+  _FoodDetailState createState() =>
+      new _FoodDetailState(foodID: foodID, promotionID: promotionID);
 }
 
 class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
   ScrollController _scrollController = new ScrollController();
   int count = 1;
 
+  final int foodID;
+  final int? promotionID;
+  _FoodDetailState({required this.foodID, this.promotionID});
+
+  @override
+  void initState() {
+    context
+        .read<FoodDetailBloc>()
+        .add(FoodDetailStartedEvent(foodID: foodID, promotionID: promotionID));
+    super.initState();
+  }
+
   Widget bottomBtns(BuildContext context, FoodDetailLoadedState state) {
     final price = state.foodVM.price;
     final cartVM = state.cartVM;
+    double discount = 0;
     if (cartVM != null) {
       count = cartVM.quantity;
     }
+    if (state.promotionVM != null) {
+      discount = state.promotionVM!.percent;
+    }
+    final totalPrice = (price * count) * (100 - discount) / 100;
 
     return new Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -42,9 +64,8 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
             child: new InkWell(
               onTap: () async {
                 // Todo we need to move this function to FoodDetailBloc to check error when create inside food detail
-                context
-                    .read<FoodDetailBloc>()
-                    .add(FoodDetailCreateCartEvent(state.foodVM.id, count));
+                context.read<FoodDetailBloc>().add(
+                    FoodDetailCreateCartEvent(state.foodVM.id, count, null));
                 // if (!result.isSuccessed) {
                 //   ScaffoldMessenger.of(context).showSnackBar(
                 //       SnackBar(content: Text(result.errorMessage!)));
@@ -67,7 +88,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: new Center(
                       child: new Text(
-                        "\$ ${AppConfigs.AppNumberFormat.format(price * count)}",
+                        "\$ ${AppConfigs.AppNumberFormat.format(totalPrice)}",
                         style: new TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -153,7 +174,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
         controller: _scrollController,
         children: <Widget>[
           new MHeader(
-            foodVM: state.foodVM,
+            state: state,
           ),
           FavnPrice(state),
           //Divider(),
@@ -196,7 +217,9 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
     return BlocBuilder<FoodDetailBloc, FoodDetailState>(
         builder: (context, state) {
       if (state is FoodDetailLoadingState) {
-        return CircularProgressIndicator();
+        return Container(
+            color: Colors.white,
+            child: Center(child: CircularProgressIndicator()));
       }
       if (state is FoodDetailLoadedState) {
         return _buildLoadedState(context, state);
