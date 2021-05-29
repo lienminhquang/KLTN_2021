@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FoodOrder.Admin.Controllers.Components
+namespace FoodOrder.Admin.Controllers
 {
     public class SaleCampaignsController : Controller
     {
@@ -107,7 +107,7 @@ namespace FoodOrder.Admin.Controllers.Components
         {
             if (!this.ValidateTokenInCookie())
             {
-                string returnUrl = this.Url.ActionLink("Edit", values: new { @id = id });
+                string returnUrl = Url.ActionLink("Edit", values: new { id });
                 return this.RedirectToLoginPage(returnUrl);
             }
 
@@ -125,6 +125,7 @@ namespace FoodOrder.Admin.Controllers.Components
             ViewBag.FoodVMs = listFoodVM.PayLoad.Items;
 
             var vm = _mapper.Map<SaleCampaignVM, SaleCampaignEditVM>(result.PayLoad);
+            vm.FoodIDs = result.PayLoad.FoodVMs.Select(x => x.ID).ToList();
 
             return View(vm);
         }

@@ -8,10 +8,12 @@ import 'package:food_delivery/services/CartServices.dart';
 import 'package:food_delivery/services/FoodServices.dart';
 import 'package:food_delivery/services/PromotionServices.dart';
 import 'package:food_delivery/services/RatingServices.dart';
+import 'package:food_delivery/services/SaleCampaignServices.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
+import 'package:food_delivery/view_models/SaleCampaigns/SaleCampaignVM.dart';
 import 'package:food_delivery/view_models/ratings/RatingVM.dart';
 
 class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
@@ -21,6 +23,7 @@ class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
   final _ratingServices = RatingServices();
   final _cartServices = CartServices();
   final _promotionServices = PromotionServices();
+  final _saleServices = SaleCampaignServices();
 
   Stream<FoodDetailState> _mapStatedEventToState(
       FoodDetailStartedEvent event, FoodDetailState currentState) async* {
@@ -73,6 +76,7 @@ class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
       var userRatings = await _fetchUserRatings(foodID);
       var cartVM = await _fetchCartVMIfExist(foodID);
       var promotionVM = await _fetchPromotion(promotionID);
+
       return FoodDetailLoadedState(
           foodDetail, userRatings, cartVM, promotionVM);
     } catch (e) {

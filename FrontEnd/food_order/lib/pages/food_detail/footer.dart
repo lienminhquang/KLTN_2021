@@ -13,8 +13,8 @@ class FavnPrice extends StatelessWidget {
     FoodVM foodVM = _loadedState.foodVM;
     final promotion = _loadedState.promotionVM;
     double discount = 0;
-    if (promotion != null) {
-      discount = promotion.percent;
+    if (_loadedState.foodVM.saleCampaignVM != null) {
+      discount = _loadedState.foodVM.saleCampaignVM!.percent;
     }
     final finalPrice = foodVM.price * (100 - discount) / 100;
     return new Padding(

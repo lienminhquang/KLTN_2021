@@ -115,7 +115,9 @@ class FoodServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {}
+    } on TypeError catch (e) {
+      print(e.stackTrace);
+    }
 
     return ApiResult.failedApiResult("Error!!");
   }

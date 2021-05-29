@@ -24,8 +24,7 @@ class FoodDetail extends StatefulWidget {
   static String routeName = "/food_detail";
 
   @override
-  _FoodDetailState createState() =>
-      new _FoodDetailState(foodID: foodID, promotionID: promotionID);
+  _FoodDetailState createState() => new _FoodDetailState(foodID: foodID);
 }
 
 class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
@@ -34,6 +33,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
 
   final int foodID;
   final int? promotionID;
+
   _FoodDetailState({required this.foodID, this.promotionID});
 
   @override
@@ -53,8 +53,8 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
     if (cartVM != null) {
       count = cartVM.quantity;
     }
-    if (state.promotionVM != null) {
-      discount = state.promotionVM!.percent;
+    if (state.foodVM.saleCampaignVM != null) {
+      discount = state.foodVM.saleCampaignVM!.percent;
     }
     final totalPrice = (price * count) * (100 - discount) / 100;
 

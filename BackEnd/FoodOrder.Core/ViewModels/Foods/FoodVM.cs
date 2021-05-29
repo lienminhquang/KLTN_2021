@@ -1,5 +1,6 @@
 ﻿using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels.Categories;
+using FoodOrder.Core.ViewModels.SaleCampaigns;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace FoodOrder.Core.ViewModels.Foods
 
         public double AgvRating { get; set; }
         public int TotalRating { get; set; }
+
+        public SaleCampaignVM SaleCampaignVM { get; set; }
 
         public List<CategoryVM> CategoryVMs { get; set; }
 

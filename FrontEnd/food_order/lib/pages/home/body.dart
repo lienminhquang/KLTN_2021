@@ -16,6 +16,7 @@ import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
+import 'package:food_delivery/view_models/SaleCampaigns/SaleCampaignVM.dart';
 import 'package:provider/provider.dart';
 
 import '../categoty/Category.dart';
@@ -104,8 +105,9 @@ class _BodyState extends State<Body> {
               Divider(
                 height: 30,
               ),
-              FastChoice(state.listPromotion[0]),
-              FastChoice(state.listPromotion[1])
+              SaleContainer(state.listSaleCampaign[0]),
+              PromotionContainer(state.listPromotion[0]),
+              //PromotionContainer(state.listPromotion[1]),
             ],
           ),
         ),
@@ -270,9 +272,43 @@ class CategoryItem extends StatelessWidget {
   }
 }
 
-class FastChoice extends StatelessWidget {
+Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
+  if (saleCampaignVM == null) {
+    return Text(
+      AppConfigs.AppNumberFormat.format(foodVM.price),
+      style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black.withOpacity(0.9)),
+    );
+  } else
+    return Row(
+      children: [
+        Text(
+          AppConfigs.AppNumberFormat.format(
+              foodVM.price * (100 - saleCampaignVM.percent) / 100),
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black.withOpacity(0.9)),
+        ),
+        Container(
+          width: 10,
+        ),
+        Text(
+          AppConfigs.AppNumberFormat.format(foodVM.price),
+          style: TextStyle(
+              fontSize: 15,
+              color: Colors.black.withOpacity(0.6),
+              decoration: TextDecoration.lineThrough),
+        ),
+      ],
+    );
+}
+
+class PromotionContainer extends StatelessWidget {
   final PromotionVM _promotionVM;
-  FastChoice(this._promotionVM);
+  PromotionContainer(this._promotionVM);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -343,51 +379,97 @@ class FastChoice extends StatelessWidget {
                               ListTile(
                                 //leading: Icon(Icons.arrow_drop_down_circle),
                                 title: Text(foodVM.name),
-                                subtitle: Row(
-                                  children: [
-                                    Text(
-                                      AppConfigs.AppNumberFormat.format(
-                                          foodVM.price *
-                                              (100 - _promotionVM.percent) /
-                                              100),
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black.withOpacity(0.9)),
-                                    ),
-                                    Container(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      AppConfigs.AppNumberFormat.format(
-                                          foodVM.price),
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black.withOpacity(0.6),
-                                          decoration:
-                                              TextDecoration.lineThrough),
-                                    ),
-                                  ],
+                                subtitle:
+                                    _priceWidget(foodVM, foodVM.saleCampaignVM),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class SaleContainer extends StatelessWidget {
+  final SaleCampaignVM _saleCampaignVM;
+  SaleContainer(this._saleCampaignVM);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //color: Colors.grey[50],
+      padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
+      child: Column(
+        children: [
+          Container(
+            //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _saleCampaignVM.name,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+              ),
+            ),
+          ),
+          Container(
+            //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+            child: Align(
+              child: Text(
+                _saleCampaignVM.desciption,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            height: 250,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _saleCampaignVM.foodVMs!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final foodVM = _saleCampaignVM.foodVMs![index];
+
+                  return Container(
+                    child: Card(
+                      clipBehavior: Clip.antiAlias,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FoodDetail(
+                              foodID: foodVM.id,
+                            );
+                          }));
+                        },
+                        child: Container(
+                          width: 200,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                //padding: const EdgeInsets.all(16.0),
+                                child: CachedNetworkImage(
+                                  // width: double.infinity,
+                                  //height: 150,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  imageUrl: AppConfigs.URL_Images +
+                                      "/${foodVM.imagePath}",
                                 ),
                               ),
-                              // ButtonBar(
-                              //   alignment: MainAxisAlignment.start,
-                              //   children: [
-                              //     TextButton(
-                              //       onPressed: () {
-                              //         // Perform some action
-                              //       },
-                              //       child: const Text('ACTION 1'),
-                              //     ),
-                              //     TextButton(
-                              //       onPressed: () {
-                              //         // Perform some action
-                              //       },
-                              //       child: const Text('ACTION 2'),
-                              //     ),
-                              //   ],
-                              // ),
-                              // Image.asset('assets/card-sample-image.jpg'),
+                              ListTile(
+                                  //leading: Icon(Icons.arrow_drop_down_circle),
+                                  title: Text(foodVM.name),
+                                  subtitle:
+                                      _priceWidget(foodVM, _saleCampaignVM)),
                             ],
                           ),
                         ),

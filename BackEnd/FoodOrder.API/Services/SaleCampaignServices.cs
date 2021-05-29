@@ -45,6 +45,7 @@ namespace FoodOrder.API.Services
                                      join fp in _dbContext.SaleCampaignFoods on f.ID equals fp.FoodID
                                      where fp.SaleCampaignID == item.ID
                                      select _mapper.Map<FoodVM>(f)).ToListAsync();
+                
 
                 item.FoodVMs = foodVMs;
             }

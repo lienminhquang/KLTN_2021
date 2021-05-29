@@ -5,6 +5,7 @@ using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
+using FoodOrder.Core.ViewModels.SaleCampaigns;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -51,6 +52,24 @@ namespace FoodOrder.API.Services
 
             var created = await PaginatedList<FoodVM>.CreateAsync(food.Select(f => _mapper.Map<Food, FoodVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 
+            // get sale campaign for each food
+            foreach (var item in created.Items)
+            {
+                var query = from cf in _dbContext.SaleCampaignFoods
+                            join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
+                            where cf.FoodID == item.ID
+                            select c;
+                if (query.Count() > 0)
+                {
+                    item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(query.First());
+                }
+                else
+                {
+                    item.SaleCampaignVM = null;
+                }
+            }
+
+
             return new SuccessedResult<PaginatedList<FoodVM>>(created);
         }
 
@@ -74,6 +93,23 @@ namespace FoodOrder.API.Services
             }
 
             var created = PaginatedList<FoodVM>.CreateFromList(listFoodVM, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+
+            // get sale campaign for each food
+            foreach (var item in created.Items)
+            {
+                var query = from cf in _dbContext.SaleCampaignFoods
+                            join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
+                            where cf.FoodID == item.ID
+                            select c;
+                if (query.Count() > 0)
+                {
+                    item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(query.First());
+                }
+                else
+                {
+                    item.SaleCampaignVM = null;
+                }
+            }
 
             return new SuccessedResult<PaginatedList<FoodVM>>(created);
         }
@@ -155,6 +191,19 @@ namespace FoodOrder.API.Services
             {
                 foodVM.AgvRating = 0;
                 foodVM.TotalRating = 0;
+            }
+
+            var query = from cf in _dbContext.SaleCampaignFoods
+                           join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
+                           where cf.FoodID == foodVM.ID
+                           select c;
+            if(query.Count() > 0)
+            {
+                foodVM.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(query.First());
+            }
+            else
+            {
+                foodVM.SaleCampaignVM = null;
             }
 
             return new SuccessedResult<FoodVM>(foodVM);

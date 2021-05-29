@@ -12,6 +12,8 @@ class AppConfigs {
   static const String URL_NotificationsRouteAPI =
       URL_BaseAPI + "/api/Notifications";
   static const String URL_PromotionsRouteAPI = URL_BaseAPI + "/api/Promotions";
+  static const String URL_SaleCampaignsRouteAPI =
+      URL_BaseAPI + "/api/SaleCampaigns";
 
   static const String URL_Images = URL_BaseAPI + "/user-content";
 

@@ -80,10 +80,10 @@ class MHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foodVM = state.foodVM;
-    final promotion = state.promotionVM;
+    final sale = state.foodVM.saleCampaignVM;
     int discount = 0;
-    if (promotion != null) {
-      discount = promotion.percent.toInt();
+    if (sale != null) {
+      discount = sale.percent.toInt();
     }
 
     return Column(
@@ -123,7 +123,7 @@ class MHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              promotion != null
+              sale != null
                   ? Positioned(
                       child: Container(
                         decoration: BoxDecoration(

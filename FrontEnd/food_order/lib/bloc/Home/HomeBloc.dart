@@ -4,13 +4,14 @@ import 'package:food_delivery/bloc/Home/HomeState.dart';
 import 'package:food_delivery/services/CategoriesServices.dart';
 import 'package:food_delivery/services/FoodServices.dart';
 import 'package:food_delivery/services/PromotionServices.dart';
-import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
+import 'package:food_delivery/services/SaleCampaignServices.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeLoadingState());
   final CategoriesServices _categoriesServices = CategoriesServices();
   final PromotionServices _promotionServices = PromotionServices();
   final FoodServices _foodServices = FoodServices();
+  final SaleCampaignServices _saleCampaignServices = SaleCampaignServices();
 
   Stream<HomeState> _mapStartedEventToState(HomeEvent event) async* {
     yield HomeLoadingState();
@@ -62,15 +63,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     var listPromotions = promotions.payLoad!.items!;
     for (var item in listPromotions) {
-      if (item.isGlobal && item.foodVMs.length == 0) {
-        item.foodVMs = (await _foodServices.getBestSellingFoods())
-            .payLoad!
-            .items!
-            .take(10)
-            .toList();
-      }
+      item.foodVMs = (await _foodServices.getBestSellingFoods())
+          .payLoad!
+          .items!
+          .take(10)
+          .toList();
     }
 
-    return HomeLoadedState(result.payLoad!.items!, promotions.payLoad!.items!);
+    // Todo: must be get valid campaign instead
+    var listSaleCampaign = await _saleCampaignServices.getAll();
+    if (listSaleCampaign.isSuccessed == false) {
+      print(listSaleCampaign.errorMessage);
+      throw listSaleCampaign.errorMessage!;
+    }
+
+    return HomeLoadedState(result.payLoad!.items!, promotions.payLoad!.items!,
+        listSaleCampaign.payLoad!.items!);
   }
 }
