@@ -7,7 +7,7 @@ typedef AddressScreenCallBack = void Function(
     AddressVM addressVM, BuildContext context);
 
 class AddressScreen extends StatelessWidget {
-  static String routeName = "/adress";
+  //static String routeName = "/adress";
   final AddressScreenCallBack? addressScreenCallBack;
   AddressScreen({required this.addressScreenCallBack});
 
