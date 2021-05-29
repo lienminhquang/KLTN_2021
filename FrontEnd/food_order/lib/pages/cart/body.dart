@@ -170,7 +170,7 @@ class _BodyState extends State<Body> {
                                   ? "Không tìm thấy địa chỉ nào!"
                                   : addressVM.addressString,
                               style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
+                                  fontSize: 10, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             )),

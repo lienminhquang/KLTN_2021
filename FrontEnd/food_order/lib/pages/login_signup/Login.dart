@@ -17,7 +17,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   UserServices _userServices = new UserServices();
-
+  bool isHiddenPassword = true;
   final _usenameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -62,98 +62,55 @@ class _LoginPageState extends State<LoginPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.fromLTRB(15.0, 90.0, 0.0, 0.0),
-                  child: Text(
-                    'Xin',
-                    style:
-                        TextStyle(fontSize: 80.0, fontWeight: FontWeight.bold),
-                  ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: Center(
+              child: SizedBox(
+                height: 155,
+                child: Image.asset(
+                  'images/logo.png',
                 ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(15.0, 175.0, 0.0, 0.0),
-                  child: Text(
-                    'Chào',
-                    style:
-                        TextStyle(fontSize: 80.0, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(225.0, 175.0, 0.0, 0.0),
-                    child: Text(
-                      '!',
-                      style: TextStyle(
-                          fontSize: 80.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue),
-                    ))
-              ],
+              ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    controller: _usenameTextController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Username!';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        labelText: 'Username',
-                        labelStyle: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue))),
-                  ), //
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  TextFormField(
-                    controller: _passwordTextController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Password!';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        labelText: 'Password',
-                        labelStyle: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue))),
-                    obscureText: true,
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Container(
-                    alignment: Alignment(1.0, 0.0),
-                    padding: EdgeInsets.only(top: 15.0, left: 20.0),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, CartScreen.routeName);
-                      },
-                      child: Text(
-                        'Forgot password?',
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
-                            decoration: TextDecoration.underline),
+          FutureBuilder(
+            future: _userServices.getUserAccountFromCache(),
+            builder: (BuildContext context,
+                AsyncSnapshot<ApiResult<Map<String, dynamic>>> snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.isSuccessed == true) {
+                  _usenameTextController.text =
+                      snapshot.data!.payLoad!["username"]! as String;
+                  _passwordTextController.text =
+                      snapshot.data!.payLoad!["password"]! as String;
+                }
+              }
+              return Container(
+                padding: EdgeInsets.only(top: 0.0, left: 40.0, right: 40.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        controller: _usenameTextController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Username!';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            hintText: 'Số điện thoại',
+                            prefix: Icon(Icons.phone),
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                      ), //
+                      SizedBox(
+                        height: 15.0,
                       ),
                     ),
                   ),
@@ -171,13 +128,41 @@ class _LoginPageState extends State<LoginPage> {
                         onTap: () {
                           login(context);
                         },
-                        child: Center(
-                          child: Text(
-                            'Đăng nhập',
-                            style: TextStyle(
-                                color: Colors.white,
+                        decoration: InputDecoration(
+                            hintText: 'Mật khẩu ',
+                            prefix: Icon(Icons.lock),
+                            suffixIcon: InkWell(
+                                onTap: _togglePasswordView,
+                                child: Icon(Icons.visibility)),
+                            labelStyle: TextStyle(
+                                fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'Montserrat'),
+                                color: Colors.grey),
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue))),
+                        obscureText: isHiddenPassword,
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Container(
+                        alignment: Alignment(1.0, 0.0),
+                        padding: EdgeInsets.only(
+                          top: 15.0,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, CartScreen.routeName);
+                          },
+                          child: Center(
+                            child: Text(
+                              'Quên mật khẩu',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.normal,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -215,11 +200,42 @@ class _LoginPageState extends State<LoginPage> {
                           )
                         ],
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ),
+                      // Container(
+                      //   height: 40.0,
+                      //   color: Colors.transparent,
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //       border: Border.all(
+                      //           color: Colors.black,
+                      //           style: BorderStyle.solid,
+                      //           width: 1.0),
+                      //       color: Colors.transparent,
+                      //       borderRadius: BorderRadius.circular(20.0),
+                      //     ),
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: <Widget>[
+                      //         Center(
+                      //             child: ImageIcon(
+                      //                 AssetImage('images/iconfacebook.png'))),
+                      //         SizedBox(
+                      //           width: 10,
+                      //         ),
+                      //         Center(
+                      //           child: Text('Đăng nhập bằng Facebook',
+                      //               style: TextStyle(
+                      //                   fontWeight: FontWeight.bold,
+                      //                   fontFamily: 'Montserrat')),
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // )
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
           SizedBox(
             height: 25,
@@ -254,6 +270,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
+  void _togglePasswordView() {
+    isHiddenPassword = !isHiddenPassword;
+    setState(() {});
+  }
   Widget _buildErrorState(BuildContext context, LoginErrorState state) {
     return Container(
         child: Center(
