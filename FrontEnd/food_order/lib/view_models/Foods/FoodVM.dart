@@ -1,8 +1,9 @@
+import 'package:food_delivery/view_models/SaleCampaigns/SaleCampaignVM.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'FoodVM.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class FoodVM {
   FoodVM(
       {this.id = -1,
@@ -12,7 +13,8 @@ class FoodVM {
       this.count = 0,
       this.imagePath = "",
       this.agvRating = 0,
-      this.totalRating = 0});
+      this.totalRating = 0,
+      this.saleCampaignVM});
 
   int id;
   String name;
@@ -22,6 +24,8 @@ class FoodVM {
   String imagePath;
   double agvRating;
   int totalRating;
+
+  SaleCampaignVM? saleCampaignVM;
 
   factory FoodVM.fromJson(Map<String, dynamic> json) => _$FoodVMFromJson(json);
   Map<String, dynamic> toJson() => _$FoodVMToJson(this);

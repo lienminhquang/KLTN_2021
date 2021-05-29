@@ -39,6 +39,17 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("best_selling")]
+        public IActionResult GetBestSelling()
+        {
+            var result = _foodServices.GetBestSelling(new PagingRequestBase());
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] FoodCreateVM foodCreateVM)

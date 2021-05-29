@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" rel="stylesheet" />
 
+    <link rel="stylesheet" href="~/kendo-ui/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="~/kendo-ui/styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="~/kendo-ui/styles/kendo.default.mobile.min.css" />
+
     @RenderSection("CustomCss", false)
 </head>
 <body class="sb-nav-fixed">
@@ -162,6 +166,19 @@
                             </nav>
                         </div>
                         <!---------------------------- End Promotions ----------------------------->
+                        <!---------------------------- SaleCampaigns ----------------------------->
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSaleCampaigns" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            SaleCampaigns
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseSaleCampaigns" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-action="Index" asp-controller="SaleCampaigns">List</a>
+                                <a class="nav-link" asp-action="Create" asp-controller="SaleCampaigns">Create</a>
+                            </nav>
+                        </div>
+                        <!---------------------------- End SaleCampaigns ----------------------------->
                         <!---------------------------- Ratings ----------------------------->
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRatings" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
@@ -314,6 +331,10 @@
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
     <script src="/assets/demo/datatables-demo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
+
+    <script src="~/kendo-ui/js/kendo.all.min.js"></script>
+    
+
     @RenderSection("Scripts", required: false)
     @RenderSection("CustomScripts", false)
     <script>

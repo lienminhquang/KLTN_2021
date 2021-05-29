@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/FoodDetailModel.dart';
-import 'package:food_delivery/view_models/Foods/FoodVM.dart';
-import 'clipper.dart';
-import 'gredients.dart';
 import 'package:provider/provider.dart';
 
 class Appbar extends StatelessWidget {
@@ -28,7 +26,7 @@ class Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var foodVM =
-        context.select<FoodDetailModel, FoodVM>((value) => value.foodVM);
+        (context.read<FoodDetailBloc>().state as FoodDetailLoadedState).foodVM;
 
     return Container(
       margin: new EdgeInsets.only(top: 30.0),
@@ -77,10 +75,17 @@ class Content extends StatelessWidget {
 }
 
 class MHeader extends StatelessWidget {
-  final FoodVM foodVM;
-  MHeader({required this.foodVM});
+  final FoodDetailLoadedState state;
+  MHeader({required this.state});
   @override
   Widget build(BuildContext context) {
+    final foodVM = state.foodVM;
+    final sale = state.foodVM.saleCampaignVM;
+    int discount = 0;
+    if (sale != null) {
+      discount = sale.percent.toInt();
+    }
+
     return Column(
       children: [
         Container(
@@ -91,7 +96,7 @@ class MHeader extends StatelessWidget {
                 padding: EdgeInsets.all(20),
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(7.0),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 10,
@@ -103,7 +108,7 @@ class MHeader extends StatelessWidget {
                   child: Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(7.0),
                         child: CachedNetworkImage(
                           width: double.infinity,
                           height: double.infinity,
@@ -114,26 +119,33 @@ class MHeader extends StatelessWidget {
                               AppConfigs.URL_Images + "/${foodVM.imagePath}",
                         ),
                       ),
-                      // Positioned(
-                      //     bottom: 100,
-                      //     left: 0,
-                      //     child: Container(
-                      //         height: 100,
-                      //         decoration: BoxDecoration(
-                      //           gradient: LinearGradient(
-                      //               colors: [
-                      //                 Colors.grey,
-                      //                 Colors.grey.withOpacity(0.1)
-                      //               ],
-                      //               begin: Alignment.bottomCenter,
-                      //               end: Alignment.center,
-                      //               stops: [0, 1]),
-                      //         ))),
                     ],
                   ),
                 ),
               ),
-              Positioned(child: Content(), bottom: 0, right: 30),
+              sale != null
+                  ? Positioned(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.yellow,
+                        ),
+                        width: 70,
+                        height: 30,
+                        child: Center(
+                          child: Text(
+                            "-$discount%",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      bottom: 30,
+                      right: 30,
+                    )
+                  : Container(),
               Positioned(
                 left: 30,
                 bottom: 30,

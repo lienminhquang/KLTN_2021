@@ -3,10 +3,20 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
+import 'package:food_delivery/bloc/Category/CategoryEvent.dart';
+import 'package:food_delivery/bloc/Home/HomeBloc.dart';
+import 'package:food_delivery/bloc/Home/HomeEvent.dart';
+import 'package:food_delivery/bloc/Home/HomeState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/CategoryModel.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
+import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
+import 'package:food_delivery/view_models/Foods/FoodVM.dart';
+import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
+import 'package:food_delivery/view_models/SaleCampaigns/SaleCampaignVM.dart';
 import 'package:provider/provider.dart';
 
 import '../categoty/Category.dart';
@@ -65,10 +75,52 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    Widget fakeSearchBox = Container(
+    return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+      if (state is HomeLoadingState) {
+        return Container(
+            color: Colors.amber,
+            child: Center(child: CircularProgressIndicator()));
+      }
+      if (state is HomeLoadedState) {
+        return _buildLoadedState(context, state);
+      }
+      throw "Unknown state!";
+    });
+  }
+
+  Widget _buildLoadedState(BuildContext context, HomeLoadedState state) {
+    return Scaffold(
+      body: Container(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<HomeBloc>().add(HomeRefeshEvent());
+          },
+          child: ListView(
+            children: [
+              //NotificationWidget(),
+              fakeSearchBox(),
+              buidImageCarousel(_appBannerImages),
+              offers(),
+              _categoryList(state.listCategory),
+              Divider(
+                height: 30,
+              ),
+              SaleContainer(state.listSaleCampaign),
+              PromotionContainer(state.listPromotion),
+              //PromotionContainer(state.listPromotion[1]),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget fakeSearchBox() {
+    return Container(
         child: GestureDetector(
       onTap: () {
-        //TODO: Navigate to real search page
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => Search()));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -94,8 +146,10 @@ class _BodyState extends State<Body> {
         ),
       ),
     ));
+  }
 
-    Widget offers = Container(
+  Widget offers() {
+    return Container(
       height: 50,
       margin: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
@@ -122,32 +176,9 @@ class _BodyState extends State<Body> {
         ],
       ),
     );
-
-    return Scaffold(
-      body: Container(
-        child: ListView(
-          children: [
-            //NotificationWidget(),
-            fakeSearchBox,
-            buidImageCarousel(_appBannerImages),
-            offers,
-            _CategoryList(),
-            FastChoice(),
-            FastChoice()
-          ],
-        ),
-      ),
-    );
   }
-}
 
-class _CategoryList extends StatelessWidget {
-  const _CategoryList({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var categories =
-        context.select<CategoryModel, List<CategoryVM>>((value) => value.items);
+  Widget _categoryList(List<CategoryVM> categories) {
     log("Rebuild CategoryList with count = " + categories.length.toString());
 
     return Container(
@@ -191,7 +222,7 @@ class CategoryItem extends StatelessWidget {
       ]),
       child: GestureDetector(
         onTap: () async {
-          await context.read<CategoryModel>().fetchFoodsInCategory(id);
+          context.read<CategoryBloc>().add(CategoryStatedEvent(id));
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => CategoryPage()));
         },
@@ -208,7 +239,7 @@ class CategoryItem extends StatelessWidget {
               CachedNetworkImage(
                 width: double.infinity,
                 height: double.infinity,
-                fit: BoxFit.fill,
+                fit: BoxFit.contain,
                 placeholder: (context, url) => CircularProgressIndicator(),
                 imageUrl: AppConfigs.URL_Images + "/$image",
               ),
@@ -241,9 +272,49 @@ class CategoryItem extends StatelessWidget {
   }
 }
 
-class FastChoice extends StatelessWidget {
+Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
+  if (saleCampaignVM == null) {
+    return Text(
+      AppConfigs.AppNumberFormat.format(foodVM.price),
+      style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black.withOpacity(0.9)),
+    );
+  } else
+    return Row(
+      children: [
+        Text(
+          AppConfigs.AppNumberFormat.format(
+              foodVM.price * (100 - saleCampaignVM.percent) / 100),
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black.withOpacity(0.9)),
+        ),
+        Container(
+          width: 10,
+        ),
+        Text(
+          AppConfigs.AppNumberFormat.format(foodVM.price),
+          style: TextStyle(
+              fontSize: 15,
+              color: Colors.black.withOpacity(0.6),
+              decoration: TextDecoration.lineThrough),
+        ),
+      ],
+    );
+}
+
+class PromotionContainer extends StatelessWidget {
+  final List<PromotionVM> _listPromotionVM;
+  PromotionContainer(this._listPromotionVM);
   @override
   Widget build(BuildContext context) {
+    if (_listPromotionVM.length == 0) {
+      return Container();
+    }
+    var _promotionVM = _listPromotionVM[0];
     return Container(
       //color: Colors.grey[50],
       padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
@@ -254,7 +325,7 @@ class FastChoice extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Chill Tết Siêu Đã | Giảm 45K",
+                _promotionVM.name,
                 textAlign: TextAlign.left,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
@@ -263,60 +334,60 @@ class FastChoice extends StatelessWidget {
           Container(
             //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
             child: Align(
-              child: Text("Nhập mã CHILLTET giảm 45K cho đơn từ 100K.",
-                  textAlign: TextAlign.left),
+              child: Text(
+                _promotionVM.desciption!,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+              ),
               alignment: Alignment.centerLeft,
             ),
           ),
           Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
             height: 250,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 10,
+                itemCount: _promotionVM.foodVMs.length,
                 itemBuilder: (BuildContext context, int index) {
+                  final foodVM = _promotionVM.foodVMs[index];
+
                   return Container(
                     child: Card(
                       clipBehavior: Clip.antiAlias,
-                      child: Container(
-                        width: 200,
-                        child: Column(
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.arrow_drop_down_circle),
-                              title: const Text('Card title 1'),
-                              subtitle: Text(
-                                'Secondary Text',
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(0.6)),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                'Greyhound divisively hello coldly wonderfully marginally far upon excluding.',
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(0.6)),
-                              ),
-                            ),
-                            ButtonBar(
-                              alignment: MainAxisAlignment.start,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    // Perform some action
-                                  },
-                                  child: const Text('ACTION 1'),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return FoodDetail(
+                              foodID: foodVM.id,
+                              promotionID: _promotionVM.id,
+                            );
+                          }));
+                        },
+                        child: Container(
+                          width: 200,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                //padding: const EdgeInsets.all(16.0),
+                                child: CachedNetworkImage(
+                                  // width: double.infinity,
+                                  //height: 150,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  imageUrl: AppConfigs.URL_Images +
+                                      "/${foodVM.imagePath}",
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Perform some action
-                                  },
-                                  child: const Text('ACTION 2'),
-                                ),
-                              ],
-                            ),
-                            // Image.asset('assets/card-sample-image.jpg'),
-                          ],
+                              ),
+                              ListTile(
+                                //leading: Icon(Icons.arrow_drop_down_circle),
+                                title: Text(foodVM.name),
+                                subtitle:
+                                    _priceWidget(foodVM, foodVM.saleCampaignVM),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -329,31 +400,96 @@ class FastChoice extends StatelessWidget {
   }
 }
 
-class NotificationWidget extends StatefulWidget {
-  @override
-  _NotificationWidgetState createState() => _NotificationWidgetState();
-}
-
-class _NotificationWidgetState extends State<NotificationWidget> {
+class SaleContainer extends StatelessWidget {
+  final List<SaleCampaignVM> _listSaleCampaignVM;
+  SaleContainer(this._listSaleCampaignVM);
   @override
   Widget build(BuildContext context) {
-    var model = context.watch<NotificationModel>();
-    if (model.unreadedNotification.isNotEmpty) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(model.unreadedNotification[0].title),
-              content: Text(model.unreadedNotification[0].message),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'Ok'),
-                  child: const Text('Ok'),
+    if (_listSaleCampaignVM.length > 0) {
+      var _saleCampaignVM = _listSaleCampaignVM[0];
+
+      return Container(
+        //color: Colors.grey[50],
+        padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
+        child: Column(
+          children: [
+            Container(
+              //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _saleCampaignVM.name,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
-              ],
-            );
-          });
+              ),
+            ),
+            Container(
+              //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+              child: Align(
+                child: Text(
+                  _saleCampaignVM.desciption,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                alignment: Alignment.centerLeft,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              height: 250,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _saleCampaignVM.foodVMs!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final foodVM = _saleCampaignVM.foodVMs![index];
+
+                    return Container(
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return FoodDetail(
+                                foodID: foodVM.id,
+                              );
+                            }));
+                          },
+                          child: Container(
+                            width: 200,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  //padding: const EdgeInsets.all(16.0),
+                                  child: CachedNetworkImage(
+                                    // width: double.infinity,
+                                    //height: 150,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    imageUrl: AppConfigs.URL_Images +
+                                        "/${foodVM.imagePath}",
+                                  ),
+                                ),
+                                ListTile(
+                                    //leading: Icon(Icons.arrow_drop_down_circle),
+                                    title: Text(foodVM.name),
+                                    subtitle:
+                                        _priceWidget(foodVM, _saleCampaignVM)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+            )
+          ],
+        ),
+      );
+    } else {
+      return Container();
     }
-    return Container();
   }
 }

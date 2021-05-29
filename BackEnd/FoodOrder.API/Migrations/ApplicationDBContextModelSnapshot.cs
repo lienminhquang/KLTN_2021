@@ -81,7 +81,7 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             Id = new Guid("b9e08f48-883c-42dc-a700-da5cf1d81aa3"),
-                            ConcurrencyStamp = "e0246349-b427-4089-a93b-f55fe690354f",
+                            ConcurrencyStamp = "dd79eca4-0825-441b-8539-929fb11309a9",
                             Description = "This is Admintrator role.",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -89,7 +89,7 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             Id = new Guid("74d17d8b-3f91-4d3a-893f-09b4e51e3834"),
-                            ConcurrencyStamp = "34784487-640f-4d87-ad51-b66505dddedd",
+                            ConcurrencyStamp = "71ccdfaa-ea59-45d7-a5dc-e59db5167f74",
                             Description = "This is User role.",
                             Name = "user",
                             NormalizedName = "User"
@@ -180,7 +180,7 @@ namespace FoodOrder.API.Migrations
                         {
                             Id = new Guid("b4e253b2-756e-48b8-9c42-b5acb139bed4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e95345fb-15d5-47cd-8f05-b67ae4fc3908",
+                            ConcurrencyStamp = "1a43fd5c-a063-44a7-8c1d-d8281ef9ab30",
                             DateOfBirth = new DateTime(1999, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jame@gmail.com",
                             EmailConfirmed = false,
@@ -188,7 +188,7 @@ namespace FoodOrder.API.Migrations
                             LastName = "Jame",
                             LockoutEnabled = false,
                             NormalizedEmail = "JAME@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFbUilFRGbmUc0hpmRY/xmww9ZqxRhuAfraFPrnbEOkNfnh+ibg+5U+p6VkQFJ8GKA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGEGfnVEBx4HAxWf01nlUf05/0CWZV9MvCqxt3wvgBIE0yNF6Ygr41wkirJXETWGmg==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -198,7 +198,7 @@ namespace FoodOrder.API.Migrations
                         {
                             Id = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c022030e-880e-4cee-aa65-e7d165b0eb33",
+                            ConcurrencyStamp = "3f325bb9-58f6-41c6-aa13-db9808e7c222",
                             DateOfBirth = new DateTime(1990, 7, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "messi10@gmail.com",
                             EmailConfirmed = false,
@@ -206,7 +206,7 @@ namespace FoodOrder.API.Migrations
                             LastName = "Messi",
                             LockoutEnabled = false,
                             NormalizedEmail = "MESSI10@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEl0b4F5ZET6A8KUOBuOkz0s5IgwPK6tqete26pLH4GuLHL+XknVoyuttpsAGeWUzw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMV6DBZOI8fBIgE5MXaaQU1K4DxmMtxlHeeNQi30TW5krfu9PQWSBlKhKEjXPgb5YA==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -329,7 +329,12 @@ namespace FoodOrder.API.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("SaleCampaignID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("SaleCampaignID");
 
                     b.ToTable("Food");
 
@@ -555,6 +560,9 @@ namespace FoodOrder.API.Migrations
                     b.Property<int?>("PromotionID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SaleCampaignID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("AppUserID");
@@ -562,6 +570,8 @@ namespace FoodOrder.API.Migrations
                     b.HasIndex("OrderStatusID");
 
                     b.HasIndex("PromotionID");
+
+                    b.HasIndex("SaleCampaignID");
 
                     b.ToTable("Order");
 
@@ -572,7 +582,7 @@ namespace FoodOrder.API.Migrations
                             AddressName = "Nha",
                             AddressString = "ABC",
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
-                            CreatedDate = new DateTime(2021, 5, 22, 21, 55, 33, 903, DateTimeKind.Local).AddTicks(9457),
+                            CreatedDate = new DateTime(2021, 5, 29, 15, 37, 23, 298, DateTimeKind.Local).AddTicks(726),
                             IsPaid = false,
                             OrderStatusID = 1,
                             PromotionID = 1
@@ -684,18 +694,10 @@ namespace FoodOrder.API.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 5, 22, 21, 55, 33, 869, DateTimeKind.Local).AddTicks(585));
 
                     b.Property<string>("Desciption")
                         .HasMaxLength(300)
@@ -709,7 +711,10 @@ namespace FoodOrder.API.Migrations
                     b.Property<DateTime>("EndDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 5, 22, 21, 55, 33, 870, DateTimeKind.Local).AddTicks(3110));
+                        .HasDefaultValue(new DateTime(2021, 5, 29, 15, 37, 23, 263, DateTimeKind.Local).AddTicks(8902));
+
+                    b.Property<bool>("IsGlobal")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Max")
                         .HasColumnType("int");
@@ -728,10 +733,16 @@ namespace FoodOrder.API.Migrations
                         .HasColumnType("real")
                         .HasDefaultValue(10f);
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 5, 22, 21, 55, 33, 870, DateTimeKind.Local).AddTicks(2815));
+                        .HasDefaultValue(new DateTime(2021, 5, 29, 15, 37, 23, 262, DateTimeKind.Local).AddTicks(7201));
+
+                    b.Property<int>("UseTimes")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -741,16 +752,17 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             ID = 1,
-                            Amount = 100,
                             Code = "THANHVIENMOI",
-                            CreatedDate = new DateTime(2021, 5, 22, 21, 55, 33, 904, DateTimeKind.Local).AddTicks(9077),
                             Enabled = true,
                             EndDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsGlobal = false,
                             Max = 5000,
                             MinPrice = 50000,
                             Name = "Chao thanh vien moi",
                             Percent = 0.25f,
-                            StartDate = new DateTime(2021, 5, 22, 21, 55, 33, 905, DateTimeKind.Local).AddTicks(1671)
+                            Priority = 0,
+                            StartDate = new DateTime(2021, 5, 29, 15, 37, 23, 299, DateTimeKind.Local).AddTicks(8352),
+                            UseTimes = 100
                         });
                 });
 
@@ -785,9 +797,63 @@ namespace FoodOrder.API.Migrations
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             FoodID = 1,
                             Comment = "Good",
-                            LastCreatedTime = new DateTime(2021, 5, 22, 21, 55, 33, 905, DateTimeKind.Local).AddTicks(4447),
+                            LastCreatedTime = new DateTime(2021, 5, 29, 15, 37, 23, 300, DateTimeKind.Local).AddTicks(2991),
                             Star = 5
                         });
+                });
+
+            modelBuilder.Entity("FoodOrder.Core.Models.SaleCampaign", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Desciption")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Percent")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SaleCampaign");
+                });
+
+            modelBuilder.Entity("FoodOrder.Core.Models.SaleCampaignFood", b =>
+                {
+                    b.Property<int>("FoodID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SaleCampaignID")
+                        .HasColumnType("int");
+
+                    b.HasKey("FoodID", "SaleCampaignID");
+
+                    b.HasIndex("SaleCampaignID");
+
+                    b.ToTable("SaleCampaignFood");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -919,6 +985,13 @@ namespace FoodOrder.API.Migrations
                     b.Navigation("Food");
                 });
 
+            modelBuilder.Entity("FoodOrder.Core.Models.Food", b =>
+                {
+                    b.HasOne("FoodOrder.Core.Models.SaleCampaign", null)
+                        .WithMany("SaleCampaignFoods")
+                        .HasForeignKey("SaleCampaignID");
+                });
+
             modelBuilder.Entity("FoodOrder.Core.Models.FoodCategory", b =>
                 {
                     b.HasOne("FoodOrder.Core.Models.Category", "Category")
@@ -978,6 +1051,10 @@ namespace FoodOrder.API.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("PromotionID");
 
+                    b.HasOne("FoodOrder.Core.Models.SaleCampaign", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("SaleCampaignID");
+
                     b.Navigation("AppUser");
 
                     b.Navigation("OrderStatus");
@@ -1021,6 +1098,25 @@ namespace FoodOrder.API.Migrations
                     b.Navigation("AppUser");
 
                     b.Navigation("Food");
+                });
+
+            modelBuilder.Entity("FoodOrder.Core.Models.SaleCampaignFood", b =>
+                {
+                    b.HasOne("FoodOrder.Core.Models.Food", "Food")
+                        .WithMany("SaleCampaignFoods")
+                        .HasForeignKey("FoodID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FoodOrder.Core.Models.SaleCampaign", "SaleCampaign")
+                        .WithMany()
+                        .HasForeignKey("SaleCampaignID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Food");
+
+                    b.Navigation("SaleCampaign");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -1103,6 +1199,8 @@ namespace FoodOrder.API.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("Ratings");
+
+                    b.Navigation("SaleCampaignFoods");
                 });
 
             modelBuilder.Entity("FoodOrder.Core.Models.Order", b =>
@@ -1118,6 +1216,13 @@ namespace FoodOrder.API.Migrations
             modelBuilder.Entity("FoodOrder.Core.Models.Promotion", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("FoodOrder.Core.Models.SaleCampaign", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("SaleCampaignFoods");
                 });
 #pragma warning restore 612, 618
         }

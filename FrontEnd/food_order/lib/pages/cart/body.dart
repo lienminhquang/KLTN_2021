@@ -1,17 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Cart/CartBloc.dart';
+import 'package:food_delivery/bloc/Cart/CartEvent.dart';
+import 'package:food_delivery/bloc/Cart/CartState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/AddressModel.dart';
-import 'package:food_delivery/models/CartModel.dart';
-import 'package:food_delivery/models/FoodDetailModel.dart';
-import 'package:food_delivery/pages/adress/AddAdressScreen.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Body extends StatefulWidget {
@@ -20,15 +19,54 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  final NumberFormat _numberFormat = NumberFormat();
-  AddressVM? _addressVM;
+  Widget _priceWidget(CartVM cartVM) {
+    if (cartVM.foodVM.saleCampaignVM != null) {
+      double discount = cartVM.foodVM.saleCampaignVM!.percent;
+      return Row(
+        children: <Widget>[
+          Text('\$ ',
+              style: TextStyle(
+                color: LightColor.red,
+                fontSize: 12,
+              )),
+          Text(
+              AppConfigs.AppNumberFormat.format(cartVM.foodVM.price *
+                      cartVM.quantity *
+                      (100 - discount) /
+                      100) +
+                  "  ",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          Text(
+              AppConfigs.AppNumberFormat.format(
+                  cartVM.foodVM.price * cartVM.quantity),
+              style: TextStyle(
+                  fontSize: 14, decoration: TextDecoration.lineThrough)),
+        ],
+      );
+    }
+    return Row(
+      children: <Widget>[
+        Text('\$ ',
+            style: TextStyle(
+              color: LightColor.red,
+              fontSize: 12,
+            )),
+        Text(
+            AppConfigs.AppNumberFormat.format(
+                cartVM.foodVM.price * cartVM.quantity),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
 
   Widget _item(CartVM model, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await context.read<FoodDetailModel>().fetchAll(model.foodID);
+        // context
+        //     .read<FoodDetailBloc>()
+        //     .add(FoodDetailStartedEvent(model.foodID));
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return FoodDetail();
+          return FoodDetail(foodID: model.foodID, promotionID: null);
         }));
       },
       child: Container(
@@ -68,21 +106,7 @@ class _BodyState extends State<Body> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    subtitle: Row(
-                      children: <Widget>[
-                        Text('\$ ',
-                            style: TextStyle(
-                              color: LightColor.red,
-                              fontSize: 12,
-                            )),
-                        Text(
-                            AppConfigs.AppNumberFormat.format(
-                                model.foodVM.price * model.quantity),
-                            style: TextStyle(
-                              fontSize: 14,
-                            )),
-                      ],
-                    ),
+                    subtitle: _priceWidget(model),
                     trailing: Container(
                       width: 35,
                       height: 35,
@@ -101,7 +125,22 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget addressSession(BuildContext context) {
+  Widget totalSession(BuildContext context, CartLoadedState state) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+      child: Row(
+        children: [
+          Text(
+            "Tổng: ",
+            style: TextStyle(color: Colors.grey),
+          ),
+          Text(AppConfigs.AppNumberFormat.format(state.getTotalPrice()))
+        ],
+      ),
+    );
+  }
+
+  Widget addressSession(BuildContext context, AddressVM? addressVM) {
     return Container(
       //height: 150,
       child: Column(
@@ -127,9 +166,9 @@ class _BodyState extends State<Body> {
                         child: Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              _addressVM == null
-                                  ? "Không tìm thấy địa chỉ nào!!"
-                                  : _addressVM!.addressString,
+                              addressVM == null
+                                  ? "Không tìm thấy địa chỉ nào!"
+                                  : addressVM.addressString,
                               style: TextStyle(
                                   fontSize: 10, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
@@ -141,17 +180,17 @@ class _BodyState extends State<Body> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    await context.read<AddressModel>().fetchAll();
+                    //await context.read<AddressBloc>().fetchAll();
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return AddressScreen(
                         addressScreenCallBack:
                             (AddressVM addressVM, BuildContext context) async {
-                          //_addressVM = addressVM;
-                          context.read<CartModel>().setAddress(addressVM);
-                          //await context.read<CartModel>().fetchAll();
+                          context
+                              .read<CartBloc>()
+                              .add(CartSetAddressEvent(addressVM));
+
                           Navigator.of(context).pop();
-                          //setState(() {});
                         },
                       );
                     }));
@@ -192,44 +231,73 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
+  _buildLoadedState(BuildContext context, CartLoadedState state) {
+    var carts = state.listCartVM;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<CartBloc>().add(CartRefreshdEvent());
+      },
+      child: ListView.builder(
+        itemCount: carts.length + 2,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return addressSession(context, state.address);
+          } else if (index == carts.length + 1) {
+            return totalSession(context, state);
+          }
+
+          return Dismissible(
+            key: ObjectKey(carts[index - 1]),
+            direction: DismissDirection.endToStart,
+            background: Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFE6E6),
+                ),
+                child: Row(
+                  children: [
+                    Spacer(),
+                    Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    )
+                  ],
+                )),
+            onDismissed: (direction) async {
+              // var cartModel = context.read<CartModel>();
+              // if (await cartModel.delete(carts[index - 1].foodID)) {
+              //   cartModel.fetchCartItems();
+              // }
+            },
+            child: _item(carts[index - 1], context),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildErrorState(BuildContext context, CartErrorState state) {
+    return Container(
+      child: Center(
+        child: Text(state.error),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    var carts = context.watch<CartModel>().items;
-    _addressVM = context.read<CartModel>().address;
-
-    return ListView.builder(
-      itemCount: carts.length + 1,
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return addressSession(context);
-        }
-
-        return Dismissible(
-          key: ObjectKey(carts[index - 1]),
-          direction: DismissDirection.endToStart,
-          background: Container(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              decoration: BoxDecoration(
-                color: Color(0xFFFFE6E6),
-              ),
-              child: Row(
-                children: [
-                  Spacer(),
-                  Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  )
-                ],
-              )),
-          onDismissed: (direction) async {
-            var cartModel = context.read<CartModel>();
-            if (await cartModel.delete(carts[index - 1].foodID)) {
-              cartModel.fetchCartItems();
-            }
-          },
-          child: _item(carts[index - 1], context),
-        );
-      },
-    );
+    return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
+      if (state is CartLoadingState) {
+        return CircularProgressIndicator();
+      }
+      if (state is CartLoadedState) {
+        return _buildLoadedState(context, state);
+      }
+      if (state is CartErrorState) {
+        return _buildErrorState(context, state);
+      }
+      throw "Unknow state";
+    });
   }
 }

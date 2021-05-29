@@ -17,13 +17,13 @@ class CategoriesServices {
 
   Future<ApiResult<PaginatedList<CategoryVM>>> getAllPaging() async {
     PagingRequest pagingRequest = PagingRequest();
-    pagingRequest.PageNumber = 1;
-    pagingRequest.SearchString = "";
-    pagingRequest.SortOrder = "";
+    pagingRequest.pageNumber = 1;
+    pagingRequest.searchString = "";
+    pagingRequest.sortOrder = "";
 
     IOClient ioClient = _httpClientFactory.createIOClient();
     final String url = baseRoute +
-        "?pageNumber=${pagingRequest.PageNumber}&searchString=${pagingRequest.SearchString}&sortOrder=${pagingRequest.SortOrder}";
+        "?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
     Response? response;
     try {
       log("GET: " + url);
@@ -55,15 +55,45 @@ class CategoriesServices {
     return ApiResult.failedApiResult("Error!!");
   }
 
+  Future<ApiResult<CategoryVM>> getByID(int id) async {
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    final String url = baseRoute + "/$id";
+    Response? response;
+    try {
+      log("GET: " + url);
+      response = await ioClient.get(Uri.parse(url));
+    } catch (e) {
+      return ApiResult<CategoryVM>.failedApiResult(
+          "Server error! Please re-try later!");
+    }
+    try {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<CategoryVM>.fromJson(json, (paginatedJson) {
+        return CategoryVM.fromJson(paginatedJson as Map<String, dynamic>);
+      });
+
+      if (result.isSuccessed == true) {
+        log("Fetched: " + result.payLoad!.toJson().toString());
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return ApiResult.failedApiResult("Error!!");
+  }
+
   Future<ApiResult<PaginatedList<FoodVM>>> getFoodsInCategory(int id) async {
     PagingRequest pagingRequest = PagingRequest();
-    pagingRequest.PageNumber = 1;
-    pagingRequest.SearchString = "";
-    pagingRequest.SortOrder = "";
+    pagingRequest.pageNumber = 1;
+    pagingRequest.searchString = "";
+    pagingRequest.sortOrder = "";
 
     IOClient ioClient = _httpClientFactory.createIOClient();
     final String url = baseRoute +
-        "/$id/foods?pageNumber=${pagingRequest.PageNumber}&searchString=${pagingRequest.SearchString}&sortOrder=${pagingRequest.SortOrder}";
+        "/$id/foods?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
     Response? response;
     try {
       log("GET: " + url);

@@ -16,10 +16,12 @@ namespace FoodOrder.Admin.Controllers
     public class PromotionsController : Controller
     {
         private readonly PromotionServices _promotionServices;
+        private readonly FoodServices _foodServices;
         private readonly IMapper _mapper;
 
-        public PromotionsController(PromotionServices services, IMapper mapper)
+        public PromotionsController(PromotionServices services, IMapper mapper, FoodServices foodServices)
         {
+            _foodServices = foodServices;
             _promotionServices = services;
             _mapper = mapper;
         }
@@ -50,12 +52,18 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> CreateAsync()
         {
             if (!this.ValidateTokenInCookie())
             {
                 return this.RedirectToLoginPage();
             }
+            var listFoodVM = await _foodServices.GetAllPaging(new PagingRequestBase { PageNumber = 1 }, this.GetTokenFromCookie());
+            if (!listFoodVM.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(listFoodVM.ErrorMessage);
+            }
+            ViewBag.FoodVMs = listFoodVM.PayLoad.Items;
 
             return View();
         }
@@ -82,7 +90,15 @@ namespace FoodOrder.Admin.Controllers
                 return RedirectToAction("Details", new { id = rs.PayLoad.ID });
             }
 
+            var listFoodVM = await _foodServices.GetAllPaging(new PagingRequestBase { PageNumber = 1 }, this.GetTokenFromCookie());
+            if (!listFoodVM.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(listFoodVM.ErrorMessage);
+            }
+            ViewBag.FoodVMs = listFoodVM.PayLoad.Items;
+
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+
             return View(createVM);
         }
 
@@ -101,8 +117,16 @@ namespace FoodOrder.Admin.Controllers
                 return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
-            var vm = result.PayLoad;
-            return View(_mapper.Map<PromotionVM, PromotionEditVM>(vm));
+            var listFoodVM = await _foodServices.GetAllPaging(new PagingRequestBase { PageNumber = 1 }, this.GetTokenFromCookie());
+            if (!listFoodVM.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(listFoodVM.ErrorMessage);
+            }
+            ViewBag.FoodVMs = listFoodVM.PayLoad.Items;
+
+            var vm = _mapper.Map<PromotionVM, PromotionEditVM>(result.PayLoad);
+            
+            return View(vm);
         }
 
         // POST: CartsController/Edit/5
@@ -126,6 +150,13 @@ namespace FoodOrder.Admin.Controllers
                 TempData[AppConfigs.SuccessMessageString] = "Promotion edit succesed!";
                 return RedirectToAction("Details", new { id = editVM.ID });
             }
+
+            var listFoodVM = await _foodServices.GetAllPaging(new PagingRequestBase { PageNumber = 1 }, this.GetTokenFromCookie());
+            if (!listFoodVM.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(listFoodVM.ErrorMessage);
+            }
+            ViewBag.FoodVMs = listFoodVM.PayLoad.Items;
 
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
             return View(editVM);

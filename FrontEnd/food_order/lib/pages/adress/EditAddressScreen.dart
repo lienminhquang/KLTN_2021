@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/models/AddressModel.dart';
+import 'package:food_delivery/bloc/Address/AddressBloc.dart';
+import 'package:food_delivery/bloc/Address/AddressEvent.dart';
+import 'package:food_delivery/view_models/Addresses/AddressEditVM.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:provider/provider.dart';
 
@@ -56,18 +58,14 @@ class EditAdressScreen extends StatelessWidget {
                         content: Text("Name and address could not be null!")));
                     return;
                   }
-                  var rs = await context.read<AddressModel>().edit(
-                      addressVM.id,
-                      addressVM.appUserID,
-                      _nameController.text,
-                      _adressController.text);
-                  await context.read<AddressModel>().fetchAll();
-                  if (rs.isSuccessed == false) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Failed to edit address!")));
-                  } else {
-                    Navigator.pop(context);
-                  }
+                  final editVM = AddressEditVM();
+                  editVM.id = addressVM.id;
+                  editVM.appUserID = addressVM.appUserID;
+                  editVM.name = _nameController.text;
+                  editVM.addressString = _adressController.text;
+                  context.read<AddressBloc>().add(AddressEdited(editVM));
+
+                  Navigator.pop(context);
                 },
               ),
             ],

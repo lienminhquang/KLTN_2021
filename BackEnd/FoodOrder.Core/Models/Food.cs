@@ -19,5 +19,6 @@ namespace FoodOrder.Core.Models
         public List<FoodCategory> FoodCategories { get; set; }
         public List<Cart> Carts { get; set; }
         public List<Image> Images { get; set; }
+        public List<SaleCampaignFood> SaleCampaignFoods { get; set; }
     }
 }

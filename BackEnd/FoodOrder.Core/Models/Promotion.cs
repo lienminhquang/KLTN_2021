@@ -11,14 +11,15 @@ namespace FoodOrder.Core.Models
         public string Name { get; set; }
         public string Code { get; set; }
         public string Desciption { get; set; }
-        public DateTime CreatedDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int Amount { get; set; }
+        public int UseTimes { get; set; } // So lan co the su dung
         public float Percent { get; set; }
         public bool Enabled { get; set; }
         public int Max { get; set; }
         public int MinPrice { get; set; }
+        public bool IsGlobal { get; set; }
+        public int Priority { get; set; }
 
         public List<Order> Orders { get; set; }
     }

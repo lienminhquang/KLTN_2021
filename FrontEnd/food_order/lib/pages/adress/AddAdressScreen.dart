@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/models/AddressModel.dart';
-import 'package:provider/provider.dart';
 
 class AddAdressScreen extends StatefulWidget {
   static String routeName = "/addadress";
@@ -61,22 +59,22 @@ class _BodyAdressScreenState extends State<BodyAdressScreen> {
                       style: TextStyle(color: Colors.white),
                     )),
                 onPressed: () async {
-                  if (_nameController.text.isEmpty ||
-                      _adressController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Name and address could not be null!")));
-                    return;
-                  }
-                  var rs = await context
-                      .read<AddressModel>()
-                      .create(_nameController.text, _adressController.text);
-                  await context.read<AddressModel>().fetchAll();
-                  if (rs.isSuccessed == false) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Failed to create address!")));
-                  } else {
-                    Navigator.pop(context);
-                  }
+                  // if (_nameController.text.isEmpty ||
+                  //     _adressController.text.isEmpty) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  //       content: Text("Name and address could not be null!")));
+                  //   return;
+                  // }
+                  // var rs = await context
+                  //     .read<AddressModel>()
+                  //     .create(_nameController.text, _adressController.text);
+                  // await context.read<AddressModel>().fetchAll();
+                  // if (rs.isSuccessed == false) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //       SnackBar(content: Text("Failed to create address!")));
+                  // } else {
+                  //   Navigator.pop(context);
+                  // }
                 },
               ),
             ],

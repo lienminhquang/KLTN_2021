@@ -104,6 +104,19 @@ namespace FoodOrder.API.Services
                 }
             }
 
+            orderVMs.Sort(new Comparison<OrderVM>((a, b) =>
+            {
+                if(a.CreatedDate == b.CreatedDate)
+                {
+                    return 0;
+                }
+                if(a.CreatedDate > b.CreatedDate)
+                {
+                    return -1;
+                }
+                return 1;
+            }));
+
             return new SuccessedResult<List<OrderVM>>(orderVMs);
             
         }
@@ -151,6 +164,7 @@ namespace FoodOrder.API.Services
                 transaction.Commit();
 
                 var orderVM = _mapper.Map<OrderVM>(createOrderResult.Entity);
+                orderVM.OrderStatusVM = _mapper.Map<OrderStatusVM>(_dbContext.OrderStatuses.Find(orderVM.OrderStatusID));
                 orderVM.OrderDetailVMs = await (from od in _dbContext.OrderDetails 
                                           where od.OrderID == createOrderResult.Entity.ID 
                                           select _mapper.Map<OrderDetailVM>(od))

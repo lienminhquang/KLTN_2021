@@ -5,6 +5,7 @@ using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Carts;
 using FoodOrder.Core.ViewModels.Foods;
+using FoodOrder.Core.ViewModels.SaleCampaigns;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -69,6 +70,20 @@ namespace FoodOrder.API.Services
                         };
 
             var created = await PaginatedList<CartVM>.CreateAsync(carts, 1, Core.Helpers.Configs.PageSize);
+
+            foreach (var item in created.Items)
+            {
+                var query = from fs in _dbContext.SaleCampaignFoods
+                            join f in _dbContext.Foods on fs.FoodID equals f.ID
+                            join sc in _dbContext.SaleCampaigns on fs.SaleCampaignID equals sc.ID
+                            where f.ID == item.FoodID
+                            select sc;
+                var list = query.OrderBy(x => x.Priority).ToList();
+                if (list.Count > 0)
+                {
+                    item.FoodVM.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(list.First());
+                }
+            }
 
             return new SuccessedResult<PaginatedList<CartVM>>(created);
         }

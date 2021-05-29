@@ -7,15 +7,16 @@ part of 'PagingRequest.dart';
 // **************************************************************************
 
 PagingRequest _$PagingRequestFromJson(Map<String, dynamic> json) {
-  return PagingRequest()
-    ..SortOrder = json['SortOrder'] as String?
-    ..SearchString = json['SearchString'] as String?
-    ..PageNumber = json['PageNumber'] as int?;
+  return PagingRequest(
+    searchString: json['searchString'] as String?,
+    sortOrder: json['sortOrder'] as String?,
+    pageNumber: json['pageNumber'] as int?,
+  );
 }
 
 Map<String, dynamic> _$PagingRequestToJson(PagingRequest instance) =>
     <String, dynamic>{
-      'SortOrder': instance.SortOrder,
-      'SearchString': instance.SearchString,
-      'PageNumber': instance.PageNumber,
+      'sortOrder': instance.sortOrder,
+      'searchString': instance.searchString,
+      'pageNumber': instance.pageNumber,
     };

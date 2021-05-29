@@ -1,11 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Cart/CartBloc.dart';
+import 'package:food_delivery/bloc/Cart/CartEvent.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
+import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/CartModel.dart';
-import 'package:food_delivery/models/FoodDetailModel.dart';
-import 'package:food_delivery/view_models/Carts/CartVM.dart';
-import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 import 'footer.dart';
 import 'package:provider/provider.dart';
@@ -17,24 +17,47 @@ class FoodDetailArguments {
 }
 
 class FoodDetail extends StatefulWidget {
+  final int foodID;
+  final int? promotionID;
+  FoodDetail({required this.foodID, this.promotionID});
+
   static String routeName = "/food_detail";
 
   @override
-  _FoodDetailState createState() => new _FoodDetailState();
+  _FoodDetailState createState() =>
+      new _FoodDetailState(foodID: foodID, promotionID: promotionID);
 }
 
 class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
   ScrollController _scrollController = new ScrollController();
   int count = 1;
 
-  Widget bottomBtns(BuildContext context) {
-    final price =
-        context.select<FoodDetailModel, double>((value) => value.foodVM.price);
-    final cartVM =
-        context.select<FoodDetailModel, CartVM?>((value) => value.cartVM);
+  final int foodID;
+  final int? promotionID;
+
+  _FoodDetailState({required this.foodID, this.promotionID});
+
+  @override
+  void initState() {
+    context
+        .read<FoodDetailBloc>()
+        .add(FoodDetailStartedEvent(foodID: foodID, promotionID: promotionID));
+
+    super.initState();
+  }
+
+  Widget bottomBtns(BuildContext context, FoodDetailLoadedState state) {
+    final price = state.foodVM.price;
+    final cartVM = state.cartVM;
+    final promotion = state.promotionVM;
+    double discount = 0;
     if (cartVM != null) {
       count = cartVM.quantity;
     }
+    if (state.foodVM.saleCampaignVM != null) {
+      discount = state.foodVM.saleCampaignVM!.percent;
+    }
+    final totalPrice = (price * count) * (100 - discount) / 100;
 
     return new Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -45,18 +68,32 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
             flex: 2,
             child: new InkWell(
               onTap: () async {
-                var result = await context.read<CartModel>().editOrCreate(
-                    context.read<FoodDetailModel>().currentFoodID, count);
-                if (!result.isSuccessed) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(result.errorMessage!)));
-                } else {
-                  context.read<CartModel>().fetchCartItems();
-                  // Navigator.pushReplacementNamed(
-                  //     context, CartItemsPage.routeName);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Added item into your cart!")));
+                if (promotion != null) {
+                  await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Container(
+                            child: Text(
+                                "Bạn có muốn áp dụng mã giảm giá ${promotion.code} cho đơn hàng không?"),
+                          ),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  context
+                                      .read<CartBloc>()
+                                      .add(CartAddPromotionEvent(promotionID!));
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("OK"))
+                          ],
+                        );
+                      });
                 }
+
+                // Todo we need to move this function to FoodDetailBloc to check error when create inside food detail
+                context.read<FoodDetailBloc>().add(FoodDetailCreateCartEvent(
+                    state.foodVM.id, count, promotionID, context));
               },
               child: ClipRRect(
                 borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
@@ -69,7 +106,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: new Center(
                       child: new Text(
-                        "\$ ${AppConfigs.AppNumberFormat.format(price * count)}",
+                        "\$ ${AppConfigs.AppNumberFormat.format(totalPrice)}",
                         style: new TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -149,19 +186,15 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var foodVM =
-        context.select<FoodDetailModel, FoodVM>((value) => value.foodVM);
-    log("rebuild bottomBtns");
-    return new Scaffold(
+  Widget _buildLoadedState(BuildContext context, FoodDetailLoadedState state) {
+    return Scaffold(
       body: new ListView(
         controller: _scrollController,
         children: <Widget>[
           new MHeader(
-            foodVM: foodVM,
+            state: state,
           ),
-          FavnPrice(),
+          FavnPrice(state),
           //Divider(),
           NotificationListener<OverscrollNotification>(
               onNotification: (OverscrollNotification value) {
@@ -183,13 +216,37 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                     .jumpTo(_scrollController.offset + value.overscroll);
                 return true;
               },
-              child: new Mfooter()),
+              child: new Mfooter(state)),
         ],
       ),
       bottomNavigationBar: Container(
         height: 80,
-        child: bottomBtns(context),
+        child: bottomBtns(context, state),
       ),
     );
+  }
+
+  Widget _buildErrorState(BuildContext context, FoodDetailErrorState state) {
+    return Text(state.error);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<FoodDetailBloc, FoodDetailState>(
+        builder: (context, state) {
+      if (state is FoodDetailLoadingState) {
+        print("FoodDetailLoadingState");
+        return Container(
+            color: Colors.white,
+            child: Center(child: CircularProgressIndicator()));
+      }
+      if (state is FoodDetailLoadedState) {
+        return _buildLoadedState(context, state);
+      }
+      if (state is FoodDetailErrorState) {
+        return _buildErrorState(context, state);
+      }
+      throw "Unknown state!";
+    });
   }
 }

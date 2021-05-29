@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/models/AddressModel.dart';
+import 'package:food_delivery/bloc/Address/AddressBloc.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
+import 'change_password.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 import 'package:provider/provider.dart';
@@ -14,15 +15,15 @@ class Body extends StatelessWidget {
         ProfilePic(),
         SizedBox(height: 20),
         ProfileMenu(
-          icon: Icon(Icons.confirmation_num_outlined),
-          text: 'Mã khuyến mãi',
-          press: () => Navigator.pushNamed(context, PromotionScreen.routeName),
+          icon: Icon(Icons.person),
+          text: 'Hoàng Phong Sang',
+          press: () {},
         ),
         ProfileMenu(
           icon: Icon(Icons.location_on_outlined),
           text: 'Địa chỉ',
           press: () {
-            context.read<AddressModel>().fetchAll();
+            //context.read<AddressBloc>().fetchAll();
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -32,13 +33,18 @@ class Body extends StatelessWidget {
           },
         ),
         ProfileMenu(
-          icon: Icon(Icons.settings),
-          text: 'Cài đặt',
-          press: () {},
+          icon: Icon(Icons.lock_outline_rounded),
+          text: 'Đổi mật khẩu',
+          press: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChangePasswordScreen()));
+          },
         ),
         ProfileMenu(
-          icon: Icon(Icons.info_outline),
-          text: 'Về chúng tôi',
+          icon: Icon(Icons.phone),
+          text: '0392131844',
           press: () {},
         ),
         ProfileMenu(

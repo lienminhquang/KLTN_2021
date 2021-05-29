@@ -22,6 +22,7 @@ namespace FoodOrder.Data.Configurations
             builder.HasMany(x => x.FoodCategories).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
             builder.HasMany(x => x.Carts).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
             builder.HasMany(x => x.Images).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
+            builder.HasMany(x => x.SaleCampaignFoods).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@model FoodOrder.Core.ViewModels.Promotions.PromotionCreateVM
+@using FoodOrder.Core.ViewModels.Foods
 
 @{
     ViewData["Title"] = "Create";
@@ -17,7 +18,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <form asp-action="Create">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
@@ -46,9 +47,9 @@
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Amount" class="control-label"></label>
-                            <input asp-for="Amount" class="form-control" />
-                            <span asp-validation-for="Amount" class="text-danger"></span>
+                            <label asp-for="UseTimes" class="control-label"></label>
+                            <input asp-for="UseTimes" class="form-control" />
+                            <span asp-validation-for="UseTimes" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Percent" class="control-label"></label>
@@ -71,6 +72,17 @@
                             <span asp-validation-for="MinPrice" class="text-danger"></span>
                         </div>
                         <div class="form-group">
+                            <label asp-for="Priority" class="control-label"></label>
+                            <input asp-for="Priority" class="form-control" />
+                            <span asp-validation-for="Priority" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="IsGlobal" /> @Html.DisplayNameFor(model => model.IsGlobal)
+                            </label>
+                        </div>
+                        <div class="form-group">
                             <input type="submit" value="Create" class="btn btn-primary" />
                         </div>
                     </form>
@@ -81,8 +93,36 @@
                 <a asp-action="Index">Back to List</a>
             </div>
 
-            @section Scripts {
+            @section CustomScripts {
                 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+                <script>
+                    $(document).ready(function () {
+                        // create MultiSelect from select HTML element
+                        var required = $("#required").kendoMultiSelect().data("kendoMultiSelect");
+
+
+                        $("#get").click(function () {
+                            alert("Attendees:\n\nRequired: " + required.value() + "\nOptional: " + optional.value());
+                        });
+
+                        var multiSelect = $("#required").data("kendoMultiSelect");
+                        multiSelect.options.filter = "contains";
+                    });
+                </script>
+            }
+            @section CustomCss{
+                <style>
+                    .demo-section label {
+                        display: block;
+                        margin: 15px 0 5px 0;
+                    }
+
+                    #get {
+                        float: right;
+                        margin: 25px auto 0;
+                    }
+                </style>
             }
         </div>
     </div>

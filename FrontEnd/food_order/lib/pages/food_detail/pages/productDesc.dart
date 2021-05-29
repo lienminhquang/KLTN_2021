@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/models/FoodDetailModel.dart';
-import 'package:provider/provider.dart';
+import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 class ProductDesc extends StatelessWidget {
+  final FoodVM _foodVM;
+  ProductDesc(this._foodVM);
   @override
   Widget build(BuildContext context) {
-    var foodVM = context.watch<FoodDetailModel>();
     return new Scaffold(
       body: new Padding(
         padding: const EdgeInsets.all(14.0),
         child: new Text(
-          foodVM.foodVM.description,
+          _foodVM.description,
           style: new TextStyle(
               fontFamily: "OpenSans",
               color: Colors.black,

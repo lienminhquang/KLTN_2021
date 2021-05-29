@@ -11,6 +11,7 @@ using FoodOrder.Core.ViewModels.Orders;
 using FoodOrder.Core.ViewModels.OrderStatuses;
 using FoodOrder.Core.ViewModels.Promotions;
 using FoodOrder.Core.ViewModels.Ratings;
+using FoodOrder.Core.ViewModels.SaleCampaigns;
 using FoodOrder.Core.ViewModels.Users;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -60,6 +61,10 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<Promotion, PromotionVM>();
             CreateMap<PromotionCreateVM, Promotion>();
             CreateMap<PromotionVM, PromotionEditVM>();
+
+            CreateMap<SaleCampaign, SaleCampaignVM>();
+            CreateMap<SaleCampaignCreateVM, SaleCampaign>();
+            CreateMap<SaleCampaignVM, SaleCampaignEditVM>();
 
             CreateMap<Rating, RatingVM>();
             CreateMap<RatingCreateVM, Rating>();

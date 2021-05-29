@@ -1,14 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:food_delivery/models/AppModel.dart';
-import 'package:food_delivery/models/CategoryModel.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/app.dart';
+import 'package:food_delivery/bloc/Login/LoginBloc.dart';
+import 'package:food_delivery/bloc/Login/LoginState.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
-import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/login_signup/SignUp.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -29,23 +29,34 @@ class _LoginPageState extends State<LoginPage> {
       if (_formKey.currentState!.validate()) {
         LoginVM _loginVM = LoginVM(
             _usenameTextController.text, _passwordTextController.text, false);
-        var loginResult = await context.read<AppModel>().login(_loginVM);
-        if (loginResult.isSuccessed == false) {
-          // show error
-          log(loginResult.errorMessage!);
+        var loginResult = _userServices.login(_loginVM);
+        loginResult.then((value) {
+          if (value.isSuccessed == false) {
+            log(value.errorMessage!.toString());
+
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(value.errorMessage!)));
+          } else {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) {
+                return MotherBoard();
+              },
+            ));
+          }
+        }, onError: (e) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(loginResult.errorMessage!)));
-        } else {
-          var category = context.read<CategoryModel>();
-          category.fetchAll();
-        }
+              .showSnackBar(SnackBar(content: Text(e.toString())));
+        });
       }
       _isLogin = false;
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildLoaedState(BuildContext context, LoginLoadedState state) {
+    if (state.map != null) {
+      _usenameTextController.text = state.map!["username"]! as String;
+      _passwordTextController.text = state.map!["password"]! as String;
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -101,13 +112,21 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 15.0,
                       ),
-                      TextFormField(
-                        controller: _passwordTextController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Password!';
-                          }
-                          return null;
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    height: 40.0,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(20),
+                      shadowColor: Colors.blueAccent,
+                      color: Colors.blue,
+                      elevation: 7.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          login(context);
                         },
                         decoration: InputDecoration(
                             hintText: 'Mật khẩu ',
@@ -147,34 +166,39 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 20.0,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    height: 40.0,
+                    color: Colors.transparent,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Colors.black,
+                            style: BorderStyle.solid,
+                            width: 1.0),
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
-                      Container(
-                        height: 40.0,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20),
-                          shadowColor: Colors.blueAccent,
-                          color: Colors.blue,
-                          elevation: 7.0,
-                          child: GestureDetector(
-                            onTap: () {
-                              login(context);
-                            },
-                            child: Center(
-                              child: Text(
-                                'Đăng nhập',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat'),
-                              ),
-                            ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Center(
+                              child: ImageIcon(
+                                  AssetImage('images/iconfacebook.png'))),
+                          SizedBox(
+                            width: 10,
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20.0,
+                          Center(
+                            child: Text('Đăng nhập bằng Facebook',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Montserrat')),
+                          )
+                        ],
                       ),
                       // Container(
                       //   height: 40.0,
@@ -246,8 +270,31 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
   void _togglePasswordView() {
     isHiddenPassword = !isHiddenPassword;
     setState(() {});
+  }
+  Widget _buildErrorState(BuildContext context, LoginErrorState state) {
+    return Container(
+        child: Center(
+      child: Text(
+        state.error,
+      ),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+      if (state is LoginLoadingState) {
+        return CircularProgressIndicator();
+      } else if (state is LoginLoadedState) {
+        return _buildLoaedState(context, state);
+      } else if (state is LoginErrorState) {
+        return _buildErrorState(context, state);
+      }
+      throw "Unknow state";
+    });
   }
 }

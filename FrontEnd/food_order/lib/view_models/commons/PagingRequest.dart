@@ -4,11 +4,11 @@ part 'PagingRequest.g.dart';
 
 @JsonSerializable()
 class PagingRequest {
-  PagingRequest();
+  PagingRequest({this.searchString, this.sortOrder, this.pageNumber});
 
-  String? SortOrder;
-  String? SearchString;
-  int? PageNumber;
+  String? sortOrder;
+  String? searchString;
+  int? pageNumber;
 
   factory PagingRequest.fromJson(Map<String, dynamic> json) =>
       _$PagingRequestFromJson(json);

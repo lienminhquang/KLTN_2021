@@ -21,7 +21,7 @@ AppBar buildAppBar(BuildContext context) {
     title: Column(
       children: [
         Text(
-          'Profile',
+          'Thông tin cá nhân',
           style: TextStyle(color: Colors.black),
         ),
       ],
