@@ -87,5 +87,18 @@ namespace FoodOrder.API.Controllers
             }
             return Ok(result);
         }
+        
+        [HttpGet("valid")]
+        // TODO: return the sortorder, currentfilter, pagenumber to the client.
+        public async Task<IActionResult> GetAllValidPaging([FromQuery] PagingRequestBase request)
+        {
+            var result = await _saleCampaignServices.GetAllValidPaging(request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
+
 }

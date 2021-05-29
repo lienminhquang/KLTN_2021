@@ -19,6 +19,46 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  Widget _priceWidget(CartVM cartVM) {
+    if (cartVM.foodVM.saleCampaignVM != null) {
+      double discount = cartVM.foodVM.saleCampaignVM!.percent;
+      return Row(
+        children: <Widget>[
+          Text('\$ ',
+              style: TextStyle(
+                color: LightColor.red,
+                fontSize: 12,
+              )),
+          Text(
+              AppConfigs.AppNumberFormat.format(cartVM.foodVM.price *
+                      cartVM.quantity *
+                      (100 - discount) /
+                      100) +
+                  "  ",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          Text(
+              AppConfigs.AppNumberFormat.format(
+                  cartVM.foodVM.price * cartVM.quantity),
+              style: TextStyle(
+                  fontSize: 14, decoration: TextDecoration.lineThrough)),
+        ],
+      );
+    }
+    return Row(
+      children: <Widget>[
+        Text('\$ ',
+            style: TextStyle(
+              color: LightColor.red,
+              fontSize: 12,
+            )),
+        Text(
+            AppConfigs.AppNumberFormat.format(
+                cartVM.foodVM.price * cartVM.quantity),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
   Widget _item(CartVM model, BuildContext context) {
     return GestureDetector(
       onTap: () async {
@@ -66,21 +106,7 @@ class _BodyState extends State<Body> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    subtitle: Row(
-                      children: <Widget>[
-                        Text('\$ ',
-                            style: TextStyle(
-                              color: LightColor.red,
-                              fontSize: 12,
-                            )),
-                        Text(
-                            AppConfigs.AppNumberFormat.format(
-                                model.foodVM.price * model.quantity),
-                            style: TextStyle(
-                              fontSize: 14,
-                            )),
-                      ],
-                    ),
+                    subtitle: _priceWidget(model),
                     trailing: Container(
                       width: 35,
                       height: 35,
@@ -95,6 +121,21 @@ class _BodyState extends State<Body> {
                     )))
           ],
         ),
+      ),
+    );
+  }
+
+  Widget totalSession(BuildContext context, CartLoadedState state) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
+      child: Row(
+        children: [
+          Text(
+            "Tổng: ",
+            style: TextStyle(color: Colors.grey),
+          ),
+          Text(AppConfigs.AppNumberFormat.format(state.getTotalPrice()))
+        ],
       ),
     );
   }
@@ -198,10 +239,12 @@ class _BodyState extends State<Body> {
         context.read<CartBloc>().add(CartRefreshdEvent());
       },
       child: ListView.builder(
-        itemCount: carts.length + 1,
+        itemCount: carts.length + 2,
         itemBuilder: (context, index) {
           if (index == 0) {
             return addressSession(context, state.address);
+          } else if (index == carts.length + 1) {
+            return totalSession(context, state);
           }
 
           return Dismissible(

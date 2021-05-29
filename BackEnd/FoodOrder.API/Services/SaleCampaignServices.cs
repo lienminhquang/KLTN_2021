@@ -45,7 +45,40 @@ namespace FoodOrder.API.Services
                                      join fp in _dbContext.SaleCampaignFoods on f.ID equals fp.FoodID
                                      where fp.SaleCampaignID == item.ID
                                      select _mapper.Map<FoodVM>(f)).ToListAsync();
-                
+
+
+                item.FoodVMs = foodVMs;
+            }
+
+
+            return new SuccessedResult<PaginatedList<SaleCampaignVM>>(created);
+        }
+
+        public async Task<ApiResult<PaginatedList<SaleCampaignVM>>> GetAllValidPaging(PagingRequestBase request)
+        {
+            var vMs = from c in _dbContext.SaleCampaigns
+                      where (c.Enabled == true)
+                            && (c.StartDate <= DateTime.Now)
+                            && (c.EndDate >= DateTime.Now)
+                      select c;
+
+            if (!String.IsNullOrEmpty(request.SearchString))
+            {
+                vMs = vMs.Where(c => c.Name.Contains(request.SearchString)
+                || c.Desciption.Contains(request.SearchString));
+            }
+
+            vMs = Core.Helpers.Utilities<SaleCampaign>.Sort(vMs, request.SortOrder, "Priority");
+
+            var created = await PaginatedList<SaleCampaignVM>.CreateAsync(vMs.Select(c => _mapper.Map<SaleCampaign, SaleCampaignVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+
+            foreach (var item in created.Items)
+            {
+                var foodVMs = await (from f in _dbContext.Foods
+                                     join fp in _dbContext.SaleCampaignFoods on f.ID equals fp.FoodID
+                                     where fp.SaleCampaignID == item.ID
+                                     select _mapper.Map<FoodVM>(f)).ToListAsync();
+
 
                 item.FoodVMs = foodVMs;
             }

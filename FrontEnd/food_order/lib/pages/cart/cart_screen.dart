@@ -91,7 +91,7 @@ class CheckoutCart extends StatelessWidget {
                 Text.rich(
                   TextSpan(
                       style: AppTheme.subTitleStyle,
-                      text: 'Tổng:\n',
+                      text: 'Thành tiền:\n',
                       children: [
                         TextSpan(
                             text:

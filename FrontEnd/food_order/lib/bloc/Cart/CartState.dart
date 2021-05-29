@@ -23,7 +23,10 @@ class CartLoadedState extends CartState {
     // Todo: apply promotions
     double total = 0;
     for (var item in listCartVM) {
-      total += item.quantity * item.foodVM.price;
+      double discount = item.foodVM.saleCampaignVM == null
+          ? 0
+          : item.foodVM.saleCampaignVM!.percent;
+      total += item.quantity * item.foodVM.price * (100 - discount) / 100;
     }
     return total;
   }

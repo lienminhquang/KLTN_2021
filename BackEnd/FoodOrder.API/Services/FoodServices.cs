@@ -57,8 +57,12 @@ namespace FoodOrder.API.Services
             {
                 var query = from cf in _dbContext.SaleCampaignFoods
                             join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
-                            where cf.FoodID == item.ID
+                            where (cf.FoodID == item.ID)
+                            && (c.Enabled == true)
+                            && (c.StartDate <= DateTime.Now)
+                            && (c.EndDate >= DateTime.Now)
                             select c;
+                query = query.OrderBy(x => x.Priority);
                 if (query.Count() > 0)
                 {
                     item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(query.First());
@@ -99,8 +103,12 @@ namespace FoodOrder.API.Services
             {
                 var query = from cf in _dbContext.SaleCampaignFoods
                             join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
-                            where cf.FoodID == item.ID
+                            where (cf.FoodID == item.ID)
+                            && (c.Enabled == true)
+                            && (c.StartDate <= DateTime.Now)
+                            && (c.EndDate >= DateTime.Now)
                             select c;
+                query = query.OrderBy(x => x.Priority);
                 if (query.Count() > 0)
                 {
                     item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(query.First());
@@ -194,10 +202,16 @@ namespace FoodOrder.API.Services
             }
 
             var query = from cf in _dbContext.SaleCampaignFoods
-                           join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
-                           where cf.FoodID == foodVM.ID
-                           select c;
-            if(query.Count() > 0)
+                        join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
+                        where (cf.FoodID == foodVM.ID)
+                        && (c.Enabled == true)
+                        && (c.StartDate <= DateTime.Now)
+                        && (c.EndDate >= DateTime.Now)
+                        select c;
+
+            // Only lowest priority campaign be display
+            query = query.OrderBy(x => x.Priority);
+            if (query.Count() > 0)
             {
                 foodVM.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(query.First());
             }

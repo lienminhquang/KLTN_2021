@@ -105,8 +105,8 @@ class _BodyState extends State<Body> {
               Divider(
                 height: 30,
               ),
-              SaleContainer(state.listSaleCampaign[0]),
-              PromotionContainer(state.listPromotion[0]),
+              SaleContainer(state.listSaleCampaign),
+              PromotionContainer(state.listPromotion),
               //PromotionContainer(state.listPromotion[1]),
             ],
           ),
@@ -307,10 +307,14 @@ Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
 }
 
 class PromotionContainer extends StatelessWidget {
-  final PromotionVM _promotionVM;
-  PromotionContainer(this._promotionVM);
+  final List<PromotionVM> _listPromotionVM;
+  PromotionContainer(this._listPromotionVM);
   @override
   Widget build(BuildContext context) {
+    if (_listPromotionVM.length == 0) {
+      return Container();
+    }
+    var _promotionVM = _listPromotionVM[0];
     return Container(
       //color: Colors.grey[50],
       padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
@@ -397,89 +401,95 @@ class PromotionContainer extends StatelessWidget {
 }
 
 class SaleContainer extends StatelessWidget {
-  final SaleCampaignVM _saleCampaignVM;
-  SaleContainer(this._saleCampaignVM);
+  final List<SaleCampaignVM> _listSaleCampaignVM;
+  SaleContainer(this._listSaleCampaignVM);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //color: Colors.grey[50],
-      padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
-      child: Column(
-        children: [
-          Container(
-            //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                _saleCampaignVM.name,
-                textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-              ),
-            ),
-          ),
-          Container(
-            //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
-            child: Align(
-              child: Text(
-                _saleCampaignVM.desciption,
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-              ),
-              alignment: Alignment.centerLeft,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-            height: 250,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _saleCampaignVM.foodVMs!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final foodVM = _saleCampaignVM.foodVMs![index];
+    if (_listSaleCampaignVM.length > 0) {
+      var _saleCampaignVM = _listSaleCampaignVM[0];
 
-                  return Container(
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return FoodDetail(
-                              foodID: foodVM.id,
-                            );
-                          }));
-                        },
-                        child: Container(
-                          width: 200,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                //padding: const EdgeInsets.all(16.0),
-                                child: CachedNetworkImage(
-                                  // width: double.infinity,
-                                  //height: 150,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
-                                  imageUrl: AppConfigs.URL_Images +
-                                      "/${foodVM.imagePath}",
+      return Container(
+        //color: Colors.grey[50],
+        padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
+        child: Column(
+          children: [
+            Container(
+              //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _saleCampaignVM.name,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                ),
+              ),
+            ),
+            Container(
+              //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+              child: Align(
+                child: Text(
+                  _saleCampaignVM.desciption,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                alignment: Alignment.centerLeft,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              height: 250,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _saleCampaignVM.foodVMs!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final foodVM = _saleCampaignVM.foodVMs![index];
+
+                    return Container(
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return FoodDetail(
+                                foodID: foodVM.id,
+                              );
+                            }));
+                          },
+                          child: Container(
+                            width: 200,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  //padding: const EdgeInsets.all(16.0),
+                                  child: CachedNetworkImage(
+                                    // width: double.infinity,
+                                    //height: 150,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    imageUrl: AppConfigs.URL_Images +
+                                        "/${foodVM.imagePath}",
+                                  ),
                                 ),
-                              ),
-                              ListTile(
-                                  //leading: Icon(Icons.arrow_drop_down_circle),
-                                  title: Text(foodVM.name),
-                                  subtitle:
-                                      _priceWidget(foodVM, _saleCampaignVM)),
-                            ],
+                                ListTile(
+                                    //leading: Icon(Icons.arrow_drop_down_circle),
+                                    title: Text(foodVM.name),
+                                    subtitle:
+                                        _priceWidget(foodVM, _saleCampaignVM)),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }),
-          )
-        ],
-      ),
-    );
+                    );
+                  }),
+            )
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 }

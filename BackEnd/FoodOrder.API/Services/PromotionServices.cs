@@ -25,6 +25,28 @@ namespace FoodOrder.API.Services
             _mapper = mapper;
         }
 
+        public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValidPaging(PagingRequestBase request)
+        {
+            var vMs = from c in _dbContext.Promotions
+                      where (c.Enabled == true)
+                      && (c.StartDate <= DateTime.Now)
+                      && (c.EndDate >= DateTime.Now)
+                      select c;
+
+            if (!String.IsNullOrEmpty(request.SearchString))
+            {
+                vMs = vMs.Where(c => c.Name.Contains(request.SearchString)
+                || c.Desciption.Contains(request.SearchString)
+                || c.Code.Contains(request.SearchString));
+            }
+
+            vMs = Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority");
+
+            var created = await PaginatedList<PromotionVM>.CreateAsync(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+
+            return new SuccessedResult<PaginatedList<PromotionVM>>(created);
+        }
+
         public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllPaging(PagingRequestBase request)
         {
             var vMs = from c in _dbContext.Promotions select c;
@@ -36,7 +58,7 @@ namespace FoodOrder.API.Services
                 || c.Code.Contains(request.SearchString));
             }
 
-            vMs = Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority_desc");
+            vMs = Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority");
 
             var created = await PaginatedList<PromotionVM>.CreateAsync(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
 

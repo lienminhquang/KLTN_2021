@@ -51,7 +51,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     //items.clear();
     var result = await _categoriesServices.getAllPaging();
 
-    var promotions = await _promotionServices.getAll();
+    var promotions = await _promotionServices.getAllValid();
     // todo: get all valid and enabled?
     if (result.isSuccessed == false) {
       print(result.errorMessage);
@@ -71,7 +71,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     // Todo: must be get valid campaign instead
-    var listSaleCampaign = await _saleCampaignServices.getAll();
+    var listSaleCampaign = await _saleCampaignServices.getAllValid();
     if (listSaleCampaign.isSuccessed == false) {
       print(listSaleCampaign.errorMessage);
       throw listSaleCampaign.errorMessage!;
