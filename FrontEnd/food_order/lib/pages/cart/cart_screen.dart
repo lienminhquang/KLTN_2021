@@ -6,6 +6,7 @@ import 'package:food_delivery/bloc/Cart/CartEvent.dart';
 import 'package:food_delivery/bloc/Cart/CartState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
+import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'body.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +73,14 @@ class CheckoutCart extends StatelessWidget {
                         ? Container()
                         : Text(promotionCode)),
                 Spacer(),
-                Text('Mã khuyến mãi'),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return PromotionScreen();
+                      }));
+                    },
+                    child: Text('Mã khuyến mãi')),
                 const SizedBox(
                   width: 10,
                 ),

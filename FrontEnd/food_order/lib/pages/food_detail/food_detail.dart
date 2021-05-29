@@ -24,7 +24,8 @@ class FoodDetail extends StatefulWidget {
   static String routeName = "/food_detail";
 
   @override
-  _FoodDetailState createState() => new _FoodDetailState(foodID: foodID);
+  _FoodDetailState createState() =>
+      new _FoodDetailState(foodID: foodID, promotionID: promotionID);
 }
 
 class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
