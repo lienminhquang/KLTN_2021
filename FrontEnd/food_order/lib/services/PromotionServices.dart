@@ -36,7 +36,7 @@ class PromotionServices {
       });
 
       if (result.isSuccessed == true) {
-        print("Fetched Address list: ");
+        print("Fetched Promotion list: ");
         print(result.payLoad!.items);
         return ApiResult.succesedApiResult(result.payLoad);
       } else {

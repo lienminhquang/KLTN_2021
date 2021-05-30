@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Cart/CartBloc.dart';
 import 'package:food_delivery/bloc/Cart/CartEvent.dart';
 import 'package:food_delivery/bloc/Cart/CartState.dart';
+import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
+import 'package:food_delivery/bloc/Promotions/PromotionEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
@@ -75,6 +77,9 @@ class CheckoutCart extends StatelessWidget {
                 Spacer(),
                 GestureDetector(
                     onTap: () {
+                      context
+                          .read<PromotionBloc>()
+                          .add(PromotionStartedEvent());
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return PromotionScreen();

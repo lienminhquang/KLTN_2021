@@ -1,35 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Cart/CartBloc.dart';
+import 'package:food_delivery/bloc/Cart/CartEvent.dart';
+import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
+import 'package:food_delivery/bloc/Promotions/PromotionState.dart';
+import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 
-class Body extends StatefulWidget {
-  @override
-  _BodyState createState() => _BodyState();
-}
+class Body extends StatelessWidget {
+  Widget _buildLoadedState(BuildContext context, PromotionLoadedState state) {
+    return SafeArea(
+      child: ListView.builder(
+        itemCount: state.listPromotionVMs.length,
+        itemBuilder: (context, index) {
+          return ItemPromotion(state.listPromotionVMs[index]);
+        },
+      ),
+    );
+  }
 
-class _BodyState extends State<Body> {
+  Widget _buildErrorState(PromotionErrorState state) {
+    return Container(
+        child: Center(
+      child: Text(
+        state.error,
+      ),
+    ));
+  }
+
+  Widget _buildLoadingState() {
+    return Container(child: Center(child: CircularProgressIndicator()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SafeArea(
-        child: Column(
-          children: [
-            ItemPromotion(),
-            ItemPromotion(),
-            ItemPromotion(),
-            ItemPromotion(),
-            ItemPromotion(),
-            ItemPromotion(),
-            ItemPromotion(),
-          ],
-        ),
-      ),
+    return BlocBuilder<PromotionBloc, PromotionState>(
+      builder: (context, state) {
+        if (state is PromotionLoadingState) {
+          return _buildLoadingState();
+        }
+        if (state is PromotionLoadedState) {
+          return _buildLoadedState(context, state);
+        }
+        if (state is PromotionErrorState) {
+          return _buildErrorState(state);
+        }
+        throw "Unknow state";
+      },
     );
   }
 }
 
 class ItemPromotion extends StatelessWidget {
-  const ItemPromotion({
-    Key? key,
-  }) : super(key: key);
+  final PromotionVM _promotionVM;
+  ItemPromotion(this._promotionVM);
 
   @override
   Widget build(BuildContext context) {
@@ -61,50 +85,76 @@ class ItemPromotion extends StatelessWidget {
               ),
               Expanded(
                 child: FlatButton(
-                  padding: EdgeInsets.only(left: 5, top: 5),
+                  padding: EdgeInsets.only(left: 5, top: 5, bottom: 5),
                   height: 100,
-                  onPressed: () {},
+                  onPressed: () {
+                    context
+                        .read<CartBloc>()
+                        .add(CartAddPromotionEvent(_promotionVM.id));
+                    Navigator.of(context).pop();
+                  },
                   child: Column(
                     children: [
-                      Text(
-                        'Giảm 40k, đơn tối thiểu 100k, quán đối tác ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey.shade700),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            _promotionVM.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey.shade700),
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 5,
                       ),
                       Container(
-                        child: SizedBox(
-                            height: 20,
-                            width: 90,
-                            child: DecoratedBox(
-                              child: Center(
-                                child: Text(
-                                  'ưu đãi có hạn',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.grey,
-                                  ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "CODE: ",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Center(
+                              child: Text(
+                                _promotionVM.code,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  //fontWeight: FontWeight.w300,
+                                  color: Colors.grey,
                                 ),
                               ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5)),
-                              ),
-                            )),
+                            ),
+                          ],
+                        ),
                         alignment: Alignment.centerLeft,
                       ),
                       SizedBox(
                         height: 8,
                       ),
                       Container(
-                        child: Text(
-                          'HSD: 12/02/2020',
-                          style: TextStyle(color: Colors.redAccent),
+                        child: Row(
+                          children: [
+                            Text(
+                              "HSD: ",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Text(
+                              AppConfigs.AppDateFormat.format(
+                                  _promotionVM.endDate),
+                              style: TextStyle(color: Colors.redAccent),
+                            ),
+                          ],
                         ),
                         alignment: Alignment.centerLeft,
                       )
