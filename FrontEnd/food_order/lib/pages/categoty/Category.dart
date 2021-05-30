@@ -117,7 +117,8 @@ class _BestSellingState extends State<BestSelling> {
                   scrollDirection: Axis.horizontal,
                   itemCount: _categoryLoadedState.listFood.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return FoodCard(_categoryLoadedState.listFood[index]);
+                    return FoodCard(
+                        foodVM: _categoryLoadedState.listFood[index]);
                   }),
             )
           ],
@@ -136,15 +137,15 @@ class AllFood extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(15.0, 10.0, 10.0, 0.0),
       child: Column(
         children: [
-          Divider(
-            thickness: 2,
-          ),
+          // Divider(
+          //   thickness: 2,
+          // ),
           SizedBox(
             height: 30,
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "All food",
+                "Tất cả",
                 style: TextStyle(
                     color: Colors.red,
                     fontSize: 15.0,
@@ -158,7 +159,11 @@ class AllFood extends StatelessWidget {
                 //scrollDirection: Axis.vertical,
                 itemCount: _categoryLoadedState.listFood.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return FoodCard(_categoryLoadedState.listFood[index]);
+                  return FoodCard(
+                    foodVM: _categoryLoadedState.listFood[index],
+                    bottomBorder:
+                        BorderSide(width: 1.0, color: Colors.grey.shade300),
+                  );
                 }),
           )
         ],
@@ -168,141 +173,155 @@ class AllFood extends StatelessWidget {
 }
 
 class FoodCard extends StatelessWidget {
-  final FoodVM _foodVM;
-  FoodCard(this._foodVM);
+  final FoodVM foodVM;
+  FoodCard({required this.foodVM, this.bottomBorder = BorderSide.none});
+  final BorderSide bottomBorder;
+
+  Widget _priceWidget(FoodVM foodVM) {
+    if (foodVM.saleCampaignVM != null) {
+      double discount = foodVM.saleCampaignVM!.percent;
+      return Row(
+        children: [
+          Text(
+            AppConfigs.AppNumberFormat.format(
+                    foodVM.price * (100 - discount) / 100) +
+                "  ",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          ),
+          Text(
+            AppConfigs.AppNumberFormat.format(foodVM.price),
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.lineThrough,
+                color: Colors.grey),
+          ),
+        ],
+      );
+    }
+
+    return Row(
+      children: [
+        Text(
+          AppConfigs.AppNumberFormat.format(foodVM.price),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: GestureDetector(
-          onTap: () async {
-            // context
-            //     .read<FoodDetailBloc>()
-            //     .add(FoodDetailStartedEvent(_foodVM.id));
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FoodDetail(
-                          foodID: _foodVM.id,
-                          promotionID: null,
-                        )));
-          },
-          child: Container(
-            color: Colors.grey[300],
-            //margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-            child: Row(
-              children: [
-                ClipRRect(
-                  //borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                      child: Stack(children: [
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          //top: BorderSide(width: 1.0, color: Color(0xFFFFFFFF)),
+          //left: BorderSide(width: 1.0, color: Color(0xFFFFFFFF)),
+          // right: BorderSide(width: 1.0, color: Color(0xFF000000)),
+          bottom: bottomBorder,
+        ),
+      ),
+      padding: const EdgeInsets.all(0.0),
+      child: GestureDetector(
+        onTap: () async {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FoodDetail(
+                        foodID: foodVM.id,
+                        promotionID: null,
+                      )));
+        },
+        child: Container(
+          //height: 80,
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                    child: Stack(children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
+                    ),
+                  ),
+                ])),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                width: 170,
+                height: 100,
+                child: Column(
+                  children: [
                     Container(
-                      width: 110,
-                      height: 110,
-                      child: CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        imageUrl:
-                            AppConfigs.URL_Images + "/${_foodVM.imagePath}",
+                      margin: const EdgeInsets.fromLTRB(0, 10, 5, 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          foodVM.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
-                    Positioned(
-                      left: 0,
-                      bottom: 0,
-                      child: Container(
-                        width: 110,
-                        color: Colors.white38,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                              size: 18,
-                            ),
-                            Text(
-                              "${_foodVM.agvRating.toStringAsPrecision(2)} (${_foodVM.totalRating})",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black54),
-                            )
-                          ],
-                        ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: _priceWidget(foodVM)),
+                              Container(
+                                height: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      //width: 110,
+                                      //color: Colors.white38,
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                            size: 18,
+                                          ),
+                                          Text(
+                                            "${foodVM.agvRating.toStringAsPrecision(2)}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black),
+                                          ),
+                                          Text(
+                                            " (${foodVM.totalRating})",
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     )
-                  ])),
+                  ],
                 ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  width: 170,
-                  height: 100,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0, 10, 5, 10),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            _foodVM.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    AppConfigs.AppNumberFormat.format(
-                                        _foodVM.price),
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w300,
-                                      decoration: TextDecoration.lineThrough,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 40,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        //width: 100,
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            AppConfigs.AppNumberFormat.format(
-                                                _foodVM.price),
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),

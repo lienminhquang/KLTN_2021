@@ -5,6 +5,7 @@ using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
+using FoodOrder.Core.ViewModels.SaleCampaigns;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -66,6 +67,7 @@ namespace FoodOrder.API.Services
 
             foreach (var item in created.Items)
             {
+                // get rating
                 var ratings = from r in _dbContext.Ratings
                               where r.FoodID == item.ID
                               select r;
@@ -73,6 +75,18 @@ namespace FoodOrder.API.Services
                 {
                     item.AgvRating = ratings.Average(a => a.Star);
                     item.TotalRating = ratings.Count();
+                }
+
+                // get sale campaign
+                var query = from fs in _dbContext.SaleCampaignFoods
+                            join f in _dbContext.Foods on fs.FoodID equals f.ID
+                            join sc in _dbContext.SaleCampaigns on fs.SaleCampaignID equals sc.ID
+                            where f.ID == item.ID
+                            select sc;
+                var list = query.OrderBy(x => x.Priority).ToList();
+                if (list.Count > 0)
+                {
+                    item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(list.First());
                 }
             }
 
