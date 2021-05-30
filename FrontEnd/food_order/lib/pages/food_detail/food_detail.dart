@@ -69,31 +69,15 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
             child: new InkWell(
               onTap: () async {
                 if (promotion != null) {
-                  await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: Container(
-                            child: Text(
-                                "Bạn có muốn áp dụng mã giảm giá ${promotion.code} cho đơn hàng không?"),
-                          ),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  context
-                                      .read<CartBloc>()
-                                      .add(CartAddPromotionEvent(promotionID!));
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("OK"))
-                          ],
-                        );
-                      });
+                  context
+                      .read<CartBloc>()
+                      .add(CartAddPromotionEvent(promotionID!));
                 }
 
                 // Todo we need to move this function to FoodDetailBloc to check error when create inside food detail
                 context.read<FoodDetailBloc>().add(FoodDetailCreateCartEvent(
                     state.foodVM.id, count, promotionID, context));
+                Navigator.of(context).pop();
               },
               child: ClipRRect(
                 borderRadius: new BorderRadius.all(new Radius.circular(10.0)),

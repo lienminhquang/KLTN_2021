@@ -79,13 +79,13 @@ class _MfooterState extends State<Mfooter> with SingleTickerProviderStateMixin {
     _tabs = [
       new Tab(
         child: new Text(
-          "Food details",
+          "Giới thiệu",
           style: new TextStyle(color: Colors.black),
         ),
       ),
       new Tab(
         child: new Text(
-          "User reviews",
+          "Đánh giá",
           style: new TextStyle(color: Colors.black),
         ),
       ),

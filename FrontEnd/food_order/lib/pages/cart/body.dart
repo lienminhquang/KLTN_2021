@@ -265,10 +265,9 @@ class _BodyState extends State<Body> {
                   ],
                 )),
             onDismissed: (direction) async {
-              // var cartModel = context.read<CartModel>();
-              // if (await cartModel.delete(carts[index - 1].foodID)) {
-              //   cartModel.fetchCartItems();
-              // }
+              context
+                  .read<CartBloc>()
+                  .add(CartDeletedEvent(carts[index - 1].foodID));
             },
             child: _item(carts[index - 1], context),
           );

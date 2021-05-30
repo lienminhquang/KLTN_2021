@@ -14,8 +14,8 @@ class ProductDesc extends StatelessWidget {
           style: new TextStyle(
               fontFamily: "OpenSans",
               color: Colors.black,
-              fontSize: 13.0,
-              fontWeight: FontWeight.w200),
+              fontSize: 15.0,
+              fontWeight: FontWeight.normal),
         ),
       ),
     );
