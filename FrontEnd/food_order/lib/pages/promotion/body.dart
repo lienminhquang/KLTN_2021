@@ -5,116 +5,115 @@ class Body extends StatefulWidget {
   _BodyState createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  List<Tab> myTab = [
-    Tab(
-      text: 'Saved',
-    ),
-    Tab(
-      text: 'Experied Soon',
-    ),
-  ];
+class _BodyState extends State<Body> {
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(vsync: this, length: myTab.length);
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: SafeArea(
+        child: Column(
+          children: [
+            ItemPromotion(),
+            ItemPromotion(),
+            ItemPromotion(),
+            ItemPromotion(),
+            ItemPromotion(),
+            ItemPromotion(),
+            ItemPromotion(),
+          ],
+        ),
+      ),
+    );
   }
+}
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+class ItemPromotion extends StatelessWidget {
+  const ItemPromotion({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget _promotionItem = Container(
-      child: Card(
-        child: ListTile(
-          leading: Image.asset('images/crabs.jpg'),
-          title: Text("Uu dai len den 50k"),
-          subtitle: Text("Tat cac cac don hang"),
-          trailing: TextButton(
-            onPressed: () {},
-            child: Column(
-              children: [
-                GestureDetector(
-                  child: Text("Dung ngay"),
-                  onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (context) {
-                    //       return MyHomePage();
-                    //     }),
-                    //   );
-                  },
-                ),
-                Text("HSD: 15.04.2021")
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-
-    Widget _savedPage = Container(
-      child: ListView(
-        children: [
-          _promotionItem,
-          _promotionItem,
-          _promotionItem,
-          _promotionItem,
-          _promotionItem,
-          _promotionItem,
-        ],
-      ),
-    );
-    Widget _expSoon = Container(
-      child: ListView(
-        children: [
-          _promotionItem,
-          _promotionItem,
-          _promotionItem,
-          _promotionItem,
-          _promotionItem,
-          _promotionItem,
-        ],
-      ),
-    );
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              height: 50,
-              child: TabBar(
-                unselectedLabelColor: Colors.black,
-                labelColor: Colors.red,
-                tabs: myTab,
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
-              ),
-            ),
-            Container(
-              child: Expanded(
-                child: TabBarView(
-                  children: [_savedPage, _expSoon],
-                  controller: _tabController,
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, left: 10, right: 5),
+      child: Container(
+        height: 100,
+        width: MediaQuery.of(context).size.width,
+        child: DecoratedBox(
+            decoration: BoxDecoration(color: Colors.grey),
+            child: Row(children: [
+              SizedBox(
+                height: 100,
+                width: 90,
+                child: DecoratedBox(
+                  child: Icon(
+                    Icons.confirmation_num_outlined,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      border: Border(
+                          left: BorderSide(
+                              width: 2,
+                              color: Colors.red,
+                              style: BorderStyle.solid))),
                 ),
               ),
-            ),
-          ],
-        ),
+              Expanded(
+                child: FlatButton(
+                  padding: EdgeInsets.only(left: 5, top: 5),
+                  height: 100,
+                  onPressed: () {},
+                  child: Column(
+                    children: [
+                      Text(
+                        'Giảm 40k, đơn tối thiểu 100k, quán đối tác ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey.shade700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        child: SizedBox(
+                            height: 20,
+                            width: 90,
+                            child: DecoratedBox(
+                              child: Center(
+                                child: Text(
+                                  'ưu đãi có hạn',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                            )),
+                        alignment: Alignment.centerLeft,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Container(
+                        child: Text(
+                          'HSD: 12/02/2020',
+                          style: TextStyle(color: Colors.redAccent),
+                        ),
+                        alignment: Alignment.centerLeft,
+                      )
+                    ],
+                  ),
+                  color: Colors.white,
+                ),
+              ),
+            ])),
       ),
     );
   }
