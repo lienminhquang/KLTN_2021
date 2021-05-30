@@ -22,6 +22,7 @@ class CartLoadedState extends CartState {
   double getTotalPrice() {
     // Todo: apply promotions
     double total = 0;
+
     for (var item in listCartVM) {
       double discount = item.foodVM.saleCampaignVM == null
           ? 0

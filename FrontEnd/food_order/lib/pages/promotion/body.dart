@@ -6,6 +6,9 @@ import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
+
+const List<Key> keys = [Key('Network')];
 
 class Body extends StatelessWidget {
   Widget _buildLoadedState(BuildContext context, PromotionLoadedState state) {
@@ -65,22 +68,47 @@ class ItemPromotion extends StatelessWidget {
         child: DecoratedBox(
             decoration: BoxDecoration(color: Colors.grey),
             child: Row(children: [
-              SizedBox(
-                height: 100,
-                width: 90,
-                child: DecoratedBox(
-                  child: Icon(
-                    Icons.confirmation_num_outlined,
-                    color: Colors.white,
-                    size: 40,
+              FlatButton(
+                key: keys[0],
+                padding: EdgeInsets.all(0),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => NetworkGiffyDialog(
+                      image: Image.network(
+                          'https://media.giphy.com/media/90tLdnyy0XPOWZ5mwE/giphy.gif'),
+                      title: Text(
+                        'Thông tin khuyến mãi của bạn',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold),
+                      ),
+                      description: Text(
+                          'Với mã khuyến mãi này bạn sẽ nhận được: Giảm ngay 50% cho tất cả các đơn hàng. Tối đa 50.000 đồng.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14, color: Colors.grey.shade700)),
+                      onlyCancelButton: true,
+                      onlyOkButton: true,
+                    ),
+                  );
+                },
+                child: SizedBox(
+                  height: 100,
+                  width: 90,
+                  child: DecoratedBox(
+                    child: Icon(
+                      Icons.confirmation_num_outlined,
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        border: Border(
+                            left: BorderSide(
+                                width: 2,
+                                color: Colors.red,
+                                style: BorderStyle.solid))),
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.redAccent,
-                      border: Border(
-                          left: BorderSide(
-                              width: 2,
-                              color: Colors.red,
-                              style: BorderStyle.solid))),
                 ),
               ),
               Expanded(
