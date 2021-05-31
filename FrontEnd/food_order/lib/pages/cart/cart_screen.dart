@@ -82,7 +82,7 @@ class CheckoutCart extends StatelessWidget {
                           .add(PromotionStartedEvent());
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return PromotionScreen();
+                        return PromotionScreen(totalPrice);
                       }));
                     },
                     child: Text('Mã khuyến mãi')),
