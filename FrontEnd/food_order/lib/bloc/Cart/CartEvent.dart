@@ -26,7 +26,8 @@ class CartCreatedEvent extends CartEvent {
 
 class CartConfirmEvent extends CartEvent {
   final AddressVM addressVM;
-  CartConfirmEvent(this.addressVM);
+  final int? promotionID;
+  CartConfirmEvent(this.addressVM, this.promotionID);
 }
 
 class CartSetAddressEvent extends CartEvent {

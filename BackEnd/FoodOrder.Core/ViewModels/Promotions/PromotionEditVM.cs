@@ -17,8 +17,8 @@ namespace FoodOrder.Core.ViewModels.Promotions
         public int UseTimes { get; set; }
         public float Percent { get; set; }
         public bool Enabled { get; set; }
-        public int Max { get; set; }
-        public int MinPrice { get; set; }
+        public double Max { get; set; }
+        public double MinPrice { get; set; }
         public bool IsGlobal { get; set; }
         public int Priority { get; set; }
     }

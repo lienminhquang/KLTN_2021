@@ -4,3 +4,5 @@ Documents:
 
 + kiem tra trung user khi register
 + check forigenkey in request
+
++ add list order, list cart for user detail in admin page

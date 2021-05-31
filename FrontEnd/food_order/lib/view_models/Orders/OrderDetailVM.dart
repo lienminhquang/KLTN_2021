@@ -1,4 +1,5 @@
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
+import 'package:food_delivery/view_models/SaleCampaigns/SaleCampaignVM.dart';
 
 import 'OrderVM.dart';
 
@@ -13,9 +14,12 @@ class OrderDetailVM {
   late int foodID;
   late int amount;
   late double price;
+  int? saleCampaignID;
+  double? salePercent;
 
   OrderVM? orderVM;
   FoodVM? foodVM;
+  SaleCampaignVM? saleCampaign;
 
   factory OrderDetailVM.fromJson(Map<String, dynamic> json) =>
       _$OrderDetailVMFromJson(json);

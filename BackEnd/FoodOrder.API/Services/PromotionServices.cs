@@ -25,13 +25,19 @@ namespace FoodOrder.API.Services
             _mapper = mapper;
         }
 
-        public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValidPaging(PagingRequestBase request)
+        public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValidPaging(PagingRequestBase request, String userID)
         {
-            var vMs = from c in _dbContext.Promotions
+            var user = _dbContext.AppUsers.Find(new Guid(userID));
+            if(user == null)
+            {
+                return new  FailedResult<PaginatedList<PromotionVM>>("User not found!");
+            }
+
+            var vMs = (from c in _dbContext.Promotions
                       where (c.Enabled == true)
                       && (c.StartDate <= DateTime.Now)
                       && (c.EndDate >= DateTime.Now)
-                      select c;
+                      select c);
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {
@@ -40,10 +46,18 @@ namespace FoodOrder.API.Services
                 || c.Code.Contains(request.SearchString));
             }
 
-            vMs = Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority");
+            var vmList = await Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority").ToListAsync();
+            // 
+            var a = vmList.Where(x => {
+                var timeUsed = (from o in _dbContext.Orders
+                                where o.AppUserID.ToString().Equals(userID) && o.PromotionID == x.ID
+                                select o).Count();
+                return timeUsed < x.UseTimes;
+            });
 
-            var created = await PaginatedList<PromotionVM>.CreateAsync(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
-
+            var created = PaginatedList<PromotionVM>.CreateFromList(a.Select(c => _mapper.Map<Promotion, PromotionVM>(c)).ToList(), 
+                request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            
             return new SuccessedResult<PaginatedList<PromotionVM>>(created);
         }
 

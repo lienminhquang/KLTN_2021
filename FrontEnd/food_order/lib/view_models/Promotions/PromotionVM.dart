@@ -15,8 +15,8 @@ class PromotionVM {
   int? useTimes;
   late double percent;
   late bool enabled;
-  int? max;
-  int? minPrice;
+  double? max;
+  double? minPrice;
   late bool isGlobal;
 
   @JsonKey(ignore: true)

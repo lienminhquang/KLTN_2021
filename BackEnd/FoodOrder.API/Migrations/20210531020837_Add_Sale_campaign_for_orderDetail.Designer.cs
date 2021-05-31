@@ -4,14 +4,16 @@ using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodOrder.API.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210531020837_Add_Sale_campaign_for_orderDetail")]
+    partial class Add_Sale_campaign_for_orderDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +83,7 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             Id = new Guid("b9e08f48-883c-42dc-a700-da5cf1d81aa3"),
-                            ConcurrencyStamp = "cde66a72-70b2-4301-ab56-da730f243c4f",
+                            ConcurrencyStamp = "30199e90-43c5-46db-aa42-8e4ef17605b9",
                             Description = "This is Admintrator role.",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -89,7 +91,7 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             Id = new Guid("74d17d8b-3f91-4d3a-893f-09b4e51e3834"),
-                            ConcurrencyStamp = "29c9f63c-c71b-4564-83dd-95f7aac224cd",
+                            ConcurrencyStamp = "1a94b90a-1a7b-4060-8473-a381366e4a2b",
                             Description = "This is User role.",
                             Name = "user",
                             NormalizedName = "User"
@@ -180,7 +182,7 @@ namespace FoodOrder.API.Migrations
                         {
                             Id = new Guid("b4e253b2-756e-48b8-9c42-b5acb139bed4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f40ea4d5-822f-4e2b-b8ca-1ef2cf147fb3",
+                            ConcurrencyStamp = "35a8589c-6c18-4784-9e9d-ec95037bdf2b",
                             DateOfBirth = new DateTime(1999, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jame@gmail.com",
                             EmailConfirmed = false,
@@ -188,7 +190,7 @@ namespace FoodOrder.API.Migrations
                             LastName = "Jame",
                             LockoutEnabled = false,
                             NormalizedEmail = "JAME@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEG5HuWmEkFhsbBmfGbBRvlvr3p+Zc7b9B0azAZiB8rT7RosdbwmIKmui6uxQARVp2w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEA8c0uoSUcsZ1YMGx8fkfhnr0G2w39bZUBFzMrV8zcdXsMkkDIiqN0xPmr7G69du+A==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -198,7 +200,7 @@ namespace FoodOrder.API.Migrations
                         {
                             Id = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4e996e9a-cf53-4d30-abd7-ee6fe3977fd1",
+                            ConcurrencyStamp = "312a2b98-a0fb-43be-8d82-4e98d3da27d1",
                             DateOfBirth = new DateTime(1990, 7, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "messi10@gmail.com",
                             EmailConfirmed = false,
@@ -206,7 +208,7 @@ namespace FoodOrder.API.Migrations
                             LastName = "Messi",
                             LockoutEnabled = false,
                             NormalizedEmail = "MESSI10@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBq1HokeU6T/zNSbluyXjFYPSkrAbV+ffeqo+Maei0Rte2Z8ApE6NymsaRuV3lLJfQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENaDsGQXKHea3De/5Cqq8qGH0j1XgFpdmo+QTJeeMQbQa6AYg9Uws+i4wapO3Yt+ew==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -326,8 +328,8 @@ namespace FoodOrder.API.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("SaleCampaignID")
                         .HasColumnType("int");
@@ -345,7 +347,7 @@ namespace FoodOrder.API.Migrations
                             Count = 100,
                             Description = "Com tam lam tu by quyet gia truyen co 2 khong 1",
                             Name = "Com tam gia truyen",
-                            Price = 15000.0
+                            Price = 15000m
                         },
                         new
                         {
@@ -353,7 +355,7 @@ namespace FoodOrder.API.Migrations
                             Count = 57,
                             Description = "Canh rong bien thit bam",
                             Name = "Canh rong bien",
-                            Price = 10000.0
+                            Price = 10000m
                         },
                         new
                         {
@@ -361,7 +363,7 @@ namespace FoodOrder.API.Migrations
                             Count = 1000,
                             Description = "Nuoc giai khat pepsi",
                             Name = "Pepsi",
-                            Price = 7000.0
+                            Price = 7000m
                         },
                         new
                         {
@@ -369,7 +371,7 @@ namespace FoodOrder.API.Migrations
                             Count = 200,
                             Description = "Tra da lam tu by quyet gia truyen co 2 khong 1",
                             Name = "Tra da",
-                            Price = 5000.0
+                            Price = 5000m
                         });
                 });
 
@@ -554,8 +556,8 @@ namespace FoodOrder.API.Migrations
                     b.Property<int>("OrderStatusID")
                         .HasColumnType("int");
 
-                    b.Property<double?>("PromotionAmount")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("PromotionAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("PromotionID")
                         .HasColumnType("int");
@@ -582,7 +584,7 @@ namespace FoodOrder.API.Migrations
                             AddressName = "Nha",
                             AddressString = "ABC",
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
-                            CreatedDate = new DateTime(2021, 5, 31, 9, 59, 21, 276, DateTimeKind.Local).AddTicks(7219),
+                            CreatedDate = new DateTime(2021, 5, 31, 9, 8, 36, 272, DateTimeKind.Local).AddTicks(297),
                             IsPaid = false,
                             OrderStatusID = 1,
                             PromotionID = 1
@@ -602,8 +604,8 @@ namespace FoodOrder.API.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("SaleCampaignID")
                         .HasColumnType("int");
@@ -625,14 +627,14 @@ namespace FoodOrder.API.Migrations
                             OrderID = 1,
                             FoodID = 1,
                             Amount = 1,
-                            Price = 12000.0
+                            Price = 12000m
                         },
                         new
                         {
                             OrderID = 1,
                             FoodID = 3,
                             Amount = 2,
-                            Price = 5000.0
+                            Price = 5000m
                         });
                 });
 
@@ -719,16 +721,16 @@ namespace FoodOrder.API.Migrations
                     b.Property<DateTime>("EndDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 5, 31, 9, 59, 21, 242, DateTimeKind.Local).AddTicks(838));
+                        .HasDefaultValue(new DateTime(2021, 5, 31, 9, 8, 36, 233, DateTimeKind.Local).AddTicks(971));
 
                     b.Property<bool>("IsGlobal")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Max")
-                        .HasColumnType("float");
+                    b.Property<int>("Max")
+                        .HasColumnType("int");
 
-                    b.Property<double>("MinPrice")
-                        .HasColumnType("float");
+                    b.Property<int>("MinPrice")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -747,7 +749,7 @@ namespace FoodOrder.API.Migrations
                     b.Property<DateTime>("StartDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 5, 31, 9, 59, 21, 240, DateTimeKind.Local).AddTicks(8275));
+                        .HasDefaultValue(new DateTime(2021, 5, 31, 9, 8, 36, 231, DateTimeKind.Local).AddTicks(9671));
 
                     b.Property<int>("UseTimes")
                         .HasColumnType("int");
@@ -764,12 +766,12 @@ namespace FoodOrder.API.Migrations
                             Enabled = true,
                             EndDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsGlobal = false,
-                            Max = 5000.0,
-                            MinPrice = 50000.0,
+                            Max = 5000,
+                            MinPrice = 50000,
                             Name = "Chao thanh vien moi",
                             Percent = 0.25f,
                             Priority = 0,
-                            StartDate = new DateTime(2021, 5, 31, 9, 59, 21, 277, DateTimeKind.Local).AddTicks(9448),
+                            StartDate = new DateTime(2021, 5, 31, 9, 8, 36, 273, DateTimeKind.Local).AddTicks(2434),
                             UseTimes = 100
                         });
                 });
@@ -805,7 +807,7 @@ namespace FoodOrder.API.Migrations
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             FoodID = 1,
                             Comment = "Good",
-                            LastCreatedTime = new DateTime(2021, 5, 31, 9, 59, 21, 278, DateTimeKind.Local).AddTicks(2182),
+                            LastCreatedTime = new DateTime(2021, 5, 31, 9, 8, 36, 273, DateTimeKind.Local).AddTicks(4879),
                             Star = 5
                         });
                 });

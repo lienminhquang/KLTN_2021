@@ -82,7 +82,7 @@ class CheckoutCart extends StatelessWidget {
                           .add(PromotionStartedEvent());
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return PromotionScreen();
+                        return PromotionScreen(totalPrice);
                       }));
                     },
                     child: Text('Mã khuyến mãi')),
@@ -126,6 +126,25 @@ class CheckoutCart extends StatelessWidget {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
+                      if (state.listCartVM.length <= 0) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Error!"),
+                                content: Text("Giỏ hàng rỗng!"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Ok'),
+                                  ),
+                                ],
+                              );
+                            });
+                        return;
+                      }
                       if (state.address == null) {
                         showDialog(
                             context: context,
@@ -136,7 +155,9 @@ class CheckoutCart extends StatelessWidget {
                                     Text("Vui lòng thêm địa chỉ giao hàng!"),
                                 actions: [
                                   TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
                                     child: const Text('Ok'),
                                   ),
                                 ],
@@ -144,9 +165,11 @@ class CheckoutCart extends StatelessWidget {
                             });
                         return;
                       }
-                      context
-                          .read<CartBloc>()
-                          .add(CartConfirmEvent(state.address!));
+                      context.read<CartBloc>().add(CartConfirmEvent(
+                          state.address!,
+                          state.promotionVM != null
+                              ? state.promotionVM!.id
+                              : null));
                       // showDialog(
                       //     context: context,
                       //     builder: (context) {

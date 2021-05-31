@@ -4,13 +4,14 @@ import 'body.dart';
 
 class PromotionScreen extends StatelessWidget {
   static String routeName = "/promotion";
-
+  double? totalPreis;
+  PromotionScreen(this.totalPreis);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Mã khuyến mãi'),
         ),
-        body: Body());
+        body: Body(totalPreis));
   }
 }

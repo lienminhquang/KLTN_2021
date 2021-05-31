@@ -17,8 +17,8 @@ PromotionVM _$PromotionVMFromJson(Map<String, dynamic> json) {
     ..useTimes = json['useTimes'] as int?
     ..percent = (json['percent'] as num).toDouble()
     ..enabled = json['enabled'] as bool
-    ..max = json['max'] as int?
-    ..minPrice = json['minPrice'] as int?
+    ..max = (json['max'] as num?)?.toDouble()
+    ..minPrice = (json['minPrice'] as num?)?.toDouble()
     ..isGlobal = json['isGlobal'] as bool;
 }
 

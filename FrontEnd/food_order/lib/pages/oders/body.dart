@@ -105,7 +105,12 @@ class Item extends StatelessWidget {
     }
     for (var item in orderVM.orderDetailVMs) {
       name += item.foodVM!.name + ", ";
-      price += item.price * item.amount;
+      price += item.price *
+          item.amount *
+          (item.salePercent == null ? 1 : (100 - item.salePercent!) / 100);
+    }
+    if (orderVM.promotionAmount != null) {
+      price -= orderVM.promotionAmount!;
     }
 
     return Container(

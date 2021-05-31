@@ -95,9 +95,9 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet("valid")]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
-        public async Task<IActionResult> GetAllValidPaging([FromQuery] PagingRequestBase request)
+        public async Task<IActionResult> GetAllValidPaging([FromQuery] PagingRequestBase request, String userID)
         {
-            var result = await _promotionServices.GetAllValidPaging(request);
+            var result = await _promotionServices.GetAllValidPaging(request, userID);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

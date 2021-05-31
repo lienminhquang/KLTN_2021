@@ -85,7 +85,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       CartConfirmEvent event, CartState state) async* {
     if (state is CartLoadedState) {
       try {
-        await _confirm(event.addressVM);
+        await _confirm(event);
         yield await _fetchAll();
       } catch (e) {
         print(e);
@@ -164,16 +164,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     return null;
   }
 
-  Future<void> _confirm(AddressVM address) async {
+  Future<void> _confirm(CartConfirmEvent event) async {
     final String userID = UserServices.getUserID();
 
     var result = await _orderServices.create(OrderCreateVM.explicit(
         appUserID: userID,
         isPaid: false,
-        orderStatusID: 1,
-        addressString: address.addressString,
-        addressName: address.name,
-        promotionAmount: 0));
+        orderStatusID: 2,
+        addressString: event.addressVM.addressString,
+        addressName: event.addressVM.name,
+        promotionID: event.promotionID));
     if (result.isSuccessed == true) {
       return;
     }
