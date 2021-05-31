@@ -96,8 +96,7 @@ class UnableItemPromotion extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.bold),
                       ),
-                      description: Text(
-                          'Với mã khuyến mãi này bạn sẽ nhận được:+${_promotionVM.desciption}',
+                      description: Text('${_promotionVM.desciption}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 14, color: Colors.grey.shade700)),
