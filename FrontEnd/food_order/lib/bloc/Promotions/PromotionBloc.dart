@@ -17,6 +17,7 @@ class PromotionBloc extends Bloc<PromotionEvent, PromotionState> {
 
   Stream<PromotionState> _mapStartedEventToState(
       PromotionState currentState, PromotionStartedEvent event) async* {
+    //stard Promotion
     yield PromotionLoadingState();
     try {
       yield await _fetchAll();

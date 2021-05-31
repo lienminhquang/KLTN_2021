@@ -13,3 +13,4 @@ class PromotionLoadedState extends PromotionState {
   final List<PromotionVM> listPromotionVMs;
   PromotionLoadedState(this.listPromotionVMs);
 }
+//dữ liệu màn hình ở 1 thời điểm
