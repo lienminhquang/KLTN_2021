@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionEvent.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionState.dart';
 import 'package:food_delivery/services/PromotionServices.dart';
+import 'package:food_delivery/services/UserServices.dart';
 
 class PromotionBloc extends Bloc<PromotionEvent, PromotionState> {
   final PromotionServices _promotionServices = PromotionServices();
@@ -27,7 +28,8 @@ class PromotionBloc extends Bloc<PromotionEvent, PromotionState> {
   }
 
   Future<PromotionState> _fetchAll() async {
-    var promotions = await _promotionServices.getAllValid();
+    var userID = UserServices.getUserID();
+    var promotions = await _promotionServices.getAllValid(userID);
 
     if (promotions.isSuccessed == false) {
       print(promotions.errorMessage);

@@ -5,6 +5,7 @@ import 'package:food_delivery/services/CategoriesServices.dart';
 import 'package:food_delivery/services/FoodServices.dart';
 import 'package:food_delivery/services/PromotionServices.dart';
 import 'package:food_delivery/services/SaleCampaignServices.dart';
+import 'package:food_delivery/services/UserServices.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeLoadingState());
@@ -50,8 +51,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<HomeState> _fetchAll() async {
     //items.clear();
     var result = await _categoriesServices.getAllPaging();
+    var userID = UserServices.getUserID();
 
-    var promotions = await _promotionServices.getAllValid();
+    var promotions = await _promotionServices.getAllValid(userID);
     // todo: get all valid and enabled?
     if (result.isSuccessed == false) {
       print(result.errorMessage);

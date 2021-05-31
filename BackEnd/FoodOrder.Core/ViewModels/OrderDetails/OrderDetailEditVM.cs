@@ -11,6 +11,8 @@ namespace FoodOrder.Core.ViewModels.OrderDetails
         public int OrderID { get; set; }
         public int FoodID { get; set; }
         public int Amount { get; set; }
-        public decimal Price { get; set; }
+        public double Price { get; set; }
+        public float? SalePercent { get; set; }
+        public int? SaleCampaignID { get; set; }
     }
 }

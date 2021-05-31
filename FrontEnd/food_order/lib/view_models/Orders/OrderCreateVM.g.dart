@@ -15,7 +15,6 @@ OrderCreateVM _$OrderCreateVMFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['datePaid'] as String)
     ..orderStatusID = json['orderStatusID'] as int
     ..promotionID = json['promotionID'] as int?
-    ..promotionAmount = (json['promotionAmount'] as num?)?.toDouble()
     ..addressString = json['addressString'] as String
     ..addressName = json['addressName'] as String;
 }
@@ -27,7 +26,6 @@ Map<String, dynamic> _$OrderCreateVMToJson(OrderCreateVM instance) =>
       'datePaid': instance.datePaid?.toIso8601String(),
       'orderStatusID': instance.orderStatusID,
       'promotionID': instance.promotionID,
-      'promotionAmount': instance.promotionAmount,
       'addressString': instance.addressString,
       'addressName': instance.addressName,
     };

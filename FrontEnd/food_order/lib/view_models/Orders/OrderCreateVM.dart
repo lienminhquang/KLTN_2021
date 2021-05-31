@@ -11,7 +11,6 @@ class OrderCreateVM {
     this.datePaid,
     required this.orderStatusID,
     this.promotionID,
-    required this.promotionAmount,
     required this.addressString,
     required this.addressName,
   });
@@ -21,7 +20,6 @@ class OrderCreateVM {
   DateTime? datePaid;
   late int orderStatusID;
   int? promotionID;
-  double? promotionAmount;
 
   late String addressString;
   late String addressName;

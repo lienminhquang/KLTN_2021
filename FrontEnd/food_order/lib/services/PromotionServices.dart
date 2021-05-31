@@ -14,9 +14,10 @@ class PromotionServices {
   final String baseRoute = AppConfigs.URL_PromotionsRouteAPI;
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
 
-  Future<ApiResult<PaginatedList<PromotionVM>>> getAllValid() async {
+  Future<ApiResult<PaginatedList<PromotionVM>>> getAllValid(
+      String userID) async {
     IOClient ioClient = _httpClientFactory.createIOClient();
-    final String url = baseRoute + "/valid";
+    final String url = baseRoute + "/valid?userID=$userID";
     Response? response;
     try {
       log("GET: " + url);

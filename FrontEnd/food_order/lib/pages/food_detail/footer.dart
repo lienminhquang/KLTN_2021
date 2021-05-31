@@ -8,15 +8,39 @@ import 'pages/userReviews.dart';
 class FavnPrice extends StatelessWidget {
   final FoodDetailLoadedState _loadedState;
   FavnPrice(this._loadedState);
-  @override
-  Widget build(BuildContext context) {
-    FoodVM foodVM = _loadedState.foodVM;
+  Widget _priceWidget() {
     final promotion = _loadedState.promotionVM;
+    FoodVM foodVM = _loadedState.foodVM;
     double discount = 0;
     if (_loadedState.foodVM.saleCampaignVM != null) {
       discount = _loadedState.foodVM.saleCampaignVM!.percent;
+      final finalPrice = foodVM.price * (100 - discount) / 100;
+      return Column(children: [
+        Text(
+          "\$" + AppConfigs.AppNumberFormat.format(finalPrice),
+          style: new TextStyle(fontSize: 20.0),
+        ),
+        Text(
+          "\$" + AppConfigs.AppNumberFormat.format(foodVM.price),
+          style: new TextStyle(
+              fontSize: 13.0,
+              decoration: TextDecoration.lineThrough,
+              color: Colors.grey),
+        ),
+      ]);
     }
-    final finalPrice = foodVM.price * (100 - discount) / 100;
+    return Column(children: [
+      Text(
+        "\$" + AppConfigs.AppNumberFormat.format(foodVM.price),
+        style: new TextStyle(fontSize: 20.0),
+      ),
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    FoodVM foodVM = _loadedState.foodVM;
+
     return new Padding(
       padding: const EdgeInsets.only(
           left: 20.0, right: 20.0, top: 10.0, bottom: 12.0),
@@ -37,21 +61,7 @@ class FavnPrice extends StatelessWidget {
           ),
           Flexible(
             flex: 2,
-            child: Column(
-              children: [
-                Text(
-                  "\$" + AppConfigs.AppNumberFormat.format(finalPrice),
-                  style: new TextStyle(fontSize: 20.0),
-                ),
-                Text(
-                  "\$" + AppConfigs.AppNumberFormat.format(foodVM.price),
-                  style: new TextStyle(
-                      fontSize: 13.0,
-                      decoration: TextDecoration.lineThrough,
-                      color: Colors.grey),
-                ),
-              ],
-            ),
+            child: _priceWidget(),
           )
         ],
       ),

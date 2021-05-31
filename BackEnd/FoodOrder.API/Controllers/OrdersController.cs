@@ -31,7 +31,7 @@ namespace FoodOrder.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int id)
         {
-            var result = await _orderServices.GetByID(id);
+            var result = _orderServices.GetByID(id);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -42,7 +42,7 @@ namespace FoodOrder.API.Controllers
         [HttpGet("user")]
         public async Task<IActionResult> GetByUserID([FromQuery] string userID)
         {
-            var result = await _orderServices.GetByUserID(userID);
+            var result = _orderServices.GetByUserID(userID);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
