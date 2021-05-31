@@ -6,6 +6,7 @@ using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Notifications;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<NotificationServices> _logger;
 
-        public NotificationServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public NotificationServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<NotificationServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<NotificationVM>>> GetByUserID(string userID, PagingRequestBase request)
@@ -112,7 +115,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<NotificationVM>(e.Message.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<NotificationVM>("Some thing went wrong!");
             }
             
         }
@@ -160,7 +164,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

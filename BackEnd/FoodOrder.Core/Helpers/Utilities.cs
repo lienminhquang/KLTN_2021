@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Core.Helpers
 {
+    public class Utils
+    {
+
+    }
+
     public class Configs
     {
         public static int PageSize = -1; // -1 mean get all

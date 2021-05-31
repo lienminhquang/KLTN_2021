@@ -26,9 +26,9 @@ class AddressServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PaginatedList<AddressVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<AddressVM>>.fromJson(json, (foodJson) {
@@ -45,11 +45,9 @@ class AddressServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<AddressVM>> create(AddressCreateVM addressCreateVM) async {
@@ -67,9 +65,9 @@ class AddressServices {
           body: jsonEncode(addressCreateVM));
     } catch (e) {
       return ApiResult<AddressVM>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -78,9 +76,9 @@ class AddressServices {
         log("AddressVM: " + result.payLoad!.toString());
       }
       return result;
-    } catch (e) {
-      return ApiResult.failedApiResult(e.toString());
     }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<AddressVM>> edit(AddressEditVM addressEditVM) async {
@@ -98,9 +96,9 @@ class AddressServices {
           body: jsonEncode(addressEditVM));
     } catch (e) {
       return ApiResult<AddressVM>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -109,9 +107,9 @@ class AddressServices {
         log("AddressVM: " + result.payLoad!.toString());
       }
       return result;
-    } catch (e) {
-      return ApiResult.failedApiResult(e.toString());
     }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<bool>> delete(int id) async {
@@ -126,7 +124,7 @@ class AddressServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;
@@ -138,10 +136,8 @@ class AddressServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 }

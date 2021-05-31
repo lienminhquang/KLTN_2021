@@ -287,6 +287,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
+      //return _buildErrorState(context, CartErrorState("test error"));
       if (state is CartLoadingState) {
         return CircularProgressIndicator();
       }

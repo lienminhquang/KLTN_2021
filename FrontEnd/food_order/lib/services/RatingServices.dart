@@ -24,9 +24,9 @@ class RatingServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PaginatedList<RatingVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<RatingVM>>.fromJson(json, (foodJson) {
@@ -43,10 +43,8 @@ class RatingServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 }

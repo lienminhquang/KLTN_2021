@@ -8,6 +8,7 @@ using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.SaleCampaigns;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +21,14 @@ namespace FoodOrder.API.Services
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly FileServices _fileServices;
+        private readonly ILogger<CategoryServices> _logger;
 
-        public CategoryServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices)
+        public CategoryServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices, ILogger<CategoryServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
             _fileServices = fileServices;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<CategoryVM>>> GetAllPaging(PagingRequestBase request)
@@ -109,27 +112,30 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<CategoryVM>("Invalid image!");
             }
-            var result = await _dbContext.Categories.AddAsync(new Category
-            {
-                Description = vm.Description,
-                Name = vm.Name
-            });
+           
             try
             {
+                var result = await _dbContext.Categories.AddAsync(new Category
+                {
+                    Description = vm.Description,
+                    Name = vm.Name
+                });
                 result.Entity.ImagePath = await _fileServices.SaveFile(vm.ImageBinary);
                 await _dbContext.SaveChangesAsync();
+                return new SuccessedResult<CategoryVM>(new CategoryVM()
+                {
+                    Description = result.Entity.Description,
+                    ID = result.Entity.ID,
+                    Name = result.Entity.Name,
+                    ImagePath = result.Entity.ImagePath
+                });
             }
             catch (Exception e)
             {
-                return new FailedResult<CategoryVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<CategoryVM>("Some thing went wrong");
             }
-            return new SuccessedResult<CategoryVM>(new CategoryVM()
-            {
-                Description = result.Entity.Description,
-                ID = result.Entity.ID,
-                Name = result.Entity.Name,
-                ImagePath = result.Entity.ImagePath
-            });
+           
         }
 
         public async Task<ApiResult<CategoryVM>> Edit(int id, CategoryEditVM categoryVM)
@@ -155,7 +161,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<CategoryVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<CategoryVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<CategoryVM>(_mapper.Map<CategoryVM>(category));
@@ -176,7 +183,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

@@ -23,9 +23,9 @@ class SaleCampaignServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PaginatedList<SaleCampaignVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<SaleCampaignVM>>.fromJson(json, (foodJson) {
@@ -42,12 +42,9 @@ class SaleCampaignServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } on TypeError catch (e) {
-      print(e.toString());
-      print(e.stackTrace);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<SaleCampaignVM>> getByID(int id) async {
@@ -59,9 +56,9 @@ class SaleCampaignServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<SaleCampaignVM>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<SaleCampaignVM>.fromJson(json, (foodJson) {
         return SaleCampaignVM.fromJson(foodJson as Map<String, dynamic>);
@@ -74,10 +71,8 @@ class SaleCampaignServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 }

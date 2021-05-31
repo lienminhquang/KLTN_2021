@@ -8,6 +8,7 @@ using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.SaleCampaigns;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,14 @@ namespace FoodOrder.API.Services
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly FileServices _fileServices;
+        private readonly ILogger<FoodServices> _logger;
 
-        public FoodServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices)
+        public FoodServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices, ILogger<FoodServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
             _fileServices = fileServices;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetAllPaging(PagingRequestBase request)
@@ -151,18 +154,18 @@ namespace FoodOrder.API.Services
                 return new FailedResult<bool>("Food not found!");
             }
 
-            var listFC = await (from fc in _dbContext.FoodCategories
-                                where fc.FoodID == foodID
-                                select fc).ToListAsync();
-            _dbContext.FoodCategories.RemoveRange(listFC);
-
             try
             {
+                var listFC = await (from fc in _dbContext.FoodCategories
+                                    where fc.FoodID == foodID
+                                    select fc).ToListAsync();
+                _dbContext.FoodCategories.RemoveRange(listFC);
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.Message);
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
 
 
@@ -229,19 +232,20 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<FoodVM>("Invalid image!");
             }
-            var result = await _dbContext.Foods.AddAsync(_mapper.Map<Food>(vm));
 
             try
             {
+                var result = await _dbContext.Foods.AddAsync(_mapper.Map<Food>(vm));
                 result.Entity.ImagePath = await _fileServices.SaveFile(vm.ImageData);
-
                 await _dbContext.SaveChangesAsync();
+                return new SuccessedResult<FoodVM>(_mapper.Map<FoodVM>(result.Entity));
             }
             catch (Exception e)
             {
-                return new FailedResult<FoodVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<FoodVM>("Some thing went wrong!");
             }
-            return new SuccessedResult<FoodVM>(_mapper.Map<FoodVM>(result.Entity));
+            
         }
 
         public async Task<ApiResult<FoodVM>> Edit(int id, FoodEditVM foodVM)
@@ -270,7 +274,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<FoodVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<FoodVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<FoodVM>(_mapper.Map<FoodVM>(food));
@@ -295,7 +300,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

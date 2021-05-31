@@ -30,9 +30,9 @@ class CategoriesServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PaginatedList<CategoryVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<CategoryVM>>.fromJson(json, (paginatedJson) {
@@ -48,11 +48,9 @@ class CategoriesServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<CategoryVM>> getByID(int id) async {
@@ -64,9 +62,9 @@ class CategoriesServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<CategoryVM>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CategoryVM>.fromJson(json, (paginatedJson) {
         return CategoryVM.fromJson(paginatedJson as Map<String, dynamic>);
@@ -78,11 +76,9 @@ class CategoriesServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<PaginatedList<FoodVM>>> getFoodsInCategory(int id) async {
@@ -102,7 +98,7 @@ class CategoriesServices {
       return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<FoodVM>>.fromJson(json, (paginatedJson) {
@@ -118,8 +114,8 @@ class CategoriesServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {}
+    }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 }

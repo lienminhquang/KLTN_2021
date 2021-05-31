@@ -7,6 +7,7 @@ using FoodOrder.Core.ViewModels.AppRoles;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,14 @@ namespace FoodOrder.API.Services
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly ILogger<AppRoleServices> _logger;
 
-        public AppRoleServices(ApplicationDBContext applicationDBContext, IMapper mapper, RoleManager<AppRole> roleManager)
+        public AppRoleServices(ApplicationDBContext applicationDBContext, IMapper mapper, RoleManager<AppRole> roleManager, ILogger<AppRoleServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
             _roleManager = roleManager;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<AppRoleVM>>> GetAllPaging(PagingRequestBase request)
@@ -61,35 +64,38 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<AppRoleVM>> Create(AppRoleCreateVM vm)
         {
             AppRole appRole = _mapper.Map<AppRole>(vm);
-            var result = await _roleManager.CreateAsync(appRole);
             try
             {
+                var result = await _roleManager.CreateAsync(appRole);
                 await _dbContext.SaveChangesAsync();
+                return new SuccessedResult<AppRoleVM>(_mapper.Map<AppRoleVM>(appRole));
             }
             catch (Exception e)
             {
-                return new FailedResult<AppRoleVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<AppRoleVM>("Some thing went wrong");
             }
-            return new SuccessedResult<AppRoleVM>(_mapper.Map<AppRoleVM>(appRole));
+            
         }
 
         public async Task<ApiResult<AppRoleVM>> Edit(Guid id, AppRoleEditVm editVM)
         {
-            var vm = await _dbContext.AppRoles.FirstOrDefaultAsync(c => c.Id == id);
+            var vm = _dbContext.AppRoles.Find(id);
             if (vm == null)
             {
                 return new FailedResult<AppRoleVM>("AppRole not found!");
             }
-            vm.Name = editVM.Name;
-            vm.Description = editVM.Description;
-
+            
             try
             {
+                vm.Name = editVM.Name;
+                vm.Description = editVM.Description;
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
             {
-                return new FailedResult<AppRoleVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<AppRoleVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<AppRoleVM>(_mapper.Map<AppRoleVM>(vm));
@@ -104,12 +110,12 @@ namespace FoodOrder.API.Services
             }
 
             var rs = await _roleManager.DeleteAsync(food);
-
             await _dbContext.SaveChangesAsync();
 
             if (!rs.Succeeded)
             {
-                return new FailedResult<bool>(rs.Errors.ToString());
+                _logger.LogError(rs.Errors.ToString());
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

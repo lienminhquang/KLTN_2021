@@ -6,6 +6,7 @@ using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Images;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,14 @@ namespace FoodOrder.API.Services
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly FileServices _fileServices;
+        private readonly ILogger<ImageServices> _logger;
 
-        public ImageServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices)
+        public ImageServices(ApplicationDBContext applicationDBContext, IMapper mapper, FileServices fileServices, ILogger<ImageServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
             _fileServices = fileServices;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<ImageVM>>> GetAllPaging(PagingRequestBase request)
@@ -67,13 +70,14 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<ImageVM>(e.Message.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<ImageVM>("Some thing went wrong!");
             }
         }
 
         public async Task<ApiResult<ImageVM>> Edit(int id, ImageEditVM editVM)
         {
-            var vm = await _dbContext.Images.FirstOrDefaultAsync(c => c.ID == id);
+            var vm = _dbContext.Images.Find(id);
             if (vm == null)
             {
                 return new FailedResult<ImageVM>("Image not found!");
@@ -91,7 +95,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<ImageVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<ImageVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<ImageVM>(_mapper.Map<ImageVM>(vm));
@@ -112,7 +117,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

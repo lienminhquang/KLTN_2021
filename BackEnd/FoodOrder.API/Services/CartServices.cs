@@ -129,28 +129,31 @@ namespace FoodOrder.API.Services
                 return new FailedResult<CartVM>("Cart already existed!");
             }
 
-            var result = await _dbContext.Carts.AddAsync(new Cart
-            {
-                FoodID = vm.FoodID,
-                AppUserId = vm.AppUserId,
-                Quantity = vm.Quantity
-            });
+           
             try
             {
+                var result = await _dbContext.Carts.AddAsync(new Cart
+                {
+                    FoodID = vm.FoodID,
+                    AppUserId = vm.AppUserId,
+                    Quantity = vm.Quantity
+                });
                 await _dbContext.SaveChangesAsync();
+                return new SuccessedResult<CartVM>(new CartVM()
+                {
+                    AppUser = result.Entity.AppUser,
+                    AppUserId = result.Entity.AppUserId,
+                    FoodVM = _mapper.Map<FoodVM>(result.Entity.Food),
+                    FoodID = result.Entity.FoodID,
+                    Quantity = result.Entity.Quantity
+                });
             }
             catch (Exception e)
             {
-                return new FailedResult<CartVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<CartVM>("Some thing went wrong!");
             }
-            return new SuccessedResult<CartVM>(new CartVM() 
-            { 
-                AppUser = result.Entity.AppUser,
-                AppUserId = result.Entity.AppUserId,
-                FoodVM = _mapper.Map<FoodVM>(result.Entity.Food),
-                FoodID = result.Entity.FoodID,
-                Quantity = result.Entity.Quantity
-            });
+           
         }
 
         public async Task<ApiResult<CartVM>> EditOrCreate(CartCreateVM vm)
@@ -170,33 +173,35 @@ namespace FoodOrder.API.Services
             }
 
             _logger.LogInformation("Cart not found => create new one");
-            var result = await _dbContext.Carts.AddAsync(new Cart
-            {
-                FoodID = vm.FoodID,
-                AppUserId = vm.AppUserId,
-                Quantity = vm.Quantity
-            });
+            
             try
             {
+                var result = await _dbContext.Carts.AddAsync(new Cart
+                {
+                    FoodID = vm.FoodID,
+                    AppUserId = vm.AppUserId,
+                    Quantity = vm.Quantity
+                });
                 await _dbContext.SaveChangesAsync();
+                return new SuccessedResult<CartVM>(new CartVM()
+                {
+                    AppUser = result.Entity.AppUser,
+                    AppUserId = result.Entity.AppUserId,
+                    FoodVM = _mapper.Map<FoodVM>(result.Entity.Food),
+                    FoodID = result.Entity.FoodID,
+                    Quantity = result.Entity.Quantity
+                });
             }
             catch (Exception e)
             {
-                return new FailedResult<CartVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<CartVM>("Some thing went wrong!");
             }
-            return new SuccessedResult<CartVM>(new CartVM()
-            {
-                AppUser = result.Entity.AppUser,
-                AppUserId = result.Entity.AppUserId,
-                FoodVM = _mapper.Map<FoodVM>(result.Entity.Food),
-                FoodID = result.Entity.FoodID,
-                Quantity = result.Entity.Quantity
-            });
         }
 
         public async Task<ApiResult<CartVM>> Edit(Guid userId, int foodID, CartEditVM cartEditVM)
         {
-            var cart = await _dbContext.Carts.FirstOrDefaultAsync(c => c.AppUserId == userId && c.FoodID == foodID);
+            var cart =  _dbContext.Carts.Find(new { AppUserID = userId, FoodID = foodID });
             if (cart == null)
             {
                 return new FailedResult<CartVM>("Cart not found!");
@@ -208,7 +213,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<CartVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<CartVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<CartVM>(new CartVM()
@@ -223,7 +229,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<bool>> Delete(Guid userId, int foodID)
         {
-            var cart = await _dbContext.Carts.FirstOrDefaultAsync(c => c.AppUserId == userId && c.FoodID == foodID);
+            var cart = await _dbContext.Carts.FindAsync(new { AppUserID = userId, FoodID = foodID });
             if (cart == null)
             {
                 return new FailedResult<bool>("Cart not found!");
@@ -235,7 +241,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

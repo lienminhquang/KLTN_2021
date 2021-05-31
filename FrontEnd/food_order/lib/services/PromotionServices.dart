@@ -24,9 +24,9 @@ class PromotionServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PaginatedList<PromotionVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<PromotionVM>>.fromJson(json, (foodJson) {
@@ -43,12 +43,9 @@ class PromotionServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } on TypeError catch (e) {
-      print(e.toString());
-      print(e.stackTrace);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<PromotionVM>> getByID(int id) async {
@@ -60,9 +57,9 @@ class PromotionServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PromotionVM>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<PromotionVM>.fromJson(json, (foodJson) {
         return PromotionVM.fromJson(foodJson as Map<String, dynamic>);
@@ -75,10 +72,8 @@ class PromotionServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 }

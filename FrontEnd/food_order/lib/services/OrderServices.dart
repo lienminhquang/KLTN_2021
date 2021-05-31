@@ -24,7 +24,7 @@ class OrderServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<List<OrderVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
     //try {
     var json = jsonDecode(response.body);
@@ -122,7 +122,7 @@ class OrderServices {
           body: jsonEncode(orderCreateVM));
     } catch (e) {
       return ApiResult<OrderVM>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
     // try {
     var json = jsonDecode(response.body);

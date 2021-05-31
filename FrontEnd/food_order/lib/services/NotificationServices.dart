@@ -27,9 +27,9 @@ class NotificationServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PaginatedList<NotificationVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<NotificationVM>>.fromJson(json, (foodJson) {
@@ -46,11 +46,9 @@ class NotificationServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<bool>> notificationReceived(
@@ -71,9 +69,9 @@ class NotificationServices {
           body: jsonEncode(notificationReceivedVM));
     } catch (e) {
       return ApiResult<bool>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (a) => a as bool);
       if (result.isSuccessed == true) {
@@ -81,9 +79,9 @@ class NotificationServices {
         log("notificationReceived: " + result.payLoad!.toString());
       }
       return result;
-    } catch (e) {
-      return ApiResult.failedApiResult(e.toString());
     }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<AddressVM>> edit(
@@ -106,9 +104,9 @@ class NotificationServices {
           body: jsonEncode(editVM));
     } catch (e) {
       return ApiResult<AddressVM>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -117,9 +115,9 @@ class NotificationServices {
         log("AddressVM: " + result.payLoad!.toString());
       }
       return result;
-    } catch (e) {
-      return ApiResult.failedApiResult(e.toString());
     }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<bool>> delete(int id) async {
@@ -134,7 +132,7 @@ class NotificationServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;
@@ -146,10 +144,8 @@ class NotificationServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 }

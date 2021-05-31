@@ -6,6 +6,7 @@ using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<OrderDetailServices> _logger;
 
-        public OrderDetailServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public OrderDetailServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<OrderDetailServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<OrderDetailVM>>> GetAllPaging(PagingRequestBase request)
@@ -47,7 +50,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<OrderDetailVM>> GetByID(int orderID, int foodID)
         {
-            var c = await _dbContext.OrderDetails.FirstOrDefaultAsync(c => c.OrderID == orderID && c.FoodID == foodID);
+            var c =  _dbContext.OrderDetails.Find(new {OrderID = orderID, FoodID = foodID });
             if (c == null)
             {
                 return new FailedResult<OrderDetailVM>("OrderDetail not found!");
@@ -58,32 +61,33 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<OrderDetailVM>> Create(OrderDetailCreateVM vm)
         {
             Food food = _dbContext.Foods.Find(vm.FoodID);
-            if(food == null)
+            if (food == null)
             {
                 return new FailedResult<OrderDetailVM>("Food not found!");
             }
 
             Order order = _dbContext.Orders.Find(vm.OrderID);
-            if(order == null)
+            if (order == null)
             {
                 return new FailedResult<OrderDetailVM>("Order not found!");
             }
 
-            var result = await _dbContext.OrderDetails.AddAsync(_mapper.Map<OrderDetail>(vm));
             try
             {
+                var result = await _dbContext.OrderDetails.AddAsync(_mapper.Map<OrderDetail>(vm));
                 await _dbContext.SaveChangesAsync();
+                return new SuccessedResult<OrderDetailVM>(_mapper.Map<OrderDetailVM>(result.Entity));
             }
             catch (Exception e)
             {
-                return new FailedResult<OrderDetailVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<OrderDetailVM>("Some thing went wrong!");
             }
-            return new SuccessedResult<OrderDetailVM>(_mapper.Map<OrderDetailVM>(result.Entity));
         }
 
         public async Task<ApiResult<OrderDetailVM>> Edit(int orderID, int foodID, OrderDetailEditVM editVM)
         {
-            var od = await _dbContext.OrderDetails.FirstOrDefaultAsync(c => c.OrderID == orderID && c.FoodID == foodID);
+            var od = await _dbContext.OrderDetails.FindAsync(new { OrderID = orderID, FoodID = foodID });
             if (od == null)
             {
                 return new FailedResult<OrderDetailVM>("OrderDetail not found!");
@@ -96,7 +100,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<OrderDetailVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<OrderDetailVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<OrderDetailVM>(_mapper.Map<OrderDetailVM>(od));
@@ -104,7 +109,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<bool>> Delete(int orderID, int foodID)
         {
-            var vm = await _dbContext.OrderDetails.FirstOrDefaultAsync(c => c.OrderID == orderID && c.FoodID == foodID);
+            var vm = await _dbContext.OrderDetails.FindAsync(new { OrderID = orderID, FoodID = foodID });
             if (vm == null)
             {
                 return new FailedResult<bool>("OrderDetail not found!");
@@ -116,7 +121,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

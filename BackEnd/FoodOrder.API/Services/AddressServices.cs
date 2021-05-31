@@ -74,16 +74,18 @@ namespace FoodOrder.API.Services
                 return new FailedResult<AddressVM>("User not found!");
             }
 
-            var result = await _dbContext.Addresses.AddAsync(_mapper.Map<Address>(vm));
             try
             {
+                var result = await _dbContext.Addresses.AddAsync(_mapper.Map<Address>(vm));
                 await _dbContext.SaveChangesAsync();
+                return new SuccessedResult<AddressVM>(_mapper.Map<AddressVM>(result.Entity));
             }
             catch (Exception e)
             {
-                return new FailedResult<AddressVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<AddressVM>("Some thing went wrong!");
             }
-            return new SuccessedResult<AddressVM>(_mapper.Map<AddressVM>(result.Entity));
+            
         }
 
         
@@ -104,7 +106,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<AddressVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<AddressVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<AddressVM>(_mapper.Map<AddressVM>(address));
@@ -124,7 +127,7 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

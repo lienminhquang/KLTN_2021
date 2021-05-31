@@ -23,9 +23,9 @@ class CartServices {
       response = await ioClient.get(Uri.parse(url));
     } catch (e) {
       return ApiResult<PaginatedList<CartVM>>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<CartVM>>.fromJson(json, (paginatedJson) {
@@ -41,9 +41,9 @@ class CartServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {}
+    }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<CartVM>> getByID(int foodID, String userID) async {
@@ -58,7 +58,7 @@ class CartServices {
       return ApiResult<CartVM>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CartVM>.fromJson(json, (foodJson) {
         return CartVM.fromJson(foodJson as Map<String, dynamic>);
@@ -71,11 +71,9 @@ class CartServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<bool>> delete(int foodID, String userID) async {
@@ -90,7 +88,7 @@ class CartServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;
@@ -102,11 +100,9 @@ class CartServices {
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }
-    } catch (e) {
-      print(e);
     }
 
-    return ApiResult.failedApiResult("Error!!");
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 
   Future<ApiResult<CartVM>> editOrCreate(
@@ -128,9 +124,9 @@ class CartServices {
           body: jsonEncode(cartCreateVM));
     } catch (e) {
       return ApiResult<CartVM>.failedApiResult(
-          "Server error! Please re-try later!");
+          "Could not connect to server. Check your connection!");
     }
-    try {
+    if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CartVM>.fromJson(
           json, (a) => CartVM.fromJson(a as Map<String, dynamic>));
@@ -139,8 +135,8 @@ class CartServices {
         log("Cart: " + result.payLoad!.toString());
       }
       return result;
-    } catch (e) {
-      return ApiResult.failedApiResult(e.toString());
     }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
   }
 }

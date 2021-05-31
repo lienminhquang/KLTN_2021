@@ -126,6 +126,12 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<OrderVM>> Create(OrderCreateVM vm)
         {
+            var user = _dbContext.AppUsers.Find(vm.AppUserID);
+            if(user == null)
+            {
+                return new  FailedResult<OrderVM>("User not found!");
+            }
+
             using var transaction = _dbContext.Database.BeginTransaction();
             try
             {
@@ -218,7 +224,7 @@ namespace FoodOrder.API.Services
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
-                return new FailedResult<OrderVM>(e.ToString());
+                return new FailedResult<OrderVM>("Some thing went wrong!");
             }
 
         }
@@ -243,7 +249,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<OrderVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<OrderVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<OrderVM>(_mapper.Map<OrderVM>(vm));
@@ -276,7 +283,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<OrderVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<OrderVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<OrderVM>(_mapper.Map<OrderVM>(vm));
@@ -296,7 +304,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

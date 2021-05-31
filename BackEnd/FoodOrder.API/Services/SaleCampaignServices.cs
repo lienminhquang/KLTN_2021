@@ -7,6 +7,7 @@ using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.SaleCampaigns;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,13 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<SaleCampaignServices> _logger;
 
-        public SaleCampaignServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public SaleCampaignServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<SaleCampaignServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<SaleCampaignVM>>> GetAllPaging(PagingRequestBase request)
@@ -110,30 +113,37 @@ namespace FoodOrder.API.Services
         {
             using var transaction = _dbContext.Database.BeginTransaction();
 
-
-            var result = await _dbContext.SaleCampaigns.AddAsync(_mapper.Map<SaleCampaignCreateVM, SaleCampaign>(vm));
-            await _dbContext.SaveChangesAsync();
-
-            List<FoodVM> foodVMs = new List<FoodVM>();
-            foreach (var item in vm.FoodIDs)
+            try
             {
-                var food = await _dbContext.Foods.FindAsync(item);
-                if (food == null)
-                {
-                    transaction.Rollback();
-                    return new FailedResult<SaleCampaignVM>("Food not found!");
-                }
-                var rs = _dbContext.SaleCampaignFoods.Add(new SaleCampaignFood { FoodID = item, SaleCampaignID = result.Entity.ID });
+                var result = await _dbContext.SaleCampaigns.AddAsync(_mapper.Map<SaleCampaignCreateVM, SaleCampaign>(vm));
                 await _dbContext.SaveChangesAsync();
-                foodVMs.Add(_mapper.Map<FoodVM>(food));
+
+                List<FoodVM> foodVMs = new List<FoodVM>();
+                foreach (var item in vm.FoodIDs)
+                {
+                    var food = await _dbContext.Foods.FindAsync(item);
+                    if (food == null)
+                    {
+                        transaction.Rollback();
+                        return new FailedResult<SaleCampaignVM>("Food not found!");
+                    }
+                    var rs = _dbContext.SaleCampaignFoods.Add(new SaleCampaignFood { FoodID = item, SaleCampaignID = result.Entity.ID });
+                    await _dbContext.SaveChangesAsync();
+                    foodVMs.Add(_mapper.Map<FoodVM>(food));
+                }
+
+                transaction.Commit();
+
+                var saleVM = _mapper.Map<SaleCampaignVM>(result.Entity);
+                saleVM.FoodVMs = foodVMs;
+
+                return new SuccessedResult<SaleCampaignVM>(saleVM);
             }
-
-            transaction.Commit();
-
-            var saleVM = _mapper.Map<SaleCampaignVM>(result.Entity);
-            saleVM.FoodVMs = foodVMs;
-
-            return new SuccessedResult<SaleCampaignVM>(saleVM);
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<SaleCampaignVM>("Some thing went wrong!");
+            }
 
         }
 
@@ -186,7 +196,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<SaleCampaignVM>(e.Message.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<SaleCampaignVM>("Some thing went wrong!");
             }
         }
 
@@ -211,7 +222,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
         }
     }

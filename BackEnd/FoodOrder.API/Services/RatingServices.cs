@@ -6,6 +6,7 @@ using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Ratings;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<RatingServices> _logger;
 
-        public RatingServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public RatingServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<RatingServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<RatingVM>>> GetRatingsOfFood(int foodID, PagingRequestBase request)
@@ -101,16 +104,17 @@ namespace FoodOrder.API.Services
             {
                 vm.Star = 0;
             }
-            var result = await _dbContext.Ratings.AddAsync(_mapper.Map<Rating>(vm));
             try
             {
+            var result = await _dbContext.Ratings.AddAsync(_mapper.Map<Rating>(vm));
                 await _dbContext.SaveChangesAsync();
+            return new SuccessedResult<RatingVM>(_mapper.Map<RatingVM>(result.Entity));
             }
             catch (Exception e)
             {
-                return new FailedResult<RatingVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<RatingVM>("Some thing went wrong!");
             }
-            return new SuccessedResult<RatingVM>(_mapper.Map<RatingVM>(result.Entity));
         }
 
         public async Task<ApiResult<RatingVM>> Edit(Guid userID, int foodID, RatingEditVM editVM)
@@ -136,7 +140,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<RatingVM>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<RatingVM>("Some thing went wrong!");
             }
 
             return new SuccessedResult<RatingVM>(_mapper.Map<RatingVM>(od));
@@ -156,7 +161,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }

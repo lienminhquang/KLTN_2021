@@ -6,6 +6,7 @@ using FoodOrder.Core.ViewModels.Users;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -24,18 +25,21 @@ namespace FoodOrder.API.Services
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IConfiguration _config;
         private readonly ApplicationDBContext _dbContext;
+        private readonly ILogger<UserServices> _logger;
 
         public UserServices(UserManager<AppUser> userManager
             , SignInManager<AppUser> signInManager
             , RoleManager<AppRole> roleManager
             , IConfiguration configuration
-            , ApplicationDBContext applicationDBContext)
+            , ApplicationDBContext applicationDBContext
+            , ILogger<UserServices> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _config = configuration;
             _dbContext = applicationDBContext;
+            _logger = logger;
         }
 
         public async Task<ApiResult<string>> Authenticate(LoginRequest loginRequest)

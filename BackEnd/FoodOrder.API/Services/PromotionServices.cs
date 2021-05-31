@@ -7,6 +7,7 @@ using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.Promotions;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,13 @@ namespace FoodOrder.API.Services
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<PromotionServices> _logger;
 
-        public PromotionServices(ApplicationDBContext applicationDBContext, IMapper mapper)
+        public PromotionServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<PromotionServices> logger)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValidPaging(PagingRequestBase request, String userID)
@@ -111,7 +114,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<PromotionVM>(e.Message.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<PromotionVM>("Some thing went wrong!");
             }
 
         }
@@ -148,7 +152,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<PromotionVM>(e.Message.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<PromotionVM>("Some thing went wrong!");
             }
         }
 
@@ -166,7 +171,8 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
-                return new FailedResult<bool>(e.InnerException.ToString());
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);
         }
