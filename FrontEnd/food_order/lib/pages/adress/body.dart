@@ -7,7 +7,7 @@ import 'Address.dart';
 import 'AddressItem.dart';
 
 class Body extends StatefulWidget {
-  AddressScreenCallBack? addressScreenCallBack;
+  final AddressScreenCallBack? addressScreenCallBack;
   Body(this.addressScreenCallBack);
   @override
   _BodyState createState() => _BodyState(addressScreenCallBack);

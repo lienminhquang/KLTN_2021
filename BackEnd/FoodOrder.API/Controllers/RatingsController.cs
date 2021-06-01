@@ -68,7 +68,8 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest(result);
             }
-            return Ok(result);
+            return CreatedAtAction(nameof(Get), new { userID = result.PayLoad.AppUserID, foodID = result.PayLoad.FoodID}, result);
+
         }
 
         // PUT api/<ValuesController>/5

@@ -28,10 +28,10 @@ namespace FoodOrder.API.Controllers
         }
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<IActionResult> GetAsync([FromQuery]PagingRequestBase request)
+        public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request)
         {
             var result = await _cartServices.GetCartPaging(request);
-            if(!result.IsSuccessed)
+            if (!result.IsSuccessed)
             {
                 return BadRequest(result);
             }
@@ -39,7 +39,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("user")]
-        public async Task<IActionResult> GetAsync([FromQuery]string userID)
+        public async Task<IActionResult> GetAsync([FromQuery] string userID)
         {
             var result = await _cartServices.GetByUserID(userID);
             if (!result.IsSuccessed)
@@ -51,7 +51,7 @@ namespace FoodOrder.API.Controllers
 
         // GET api/<ValuesController>/details?
         [HttpGet("details")]
-        public async Task<IActionResult> Get([FromQuery]Guid userId, [FromQuery]int foodID)
+        public async Task<IActionResult> Get([FromQuery] Guid userId, [FromQuery] int foodID)
         {
             var result = await _cartServices.GetByID(userId, foodID);
             if (!result.IsSuccessed)
@@ -70,7 +70,9 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest(result);
             }
-            return Ok(result);
+            return CreatedAtAction(nameof(Get)
+                , new { userId = result.PayLoad.AppUserId, foodID = result.PayLoad.FoodID }
+            , result);
         }
 
         // POST api/<ValuesController>

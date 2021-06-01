@@ -4,7 +4,7 @@ import 'body.dart';
 
 class PromotionScreen extends StatelessWidget {
   static String routeName = "/promotion";
-  double? totalPreis;
+  final double? totalPreis;
   PromotionScreen(this.totalPreis);
   @override
   Widget build(BuildContext context) {

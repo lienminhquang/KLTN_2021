@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/helper/TokenParser.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
@@ -83,7 +81,8 @@ class UserServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<String>.fromJson(json, (a) => a.toString());
       if (result.isSuccessed == true) {

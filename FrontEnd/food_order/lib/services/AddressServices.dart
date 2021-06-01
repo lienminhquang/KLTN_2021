@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Addresses/AddressCreateVM.dart';
 import 'package:food_delivery/view_models/Addresses/AddressEditVM.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
@@ -28,7 +29,8 @@ class AddressServices {
       return ApiResult<PaginatedList<AddressVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<AddressVM>>.fromJson(json, (foodJson) {
@@ -67,7 +69,8 @@ class AddressServices {
       return ApiResult<AddressVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.Created ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -98,7 +101,8 @@ class AddressServices {
       return ApiResult<AddressVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -124,7 +128,8 @@ class AddressServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;

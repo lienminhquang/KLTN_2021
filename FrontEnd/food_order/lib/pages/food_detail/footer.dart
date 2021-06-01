@@ -9,7 +9,6 @@ class FavnPrice extends StatelessWidget {
   final FoodDetailLoadedState _loadedState;
   FavnPrice(this._loadedState);
   Widget _priceWidget() {
-    final promotion = _loadedState.promotionVM;
     FoodVM foodVM = _loadedState.foodVM;
     double discount = 0;
     if (_loadedState.foodVM.saleCampaignVM != null) {

@@ -55,7 +55,7 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest(result);
             }
-            return Ok(result);
+            return CreatedAtAction(nameof(GetByID), result.PayLoad.ID, result);
         }
 
         [HttpPut]

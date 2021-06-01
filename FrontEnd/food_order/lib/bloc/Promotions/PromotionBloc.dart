@@ -20,12 +20,8 @@ class PromotionBloc extends Bloc<PromotionEvent, PromotionState> {
       PromotionState currentState, PromotionStartedEvent event) async* {
     //stard Promotion
     yield PromotionLoadingState();
-    try {
-      yield await _fetchAll();
-    } catch (e) {
-      print(e);
-      yield PromotionErrorState("Some thing went wrong!");
-    }
+
+    yield await _fetchAll();
   }
 
   Future<PromotionState> _fetchAll() async {
@@ -34,7 +30,7 @@ class PromotionBloc extends Bloc<PromotionEvent, PromotionState> {
 
     if (promotions.isSuccessed == false) {
       print(promotions.errorMessage);
-      throw promotions.errorMessage!;
+      return PromotionErrorState(promotions.errorMessage!);
     }
     var listPromotions = promotions.payLoad!.items!;
 

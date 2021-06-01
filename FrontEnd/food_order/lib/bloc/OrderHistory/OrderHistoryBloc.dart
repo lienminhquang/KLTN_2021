@@ -21,22 +21,13 @@ class OrderHistoryBloc extends Bloc<OrderHistoryEvent, OrderHistoryState> {
   Stream<OrderHistoryState> _mapStartedEventToState(
       OrderHistoryEvent event) async* {
     yield OrderHistoryLoadingState();
-    try {
-      yield await _fetchAll();
-    } catch (e) {
-      print(e);
-      yield OrderHistoryErrorState("Error!");
-    }
+
+    yield await _fetchAll();
   }
 
   Stream<OrderHistoryState> _mapRefeshEventToState(
       OrderHistoryEvent event) async* {
-    try {
-      yield await _fetchAll();
-    } catch (e) {
-      print(e);
-      yield OrderHistoryErrorState("Error!");
-    }
+    yield await _fetchAll();
   }
 
   Future<OrderHistoryState> _fetchAll() async {

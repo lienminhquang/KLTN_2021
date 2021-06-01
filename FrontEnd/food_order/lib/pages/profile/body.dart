@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/bloc/Address/AddressBloc.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
-import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'change_password.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
-import 'package:provider/provider.dart';
 
 class Body extends StatelessWidget {
   @override

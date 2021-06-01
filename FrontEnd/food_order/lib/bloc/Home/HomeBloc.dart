@@ -16,21 +16,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<HomeState> _mapStartedEventToState(HomeEvent event) async* {
     yield HomeLoadingState();
-    try {
-      yield await _fetchAll();
-    } catch (e) {
-      print(e);
-      yield HomeErrorState("Error");
-    }
+
+    yield await _fetchAll();
   }
 
   Stream<HomeState> _mapRefreshEventToState(HomeRefeshEvent event) async* {
-    try {
-      yield await _fetchAll();
-    } catch (e) {
-      print(e);
-      yield HomeErrorState("Error");
-    }
+    yield await _fetchAll();
   }
 
   @override
@@ -56,12 +47,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     var promotions = await _promotionServices.getAllValid(userID);
     // todo: get all valid and enabled?
     if (result.isSuccessed == false) {
-      print(result.errorMessage);
-      throw result.errorMessage!;
+      return HomeErrorState(result.errorMessage!);
     }
     if (promotions.isSuccessed == false) {
       print(promotions.errorMessage);
-      throw promotions.errorMessage!;
+      return HomeErrorState(promotions.errorMessage!);
     }
     var listPromotions = promotions.payLoad!.items!;
     for (var item in listPromotions) {

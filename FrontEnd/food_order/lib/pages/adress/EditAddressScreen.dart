@@ -63,8 +63,16 @@ class EditAdressScreen extends StatelessWidget {
                   editVM.appUserID = addressVM.appUserID;
                   editVM.name = _nameController.text;
                   editVM.addressString = _adressController.text;
-                  context.read<AddressBloc>().add(AddressEdited(editVM));
-
+                  var result =
+                      await context.read<AddressBloc>().editAddress(editVM);
+                  if (result.isSuccessed) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Đã sửa địa chỉ")));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(result.errorMessage!)));
+                  }
+                  context.read<AddressBloc>().add(AddressStarted());
                   Navigator.pop(context);
                 },
               ),

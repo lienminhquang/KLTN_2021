@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
-import 'package:food_delivery/view_models/SaleCampaigns/SaleCampaignVM.dart';
 import 'package:food_delivery/view_models/ratings/RatingVM.dart';
 
 @immutable

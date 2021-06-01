@@ -8,12 +8,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserServices _userServices = UserServices();
   Stream<LoginState> _mapStartedEventToState(LoginEvent event) async* {
     yield LoginLoadingState();
-    try {
-      yield await _fetchAll();
-    } catch (e) {
-      print(e);
-      yield LoginErrorState("Error");
-    }
+
+    yield await _fetchAll();
   }
 
   @override

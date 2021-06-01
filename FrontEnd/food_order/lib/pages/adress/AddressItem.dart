@@ -65,7 +65,16 @@ class AdressItem extends StatelessWidget {
                   return EditAdressScreen(adress);
                 }));
               } else if (index == 1) {
-                context.read<AddressBloc>().add(AddressDeleted(adress.id));
+                var result =
+                    await context.read<AddressBloc>().deleteAddress(adress.id);
+                if (result.isSuccessed) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text("Đã xóa địa chỉ")));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(result.errorMessage!)));
+                }
+                context.read<AddressBloc>().add(AddressStarted());
               }
             },
             itemBuilder: (context) {

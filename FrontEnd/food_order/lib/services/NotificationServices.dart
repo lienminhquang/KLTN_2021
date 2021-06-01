@@ -29,7 +29,8 @@ class NotificationServices {
       return ApiResult<PaginatedList<NotificationVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<NotificationVM>>.fromJson(json, (foodJson) {
@@ -71,7 +72,8 @@ class NotificationServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (a) => a as bool);
       if (result.isSuccessed == true) {
@@ -106,7 +108,8 @@ class NotificationServices {
       return ApiResult<AddressVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -132,7 +135,8 @@ class NotificationServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;

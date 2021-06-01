@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:provider/provider.dart';
 
 class Appbar extends StatelessWidget {
   @override
@@ -25,9 +23,6 @@ class Appbar extends StatelessWidget {
 class Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var foodVM =
-        (context.read<FoodDetailBloc>().state as FoodDetailLoadedState).foodVM;
-
     return Container(
       margin: new EdgeInsets.only(top: 30.0),
       child: new Column(

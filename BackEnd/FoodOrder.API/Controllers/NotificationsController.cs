@@ -85,7 +85,8 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest(result);
             }
-            return Ok(result);
+            return CreatedAtAction(nameof(Get), result.PayLoad.ID, result);
+
         }
 
         //// PUT api/<ValuesController>/5

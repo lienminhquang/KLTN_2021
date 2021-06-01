@@ -1,5 +1,3 @@
-import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
-
 abstract class LoginState {}
 
 class LoginLoadingState extends LoginState {}

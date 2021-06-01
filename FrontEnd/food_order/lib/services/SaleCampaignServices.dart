@@ -58,7 +58,8 @@ class SaleCampaignServices {
       return ApiResult<SaleCampaignVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<SaleCampaignVM>.fromJson(json, (foodJson) {
         return SaleCampaignVM.fromJson(foodJson as Map<String, dynamic>);

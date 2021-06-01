@@ -32,7 +32,8 @@ class CategoriesServices {
       return ApiResult<PaginatedList<CategoryVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<CategoryVM>>.fromJson(json, (paginatedJson) {
@@ -64,7 +65,8 @@ class CategoriesServices {
       return ApiResult<CategoryVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CategoryVM>.fromJson(json, (paginatedJson) {
         return CategoryVM.fromJson(paginatedJson as Map<String, dynamic>);
@@ -98,7 +100,8 @@ class CategoriesServices {
       return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<FoodVM>>.fromJson(json, (paginatedJson) {

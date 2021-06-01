@@ -61,7 +61,7 @@ namespace FoodOrder.API.Controllers
             }
            
 
-            return Ok(result);
+            return CreatedAtAction(nameof(GetByID), result.PayLoad.ID, result);
         }
 
         [HttpPost("{id}/categories")]

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/bloc/Address/AddressBloc.dart';
+import 'package:food_delivery/bloc/Address/AddressEvent.dart';
+import 'package:food_delivery/view_models/Addresses/AddressCreateVM.dart';
+import 'package:provider/provider.dart';
 
 class AddAdressScreen extends StatefulWidget {
   static String routeName = "/addadress";
@@ -27,7 +31,6 @@ class BodyAdressScreen extends StatefulWidget {
 class _BodyAdressScreenState extends State<BodyAdressScreen> {
   final _adressController = TextEditingController();
   final _nameController = TextEditingController();
-  final _sdtController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,22 +62,26 @@ class _BodyAdressScreenState extends State<BodyAdressScreen> {
                       style: TextStyle(color: Colors.white),
                     )),
                 onPressed: () async {
-                  // if (_nameController.text.isEmpty ||
-                  //     _adressController.text.isEmpty) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //       content: Text("Name and address could not be null!")));
-                  //   return;
-                  // }
-                  // var rs = await context
-                  //     .read<AddressModel>()
-                  //     .create(_nameController.text, _adressController.text);
-                  // await context.read<AddressModel>().fetchAll();
-                  // if (rs.isSuccessed == false) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //       SnackBar(content: Text("Failed to create address!")));
-                  // } else {
-                  //   Navigator.pop(context);
-                  // }
+                  if (_nameController.text.isEmpty ||
+                      _adressController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Name and address could not be null!")));
+                    return;
+                  }
+                  var address = AddressCreateVM();
+                  address.addressString = _adressController.text;
+                  address.name = _nameController.text;
+                  var result =
+                      await context.read<AddressBloc>().createAddress(address);
+                  if (result.isSuccessed) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Đã thêm địa chỉ")));
+                    context.read<AddressBloc>().add(AddressStarted());
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(result.errorMessage!)));
+                  }
                 },
               ),
             ],

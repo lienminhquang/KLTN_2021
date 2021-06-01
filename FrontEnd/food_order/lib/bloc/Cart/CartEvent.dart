@@ -14,8 +14,8 @@ class CartAddPromotionEvent extends CartEvent {
 class CartRefreshdEvent extends CartEvent {}
 
 class CartDeletedEvent extends CartEvent {
-  final int cartID;
-  CartDeletedEvent(this.cartID);
+  final int foodID;
+  CartDeletedEvent(this.foodID);
 }
 
 class CartCreatedEvent extends CartEvent {

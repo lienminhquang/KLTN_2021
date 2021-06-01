@@ -80,7 +80,7 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest(e.Message);
             }
-            return Ok();
+            return CreatedAtAction(nameof(Get), rs.Entity.ID, rs.Entity);
         }
 
         // PUT api/<OrderStatusController>/5

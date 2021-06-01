@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/services/HttpClientFactory.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
-import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/view_models/commons/PaginatedList.dart';
 import 'package:food_delivery/view_models/commons/PagingRequest.dart';
@@ -26,7 +25,8 @@ class FoodServices {
       return ApiResult<FoodVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<FoodVM>.fromJson(json, (foodJson) {
         return FoodVM.fromJson(foodJson as Map<String, dynamic>);
@@ -57,7 +57,8 @@ class FoodServices {
       return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<FoodVM>>.fromJson(json, (paginatedJson) {
@@ -95,7 +96,8 @@ class FoodServices {
       return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<FoodVM>>.fromJson(json, (paginatedJson) {

@@ -25,7 +25,8 @@ class CartServices {
       return ApiResult<PaginatedList<CartVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<CartVM>>.fromJson(json, (paginatedJson) {
@@ -58,7 +59,8 @@ class CartServices {
       return ApiResult<CartVM>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CartVM>.fromJson(json, (foodJson) {
         return CartVM.fromJson(foodJson as Map<String, dynamic>);
@@ -88,7 +90,8 @@ class CartServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;
@@ -126,7 +129,8 @@ class CartServices {
       return ApiResult<CartVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CartVM>.fromJson(
           json, (a) => CartVM.fromJson(a as Map<String, dynamic>));

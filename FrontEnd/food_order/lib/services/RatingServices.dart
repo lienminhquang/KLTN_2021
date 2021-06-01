@@ -26,7 +26,8 @@ class RatingServices {
       return ApiResult<PaginatedList<RatingVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<RatingVM>>.fromJson(json, (foodJson) {

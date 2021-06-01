@@ -211,7 +211,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
   }
 
   Widget _buildErrorState(BuildContext context, FoodDetailErrorState state) {
-    return Text(state.error);
+    return Scaffold(body: Container(child: Center(child: Text(state.error))));
   }
 
   @override

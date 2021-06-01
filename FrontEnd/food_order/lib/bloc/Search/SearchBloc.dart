@@ -20,17 +20,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         return;
       }
       yield SearchLoadingState();
-      try {
-        var result = await _foodServices.searchFood(PagingRequest(
-            searchString: event.searchText, pageNumber: 1, sortOrder: null));
-        if (result.isSuccessed) {
-          yield SearchSuccessState(result.payLoad!.items!);
-        } else {
-          yield SearchErrorState(result.errorMessage!);
-        }
-      } catch (e) {
-        print(e);
-        yield SearchErrorState("Some thing went wrong!");
+
+      var result = await _foodServices.searchFood(PagingRequest(
+          searchString: event.searchText, pageNumber: 1, sortOrder: null));
+      if (result.isSuccessed) {
+        yield SearchSuccessState(result.payLoad!.items!);
+      } else {
+        yield SearchErrorState(result.errorMessage!);
       }
     }
   }

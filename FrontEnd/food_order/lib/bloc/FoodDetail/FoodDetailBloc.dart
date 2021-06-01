@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
@@ -8,13 +5,7 @@ import 'package:food_delivery/services/CartServices.dart';
 import 'package:food_delivery/services/FoodServices.dart';
 import 'package:food_delivery/services/PromotionServices.dart';
 import 'package:food_delivery/services/RatingServices.dart';
-import 'package:food_delivery/services/SaleCampaignServices.dart';
 import 'package:food_delivery/services/UserServices.dart';
-import 'package:food_delivery/view_models/Carts/CartVM.dart';
-import 'package:food_delivery/view_models/Foods/FoodVM.dart';
-import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
-import 'package:food_delivery/view_models/SaleCampaigns/SaleCampaignVM.dart';
-import 'package:food_delivery/view_models/ratings/RatingVM.dart';
 
 class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
   FoodDetailBloc() : super(FoodDetailLoadingState());
@@ -23,39 +14,25 @@ class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
   final _ratingServices = RatingServices();
   final _cartServices = CartServices();
   final _promotionServices = PromotionServices();
-  final _saleServices = SaleCampaignServices();
 
   Stream<FoodDetailState> _mapStatedEventToState(
       FoodDetailStartedEvent event, FoodDetailState currentState) async* {
     yield FoodDetailLoadingState();
-    try {
-      yield await _fetchAll(event.foodID, event.promotionID);
-    } catch (e) {
-      print(e);
-      yield FoodDetailErrorState("Error");
-    }
+
+    yield await _fetchAll(event.foodID, event.promotionID);
   }
 
   Stream<FoodDetailState> _mapCreateCartEventToState(
       FoodDetailCreateCartEvent event, FoodDetailState currentState) async* {
-    if (state is FoodDetailLoadedState)
-      try {
-        await _create(event.foodID, event.count);
-        ScaffoldMessenger.of(event.context).showSnackBar(
-          const SnackBar(
-            content: Text('Đã thêm vào giỏ hàng!'),
-          ),
-        );
+    if (state is FoodDetailLoadedState) {
+      final String userID = UserServices.getUserID();
+      var result =
+          await _cartServices.editOrCreate(event.foodID, event.count, userID);
+      if (result.isSuccessed == true) {
         yield await _fetchAll(event.foodID, event.promotionID);
-      } catch (e) {}
-  }
-
-  Future<void> _create(int foodID, int quantity) async {
-    final String userID = UserServices.getUserID();
-    var result = await _cartServices.editOrCreate(foodID, quantity, userID);
-    if (result.isSuccessed == false) {
-      log(result.errorMessage!);
-      throw result.errorMessage!;
+      } else {
+        yield FoodDetailErrorState(result.errorMessage!);
+      }
     }
   }
 
@@ -71,51 +48,29 @@ class FoodDetailBloc extends Bloc<FoodDetailEvent, FoodDetailState> {
   }
 
   Future<FoodDetailState> _fetchAll(int foodID, int? promotionID) async {
-    try {
-      var foodDetail = await _fetchFoodDetail(foodID);
-      var userRatings = await _fetchUserRatings(foodID);
-      var cartVM = await _fetchCartVMIfExist(foodID);
-      var promotionVM = await _fetchPromotion(promotionID);
+    var foodDetail = await _foodServices.getFoodByID(foodID);
+    if (foodDetail.isSuccessed == false) {
+      return FoodDetailErrorState(foodDetail.errorMessage!);
+    }
+    var userRatings = await _ratingServices.getRatingsOfFood(foodID);
+    if (userRatings.isSuccessed == false) {
+      return FoodDetailErrorState(userRatings.errorMessage!);
+    }
+    var cartVM = await _cartServices.getByID(foodID, UserServices.getUserID());
+    if (cartVM.isSuccessed == false) {
+      return FoodDetailErrorState(cartVM.errorMessage!);
+    }
+    var promotionVM = promotionID == null
+        ? null
+        : await _promotionServices.getByID(promotionID);
+    if (cartVM.isSuccessed == false) {
+      return FoodDetailErrorState(promotionVM!.errorMessage!);
+    }
 
-      return FoodDetailLoadedState(
-          foodDetail, userRatings, cartVM, promotionVM);
-    } catch (e) {
-      return FoodDetailErrorState(e.toString());
-    }
-  }
-
-  Future<PromotionVM?> _fetchPromotion(int? promotionID) async {
-    if (promotionID == null) {
-      return null;
-    }
-    var result = await _promotionServices.getByID(promotionID);
-    if (result.isSuccessed == true) {
-      return (result.payLoad!);
-    }
-    throw result.errorMessage!;
-  }
-
-  Future<FoodVM> _fetchFoodDetail(int id) async {
-    var result = await _foodServices.getFoodByID(id);
-    if (result.isSuccessed == true) {
-      return (result.payLoad!);
-    }
-    throw result.errorMessage!;
-  }
-
-  Future<CartVM?> _fetchCartVMIfExist(int foodID) async {
-    var result = await _cartServices.getByID(foodID, UserServices.getUserID());
-    if (result.isSuccessed == true) {
-      return result.payLoad;
-    }
-    return null;
-  }
-
-  Future<List<RatingVM>> _fetchUserRatings(int foodID) async {
-    var result = await _ratingServices.getRatingsOfFood(foodID);
-    if (result.isSuccessed == true) {
-      return (result.payLoad!.items)!;
-    }
-    throw result.errorMessage!;
+    return FoodDetailLoadedState(
+        foodDetail.payLoad!,
+        userRatings.payLoad!.items!,
+        cartVM.payLoad,
+        promotionVM == null ? null : promotionVM.payLoad);
   }
 }

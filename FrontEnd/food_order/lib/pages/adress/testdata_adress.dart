@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Adress {
   final String adress, name, sdt;
 

@@ -7,7 +7,6 @@ import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Notifications/NotificationVM.dart';
 
 class NotificationModel extends ChangeNotifier {
-  final UserServices _userServices = UserServices();
   final NotificationServices _notificationServices = NotificationServices();
 
   List<NotificationVM> unreadedNotification = [];

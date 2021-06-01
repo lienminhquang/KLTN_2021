@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:food_delivery/bloc/Cart/CartEvent.dart';
 import 'package:food_delivery/bloc/Cart/CartState.dart';
@@ -11,7 +9,9 @@ import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderCreateVM.dart';
+import 'package:food_delivery/view_models/Orders/OrderVM.dart';
 import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
+import 'package:food_delivery/view_models/commons/ApiResult.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(CartLoadingState());
@@ -45,24 +45,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       CartAddPromotionEvent event, CartState state) async* {
     _promotionID = event.promotionID;
     if (state is CartLoadedState) {
-      try {
-        yield await _fetchAll();
-      } catch (e) {
-        print(e);
-        yield CartErrorState("Error");
-      }
+      yield await _fetchAll();
     }
   }
 
   Stream<CartState> _mapDeletedEventToState(
       CartDeletedEvent event, CartState state) async* {
     if (state is CartLoadedState) {
-      try {
-        await _delete(event.cartID);
+      final String userID = UserServices.getUserID();
+      var result = await _cartServices.delete(event.foodID, userID);
+
+      if (result.isSuccessed) {
         yield await _fetchAll();
-      } catch (e) {
-        print(e);
-        yield CartErrorState("Error");
+      } else {
+        yield CartErrorState(result.errorMessage!);
       }
     }
   }
@@ -70,56 +66,32 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Stream<CartState> _mapSetAddressEventToState(
       CartSetAddressEvent event, CartState state) async* {
     if (state is CartLoadedState) {
-      try {
-        var loadedState = await _fetchAll();
-        yield CartLoadedState(
-            event.addressVM, loadedState.listCartVM, loadedState.promotionVM);
-      } catch (e) {
-        print(e);
-        yield CartErrorState("Error");
-      }
+      var loadedState = await _fetchAll();
+      yield CartLoadedState(
+          event.addressVM, loadedState.listCartVM, loadedState.promotionVM);
     }
   }
 
   Stream<CartState> _mapConfirmEventToState(
       CartConfirmEvent event, CartState state) async* {
     if (state is CartLoadedState) {
-      try {
-        await _confirm(event);
+      var result = await _confirm(event);
+      if (result.isSuccessed == true) {
         yield await _fetchAll();
-      } catch (e) {
-        print(e);
-        yield CartErrorState("Error");
+      } else {
+        yield CartErrorState(result.errorMessage!);
       }
     }
   }
 
   Stream<CartState> _mapStartedEventToState() async* {
     yield CartLoadingState();
-    try {
-      yield await _fetchAll();
-    } catch (e) {
-      print(e);
-      yield CartErrorState("Error");
-    }
+
+    yield await _fetchAll();
   }
 
   Stream<CartState> _mapRefreshEventToState() async* {
-    try {
-      yield await _fetchAll();
-    } catch (e) {
-      print(e);
-      yield CartErrorState("Error");
-    }
-  }
-
-  Future<void> _delete(int foodID) async {
-    final String userID = UserServices.getUserID();
-    var result = await _cartServices.delete(foodID, userID);
-    if (result.isSuccessed == true) {
-      return;
-    }
-    throw result.errorMessage!;
+    yield await _fetchAll();
   }
 
   Future<CartLoadedState> _fetchAll() async {
@@ -164,7 +136,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     return null;
   }
 
-  Future<void> _confirm(CartConfirmEvent event) async {
+  Future<ApiResult<OrderVM>> _confirm(CartConfirmEvent event) async {
     final String userID = UserServices.getUserID();
 
     var result = await _orderServices.create(OrderCreateVM.explicit(
@@ -174,11 +146,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         addressString: event.addressVM.addressString,
         addressName: event.addressVM.name,
         promotionID: event.promotionID));
-    if (result.isSuccessed == true) {
-      return;
-    }
-
-    log(result.errorMessage!);
-    throw result.errorMessage!;
+    return result;
   }
 }

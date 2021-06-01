@@ -26,7 +26,8 @@ class PromotionServices {
       return ApiResult<PaginatedList<PromotionVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<PromotionVM>>.fromJson(json, (foodJson) {
@@ -59,7 +60,8 @@ class PromotionServices {
       return ApiResult<PromotionVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<PromotionVM>.fromJson(json, (foodJson) {
         return PromotionVM.fromJson(foodJson as Map<String, dynamic>);

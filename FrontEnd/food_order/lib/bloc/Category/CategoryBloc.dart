@@ -24,12 +24,8 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   Stream<CategoryState> _mapStartedEventToState(
       CategoryStatedEvent event) async* {
     yield CategoryLoadingState();
-    try {
-      yield await _fetchAll(event);
-    } catch (e) {
-      print(e);
-      yield CategoryErrorState("Error");
-    }
+
+    yield await _fetchAll(event);
   }
 
   Future<CategoryState> _fetchAll(CategoryStatedEvent event) async {

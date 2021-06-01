@@ -5,7 +5,6 @@ import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Orders/OrderCreateVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
-import 'package:food_delivery/view_models/commons/PaginatedList.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
@@ -26,18 +25,21 @@ class OrderServices {
       return ApiResult<List<OrderVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    //try {
-    var json = jsonDecode(response.body);
-    var result = ApiResult<List<OrderVM>>.fromJson(json, (json) {
-      return (json as List<dynamic>).map((e) => OrderVM.fromJson(e)).toList();
-    });
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<List<OrderVM>>.fromJson(json, (json) {
+        return (json as List<dynamic>).map((e) => OrderVM.fromJson(e)).toList();
+      });
 
-    if (result.isSuccessed == true) {
-      log("Fetched: " + result.payLoad!.length.toString());
-      return ApiResult.succesedApiResult(result.payLoad);
-    } else {
-      return ApiResult.failedApiResult(result.errorMessage);
+      if (result.isSuccessed == true) {
+        log("Fetched: " + result.payLoad!.length.toString());
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
     }
+    return ApiResult.failedApiResult("Some thing went wrong!");
     // } catch (e) {
     //   log("Error: ${e.toString()}");
     //   return ApiResult.failedApiResult("Error!!");
@@ -124,17 +126,20 @@ class OrderServices {
       return ApiResult<OrderVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    // try {
-    var json = jsonDecode(response.body);
-    var result = ApiResult<OrderVM>.fromJson(
-        json, (a) => OrderVM.fromJson(a as Map<String, dynamic>));
-    if (result.isSuccessed == true) {
-      log("OrderVM create succesed!");
-      log("OrderVM: " + result.payLoad!.toJson().toString());
-    } else {
-      log("[Failed] " + result.errorMessage!);
+    if (response.statusCode == HTTPStatusCode.Created ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<OrderVM>.fromJson(
+          json, (a) => OrderVM.fromJson(a as Map<String, dynamic>));
+      if (result.isSuccessed == true) {
+        log("OrderVM create succesed!");
+        log("OrderVM: " + result.payLoad!.toJson().toString());
+      } else {
+        log("[Failed] " + result.errorMessage!);
+      }
+      return result;
     }
-    return result;
+    return ApiResult.failedApiResult("Some thing went wrong!");
     // } catch (e) {
     //   log("[Failed] " + e.toString());
     //   return ApiResult.failedApiResult(e.toString());

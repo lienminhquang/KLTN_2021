@@ -1,16 +1,12 @@
 import 'package:food_delivery/pages/adress/AddAdressScreen.dart';
-import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
-import 'package:food_delivery/pages/categoty/Category.dart';
 import 'package:food_delivery/pages/favorite/Favorite.dart';
-import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/home/Home.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_delivery/pages/login_signup/SignUp.dart';
 import 'package:food_delivery/pages/nofication/Nofication.dart';
 import 'package:food_delivery/pages/oders/Orders.dart';
 import 'package:food_delivery/pages/profile/Profile.dart';
-import 'package:food_delivery/pages/promotion/Promotions.dart';
 
 final Map<String, WidgetBuilder> routes = {
   CartScreen.routeName: (context) => CartScreen(),
