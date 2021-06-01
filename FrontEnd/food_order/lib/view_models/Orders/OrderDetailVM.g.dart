@@ -22,7 +22,10 @@ OrderDetailVM _$OrderDetailVMFromJson(Map<String, dynamic> json) {
         : FoodVM.fromJson(json['foodVM'] as Map<String, dynamic>)
     ..saleCampaign = json['saleCampaign'] == null
         ? null
-        : SaleCampaignVM.fromJson(json['saleCampaign'] as Map<String, dynamic>);
+        : SaleCampaignVM.fromJson(json['saleCampaign'] as Map<String, dynamic>)
+    ..ratingVM = json['ratingVM'] == null
+        ? null
+        : RatingVM.fromJson(json['ratingVM'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$OrderDetailVMToJson(OrderDetailVM instance) =>
@@ -36,4 +39,5 @@ Map<String, dynamic> _$OrderDetailVMToJson(OrderDetailVM instance) =>
       'orderVM': instance.orderVM?.toJson(),
       'foodVM': instance.foodVM?.toJson(),
       'saleCampaign': instance.saleCampaign?.toJson(),
+      'ratingVM': instance.ratingVM?.toJson(),
     };

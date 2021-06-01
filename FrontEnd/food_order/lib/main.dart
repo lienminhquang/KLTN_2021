@@ -11,6 +11,7 @@ import 'package:food_delivery/bloc/Home/HomeBloc.dart';
 import 'package:food_delivery/bloc/Home/HomeEvent.dart';
 import 'package:food_delivery/bloc/Login/LoginBloc.dart';
 import 'package:food_delivery/bloc/Login/LoginEvent.dart';
+import 'package:food_delivery/bloc/OrderDetails/OrderDetailsBloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<SearchBloc>(create: (_) => SearchBloc()),
         BlocProvider<PromotionBloc>(
             create: (_) => PromotionBloc()..add(PromotionStartedEvent())),
+        BlocProvider<OrderDetailsBloc>(create: (_) => OrderDetailsBloc()),
       ],
       child: MaterialApp(
         title: 'Food Delivery',

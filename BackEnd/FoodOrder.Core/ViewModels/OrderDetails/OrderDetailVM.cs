@@ -1,6 +1,7 @@
 ﻿using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.Orders;
+using FoodOrder.Core.ViewModels.Ratings;
 using FoodOrder.Core.ViewModels.SaleCampaigns;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,6 @@ namespace FoodOrder.Core.ViewModels.OrderDetails
         public SaleCampaignVM SaleCampaign { get; set; }
         public OrderVM OrderVM { get; set; }
         public FoodVM FoodVM { get; set; }
+        public RatingVM RatingVM { get; set; }
     }
 }

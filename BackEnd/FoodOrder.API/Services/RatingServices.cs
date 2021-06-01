@@ -45,7 +45,8 @@ namespace FoodOrder.API.Services
             var created = await PaginatedList<RatingVM>.CreateAsync(vMs.Select(f => _mapper.Map<Rating, RatingVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
             foreach (var item in created.Items)
             {
-                var user = _dbContext.Users.Find(item.AppUserID);
+                var order = _dbContext.Orders.Find(item.OrderID);
+                var user = _dbContext.AppUsers.Find(order.AppUserID);
                 item.UserFullName = user.FirstName + " " + user.LastName;
             }
 
@@ -72,9 +73,9 @@ namespace FoodOrder.API.Services
             return new SuccessedResult<PaginatedList<RatingVM>>(created);
         }
 
-        public async Task<ApiResult<RatingVM>> GetByID(Guid userID, int foodID)
+        public ApiResult<RatingVM> GetByID(int orderID, int foodID)
         {
-            var c = await _dbContext.Ratings.FirstOrDefaultAsync(c => c.AppUserID == userID && c.FoodID == foodID);
+            var c = _dbContext.Ratings.Find(orderID, foodID);
             if (c == null)
             {
                 return new FailedResult<RatingVM>("Rating not found!");
@@ -90,13 +91,25 @@ namespace FoodOrder.API.Services
                 return new FailedResult<RatingVM>("Food not found!");
             }
 
-            AppUser user = _dbContext.Users.Find(vm.AppUserID);
-            if (user == null)
+            Order order = _dbContext.Orders.Find(vm.OrderID);
+            if (order == null)
             {
-                return new FailedResult<RatingVM>("User not found!");
+                return new FailedResult<RatingVM>("Order not found!");
             }
 
-            if(vm.Star > 5)
+            var od = _dbContext.OrderDetails.Find(vm.OrderID, vm.FoodID);
+            if (od == null)
+            {
+                return new FailedResult<RatingVM>("Food is not in order!");
+            }
+
+            var existed = _dbContext.Ratings.Find(vm.OrderID, vm.FoodID);
+            if (existed != null)
+            {
+                return new FailedResult<RatingVM>("The Order is already rated!");
+            }
+
+            if (vm.Star > 5)
             {
                 vm.Star = 5;
             }
@@ -104,11 +117,14 @@ namespace FoodOrder.API.Services
             {
                 vm.Star = 0;
             }
+
             try
             {
-            var result = await _dbContext.Ratings.AddAsync(_mapper.Map<Rating>(vm));
+                var rating = _mapper.Map<Rating>(vm);
+                rating.TimeCreate = DateTime.Now;
+                var result = await _dbContext.Ratings.AddAsync(rating);
                 await _dbContext.SaveChangesAsync();
-            return new SuccessedResult<RatingVM>(_mapper.Map<RatingVM>(result.Entity));
+                return new SuccessedResult<RatingVM>(_mapper.Map<RatingVM>(result.Entity));
             }
             catch (Exception e)
             {
@@ -117,9 +133,9 @@ namespace FoodOrder.API.Services
             }
         }
 
-        public async Task<ApiResult<RatingVM>> Edit(Guid userID, int foodID, RatingEditVM editVM)
+        public async Task<ApiResult<RatingVM>> Edit(int orderID, int foodID, RatingEditVM editVM)
         {
-            var od = await _dbContext.Ratings.FirstOrDefaultAsync(c => c.AppUserID == userID && c.FoodID == foodID);
+            var od = await _dbContext.Ratings.FindAsync(orderID, foodID);
             if (od == null)
             {
                 return new FailedResult<RatingVM>("Rating not found!");
@@ -147,9 +163,9 @@ namespace FoodOrder.API.Services
             return new SuccessedResult<RatingVM>(_mapper.Map<RatingVM>(od));
         }
 
-        public async Task<ApiResult<bool>> Delete(Guid userID, int foodID)
+        public async Task<ApiResult<bool>> Delete(int orderID, int foodID)
         {
-            var vm = await _dbContext.Ratings.FirstOrDefaultAsync(c => c.AppUserID == userID && c.FoodID == foodID);
+            var vm = await _dbContext.Ratings.FindAsync(orderID, foodID);
             if (vm == null)
             {
                 return new FailedResult<bool>("Rating not found!");

@@ -28,8 +28,8 @@ class _SingleComment extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          UserDetailsWithFollow(_ratingVM.userFullName,
-              _ratingVM.lastCreatedTime, _ratingVM.star),
+          UserDetailsWithFollow(
+              _ratingVM.userFullName, _ratingVM.timeCreate, _ratingVM.star),
           Text(
             _ratingVM.comment,
             textAlign: TextAlign.left,

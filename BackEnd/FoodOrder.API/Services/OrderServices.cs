@@ -7,6 +7,7 @@ using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Core.ViewModels.Orders;
 using FoodOrder.Core.ViewModels.OrderStatuses;
+using FoodOrder.Core.ViewModels.Ratings;
 using FoodOrder.Core.ViewModels.Users;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
@@ -63,22 +64,37 @@ namespace FoodOrder.API.Services
 
             var orderDetails = (from od in _dbContext.OrderDetails
                                 where od.OrderID == id
-                                select od).Include(a => a.Food);
+                                select od).Include(a => a.Food).ToList();
             var orderDetailVMs = orderDetails.Select(od => new OrderDetailVM()
             {
+                SaleCampaignID = od.SaleCampaignID,
+                SalePercent = od.SalePercent,
                 Amount = od.Amount,
                 FoodID = od.FoodID,
                 OrderID = od.OrderID,
                 Price = od.Price,
-                FoodVM = _mapper.Map<FoodVM>(od.Food)
-            });
+                FoodVM = _mapper.Map<FoodVM>(od.Food),
+            }).ToList();
 
             var userVM = _mapper.Map<UserVM>(_dbContext.AppUsers.Find(c.AppUserID));
+
+            foreach (var item in orderDetailVMs)
+            {
+                var rating = _dbContext.Ratings.Find(id, item.FoodID);
+                
+                if(rating != null)
+                {
+                    item.RatingVM = _mapper.Map<RatingVM>(rating);
+                    item.RatingVM.UserFullName = userVM.FirstName  + " " + userVM.LastName;
+                }
+            }
+
+            
             var orderVM = _mapper.Map<Order, OrderVM>(c);
 
 
             orderVM.OrderStatusVM = _mapper.Map<OrderStatusVM>(c.OrderStatus);
-            orderVM.OrderDetailVMs = orderDetailVMs.ToList();
+            orderVM.OrderDetailVMs = orderDetailVMs;
             orderVM.UserVM = userVM;
 
             return new SuccessedResult<OrderVM>(orderVM);
@@ -144,7 +160,8 @@ namespace FoodOrder.API.Services
                     return new FailedResult<OrderVM>("Failed to create order");
                 }
                 _dbContext.SaveChanges();
-                _logger.LogInformation("Created Order: " + JsonConvert.SerializeObject(createOrderResult.Entity).ToString());
+                //order.AppUser.Orders = null;
+                //_logger.LogInformation("Created Order: " + JsonConvert.SerializeObject(createOrderResult.Entity).ToString());
 
                 var carts = (from c in _dbContext.Carts
                              where c.AppUserId == vm.AppUserID
@@ -196,15 +213,24 @@ namespace FoodOrder.API.Services
                     {
                         return new FailedResult<OrderVM>("Promotion not found!");
                     }
+                    var timeUsed = (from o in _dbContext.Orders
+                                    where o.AppUserID.Equals(order.AppUserID) && o.PromotionID == promotion.ID
+                                    select o).Count();
+                   
                     if (promotion.StartDate <= DateTime.Now
                         && promotion.EndDate >= DateTime.Now
                         && promotion.Enabled == true
-                        && promotion.MinPrice <= totalPrice)
+                        && promotion.MinPrice <= totalPrice 
+                        && timeUsed < promotion.UseTimes)
                     {
                         double promotedAmount = Math.Min((double)promotion.Max, totalPrice * promotion.Percent / 100);
                         _logger.LogInformation("Create order: promotedAmount: " + promotedAmount);
                         order.PromotionID = vm.PromotionID;
                         order.PromotionAmount = promotedAmount;
+                    }
+                    else
+                    {
+                        return new FailedResult<OrderVM>("Mã giảm giá không hợp lệ hoặc đã hết hạn!");
                     }
                 }
 

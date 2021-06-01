@@ -37,11 +37,11 @@ namespace FoodOrder.Admin.Services
             return vm;
         }
 
-        public async Task<ApiResult<RatingVM>> GetByID(string userID, int foodID, string token)
+        public async Task<ApiResult<RatingVM>> GetByID(int orderID, int foodID, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var uri = BaseRoute + $"/details?userID={userID}&foodID={foodID}";
+            var uri = BaseRoute + $"/details?orderID={orderID}&foodID={foodID}";
             var rs = await client.GetAsync(uri);
             var body = await rs.Content.ReadAsStringAsync();
             var vm = JsonConvert.DeserializeObject<ApiResult<RatingVM>>(body);
@@ -61,7 +61,7 @@ namespace FoodOrder.Admin.Services
             return JsonConvert.DeserializeObject<ApiResult<RatingVM>>(await res.Content.ReadAsStringAsync());
         }
 
-        public async Task<ApiResult<RatingVM>> Edit(string userID, int foodID, RatingEditVM editVM, string token)
+        public async Task<ApiResult<RatingVM>> Edit(int orderID, int foodID, RatingEditVM editVM, string token)
         {
             var json = JsonConvert.SerializeObject(editVM);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
@@ -69,16 +69,16 @@ namespace FoodOrder.Admin.Services
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var res = await client.PutAsync(BaseRoute + $"?userID={userID}&foodID={foodID}", httpContent);
+            var res = await client.PutAsync(BaseRoute + $"?orderID={orderID}&foodID={foodID}", httpContent);
 
             return JsonConvert.DeserializeObject<ApiResult<RatingVM>>(await res.Content.ReadAsStringAsync());
         }
 
-        public async Task<ApiResult<bool>> Delete(string userID, int foodID, string token)
+        public async Task<ApiResult<bool>> Delete(int orderID, int foodID, string token)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var uri = BaseRoute + $"?userID={userID}&foodID={foodID}";
+            var uri = BaseRoute + $"?orderID={orderID}&foodID={foodID}";
             var rs = await client.DeleteAsync(uri);
             var body = await rs.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ApiResult<bool>>(body);

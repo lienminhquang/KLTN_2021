@@ -165,11 +165,24 @@ class CheckoutCart extends StatelessWidget {
                             });
                         return;
                       }
-                      context.read<CartBloc>().add(CartConfirmEvent(
-                          state.address!,
-                          state.promotionVM != null
-                              ? state.promotionVM!.id
-                              : null));
+                      var result = await context.read<CartBloc>().confirm(
+                          state.address!.addressString,
+                          state.address!.name,
+                          state.promotionVM == null
+                              ? null
+                              : state.promotionVM!.id);
+
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            if (result.isSuccessed == true)
+                              return buildSuccessedOrderDialog(context);
+                            else
+                              return buildFailedOrderDialog(
+                                  context, result.errorMessage);
+                          });
+                      context.read<CartBloc>().add(CartRefreshdEvent());
+
                       // showDialog(
                       //     context: context,
                       //     builder: (context) {
@@ -227,11 +240,13 @@ Widget buildSuccessedOrderDialog(BuildContext context) {
   );
 }
 
-Widget buildFailedOrderDialog(BuildContext context) {
+Widget buildFailedOrderDialog(BuildContext context, String? error) {
   return AlertDialog(
     title: Text("Đặt hàng không thành công!"),
-    content: Text(
-        "Vui lòng kiểm tra lại thông tin hoặc liên hệ chúng tôi để được hỗ trợ."),
+    content: Text(error == null
+        ? ""
+        : error +
+            "\nVui lòng kiểm tra lại thông tin hoặc liên hệ chúng tôi để được hỗ trợ."),
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context, 'Ok'),

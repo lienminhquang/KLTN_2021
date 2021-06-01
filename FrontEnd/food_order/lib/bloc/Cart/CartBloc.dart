@@ -30,8 +30,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield* _mapDeletedEventToState(event, state);
       // } else if (event is CartCreatedEvent) {
       //   yield* _mapCreatedEventToState(event, state);
-    } else if (event is CartConfirmEvent) {
-      yield* _mapConfirmEventToState(event, state);
+      // } else if (event is CartConfirmEvent) {
+      //   yield* _mapConfirmEventToState(event, state);
     } else if (event is CartSetAddressEvent) {
       yield* _mapSetAddressEventToState(event, state);
     } else if (event is CartRefreshdEvent) {
@@ -72,17 +72,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Stream<CartState> _mapConfirmEventToState(
-      CartConfirmEvent event, CartState state) async* {
-    if (state is CartLoadedState) {
-      var result = await _confirm(event);
-      if (result.isSuccessed == true) {
-        yield await _fetchAll();
-      } else {
-        yield CartErrorState(result.errorMessage!);
-      }
-    }
-  }
+  // Stream<CartState> _mapConfirmEventToState(
+  //     CartConfirmEvent event, CartState state) async* {
+  //   if (state is CartLoadedState) {
+  //     var result = await confirm(event);
+  //     if (result.isSuccessed == true) {
+  //       yield await _fetchAll();
+  //     } else {
+  //       yield CartErrorState(result.errorMessage!);
+  //     }
+  //   }
+  // }
 
   Stream<CartState> _mapStartedEventToState() async* {
     yield CartLoadingState();
@@ -136,16 +136,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     return null;
   }
 
-  Future<ApiResult<OrderVM>> _confirm(CartConfirmEvent event) async {
+  Future<ApiResult<OrderVM>> confirm(
+      String addressString, String addressName, int? promotionID) async {
     final String userID = UserServices.getUserID();
 
     var result = await _orderServices.create(OrderCreateVM.explicit(
         appUserID: userID,
         isPaid: false,
         orderStatusID: 2,
-        addressString: event.addressVM.addressString,
-        addressName: event.addressVM.name,
-        promotionID: event.promotionID));
+        addressString: addressString,
+        addressName: addressName,
+        promotionID: promotionID));
     return result;
   }
 }

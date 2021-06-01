@@ -37,7 +37,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("food")]
-        public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request,[FromQuery] int foodID)
+        public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request, [FromQuery] int foodID)
         {
             var result = await _ratingServices.GetRatingsOfFood(foodID, request);
             if (!result.IsSuccessed)
@@ -49,9 +49,9 @@ namespace FoodOrder.API.Controllers
 
         // GET api/<ValuesController>/details?
         [HttpGet("details")]
-        public async Task<IActionResult> Get([FromQuery] Guid userID, [FromQuery] int foodID)
+        public IActionResult Get([FromQuery] int orderID, [FromQuery] int foodID)
         {
-            var result = await _ratingServices.GetByID(userID, foodID);
+            var result = _ratingServices.GetByID(orderID, foodID);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -68,15 +68,15 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest(result);
             }
-            return CreatedAtAction(nameof(Get), new { userID = result.PayLoad.AppUserID, foodID = result.PayLoad.FoodID}, result);
+            return CreatedAtAction(nameof(Get), new { orderID = vM.OrderID, foodID = vM.FoodID }, result);
 
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut]
-        public async Task<IActionResult> PutAsync(Guid userID, int foodID, [FromBody] RatingEditVM value)
+        public async Task<IActionResult> PutAsync([FromQuery] int orderID, [FromQuery] int foodID, [FromBody] RatingEditVM value)
         {
-            var result = await _ratingServices.Edit(userID, foodID, value);
+            var result = await _ratingServices.Edit(orderID, foodID, value);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -86,9 +86,9 @@ namespace FoodOrder.API.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete]
-        public async Task<IActionResult> Delete(Guid userID, int foodID)
+        public async Task<IActionResult> Delete([FromQuery] int orderID, [FromQuery] int foodID)
         {
-            var result = await _ratingServices.Delete(userID, foodID);
+            var result = await _ratingServices.Delete(orderID, foodID);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

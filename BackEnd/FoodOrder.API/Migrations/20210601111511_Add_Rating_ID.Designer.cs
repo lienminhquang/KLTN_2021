@@ -4,14 +4,16 @@ using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodOrder.API.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210601111511_Add_Rating_ID")]
+    partial class Add_Rating_ID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +83,7 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             Id = new Guid("b9e08f48-883c-42dc-a700-da5cf1d81aa3"),
-                            ConcurrencyStamp = "858c07cc-86c4-47b9-a41a-09c54108ffd4",
+                            ConcurrencyStamp = "178858ea-0e37-4229-91d8-571d1de456cb",
                             Description = "This is Admintrator role.",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -89,7 +91,7 @@ namespace FoodOrder.API.Migrations
                         new
                         {
                             Id = new Guid("74d17d8b-3f91-4d3a-893f-09b4e51e3834"),
-                            ConcurrencyStamp = "f5e78c26-fdde-4435-bbba-a9710341995e",
+                            ConcurrencyStamp = "1619a3c7-2e62-4579-bfb6-db4ccabb2df4",
                             Description = "This is User role.",
                             Name = "user",
                             NormalizedName = "User"
@@ -180,7 +182,7 @@ namespace FoodOrder.API.Migrations
                         {
                             Id = new Guid("b4e253b2-756e-48b8-9c42-b5acb139bed4"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f50932e0-c399-46c0-870b-6bfa57c03f39",
+                            ConcurrencyStamp = "1f6c7c63-9b0f-4cf5-8ac8-a8ab5c0353b3",
                             DateOfBirth = new DateTime(1999, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jame@gmail.com",
                             EmailConfirmed = false,
@@ -188,7 +190,7 @@ namespace FoodOrder.API.Migrations
                             LastName = "Jame",
                             LockoutEnabled = false,
                             NormalizedEmail = "JAME@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELp7zshb+bBrPu2xXBvYxTt0A29Tx0lo89DsDfo42J03sjqXVKdKAyfZfCimOIlzEw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPZbKi2uGob5xBEE0DDWmR5VyHBvQo3WVSm8odqJTR8NvOuJYdcskKUFTp5PtOzewQ==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -198,7 +200,7 @@ namespace FoodOrder.API.Migrations
                         {
                             Id = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "16221181-0f78-48c8-8b1b-2da19e93a716",
+                            ConcurrencyStamp = "2397ea97-63be-42a4-8d4b-c1436c785569",
                             DateOfBirth = new DateTime(1990, 7, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "messi10@gmail.com",
                             EmailConfirmed = false,
@@ -206,7 +208,7 @@ namespace FoodOrder.API.Migrations
                             LastName = "Messi",
                             LockoutEnabled = false,
                             NormalizedEmail = "MESSI10@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAtmMqFLfyYWlGPKweUZxXc1UllXnemzoVWTPBp+KIIV4regNlsoOPx8MnVP0L0mAg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDVnW+iehx4fN7g10FKTmFhh7JV8Nmcq5nE71PThmARPFZrxk9yiCDI9UxfqLPuPPQ==",
                             PhoneNumber = "+111111111",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
@@ -582,7 +584,7 @@ namespace FoodOrder.API.Migrations
                             AddressName = "Nha",
                             AddressString = "ABC",
                             AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
-                            CreatedDate = new DateTime(2021, 6, 1, 23, 50, 4, 654, DateTimeKind.Local).AddTicks(7116),
+                            CreatedDate = new DateTime(2021, 6, 1, 18, 15, 9, 559, DateTimeKind.Local).AddTicks(9494),
                             IsPaid = false,
                             OrderStatusID = 1,
                             PromotionID = 1
@@ -663,27 +665,33 @@ namespace FoodOrder.API.Migrations
                     b.HasData(
                         new
                         {
+                            ID = 1,
+                            Description = "",
+                            Name = "Dang tiep nhan"
+                        },
+                        new
+                        {
                             ID = 2,
                             Description = "",
-                            Name = "Đang chuẩn bị"
+                            Name = "Dang chuan bi"
                         },
                         new
                         {
                             ID = 3,
                             Description = "",
-                            Name = "Đang giao hàng"
+                            Name = "Dang giao hang"
                         },
                         new
                         {
                             ID = 4,
                             Description = "",
-                            Name = "Đã nhận hàng"
+                            Name = "Da nhan hang"
                         },
                         new
                         {
                             ID = 5,
                             Description = "",
-                            Name = "Đã hủy"
+                            Name = "Da huy"
                         });
                 });
 
@@ -713,7 +721,7 @@ namespace FoodOrder.API.Migrations
                     b.Property<DateTime>("EndDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 6, 1, 23, 50, 4, 597, DateTimeKind.Local).AddTicks(4210));
+                        .HasDefaultValue(new DateTime(2021, 6, 1, 18, 15, 9, 500, DateTimeKind.Local).AddTicks(5393));
 
                     b.Property<bool>("IsGlobal")
                         .HasColumnType("bit");
@@ -741,7 +749,7 @@ namespace FoodOrder.API.Migrations
                     b.Property<DateTime>("StartDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 6, 1, 23, 50, 4, 595, DateTimeKind.Local).AddTicks(7859));
+                        .HasDefaultValue(new DateTime(2021, 6, 1, 18, 15, 9, 498, DateTimeKind.Local).AddTicks(8745));
 
                     b.Property<int>("UseTimes")
                         .HasColumnType("int");
@@ -763,25 +771,29 @@ namespace FoodOrder.API.Migrations
                             Name = "Chao thanh vien moi",
                             Percent = 0.25f,
                             Priority = 0,
-                            StartDate = new DateTime(2021, 6, 1, 23, 50, 4, 656, DateTimeKind.Local).AddTicks(5960),
+                            StartDate = new DateTime(2021, 6, 1, 18, 15, 9, 561, DateTimeKind.Local).AddTicks(6050),
                             UseTimes = 100
                         });
                 });
 
             modelBuilder.Entity("FoodOrder.Core.Models.Rating", b =>
                 {
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FoodID")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("AppUserId")
+                    b.Property<Guid>("AppUserID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comment")
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FoodID")
+                        .HasColumnType("int");
 
                     b.Property<int>("Star")
                         .ValueGeneratedOnAdd()
@@ -792,13 +804,24 @@ namespace FoodOrder.API.Migrations
                         .IsUnicode(true)
                         .HasColumnType("datetime2");
 
-                    b.HasKey("OrderID", "FoodID");
+                    b.HasKey("ID");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserID");
 
                     b.HasIndex("FoodID");
 
                     b.ToTable("Rating");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            AppUserID = new Guid("daeb6f0d-eefe-4250-9ecd-28b3243eb684"),
+                            Comment = "Good",
+                            FoodID = 1,
+                            Star = 5,
+                            TimeCreate = new DateTime(2021, 6, 1, 18, 15, 9, 562, DateTimeKind.Local).AddTicks(118)
+                        });
                 });
 
             modelBuilder.Entity("FoodOrder.Core.Models.SaleCampaign", b =>
@@ -1090,7 +1113,9 @@ namespace FoodOrder.API.Migrations
                 {
                     b.HasOne("FoodOrder.Core.Models.AppUser", "AppUser")
                         .WithMany("Ratings")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FoodOrder.Core.Models.Food", "Food")
                         .WithMany("Ratings")
@@ -1098,17 +1123,9 @@ namespace FoodOrder.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodOrder.Core.Models.Order", "Order")
-                        .WithMany("Ratings")
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("AppUser");
 
                     b.Navigation("Food");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("FoodOrder.Core.Models.SaleCampaignFood", b =>
@@ -1217,8 +1234,6 @@ namespace FoodOrder.API.Migrations
             modelBuilder.Entity("FoodOrder.Core.Models.Order", b =>
                 {
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("FoodOrder.Core.Models.OrderStatus", b =>

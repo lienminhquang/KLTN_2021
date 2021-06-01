@@ -22,8 +22,9 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().AppUserID)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().OrderID)
                             </th>
+                          
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().FoodID)
                             </th>
@@ -34,7 +35,7 @@
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Comment)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().LastCreatedTime)
+                                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().TimeCreate)
                             </th>
                             <th></th>
                         </tr>
@@ -46,8 +47,9 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.AppUserID)
+                                        @Html.DisplayFor(modelItem => item.OrderID)
                                     </td>
+                                  
                                     <td>
                                         @Html.DisplayFor(modelItem => item.FoodID)
                                     </td>
@@ -58,12 +60,12 @@
                                         @Html.DisplayFor(modelItem => item.Comment)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.LastCreatedTime)
+                                        @Html.DisplayFor(modelItem => item.TimeCreate)
                                     </td>
                                     <td>
-                                        @Html.ActionLink("Edit", "Edit", new { userID = item.AppUserID, foodID = item.FoodID }) |
-                                        @Html.ActionLink("Details", "Details", new { userID = item.AppUserID, foodID = item.FoodID }) |
-                                        @Html.ActionLink("Delete", "Delete", new { userID = item.AppUserID, foodID = item.FoodID })
+                                        @Html.ActionLink("Edit", "Edit", new { orderID = item.OrderID,  foodID = item.FoodID }) |
+                                        @Html.ActionLink("Details", "Details", new { orderID = item.OrderID,  foodID = item.FoodID }) |
+                                        @Html.ActionLink("Delete", "Delete", new { orderID = item.OrderID,  foodID = item.FoodID })
                                     </td>
                                 </tr>
                             }

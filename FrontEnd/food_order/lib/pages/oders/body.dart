@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/OrderDetails/OrderDetailsBloc.dart';
+import 'package:food_delivery/bloc/OrderDetails/OrderDetailsEvent.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/pages/OrderDetails/OrderDetails.dart';
 import 'package:food_delivery/view_models/Orders/OrderVM.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -113,107 +116,118 @@ class Item extends StatelessWidget {
       price -= orderVM.promotionAmount!;
     }
 
-    return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(5), boxShadow: [
-        BoxShadow(blurRadius: 2, color: Colors.grey.shade300, spreadRadius: 2)
-      ]),
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: Container(
-          height: 100,
-          //color: Colors.red,
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                color: Colors.white,
-                height: 30,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.check_circle,
-                      size: 15,
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
-                      child: Text(
-                        orderVM.orderStatusVM.name,
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13),
+    return GestureDetector(
+      onTap: () {
+        context
+            .read<OrderDetailsBloc>()
+            .add(OrderDetailStartedEvent(orderVM.id));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return OrderDetails();
+        }));
+      },
+      child: Container(
+        decoration:
+            BoxDecoration(borderRadius: BorderRadius.circular(5), boxShadow: [
+          BoxShadow(blurRadius: 2, color: Colors.grey.shade300, spreadRadius: 2)
+        ]),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: Container(
+            height: 100,
+            //color: Colors.red,
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  color: Colors.white,
+                  height: 30,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle,
+                        size: 15,
                       ),
-                    ),
-                    Icon(
-                      Icons.remove,
-                      size: 15,
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
-                      child: Text(
-                        datetime == null
-                            ? ""
-                            : DateFormat.yMMMd().format(datetime),
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
+                        child: Text(
+                          orderVM.orderStatusVM.name,
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                height: 45,
-                color: Colors.white,
-                //color: Colors.grey.shade200,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    name,
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
-                    overflow: TextOverflow.ellipsis,
+                      Icon(
+                        Icons.remove,
+                        size: 15,
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
+                        child: Text(
+                          datetime == null
+                              ? ""
+                              : DateFormat.yMMMd().format(datetime),
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                color: Colors.white,
-                height: 25,
-                child: Row(
-                  children: [
-                    Text(
-                      "\$${AppConfigs.AppNumberFormat.format(price)}",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  height: 45,
+                  color: Colors.white,
+                  //color: Colors.grey.shade200,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      name,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Text(
-                      " ($foodCount Món)",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    // GestureDetector(
-                    //   onTap: () {},
-                    //   child: Center(
-                    //     child: Icon(
-                    //       Icons.more_horiz,
-                    //       color: Colors.grey,
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  color: Colors.white,
+                  height: 25,
+                  child: Row(
+                    children: [
+                      Text(
+                        "\$${AppConfigs.AppNumberFormat.format(price)}",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        " ($foodCount Món)",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      // GestureDetector(
+                      //   onTap: () {},
+                      //   child: Center(
+                      //     child: Icon(
+                      //       Icons.more_horiz,
+                      //       color: Colors.grey,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -24,11 +24,11 @@ class CartCreatedEvent extends CartEvent {
   CartCreatedEvent(this.foodID, this.count);
 }
 
-class CartConfirmEvent extends CartEvent {
-  final AddressVM addressVM;
-  final int? promotionID;
-  CartConfirmEvent(this.addressVM, this.promotionID);
-}
+// class CartConfirmEvent extends CartEvent {
+//   final AddressVM addressVM;
+//   final int? promotionID;
+//   CartConfirmEvent(this.addressVM, this.promotionID);
+// }
 
 class CartSetAddressEvent extends CartEvent {
   final AddressVM addressVM;

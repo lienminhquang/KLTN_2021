@@ -23,5 +23,6 @@ namespace FoodOrder.Core.Models
         public Promotion Promotion { get; set; }
         public AppUser AppUser { get; set; }
         public OrderStatus OrderStatus { get; set; }
+        public List<Rating> Ratings { get; set; }
     }
 }

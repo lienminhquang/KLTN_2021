@@ -201,7 +201,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<CartVM>> Edit(Guid userId, int foodID, CartEditVM cartEditVM)
         {
-            var cart =  _dbContext.Carts.Find(new { AppUserID = userId, FoodID = foodID });
+            var cart =  _dbContext.Carts.Find(foodID, userId);
             if (cart == null)
             {
                 return new FailedResult<CartVM>("Cart not found!");
@@ -229,7 +229,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<bool>> Delete(Guid userId, int foodID)
         {
-            var cart = await _dbContext.Carts.FindAsync(new { AppUserID = userId, FoodID = foodID });
+            var cart = await _dbContext.Carts.FindAsync(foodID ,userId);
             if (cart == null)
             {
                 return new FailedResult<bool>("Cart not found!");

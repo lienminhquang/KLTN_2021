@@ -40,74 +40,35 @@ class OrderServices {
       }
     }
     return ApiResult.failedApiResult("Some thing went wrong!");
-    // } catch (e) {
-    //   log("Error: ${e.toString()}");
-    //   return ApiResult.failedApiResult("Error!!");
-    // }
   }
 
-  // Future<ApiResult<CartVM>> getByID(int foodID, String userID) async {
-  //   IOClient ioClient = _httpClientFactory.createIOClient();
-  //   final String url = baseRoute + "/details?foodID=$foodID&userId=$userID";
-  //   Response? response;
-  //   try {
-  //     log("GET: " + url);
-  //     response = await ioClient.get(Uri.parse(url));
-  //   } catch (e) {
-  //     print(e);
-  //     return ApiResult<CartVM>.failedApiResult(
-  //         "Could not connect to server! Please re-try later!");
-  //   }
-  //   try {
-  //     var json = jsonDecode(response.body);
-  //     var result = ApiResult<CartVM>.fromJson(json, (foodJson) {
-  //       return CartVM.fromJson(foodJson as Map<String, dynamic>);
-  //     });
+  Future<ApiResult<OrderVM>> getByID(int orderID) async {
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    final String url = baseRoute + "/$orderID";
+    Response? response;
+    try {
+      log("GET: " + url);
+      response = await ioClient.get(Uri.parse(url));
+    } catch (e) {
+      return ApiResult<OrderVM>.failedApiResult(
+          "Could not connect to server. Check your connection!");
+    }
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<OrderVM>.fromJson(json, (json) {
+        return OrderVM.fromJson(json as Map<String, dynamic>);
+      });
 
-  //     if (result.isSuccessed == true) {
-  //       print("Fetched CartVM: ");
-  //       print(result.payLoad);
-  //       return ApiResult.succesedApiResult(result.payLoad);
-  //     } else {
-  //       return ApiResult.failedApiResult(result.errorMessage);
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-
-  //   return ApiResult.failedApiResult("Error!!");
-  // }
-
-  // Future<ApiResult<bool>> delete(int foodID, String userID) async {
-  //   IOClient ioClient = _httpClientFactory.createIOClient();
-  //   final String url = baseRoute + "?foodID=$foodID&userId=$userID";
-  //   Response? response;
-  //   try {
-  //     log("DELETE: " + url);
-  //     response = await ioClient.delete(Uri.parse(url));
-  //   } catch (e) {
-  //     print(e);
-  //     return ApiResult<bool>.failedApiResult(
-  //         "Could not connect to server! Please re-try later!");
-  //   }
-  //   try {
-  //     var json = jsonDecode(response.body);
-  //     var result = ApiResult<bool>.fromJson(json, (child) {
-  //       return child as bool;
-  //     });
-
-  //     if (result.isSuccessed == true) {
-  //       print("Deleted CartVM: foodID = $foodID, userID = $userID");
-  //       return ApiResult.succesedApiResult(result.payLoad);
-  //     } else {
-  //       return ApiResult.failedApiResult(result.errorMessage);
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-
-  //   return ApiResult.failedApiResult("Error!!");
-  // }
+      if (result.isSuccessed == true) {
+        log("Fetched: OrderDetails" + result.payLoad!.toString());
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    }
+    return ApiResult.failedApiResult("Some thing went wrong!");
+  }
 
   Future<ApiResult<OrderVM>> create(OrderCreateVM orderCreateVM) async {
     log("editOrCreate cart: ${orderCreateVM.toJson()}");

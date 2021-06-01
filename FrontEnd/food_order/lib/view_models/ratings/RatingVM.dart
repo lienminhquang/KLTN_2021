@@ -6,12 +6,13 @@ part 'RatingVM.g.dart';
 class RatingVM {
   RatingVM();
 
+  int id = 0;
   String appUserID = "";
   int foodID = 0;
   int star = 0;
   String comment = "";
-  DateTime lastCreatedTime = DateTime.now();
   String userFullName = "";
+  DateTime timeCreate = DateTime.now();
 
   factory RatingVM.fromJson(Map<String, dynamic> json) =>
       _$RatingVMFromJson(json);

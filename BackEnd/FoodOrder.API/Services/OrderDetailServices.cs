@@ -50,7 +50,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<OrderDetailVM>> GetByID(int orderID, int foodID)
         {
-            var c =  _dbContext.OrderDetails.Find(new {OrderID = orderID, FoodID = foodID });
+            var c =  _dbContext.OrderDetails.Find(orderID, foodID );
             if (c == null)
             {
                 return new FailedResult<OrderDetailVM>("OrderDetail not found!");
@@ -87,7 +87,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<OrderDetailVM>> Edit(int orderID, int foodID, OrderDetailEditVM editVM)
         {
-            var od = await _dbContext.OrderDetails.FindAsync(new { OrderID = orderID, FoodID = foodID });
+            var od = await _dbContext.OrderDetails.FindAsync(orderID, foodID);
             if (od == null)
             {
                 return new FailedResult<OrderDetailVM>("OrderDetail not found!");
@@ -109,7 +109,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<bool>> Delete(int orderID, int foodID)
         {
-            var vm = await _dbContext.OrderDetails.FindAsync(new { OrderID = orderID, FoodID = foodID });
+            var vm = await _dbContext.OrderDetails.FindAsync(orderID,  foodID );
             if (vm == null)
             {
                 return new FailedResult<bool>("OrderDetail not found!");

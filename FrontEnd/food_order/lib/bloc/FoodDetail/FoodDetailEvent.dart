@@ -9,12 +9,12 @@ class FoodDetailStartedEvent extends FoodDetailEvent {
   FoodDetailStartedEvent({required this.foodID, this.saleID, this.promotionID});
 }
 
-class FoodDetailCreateCartEvent extends FoodDetailEvent {
-  final int foodID;
-  final int count;
-  final int? promotionID;
+// class FoodDetailCreateCartEvent extends FoodDetailEvent {
+//   final int foodID;
+//   final int count;
+//   final int? promotionID;
 
-  final BuildContext context;
-  FoodDetailCreateCartEvent(
-      this.foodID, this.count, this.promotionID, this.context);
-}
+//   final BuildContext context;
+//   FoodDetailCreateCartEvent(
+//       this.foodID, this.count, this.promotionID, this.context);
+// }

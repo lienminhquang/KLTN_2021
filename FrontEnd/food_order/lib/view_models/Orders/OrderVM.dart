@@ -27,3 +27,10 @@ class OrderVM {
       _$OrderVMFromJson(json);
   Map<String, dynamic> toJson() => _$OrderVMToJson(this);
 }
+
+class OrderStatus {
+  static const int DangChuanBi = 2;
+  static const int DangGiaoHang = 3;
+  static const int DaNhanHang = 4;
+  static const int DaHuy = 5;
+}
