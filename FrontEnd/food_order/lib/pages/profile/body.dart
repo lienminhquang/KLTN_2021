@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Home/HomeBloc.dart';
+import 'package:food_delivery/bloc/Profile/ProfileBloc.dart';
+import 'package:food_delivery/bloc/Profile/ProfileState.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
 import 'package:food_delivery/services/UserServices.dart';
@@ -9,15 +12,15 @@ import 'profile_pic.dart';
 import 'package:provider/provider.dart';
 
 class Body extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildLoadeState(BuildContext context, ProfileLoadedState state) {
+    String fullname = state.userVM.firstName + " " + state.userVM.lastName;
     return Column(
       children: [
         ProfilePic(),
         //SizedBox(height: 20),
         ProfileMenu(
           icon: Icon(Icons.person),
-          text: 'Hoàng Phong Sang',
+          text: fullname,
           press: () {},
         ),
         ProfileMenu(
@@ -61,6 +64,38 @@ class Body extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Container(
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(ProfileErrorState state) {
+    return Container(
+      child: Center(child: Text(state.error)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileLoadedState) {
+          return _buildLoadeState(context, state);
+        }
+        if (state is ProfileLoadingState) {
+          return _buildLoadingState();
+        }
+        if (state is ProfileErrorState) {
+          return _buildErrorState(state);
+        }
+        throw "Unknow state";
+      },
     );
   }
 }

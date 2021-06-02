@@ -14,8 +14,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final FoodServices _foodServices = FoodServices();
   final SaleCampaignServices _saleCampaignServices = SaleCampaignServices();
 
-  Stream<HomeState> _mapStartedEventToState(HomeEvent event) async* {
-    yield HomeLoadingState();
+  Stream<HomeState> _mapStartedEventToState(
+      HomeEvent event, HomeState currentState) async* {
+    if ((currentState is HomeLoadedState) == false) {
+      yield HomeLoadingState();
+    }
 
     yield await _fetchAll();
   }
@@ -27,7 +30,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
     if (event is HomeStartedEvent) {
-      yield* _mapStartedEventToState(event);
+      yield* _mapStartedEventToState(event, state);
     } else if (event is HomeRefeshEvent) {
       yield* _mapRefreshEventToState(event);
       // } else if (event is CartCreatedEvent) {

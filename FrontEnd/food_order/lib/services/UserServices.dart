@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/helper/TokenParser.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
+import 'package:food_delivery/view_models/Users/UserVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/services/FileServices.dart';
 import 'package:food_delivery/services/HttpClientFactory.dart';
@@ -123,6 +124,40 @@ class UserServices {
       }
     }
 
+    return ApiResult.failedApiResult("Some thing went wrong!");
+  }
+
+  Future<ApiResult<UserVM>> getUser() async {
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    Response? response;
+    String userID = UserServices.getUserID();
+
+    try {
+      var url = Uri.parse(baseRoute + '/$userID');
+      log("GET: " + url.toString());
+      response = await ioClient.get(
+        url,
+        headers: <String, String>{'Authorization': 'Bearer ' + JWT!},
+      );
+    } catch (e) {
+      return ApiResult<UserVM>.failedApiResult(
+          "Could not connect to server. Check your connection!");
+    }
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<UserVM>.fromJson(
+          json, (a) => UserVM.fromJson(a as Map<String, dynamic>));
+      if (result.isSuccessed == true) {
+        log("Fetched UserVM: " + result.payLoad!.toJson().toString());
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        log("Error when fetch userVM: " + result.errorMessage!);
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    }
+    log("Request error: " + response.reasonPhrase.toString());
+    log("Response body: " + response.body);
     return ApiResult.failedApiResult("Some thing went wrong!");
   }
 }

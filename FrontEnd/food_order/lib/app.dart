@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
+import 'package:food_delivery/bloc/Profile/ProfileBloc.dart';
+import 'package:food_delivery/bloc/Profile/ProfileEvent.dart';
 import 'package:food_delivery/pages/chatbot/chatbotScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
@@ -80,6 +82,10 @@ class _MotherBoardState extends State<MotherBoard> {
         //await context.read<CartModel>().fetchAddress();
         // context.read<ad>().fetchAll();
         context.read<CartBloc>().add(CartStartedEvent());
+        break;
+      case 3:
+        context.read<ProfileBloc>().add(ProfileStartedEvent());
+
         break;
       default:
     }

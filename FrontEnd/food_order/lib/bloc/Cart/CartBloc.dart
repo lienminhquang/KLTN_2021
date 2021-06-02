@@ -25,7 +25,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   @override
   Stream<CartState> mapEventToState(CartEvent event) async* {
     if (event is CartStartedEvent) {
-      yield* _mapStartedEventToState();
+      yield* _mapStartedEventToState(state);
     } else if (event is CartDeletedEvent) {
       yield* _mapDeletedEventToState(event, state);
       // } else if (event is CartCreatedEvent) {
@@ -84,8 +84,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   //   }
   // }
 
-  Stream<CartState> _mapStartedEventToState() async* {
-    yield CartLoadingState();
+  Stream<CartState> _mapStartedEventToState(CartState currentState) async* {
+    if ((currentState is CartLoadedState) == false) {
+      yield CartLoadingState();
+    }
 
     yield await _fetchAll();
   }
