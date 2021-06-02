@@ -40,7 +40,7 @@ namespace FoodOrder.API.Services
                 vMs = vMs.Where(c => c.Comment.Contains(request.SearchString));
             }
 
-            vMs = Core.Helpers.Utilities<Rating>.Sort(vMs, request.SortOrder, "FoodID");
+            vMs = Core.Helpers.Utilities<Rating>.Sort(vMs, request.SortOrder, "TimeCreate_desc");
 
             var created = await PaginatedList<RatingVM>.CreateAsync(vMs.Select(f => _mapper.Map<Rating, RatingVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
             foreach (var item in created.Items)

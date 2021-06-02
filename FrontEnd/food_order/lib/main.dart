@@ -42,10 +42,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<FoodDetailBloc>(
             create: (_) =>
                 FoodDetailBloc()), // no need to and started event here??
-        BlocProvider<HomeBloc>(
-            create: (_) => HomeBloc()..add(HomeStartedEvent())),
-        BlocProvider<OrderHistoryBloc>(
-            create: (_) => OrderHistoryBloc()..add(OrderHistoryStartedEvent())),
+        BlocProvider<HomeBloc>(create: (_) => HomeBloc()),
+        BlocProvider<OrderHistoryBloc>(create: (_) => OrderHistoryBloc()),
         BlocProvider<LoginBloc>(
             create: (_) => LoginBloc()..add(LoginStartedEvent())),
         BlocProvider<SearchBloc>(create: (_) => SearchBloc()),

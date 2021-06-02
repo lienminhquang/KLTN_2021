@@ -17,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.blue.shade100,
     title: Column(
       children: [
         Text(

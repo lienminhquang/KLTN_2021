@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
+import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
 import 'package:food_delivery/pages/chatbot/chatbotScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
@@ -71,6 +73,7 @@ class _MotherBoardState extends State<MotherBoard> {
     _currentIndex = index;
     switch (_currentIndex) {
       case 1:
+        context.read<OrderHistoryBloc>().add(OrderHistoryStartedEvent());
         break;
       case 2:
         //await context.read<CartModel>().fetchCartItems();

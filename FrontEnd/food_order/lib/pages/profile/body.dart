@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/bloc/Home/HomeBloc.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
+import 'package:food_delivery/pages/login_signup/Login.dart';
+import 'package:food_delivery/services/UserServices.dart';
 import 'change_password.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
+import 'package:provider/provider.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -10,7 +14,7 @@ class Body extends StatelessWidget {
     return Column(
       children: [
         ProfilePic(),
-        SizedBox(height: 20),
+        //SizedBox(height: 20),
         ProfileMenu(
           icon: Icon(Icons.person),
           text: 'Hoàng Phong Sang',
@@ -47,7 +51,14 @@ class Body extends StatelessWidget {
         ProfileMenu(
           icon: Icon(Icons.logout),
           text: 'Đăng xuất',
-          press: () {},
+          press: () async {
+            UserServices userServices = UserServices();
+            await userServices.logout();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) {
+              return LoginPage();
+            }), (Route<dynamic> route) => false);
+          },
         ),
       ],
     );

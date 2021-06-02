@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/app.dart';
+import 'package:food_delivery/bloc/Home/HomeBloc.dart';
+import 'package:food_delivery/bloc/Home/HomeEvent.dart';
 import 'package:food_delivery/bloc/Login/LoginBloc.dart';
 import 'package:food_delivery/bloc/Login/LoginState.dart';
 import 'package:food_delivery/services/UserServices.dart';
@@ -10,6 +12,7 @@ import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/login_signup/SignUp.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -23,6 +26,13 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLogin = false;
+
+  @override
+  void dispose() {
+    _usenameTextController.dispose();
+    _passwordTextController.dispose();
+    super.dispose();
+  }
 
   Future<void> login(BuildContext context) async {
     if (!_isLogin) {
@@ -38,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(value.errorMessage!)));
           } else {
+            context.read<HomeBloc>().add(HomeStartedEvent());
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) {
                 return MotherBoard();
@@ -276,15 +287,35 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      if (state is LoginLoadingState) {
-        return CircularProgressIndicator();
-      } else if (state is LoginLoadedState) {
-        return _buildLoaedState(context, state);
-      } else if (state is LoginErrorState) {
-        return _buildErrorState(context, state);
-      }
-      throw "Unknow state";
-    });
+    return WillPopScope(
+      onWillPop: () async {
+        var rs = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Bạn có muốn thoát ứng dụng?"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: Text("Có")),
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text("Không"))
+                ],
+              );
+            });
+        return rs == true;
+      },
+      child: BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+        if (state is LoginLoadingState) {
+          return CircularProgressIndicator();
+        } else if (state is LoginLoadedState) {
+          return _buildLoaedState(context, state);
+        } else if (state is LoginErrorState) {
+          return _buildErrorState(context, state);
+        }
+        throw "Unknow state";
+      }),
+    );
   }
 }

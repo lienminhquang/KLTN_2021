@@ -65,6 +65,32 @@ class UserServices {
     }
   }
 
+  Future<ApiResult<void>> removeUserAccountFromCache() async {
+    try {
+      final FileServices fileServices = new FileServices();
+      String cachePath = await fileServices.cachePath;
+      String fullFilePath = cachePath + _userAccountFilename;
+
+      File file = File(fullFilePath);
+      await file.delete();
+      return ApiResult.succesedApiResult(true);
+    } catch (e) {
+      log("Failed to delete useraccount from cache " + e.toString());
+      return ApiResult.failedApiResult(
+          "Failed to delete useraccount from cache" + e.toString());
+    }
+  }
+
+  Future<ApiResult<bool>> logout() async {
+    JWT = "";
+    PayloadMap = {};
+    var rs = await removeUserAccountFromCache();
+    if (rs.isSuccessed == true) {
+      return ApiResult.succesedApiResult(true);
+    }
+    return ApiResult.failedApiResult(rs.errorMessage!);
+  }
+
   Future<ApiResult<bool>> login(LoginVM loginVM) async {
     saveUserAccountToCache(loginVM.username!, loginVM.password!);
 
