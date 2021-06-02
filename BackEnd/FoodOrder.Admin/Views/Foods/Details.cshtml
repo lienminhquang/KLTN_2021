@@ -1,10 +1,12 @@
 ﻿@model FoodOrder.Core.ViewModels.Foods.FoodVM
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
-
+@using FoodOrder.Core.Helpers;
+@using FoodOrder.Core.ViewModels.Ratings;
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    PaginatedList<RatingVM> ratingVMs = ViewBag.RatingVMs as PaginatedList<RatingVM>;
 }
 <div class="container-fluid">
     <h1 class="mt-4">Food detail</h1>
@@ -54,7 +56,7 @@
                     </dt>
                     <dd class="col-sm-10">
                         <a href="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + Model.ImagePath)" title="@Model.ImagePath">
-                            <img src="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + Model.ImagePath)" style="width:100%" alt="@Model.ImagePath" />
+                            <img src="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + Model.ImagePath)" style="width:150px;height:150px" alt="@Model.ImagePath" />
                         </a>
                     </dd>
                     <dt class="col-sm-2">
@@ -64,11 +66,44 @@
                         <ul class="list-group">
                             @foreach (var item in Model.CategoryVMs)
                             {
-                            <li class="list-group-item">
-                                @Html.ActionLink(item.Name, "Details","Categories", new { id = item.ID })
-                            </li>
+                                <li class="list-group-item">
+                                    @Html.ActionLink(item.Name, "Details", "Categories", new { id = item.ID })
+                                </li>
                             }
                         </ul>
+                    </dd>
+
+                    <dt class="col-sm-2">
+                        User reviews
+                    </dt>
+                    <dd class="col-sm-10">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">User name</th>
+                                    <th scope="col">Star</th>
+                                    <th scope="col">Comment</th>
+                                    <th scope="col">Time</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < ratingVMs.Items.Count(); i++)
+                                {
+                                <tr>
+                                    <th scope="row">@i</th>
+                                    <td>@ratingVMs.Items[i].UserFullName</td>
+                                    <td>@ratingVMs.Items[i].Star</td>
+                                    <td>@ratingVMs.Items[i].Comment</td>
+                                    <td>@ratingVMs.Items[i].TimeCreate</td>
+                                </tr>
+                                }
+                               
+                            </tbody>
+                        </table>
+
+
                     </dd>
                 </dl>
 

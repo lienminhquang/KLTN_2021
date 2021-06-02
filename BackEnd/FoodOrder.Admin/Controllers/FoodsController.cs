@@ -20,13 +20,15 @@ namespace FoodOrder.Admin.Controllers
     {
         private readonly FoodServices _foodServices;
         private readonly CategoryServices _categoryServices;
+        private readonly RatingServices _ratingServices;
         private readonly IMapper _mapper;
 
-        public FoodsController(FoodServices foodServices, IMapper mapper, CategoryServices categoryServices)
+        public FoodsController(FoodServices foodServices, IMapper mapper, CategoryServices categoryServices, RatingServices ratingServices)
         {
             _foodServices = foodServices;
             _mapper = mapper;
             _categoryServices = categoryServices;
+            _ratingServices = ratingServices;
         }
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
@@ -42,9 +44,19 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Details/5
-        public async Task<ActionResult> DetailsAsync(int id)
+        public async Task<ActionResult> DetailsAsync([FromRoute]int id, [FromQuery] PagingRequestBase request)
         {
             var vm = await _foodServices.GetByID(id, this.GetTokenFromCookie());
+            var ratings = await _ratingServices.GetRatingOfFood(id, request, this.GetTokenFromCookie());
+            if(ratings.IsSuccessed == false)
+            {
+                TempData[AppConfigs.ErrorMessageString] = ratings.ErrorMessage;
+            }
+            else
+            {
+                ViewBag.RatingVMs = ratings.PayLoad;
+            }
+
 
             if (!vm.IsSuccessed)
             {

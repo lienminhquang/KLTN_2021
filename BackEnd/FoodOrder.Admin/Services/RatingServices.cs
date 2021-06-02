@@ -37,6 +37,17 @@ namespace FoodOrder.Admin.Services
             return vm;
         }
 
+        public async Task<ApiResult<PaginatedList<RatingVM>>> GetRatingOfFood(int foodID, PagingRequestBase request, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = BaseRoute + $"/food?foodID={foodID}&{request.ToQueryString("&")}";
+            var rs = await client.GetAsync(uri);
+            var body = await rs.Content.ReadAsStringAsync();
+            var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<RatingVM>>>(body);
+            return vm;
+        }
+
         public async Task<ApiResult<RatingVM>> GetByID(int orderID, int foodID, string token)
         {
             var client = _httpClientFactory.CreateClient();
