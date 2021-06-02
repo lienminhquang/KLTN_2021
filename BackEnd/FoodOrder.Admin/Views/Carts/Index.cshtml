@@ -38,7 +38,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.AppUserId)
+                                    @Html.ActionLink(item.AppUserId.ToString(), "Details", "User", new { id = item.AppUserId })
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.FoodID)

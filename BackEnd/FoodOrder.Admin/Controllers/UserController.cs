@@ -23,11 +23,17 @@ namespace FoodOrder.Admin.Controllers
     {
         private readonly AdminUserService _adminUserService;
         private readonly IConfiguration _config;
+        private readonly OrderServices _orderServices;
+        private readonly CartServices _cartServices;
+        private readonly AddressServices _addressServices;
 
-        public UserController(AdminUserService adminUserService, IConfiguration configuration)
+        public UserController(AdminUserService adminUserService, IConfiguration configuration, OrderServices orderServices, CartServices cartServices, AddressServices addressServices)
         {
             _adminUserService = adminUserService;
             _config = configuration;
+            _orderServices = orderServices;
+            _cartServices = cartServices;
+            _addressServices = addressServices;
         }
 
         [HttpGet]
@@ -87,12 +93,37 @@ namespace FoodOrder.Admin.Controllers
 
         public async Task<ActionResult> DetailsAsync(string id)
         {
+            if (!this.ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
             var user = await _adminUserService.GetUserByID(id, this.GetTokenFromCookie());
 
             if (!user.IsSuccessed)
             {
                 return this.RedirectToErrorPage(user.ErrorMessage);
             }
+
+            var orders = await _orderServices.GetByUserID(new Guid(id), new PagingRequestBase(), this.GetTokenFromCookie());
+            if(orders.IsSuccessed == false)
+            {
+                TempData[AppConfigs.ErrorMessageString] = orders.ErrorMessage;
+            }
+            ViewBag.OrderVMs = orders.PayLoad;
+
+            var cartVMs = await _cartServices.GetByUserID(id, this.GetTokenFromCookie());
+            if (cartVMs.IsSuccessed == false)
+            {
+                TempData[AppConfigs.ErrorMessageString] = cartVMs.ErrorMessage;
+            }
+            ViewBag.CartVMs = cartVMs.PayLoad;
+
+            var addresses = await _addressServices.GetByUserID(id, new PagingRequestBase(), this.GetTokenFromCookie());
+            if (addresses.IsSuccessed == false)
+            {
+                TempData[AppConfigs.ErrorMessageString] = addresses.ErrorMessage;
+            }
+            ViewBag.AddressVMs = addresses.PayLoad;
 
             return View(user.PayLoad);
         }

@@ -1,8 +1,17 @@
 ﻿@model FoodOrder.Core.ViewModels.Users.UserVM
+@using FoodOrder.Core.ViewModels.Orders;
+@using FoodOrder.Core.ViewModels.Carts;
+@using FoodOrder.Core.ViewModels.Addresses;
+@using FoodOrder.Core.Helpers;
+
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<OrderVM> orderVMs = ViewBag.OrderVMs as List<OrderVM>;
+    PaginatedList<CartVM> cartVMs = ViewBag.CartVMs as PaginatedList<CartVM>;
+    PaginatedList<AddressVM> addressVMs = ViewBag.AddressVMs as PaginatedList<AddressVM>;
+
 }
 
 <div class="container-fluid">
@@ -54,6 +63,103 @@
                     <dd class="col-sm-10">
                         @Html.DisplayFor(model => model.Email)
                     </dd>
+
+                    <dt class="col-sm-2">
+                        Order History
+                    </dt>
+                    <dd class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered display" id="example" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Order Status</th>
+                                        <th scope="col">Is Paid</th>
+                                        <th scope="col">Create Date</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < orderVMs.Count(); i++)
+                                    {
+                                        <tr>
+                                            <th scope="row">
+                                                @Html.ActionLink(orderVMs[i].ID.ToString(), "Details", "Orders", new { id = orderVMs[i].ID })
+                                            </th>
+                                            <td>@orderVMs[i].OrderStatusVM.Name</td>
+                                            <td>@orderVMs[i].IsPaid</td>
+                                            <td>@orderVMs[i].CreatedDate</td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </dd>
+
+                    <dt class="col-sm-2">
+                        Cart
+                    </dt>
+                    <dd class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered display" id="cart_table" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Food ID</th>
+                                        <th scope="col">Food name</th>
+                                        <th scope="col">Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < cartVMs.Items.Count(); i++)
+                                    {
+                                        <tr>
+                                            <th scope="row">
+                                                @Html.ActionLink(cartVMs.Items[i].FoodID.ToString(), "Details", "Foods", new { id = cartVMs.Items[i].FoodID })
+                                            </th>
+                                            <td>@cartVMs.Items[i].FoodVM.Name</td>
+                                            <td>@cartVMs.Items[i].Quantity</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </dd>
+
+                    <dt class="col-sm-2">
+                        Addresses
+                    </dt>
+                    <dd class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered display" id="address_table" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < addressVMs.Items.Count(); i++)
+                                    {
+                                        <tr>
+                                            <th scope="row">
+                                                @Html.ActionLink(addressVMs.Items[i].ID.ToString(), "Details", "Addresses", new { id = addressVMs.Items[i].ID })
+                                            </th>
+                                            <td>@addressVMs.Items[i].Name</td>
+                                            <td>@addressVMs.Items[i].AddressString</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </dd>
                 </dl>
             </div>
             <div>
@@ -65,3 +171,81 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        //$(document).ready(function () {
+        //    $('table.display').DataTable();
+        //});
+
+        $(document).ready(function () {
+            // Setup - add a text input to each footer cell
+            $('#example thead tr').clone(true).appendTo('#example thead');
+            $('#example thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+
+            var table = $('#example').DataTable({
+                orderCellsTop: true,
+                fixedHeader: true
+            });
+        });
+
+        $(document).ready(function () {
+            // Setup - add a text input to each footer cell
+            $('#cart_table thead tr').clone(true).appendTo('#cart_table thead');
+            $('#cart_table thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+
+            var table = $('#cart_table').DataTable({
+                orderCellsTop: true,
+                fixedHeader: true
+            });
+        });
+
+        $(document).ready(function () {
+            // Setup - add a text input to each footer cell
+            $('#address_table thead tr').clone(true).appendTo('#address_table thead');
+            $('#address_table thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+
+            var table = $('#address_table').DataTable({
+                orderCellsTop: true,
+                fixedHeader: true
+            });
+        });
+
+    </script>
+}

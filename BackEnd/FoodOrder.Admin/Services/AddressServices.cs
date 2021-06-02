@@ -37,6 +37,17 @@ namespace FoodOrder.Admin.Services
             return vm;
         }
 
+        public async Task<ApiResult<PaginatedList<AddressVM>>> GetByUserID(string userID, PagingRequestBase request, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = BaseRoute + $"/user?userID={userID}&{request.ToQueryString("&")}";
+            var rs = await client.GetAsync(uri);
+            var body = await rs.Content.ReadAsStringAsync();
+            var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<AddressVM>>>(body);
+            return vm;
+        }
+
         public async Task<ApiResult<AddressVM>> GetByID(int id, string token)
         {
             var client = _httpClientFactory.CreateClient();

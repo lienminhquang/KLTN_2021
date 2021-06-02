@@ -48,6 +48,17 @@ namespace FoodOrder.Admin.Services
             return cart;
         }
 
+        public async Task<ApiResult<PaginatedList<CartVM>>> GetByUserID(string userID, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = BaseRoute + $"/user?userID={userID.ToString()}";
+            var rs = await client.GetAsync(uri);
+            var body = await rs.Content.ReadAsStringAsync();
+            var cart = JsonConvert.DeserializeObject<ApiResult<PaginatedList<CartVM>>>(body);
+            return cart;
+        }
+
         public async Task<ApiResult<CartVM>> Create(CartCreateVM cartCreateVM, string token)
         {
             var json = JsonConvert.SerializeObject(cartCreateVM);

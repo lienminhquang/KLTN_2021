@@ -36,8 +36,17 @@ namespace FoodOrder.Admin.Services
             ApiResult<PaginatedList<OrderVM>> vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<OrderVM>>>(body);
             return vm;
         }
-        
 
+        public async Task<ApiResult<List<OrderVM>>> GetByUserID(Guid userID, PagingRequestBase request, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = BaseRoute + $"/user?userID={userID}&{request.ToQueryString("&")}";
+            var rs = await client.GetAsync(uri);
+            var body = await rs.Content.ReadAsStringAsync();
+            ApiResult<List<OrderVM>> vm = JsonConvert.DeserializeObject<ApiResult<List<OrderVM>>>(body);
+            return vm;
+        }
 
         public async Task<ApiResult<OrderVM>> ChangeOrderStatus(ChangeOrderStatusVM changeOrderStatus, string token)
         {

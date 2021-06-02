@@ -172,7 +172,6 @@ namespace FoodOrder.API.Services
             {
                 ID = user.Id,
                 Username = user.UserName,
-                
                 DateOfBirth = user.DateOfBirth,
                 Email = user.Email,
                 FirstName = user.FirstName,
