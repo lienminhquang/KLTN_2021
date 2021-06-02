@@ -6,7 +6,6 @@ import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 
 const List<Key> keys = [Key('Network')];
 
@@ -31,10 +30,6 @@ class Body extends StatelessWidget {
       ),
     );
   }
-
-  // Widget _buildchild(PromotionErrorState state, BuildContext context) {
-  //   return;
-  // }
 
   Widget _buildErrorState(PromotionErrorState state) {
     return Container(
@@ -88,21 +83,41 @@ class UnableItemPromotion extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (_) => NetworkGiffyDialog(
-                      image: Image.network(
-                          'https://media.giphy.com/media/90tLdnyy0XPOWZ5mwE/giphy.gif'),
-                      title: Text(
-                        'Thông tin khuyến mãi của bạn',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
-                      ),
-                      description: Text('${_promotionVM.desciption}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade700)),
-                      onlyCancelButton: true,
-                      onlyOkButton: true,
-                    ),
+                    builder: (context) => Dialog(
+                        backgroundColor: Colors.transparent,
+                        insetPadding: EdgeInsets.all(10),
+                        child: Stack(
+                          overflow: Overflow.visible,
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: double.infinity,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Colors.white),
+                              padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+                              child: Column(children: [
+                                Text("Khuyến mãi của bạn",
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center),
+                                SizedBox(height: 20),
+                                Text(_promotionVM.desciption.toString(),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade700))
+                              ]),
+                            ),
+                            Positioned(
+                                top: -100,
+                                child: Image.network(
+                                    "https://media.giphy.com/media/90tLdnyy0XPOWZ5mwE/giphy.gif",
+                                    width: 150,
+                                    height: 150))
+                          ],
+                        )),
                   );
                 },
                 child: SizedBox(
@@ -230,22 +245,41 @@ class DisableItemPromotion extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (_) => NetworkGiffyDialog(
-                      image: Image.network(
-                          'https://media.giphy.com/media/90tLdnyy0XPOWZ5mwE/giphy.gif'),
-                      title: Text(
-                        'Thông tin khuyến mãi của bạn',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
-                      ),
-                      description: Text(
-                          'Với mã khuyến mãi này bạn sẽ nhận được:+${_promotionVM.desciption}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade700)),
-                      onlyCancelButton: true,
-                      onlyOkButton: true,
-                    ),
+                    builder: (context) => Dialog(
+                        backgroundColor: Colors.transparent,
+                        insetPadding: EdgeInsets.all(10),
+                        child: Stack(
+                          overflow: Overflow.visible,
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: double.infinity,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Colors.white),
+                              padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+                              child: Column(children: [
+                                Text("Khuyến mãi của bạn",
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center),
+                                SizedBox(height: 20),
+                                Text(_promotionVM.desciption.toString(),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade700))
+                              ]),
+                            ),
+                            Positioned(
+                                top: -100,
+                                child: Image.network(
+                                    "https://media.giphy.com/media/90tLdnyy0XPOWZ5mwE/giphy.gif",
+                                    width: 150,
+                                    height: 150))
+                          ],
+                        )),
                   );
                 },
                 child: SizedBox(
