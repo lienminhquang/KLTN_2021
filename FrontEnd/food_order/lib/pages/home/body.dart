@@ -275,7 +275,7 @@ class CategoryItem extends StatelessWidget {
 Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
   if (saleCampaignVM == null) {
     return Text(
-      AppConfigs.AppNumberFormat.format(foodVM.price),
+      AppConfigs.toPrice(foodVM.price),
       style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -285,7 +285,7 @@ Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
     return Row(
       children: [
         Text(
-          AppConfigs.AppNumberFormat.format(
+          AppConfigs.toPrice(
               foodVM.price * (100 - saleCampaignVM.percent) / 100),
           style: TextStyle(
               fontSize: 20,
@@ -296,7 +296,7 @@ Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
           width: 10,
         ),
         Text(
-          AppConfigs.AppNumberFormat.format(foodVM.price),
+          AppConfigs.toPrice(foodVM.price),
           style: TextStyle(
               fontSize: 15,
               color: Colors.black.withOpacity(0.6),

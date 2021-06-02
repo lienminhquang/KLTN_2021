@@ -107,8 +107,7 @@ class CheckoutCart extends StatelessWidget {
                       text: 'Thành tiền:\n',
                       children: [
                         TextSpan(
-                            text:
-                                '\$${AppConfigs.AppNumberFormat.format(totalPrice)}',
+                            text: '${AppConfigs.toPrice(totalPrice)}',
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,

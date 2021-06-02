@@ -97,7 +97,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: new Center(
                       child: new Text(
-                        "\$ ${AppConfigs.AppNumberFormat.format(totalPrice)}",
+                        "${AppConfigs.toPrice(totalPrice)}",
                         style: new TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,

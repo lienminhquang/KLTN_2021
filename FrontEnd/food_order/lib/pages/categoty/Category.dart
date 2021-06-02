@@ -181,13 +181,11 @@ class FoodCard extends StatelessWidget {
       return Row(
         children: [
           Text(
-            AppConfigs.AppNumberFormat.format(
-                    foodVM.price * (100 - discount) / 100) +
-                "  ",
+            AppConfigs.toPrice(foodVM.price * (100 - discount) / 100) + "  ",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
           Text(
-            AppConfigs.AppNumberFormat.format(foodVM.price),
+            AppConfigs.toPrice(foodVM.price),
             style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
@@ -201,7 +199,7 @@ class FoodCard extends StatelessWidget {
     return Row(
       children: [
         Text(
-          AppConfigs.AppNumberFormat.format(foodVM.price),
+          AppConfigs.toPrice(foodVM.price),
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
       ],

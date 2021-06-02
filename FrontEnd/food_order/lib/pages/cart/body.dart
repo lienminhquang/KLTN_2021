@@ -24,21 +24,19 @@ class _BodyState extends State<Body> {
       double discount = cartVM.foodVM.saleCampaignVM!.percent;
       return Row(
         children: <Widget>[
-          Text('\$ ',
-              style: TextStyle(
-                color: LightColor.red,
-                fontSize: 12,
-              )),
+          // Text('\$ ',
+          //     style: TextStyle(
+          //       color: LightColor.red,
+          //       fontSize: 12,
+          //     )),
           Text(
-              AppConfigs.AppNumberFormat.format(cartVM.foodVM.price *
+              AppConfigs.toPrice(cartVM.foodVM.price *
                       cartVM.quantity *
                       (100 - discount) /
                       100) +
                   "  ",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          Text(
-              AppConfigs.AppNumberFormat.format(
-                  cartVM.foodVM.price * cartVM.quantity),
+          Text(AppConfigs.toPrice(cartVM.foodVM.price * cartVM.quantity),
               style: TextStyle(
                   fontSize: 14, decoration: TextDecoration.lineThrough)),
         ],
@@ -46,14 +44,12 @@ class _BodyState extends State<Body> {
     }
     return Row(
       children: <Widget>[
-        Text('\$ ',
-            style: TextStyle(
-              color: LightColor.red,
-              fontSize: 12,
-            )),
-        Text(
-            AppConfigs.AppNumberFormat.format(
-                cartVM.foodVM.price * cartVM.quantity),
+        // Text('\$ ',
+        //     style: TextStyle(
+        //       color: LightColor.red,
+        //       fontSize: 12,
+        //     )),
+        Text(AppConfigs.toPrice(cartVM.foodVM.price * cartVM.quantity),
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       ],
     );
@@ -134,7 +130,7 @@ class _BodyState extends State<Body> {
             "Tổng: ",
             style: TextStyle(color: Colors.grey),
           ),
-          Text(AppConfigs.AppNumberFormat.format(state.getTotalPrice()))
+          Text(AppConfigs.toPrice(state.getTotalPrice()))
         ],
       ),
     );

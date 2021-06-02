@@ -199,7 +199,7 @@ class Item extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        "\$${AppConfigs.AppNumberFormat.format(price)}",
+                        AppConfigs.toPrice(price),
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 12,

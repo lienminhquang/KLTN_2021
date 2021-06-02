@@ -17,6 +17,9 @@ class AppConfigs {
 
   static const String URL_Images = URL_BaseAPI + "/user-content";
 
-  static final NumberFormat AppNumberFormat = NumberFormat();
+  static final NumberFormat _appNumberFormat = NumberFormat();
   static final DateFormat AppDateFormat = DateFormat('yyyy-MM-dd');
+  static String toPrice(double price) {
+    return _appNumberFormat.format(price) + "đ";
+  }
 }

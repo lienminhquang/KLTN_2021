@@ -44,8 +44,18 @@ class OrderDetailsBody extends StatelessWidget {
   Widget _buildLoadedState(
       BuildContext context, OrderDetailsLoadedState state) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
+          Container(
+            height: 40,
+            child: Row(children: [
+              Text("Trạng thái"),
+              Spacer(),
+              Text(state.orderVM.orderStatusVM.name),
+            ]),
+          ),
+          Divider(),
           addressSession(
               context, state.orderVM.addressName, state.orderVM.addressString),
           Expanded(
@@ -56,7 +66,48 @@ class OrderDetailsBody extends StatelessWidget {
               },
               itemCount: state.orderVM.orderDetailVMs.length,
             ),
-          )
+          ),
+          Divider(),
+          Container(
+            height: 30,
+            child: Row(
+              children: [
+                Text("Tạm tính"),
+                Spacer(),
+                Text(AppConfigs.toPrice(state.tempPrice))
+              ],
+            ),
+          ),
+          Container(
+            height: 30,
+            child: Row(
+              children: [
+                Text("Mã giảm giá"),
+                Spacer(),
+                Text("-" + AppConfigs.toPrice(state.promotedAmount))
+              ],
+            ),
+          ),
+          Divider(),
+          Container(
+            height: 50,
+            child: Row(
+              children: [
+                Text("Tổng cộng", style: TextStyle(fontSize: 16)),
+                Spacer(),
+                Text(
+                  AppConfigs.toPrice(state.tempPrice),
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      decoration: TextDecoration.lineThrough),
+                ),
+                Text(AppConfigs.toPrice(state.finalPrice),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
+              ],
+            ),
+          ),
+          Divider(),
         ],
       ),
     );
@@ -69,18 +120,18 @@ class OrderDetailsBody extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 100,
+            height: 60,
             child: Row(
               children: [
                 Expanded(
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(10, 10, 0, 5),
+                        margin: EdgeInsets.fromLTRB(0, 10, 0, 5),
                         child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "Địa điểm nhận hàng",
+                              "Giao đến",
                               style: AppTheme.subTitleStyle,
                             )),
                       ),
@@ -91,9 +142,9 @@ class OrderDetailsBody extends StatelessWidget {
                             child: Text(
                               addressString,
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontSize: 15, fontWeight: FontWeight.normal),
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                              maxLines: 1,
                             )),
                       )
                     ],
@@ -109,7 +160,6 @@ class OrderDetailsBody extends StatelessWidget {
             //endIndent: 20,
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
             child: Align(
               child: Text(
                 "Đơn hàng",
@@ -209,7 +259,6 @@ class OrderDetailsBody extends StatelessWidget {
   Widget _item(OrderDetailVM model, OrderVM orderVM, BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
       decoration: BoxDecoration(color: Colors.white, boxShadow: <BoxShadow>[
         new BoxShadow(
           blurRadius: 3.0,
@@ -236,7 +285,7 @@ class OrderDetailsBody extends StatelessWidget {
                         height: 70,
                         width: 70,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                           child: CachedNetworkImage(
                             fit: BoxFit.cover,
                             placeholder: (context, url) =>
@@ -262,7 +311,7 @@ class OrderDetailsBody extends StatelessWidget {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: LightColor.lightGrey.withAlpha(150),
-                                borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(5)),
                             child: Text('x${model.amount}',
                                 style: TextStyle(
                                   fontSize: 12,
@@ -285,17 +334,17 @@ class OrderDetailsBody extends StatelessWidget {
       double discount = cartVM.salePercent!;
       return Row(
         children: <Widget>[
-          Text('\$ ',
-              style: TextStyle(
-                color: LightColor.red,
-                fontSize: 12,
-              )),
+          // Text('\$ ',
+          //     style: TextStyle(
+          //       color: LightColor.red,
+          //       fontSize: 12,
+          //     )),
           Text(
-              AppConfigs.AppNumberFormat.format(
+              AppConfigs.toPrice(
                       cartVM.price * cartVM.amount * (100 - discount) / 100) +
                   "  ",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          Text(AppConfigs.AppNumberFormat.format(cartVM.price * cartVM.amount),
+          Text(AppConfigs.toPrice(cartVM.price * cartVM.amount),
               style: TextStyle(
                   fontSize: 14, decoration: TextDecoration.lineThrough)),
         ],
@@ -303,14 +352,7 @@ class OrderDetailsBody extends StatelessWidget {
     }
     return Row(
       children: <Widget>[
-        Text('\$ ',
-            style: TextStyle(
-              color: LightColor.red,
-              fontSize: 12,
-            )),
-        Text(
-            AppConfigs.AppNumberFormat.format(
-                cartVM.foodVM!.price * cartVM.amount),
+        Text(AppConfigs.toPrice(cartVM.foodVM!.price * cartVM.amount),
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       ],
     );

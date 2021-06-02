@@ -16,11 +16,11 @@ class FavnPrice extends StatelessWidget {
       final finalPrice = foodVM.price * (100 - discount) / 100;
       return Column(children: [
         Text(
-          "\$" + AppConfigs.AppNumberFormat.format(finalPrice),
+          AppConfigs.toPrice(finalPrice),
           style: new TextStyle(fontSize: 20.0),
         ),
         Text(
-          "\$" + AppConfigs.AppNumberFormat.format(foodVM.price),
+          AppConfigs.toPrice(foodVM.price),
           style: new TextStyle(
               fontSize: 13.0,
               decoration: TextDecoration.lineThrough,
@@ -30,7 +30,7 @@ class FavnPrice extends StatelessWidget {
     }
     return Column(children: [
       Text(
-        "\$" + AppConfigs.AppNumberFormat.format(foodVM.price),
+        AppConfigs.toPrice(foodVM.price),
         style: new TextStyle(fontSize: 20.0),
       ),
     ]);
