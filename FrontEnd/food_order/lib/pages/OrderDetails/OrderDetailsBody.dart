@@ -163,15 +163,17 @@ class OrderDetailsBody extends StatelessWidget {
                                   },
                                   child: Text("Cancel"))
                             ],
+                            title: Center(
+                                child: Text(
+                              "Bạn chấm món này mấy điểm? :)",
+                              textAlign: TextAlign.center,
+                            )),
                             content: Container(
-                              child: Column(
-                                children: [
-                                  Text("Bạn chấm món này mấy điểm? :)"),
-                                  RatingButton((rating) {
-                                    _rating = rating;
-                                  }, _rating)
-                                ],
-                              ),
+                              height: 50,
+                              alignment: Alignment.center,
+                              child: RatingButton((rating) {
+                                _rating = rating;
+                              }, _rating),
                             ),
                           );
                         });
@@ -331,14 +333,17 @@ class _RatingButtonState extends State<RatingButton> {
   double start;
   @override
   Widget build(BuildContext context) {
-    return StarRating(
-      iconSize: 30,
-      rating: start,
-      onRatingChanged: (rating) {
-        start = rating;
-        _ratingChangeCallback(rating);
-        setState(() {});
-      },
+    return Container(
+      width: 150,
+      child: StarRating(
+        iconSize: 30,
+        rating: start,
+        onRatingChanged: (rating) {
+          start = rating;
+          _ratingChangeCallback(rating);
+          setState(() {});
+        },
+      ),
     );
   }
 }
