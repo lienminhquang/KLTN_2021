@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/pages/chatbot/chatbotScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/home/Home.dart';
@@ -20,7 +21,8 @@ class _MotherBoardState extends State<MotherBoard> {
     OderScreen(),
     CartScreen(),
     // NoficationScreen(),
-    ProfileScreen()
+    ProfileScreen(),
+    ChatBotScreen()
   ];
 
   @override
@@ -52,6 +54,11 @@ class _MotherBoardState extends State<MotherBoard> {
               backgroundColor: Colors.black87,
               icon: Icon(Icons.person),
               label: "Profile",
+            ),
+            new BottomNavigationBarItem(
+              backgroundColor: Colors.black87,
+              icon: Icon(Icons.support_agent_outlined),
+              label: "Amee",
             )
           ],
           onTap: (int index) {
