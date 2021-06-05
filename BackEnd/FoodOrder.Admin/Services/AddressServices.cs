@@ -32,9 +32,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"?{request.ToQueryString("&")}";
             var rs = await client.GetAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<AddressVM>>>(body);
-            return vm;
+            if(rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<AddressVM>>>(body);
+                return vm;
+            }
+            return new FailedResult<PaginatedList<AddressVM>>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<PaginatedList<AddressVM>>> GetByUserID(string userID, PagingRequestBase request, string token)
@@ -43,9 +47,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"/user?userID={userID}&{request.ToQueryString("&")}";
             var rs = await client.GetAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<AddressVM>>>(body);
-            return vm;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<AddressVM>>>(body);
+                return vm;
+            }
+            return new FailedResult<PaginatedList<AddressVM>>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<AddressVM>> GetByID(int id, string token)
@@ -54,9 +62,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"/details?id={id}";
             var rs = await client.GetAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var vm = JsonConvert.DeserializeObject<ApiResult<AddressVM>>(body);
-            return vm;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<AddressVM>>(body);
+                return vm;
+            }
+            return new FailedResult<AddressVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<AddressVM>> Create(AddressCreateVM createVM, string token)
@@ -67,9 +79,15 @@ namespace FoodOrder.Admin.Services
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var res = await client.PostAsync(BaseRoute, httpContent);
+            var rs = await client.PostAsync(BaseRoute, httpContent);
 
-            return JsonConvert.DeserializeObject<ApiResult<AddressVM>>(await res.Content.ReadAsStringAsync());
+            if (rs.StatusCode == System.Net.HttpStatusCode.Created || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<AddressVM>>(body);
+                return vm;
+            }
+            return new FailedResult<AddressVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<AddressVM>> Edit(int id, AddressEditVM editVM, string token)
@@ -80,9 +98,15 @@ namespace FoodOrder.Admin.Services
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var res = await client.PutAsync(BaseRoute + $"?id={id}", httpContent);
+            var rs = await client.PutAsync(BaseRoute + $"?id={id}", httpContent);
 
-            return JsonConvert.DeserializeObject<ApiResult<AddressVM>>(await res.Content.ReadAsStringAsync());
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<AddressVM>>(body);
+                return vm;
+            }
+            return new FailedResult<AddressVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<bool>> Delete(int id, string token)
@@ -91,9 +115,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"?id={id}";
             var rs = await client.DeleteAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ApiResult<bool>>(body);
-            return result;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<bool>>(body);
+                return vm;
+            }
+            return new FailedResult<bool>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
     }
 }

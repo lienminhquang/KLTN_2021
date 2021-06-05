@@ -1,7 +1,9 @@
-﻿using FoodOrder.API.Services;
+﻿using FoodOrder.API.Identity;
+using FoodOrder.API.Services;
 using FoodOrder.Core.Helpers;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.AppRoles;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AppRolesController : Controller
     {
         private readonly AppRoleServices _appRoleServices;
@@ -22,6 +25,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin )]
         public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
         {
             var result = await _appRoleServices.GetAllPaging(request);
@@ -33,6 +37,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> GetByID(Guid id)
         {
             var result = await _appRoleServices.GetByID(id);
@@ -44,6 +49,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Create([FromBody] AppRoleCreateVM createVM)
         {
             var result = await _appRoleServices.Create(createVM);
@@ -55,6 +61,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Edit(string id, [FromBody] AppRoleEditVm editVM)
         {
             // Todo: please handle this kind of error
@@ -72,6 +79,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Delete(Guid id)
         {
             if (!ModelState.IsValid)

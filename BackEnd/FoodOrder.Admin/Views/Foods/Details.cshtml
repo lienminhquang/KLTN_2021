@@ -91,15 +91,15 @@
                             <tbody>
                                 @for (int i = 0; i < ratingVMs.Items.Count(); i++)
                                 {
-                                <tr>
-                                    <th scope="row">@i</th>
-                                    <td>@ratingVMs.Items[i].UserFullName</td>
-                                    <td>@ratingVMs.Items[i].Star</td>
-                                    <td>@ratingVMs.Items[i].Comment</td>
-                                    <td>@ratingVMs.Items[i].TimeCreate</td>
-                                </tr>
+                                    <tr>
+                                        <th scope="row">@i</th>
+                                        <td>@Html.ActionLink(ratingVMs.Items[i].UserFullName, "Details", "User", new { id = ratingVMs.Items[i].UserID })</td>
+                                        <td>@ratingVMs.Items[i].Star</td>
+                                        <td>@ratingVMs.Items[i].Comment</td>
+                                        <td>@ratingVMs.Items[i].TimeCreate</td>
+                                    </tr>
                                 }
-                               
+
                             </tbody>
                         </table>
 

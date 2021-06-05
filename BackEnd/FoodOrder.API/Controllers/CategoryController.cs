@@ -10,15 +10,16 @@ using System.Threading.Tasks;
 using FoodOrder.API.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Categories;
+using Microsoft.AspNetCore.Authorization;
+using FoodOrder.API.Identity;
 
 namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
-        
-
         private readonly CategoryServices _categoryServices;
 
         public CategoryController(CategoryServices categoryServices)
@@ -61,6 +62,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateAsync([FromForm] CategoryCreateVM request)
         {
@@ -74,6 +76,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPut]
         [Consumes("multipart/form-data")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> EditAsync(int id, [FromForm] CategoryEditVM category)
         {
             var result = await _categoryServices.Edit(id ,category);
@@ -85,7 +88,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[ValidateAntiForgeryToken]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var result = await _categoryServices.Delete(id);

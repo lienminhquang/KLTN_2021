@@ -1,9 +1,11 @@
-﻿using FoodOrder.API.Services;
+﻿using FoodOrder.API.Identity;
+using FoodOrder.API.Services;
 using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Promotions;
 using FoodOrder.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -27,6 +29,7 @@ namespace FoodOrder.API.Controllers
 
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(int id)
         {
             var result = await _promotionServices.GetByID(id);
@@ -38,6 +41,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> Create([FromBody] PromotionCreateVM createVM)
         {
             var result = await _promotionServices.Create(createVM);
@@ -50,6 +54,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> Edit(int id, [FromBody] PromotionEditVM editVM)
         {
             // Todo: please handle this kind of error
@@ -67,6 +72,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = PolicyType.Admin )]
         public async Task<IActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)
@@ -84,6 +90,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
         {
             var result = await _promotionServices.GetAllPaging(request);
@@ -96,6 +103,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet("valid")]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllValidPaging([FromQuery] PagingRequestBase request, String userID)
         {
             var result = await _promotionServices.GetAllValidPaging(request, userID);

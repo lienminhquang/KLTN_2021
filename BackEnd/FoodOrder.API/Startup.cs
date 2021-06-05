@@ -1,10 +1,12 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using FoodOrder.API.Identity;
 using FoodOrder.API.Services;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels.Users;
 using FoodOrder.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 //using Microsoft.Data.Sqlite;
 
 namespace FoodOrder.API
@@ -42,7 +45,8 @@ namespace FoodOrder.API
                 options.Password.RequireUppercase = false;
             })
                 .AddEntityFrameworkStores<ApplicationDBContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddRoles<AppRole>();
 
             string issuer = Configuration.GetValue<string>("Tokens:Issuer");
             string signingKey = Configuration.GetValue<string>("Tokens:Key");
@@ -69,12 +73,16 @@ namespace FoodOrder.API
                         IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
                     };
                 });
-            
+
+            services.AddAuthorization();
+
             #endregion
 
             services.AddAutoMapper(typeof(Core.AutoMapper.AutoMapperProfile).Assembly);
 
             #region DI
+
+            //services.AddSingleton<IAuthorizationHandler, CustomContainRoleHandler>();
 
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
@@ -160,8 +168,8 @@ namespace FoodOrder.API
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

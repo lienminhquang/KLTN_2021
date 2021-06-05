@@ -9,6 +9,7 @@ namespace FoodOrder.Core.ViewModels.Users
 {
     public class UserDeleteVM
     {
+        [Display(Name = "User ID")]
         public Guid UserID { get; set; }
 
         public string FirstName { get; set; }

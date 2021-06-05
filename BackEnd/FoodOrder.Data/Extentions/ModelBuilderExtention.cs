@@ -13,32 +13,42 @@ namespace FoodOrder.Data.Extentions
             string adminID = "B4E253B2-756E-48B8-9C42-B5ACB139BED4";
             string userID = "DAEB6F0D-EEFE-4250-9ECD-28B3243EB684";
 
+            var user1 = new AppUser
+            {
+                Id = new Guid(adminID),
+                FirstName = "Mary",
+                LastName = "Jame",
+                DateOfBirth = new DateTime(1999, 5, 21),
+                UserName = "admin",
+                //PasswordHash = passwordHasher.HashPassword(null, "123456"),
+                Email = "jame@gmail.com",
+                NormalizedEmail = "JAME@GMAIL.COM",
+                PhoneNumber = "+111111111"
+            };
+            var password1 = new PasswordHasher<AppUser>();
+            var hashed1 = password1.HashPassword(user1, "123456?a");
+            user1.PasswordHash = hashed1;
+
+            var user2 = new AppUser
+            {
+                Id = new Guid(userID),
+                FirstName = "Lonen",
+                LastName = "Messi",
+                DateOfBirth = new DateTime(1990, 7, 5),
+                UserName = "messi10",
+                // PasswordHash = passwordHasher.HashPassword(null, "123456"),
+                Email = "messi10@gmail.com",
+                NormalizedEmail = "MESSI10@GMAIL.COM",
+                PhoneNumber = "+111111111"
+            };
+            var password2 = new PasswordHasher<AppUser>();
+            var hashed2 = password2.HashPassword(user2, "123456?a");
+            user2.PasswordHash = hashed2;
+
             modelBuilder.Entity<AppUser>().HasData(
-                new AppUser
-                {
-                    Id = new Guid(adminID),
-                    FirstName = "Mary",
-                    LastName = "Jame",
-                    DateOfBirth = new DateTime(1999, 5, 21),
-                    UserName = "admin",
-                    PasswordHash = passwordHasher.HashPassword(null, "123456"),
-                    Email = "jame@gmail.com",
-                    NormalizedEmail = "JAME@GMAIL.COM",
-                    PhoneNumber = "+111111111"
-                },
-                new AppUser
-                {
-                    Id = new Guid(userID),
-                    FirstName = "Lonen",
-                    LastName = "Messi",
-                    DateOfBirth = new DateTime(1990, 7, 5),
-                    UserName = "messi10",
-                    PasswordHash = passwordHasher.HashPassword(null, "123456"),
-                    Email = "messi10@gmail.com",
-                    NormalizedEmail = "MESSI10@GMAIL.COM",
-                    PhoneNumber = "+111111111"
-                }
+                user1, user2
                 );
+
             modelBuilder.Entity<AppRole>().HasData(
                 new AppRole
                 {
@@ -52,7 +62,27 @@ namespace FoodOrder.Data.Extentions
                     Id = new Guid("74D17D8B-3F91-4D3A-893F-09B4E51E3834"),
                     Description = "This is User role.",
                     Name = "user",
-                    NormalizedName = "User"
+                    NormalizedName = "USER"
+                },
+                new AppRole
+                {
+                    Id = new Guid("1267BF30-8EEA-4370-BBCD-12F74E29C656"),
+                    Description = "This is Manager role.",
+                    Name = "manager",
+                    NormalizedName = "MANAGER"
+                }
+                );
+
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(
+                new IdentityUserRole<Guid>()
+                {
+                    RoleId = new Guid("B9E08F48-883C-42DC-A700-DA5CF1D81AA3"),
+                    UserId = user1.Id
+                },
+                new IdentityUserRole<Guid>()
+                {
+                    RoleId = new Guid("1267BF30-8EEA-4370-BBCD-12F74E29C656"),
+                    UserId = user2.Id
                 }
                 );
 
@@ -68,7 +98,7 @@ namespace FoodOrder.Data.Extentions
             modelBuilder.Entity<Food>().HasData(
                 new Food { ID = 1, Name = "Com tam gia truyen", Description = "Com tam lam tu by quyet gia truyen co 2 khong 1", Price = 15000, Count = 100 },
                 new Food { ID = 2, Name = "Canh rong bien", Description = "Canh rong bien thit bam", Price = 10000, Count = 57 },
-                new Food { ID = 3, Name = "Pepsi", Description = "Nuoc giai khat pepsi",  Price = 7000, Count = 1000 },
+                new Food { ID = 3, Name = "Pepsi", Description = "Nuoc giai khat pepsi", Price = 7000, Count = 1000 },
                 new Food { ID = 4, Name = "Tra da", Description = "Tra da lam tu by quyet gia truyen co 2 khong 1", Price = 5000, Count = 200 }
                 );
             modelBuilder.Entity<Image>().HasData(
@@ -84,7 +114,7 @@ namespace FoodOrder.Data.Extentions
                 new FoodCategory { CategoryID = 1, FoodID = 3 }
                 );
             modelBuilder.Entity<Order>().HasData(
-                new Order { ID = 1, AppUserID = new Guid(userID), CreatedDate = DateTime.Now, DatePaid = null, IsPaid = false, OrderStatusID = 1, PromotionID = 1 , AddressName = "Nha", AddressString = "ABC"}
+                new Order { ID = 1, AppUserID = new Guid(userID), CreatedDate = DateTime.Now, DatePaid = null, IsPaid = false, OrderStatusID = 1, PromotionID = 1, AddressName = "Nha", AddressString = "ABC" }
                 );
             modelBuilder.Entity<OrderDetail>().HasData(
                 new OrderDetail { FoodID = 1, Amount = 1, OrderID = 1, Price = 12000 },
@@ -100,7 +130,7 @@ namespace FoodOrder.Data.Extentions
             modelBuilder.Entity<Promotion>().HasData(
                 new Promotion { ID = 1, Name = "Chao thanh vien moi", UseTimes = 100, Code = "THANHVIENMOI", Enabled = true, EndDate = new DateTime(2022, 1, 1), Percent = 0.25f, MinPrice = 50000, Max = 5000, StartDate = DateTime.Now }
                 );
-            
+
         }
     }
 }

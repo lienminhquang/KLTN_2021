@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,18 +27,20 @@ namespace FoodOrder.Admin.Controllers
         private readonly OrderServices _orderServices;
         private readonly CartServices _cartServices;
         private readonly AddressServices _addressServices;
+        private readonly AppRoleServices _roleServices;
 
-        public UserController(AdminUserService adminUserService, IConfiguration configuration, OrderServices orderServices, CartServices cartServices, AddressServices addressServices)
+        public UserController(AdminUserService adminUserService, IConfiguration configuration, OrderServices orderServices, CartServices cartServices, AddressServices addressServices, AppRoleServices appRoleServices)
         {
             _adminUserService = adminUserService;
             _config = configuration;
             _orderServices = orderServices;
             _cartServices = cartServices;
             _addressServices = addressServices;
+            _roleServices = appRoleServices;
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexAsync([FromQuery] PagingRequestBase request)
+        public async Task<IActionResult> Index([FromQuery] PagingRequestBase request)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -48,7 +51,7 @@ namespace FoodOrder.Admin.Controllers
 
             if (!users.IsSuccessed)
             {
-                return View(users.ErrorMessage);
+                return this.RedirectToErrorPage(users.ErrorMessage);
             }
 
             return View(users.PayLoad);
@@ -90,7 +93,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Details/5
-
+        [HttpGet]
         public async Task<ActionResult> DetailsAsync(string id)
         {
             if (!this.ValidateTokenInCookie())
@@ -105,7 +108,7 @@ namespace FoodOrder.Admin.Controllers
             }
 
             var orders = await _orderServices.GetByUserID(new Guid(id), new PagingRequestBase(), this.GetTokenFromCookie());
-            if(orders.IsSuccessed == false)
+            if (orders.IsSuccessed == false)
             {
                 TempData[AppConfigs.ErrorMessageString] = orders.ErrorMessage;
             }
@@ -128,6 +131,55 @@ namespace FoodOrder.Admin.Controllers
             return View(user.PayLoad);
         }
 
+        [HttpGet()]
+        public async Task<IActionResult> AssignRoleToUser([FromRoute] string id)
+        {
+            if (!this.ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+
+            var rs = await _adminUserService.GetRolesOfUser(id, this.GetTokenFromCookie());
+            if (rs.IsSuccessed)
+            {
+                var roles = await _roleServices.GetAllPaging(new PagingRequestBase(), this.GetTokenFromCookie());
+                ViewBag.Roles = roles.PayLoad.Items;
+                RoleAssignVM roleAssignVM = new RoleAssignVM()
+                {
+                    roles = rs.PayLoad,
+                    userID = id
+                };
+
+                return View(roleAssignVM);
+            }
+
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View();
+        }
+        [HttpPost()]
+        public async Task<IActionResult> AssignRoleToUser([FromRoute] string id, [FromForm] RoleAssignVM roleAssignVM)
+        {
+            if (!this.ValidateTokenInCookie())
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+
+            var rs = await _adminUserService.AssignRoleToUser(roleAssignVM.roles, roleAssignVM.userID, this.GetTokenFromCookie());
+            if (rs.IsSuccessed)
+            {
+                
+                TempData[AppConfigs.SuccessMessageString] = "Role assigned!";
+               
+            }
+            var roles = await _roleServices.GetAllPaging(new PagingRequestBase(), this.GetTokenFromCookie());
+            ViewBag.Roles = roles.PayLoad.Items;
+
+            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
+            return View(roleAssignVM);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Edit([FromForm] UserUpdateRequest request)
         {
@@ -144,7 +196,7 @@ namespace FoodOrder.Admin.Controllers
             var rs = await _adminUserService.EditUser(request, this.GetTokenFromCookie());
             if (rs.IsSuccessed)
             {
-                return RedirectToAction("Details", new { userID = rs.PayLoad.UserID });
+                return RedirectToAction("Details", new { id = rs.PayLoad.UserID });
             }
 
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
@@ -185,16 +237,16 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> Login([FromQuery] string returnUrl)
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return View(new LoginRequest() {});
+            return View(new LoginRequest() { });
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
             if (!ModelState.IsValid)
@@ -237,7 +289,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(string id, [FromBody] UserDeleteVM userDeleteVM)
+        public async Task<IActionResult> Delete(string id, [FromForm] UserDeleteVM userDeleteVM)
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -247,8 +299,7 @@ namespace FoodOrder.Admin.Controllers
             var result = await _adminUserService.DeleteUser(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
-                return View(userDeleteVM);
+                this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             TempData[AppConfigs.SuccessMessageString] = "User delete succesed!";
@@ -256,7 +307,6 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> Delete(string id)
         {
             if (!this.ValidateTokenInCookie())

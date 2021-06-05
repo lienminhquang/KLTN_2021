@@ -54,7 +54,7 @@
                                             @Html.DisplayFor(modelItem => item.ID)
                                         </td>
                                         <td>
-                                            @fullName
+                                            @Html.ActionLink(fullName, "Details", "User", new { id = item.UserVM.ID })
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.CreatedDate)

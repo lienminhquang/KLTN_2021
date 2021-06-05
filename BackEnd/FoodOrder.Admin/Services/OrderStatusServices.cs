@@ -36,9 +36,13 @@ namespace FoodOrder.Admin.Services
                 uri += $"?{query}";
             }
             var rs = await client.GetAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var vms = JsonConvert.DeserializeObject<ApiResult<PaginatedList<OrderStatusVM>>>(body);
-            return vms;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<OrderStatusVM>>>(body);
+                return vm;
+            }
+            return new FailedResult<PaginatedList<OrderStatusVM>>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<OrderStatusVM>> GetByID(int id, string token)
@@ -47,9 +51,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"/{id}";
             var rs = await client.GetAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var vm = JsonConvert.DeserializeObject<ApiResult<OrderStatusVM>>(body);
-            return vm;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<OrderStatusVM>>(body);
+                return vm;
+            }
+            return new FailedResult<OrderStatusVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         //public async Task<ApiResult<ImageVM>> Create(ImageCreateVM imageCreateVM, string token)

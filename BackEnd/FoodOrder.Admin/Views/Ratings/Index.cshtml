@@ -24,7 +24,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().OrderID)
                             </th>
-                          
+
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().FoodID)
                             </th>
@@ -47,11 +47,10 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.OrderID)
+                                        @Html.ActionLink(item.OrderID.ToString(), "Details", "Orders", new { id = item.OrderID })
                                     </td>
-                                  
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.FoodID)
+                                        @Html.ActionLink(item.FoodID.ToString(), "Details", "Foods", new { id = item.FoodID })
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Star)
@@ -63,9 +62,9 @@
                                         @Html.DisplayFor(modelItem => item.TimeCreate)
                                     </td>
                                     <td>
-                                        @Html.ActionLink("Edit", "Edit", new { orderID = item.OrderID,  foodID = item.FoodID }) |
-                                        @Html.ActionLink("Details", "Details", new { orderID = item.OrderID,  foodID = item.FoodID }) |
-                                        @Html.ActionLink("Delete", "Delete", new { orderID = item.OrderID,  foodID = item.FoodID })
+                                        @Html.ActionLink("Edit", "Edit", new { orderID = item.OrderID, foodID = item.FoodID }) |
+                                        @Html.ActionLink("Details", "Details", new { orderID = item.OrderID, foodID = item.FoodID }) |
+                                        @Html.ActionLink("Delete", "Delete", new { orderID = item.OrderID, foodID = item.FoodID })
                                     </td>
                                 </tr>
                             }

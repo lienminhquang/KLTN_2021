@@ -32,9 +32,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"?{request.ToQueryString("&")}";
             var rs = await client.GetAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var carts = JsonConvert.DeserializeObject<ApiResult<PaginatedList<CartVM>>>(body);
-            return carts;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<CartVM>>>(body);
+                return vm;
+            }
+            return new FailedResult<PaginatedList<CartVM>>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<CartVM>> GetByID(string userID, int foodID, string token)
@@ -43,9 +47,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"/details?userID={userID.ToString()}&foodID={foodID}";
             var rs = await client.GetAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var cart = JsonConvert.DeserializeObject<ApiResult<CartVM>>(body);
-            return cart;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<CartVM>>(body);
+                return vm;
+            }
+            return new FailedResult<CartVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<PaginatedList<CartVM>>> GetByUserID(string userID, string token)
@@ -54,9 +62,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"/user?userID={userID.ToString()}";
             var rs = await client.GetAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var cart = JsonConvert.DeserializeObject<ApiResult<PaginatedList<CartVM>>>(body);
-            return cart;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<CartVM>>>(body);
+                return vm;
+            }
+            return new FailedResult<PaginatedList<CartVM>>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<CartVM>> Create(CartCreateVM cartCreateVM, string token)
@@ -67,9 +79,15 @@ namespace FoodOrder.Admin.Services
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var res = await client.PostAsync(BaseRoute, httpContent);
+            var rs = await client.PostAsync(BaseRoute, httpContent);
 
-            return JsonConvert.DeserializeObject<ApiResult<CartVM>>(await res.Content.ReadAsStringAsync());
+            if (rs.StatusCode == System.Net.HttpStatusCode.Created || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<CartVM>>(body);
+                return vm;
+            }
+            return new FailedResult<CartVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<CartEditVM>> EditCart(Guid userID, int foodID, CartEditVM cartEditVM, string token)
@@ -80,9 +98,15 @@ namespace FoodOrder.Admin.Services
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var res = await client.PutAsync(BaseRoute + $"?userID={userID.ToString()}&foodID={foodID}", httpContent);
+            var rs = await client.PutAsync(BaseRoute + $"?userID={userID.ToString()}&foodID={foodID}", httpContent);
 
-            return JsonConvert.DeserializeObject<ApiResult<CartEditVM>>(await res.Content.ReadAsStringAsync());
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<CartEditVM>>(body);
+                return vm;
+            }
+            return new FailedResult<CartEditVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<bool>> Delete(Guid userID, int foodID, string token)
@@ -91,9 +115,13 @@ namespace FoodOrder.Admin.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var uri = BaseRoute + $"?userID={userID.ToString()}&foodID={foodID}";
             var rs = await client.DeleteAsync(uri);
-            var body = await rs.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ApiResult<bool>>(body);
-            return result;
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<bool>>(body);
+                return vm;
+            }
+            return new FailedResult<bool>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
     }
 }

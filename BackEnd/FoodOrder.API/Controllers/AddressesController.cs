@@ -1,6 +1,8 @@
-﻿using FoodOrder.API.Services;
+﻿using FoodOrder.API.Identity;
+using FoodOrder.API.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Addresses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AddressesController : Controller
     {
         private readonly AddressServices _addressServices;
@@ -21,6 +24,7 @@ namespace FoodOrder.API.Controllers
         }
         // GET: api/<ValuesController>
         [HttpGet]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request)
         {
             var result = await _addressServices.GetAllPaging(request);
@@ -33,6 +37,7 @@ namespace FoodOrder.API.Controllers
 
         // GET api/<ValuesController>/details?
         [HttpGet("user")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> GetByUserID([FromQuery] string userID)
         {
             var result = await _addressServices.GetByUserID(userID);
@@ -45,6 +50,7 @@ namespace FoodOrder.API.Controllers
 
         // GET api/<ValuesController>/details?
         [HttpGet("details")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public IActionResult Get([FromQuery] int id)
         {
             var result = _addressServices.GetByID(id);
@@ -57,6 +63,7 @@ namespace FoodOrder.API.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Post([FromBody] AddressCreateVM vM)
         {
             var result = await _addressServices.Create(vM);
@@ -69,6 +76,7 @@ namespace FoodOrder.API.Controllers
 
         // PUT api/<ValuesController>/5
         [HttpPut]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] AddressEditVM value)
         {
             var result = await _addressServices.Edit(id, value);
@@ -81,6 +89,7 @@ namespace FoodOrder.API.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _addressServices.Delete(id);

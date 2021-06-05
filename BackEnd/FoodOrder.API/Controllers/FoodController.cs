@@ -1,4 +1,5 @@
-﻿using FoodOrder.API.Services;
+﻿using FoodOrder.API.Identity;
+using FoodOrder.API.Services;
 using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
@@ -6,6 +7,8 @@ using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
 using FoodOrder.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,20 +20,23 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize]
     public class FoodController : ControllerBase
     {
         private readonly FoodServices _foodServices;
+        private readonly UserManager<AppUser> _userManager;
 
-        public FoodController(FoodServices foodServices)
+        public FoodController(FoodServices foodServices, UserManager<AppUser> userManager)
         {
             _foodServices = foodServices;
+            _userManager = userManager;
         }
 
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID(int id)
         {
+
             var result = await _foodServices.GetByID(id);
             if (!result.IsSuccessed)
             {
@@ -51,6 +57,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = PolicyType.Admin + "," + PolicyType.Manager)]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] FoodCreateVM foodCreateVM)
         {
@@ -65,6 +72,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost("{id}/categories")]
+        [Authorize(Roles = PolicyType.Admin + "," + PolicyType.Manager)]
         public async Task<IActionResult> AddFoodToCategories(int id, [FromBody] List<string> categoryIDs)
         {
             var fcResult = await _foodServices.AddFoodToCategories(categoryIDs, id);
@@ -76,6 +84,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}/categories")]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> DeleteFoodFromCategory(int id)
         {
             var fcResult = await _foodServices.DeleteFoodFromAllCategory(id);
@@ -88,6 +97,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPut]
         [Consumes("multipart/form-data")]
+        [Authorize(Roles = PolicyType.Admin + "," + PolicyType.Manager)]
         public async Task<IActionResult> Edit(int id, [FromForm] FoodEditVM food)
         {
             // Todo: please handle this kind of error
@@ -105,6 +115,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)
@@ -121,7 +132,6 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet]
-        // TODO: return the sortorder, currentfilter, pagenumber to the client.
         public async Task<IActionResult> GetAllPaging([FromQuery]PagingRequestBase request)
         {
             var result = await _foodServices.GetAllPaging(request);

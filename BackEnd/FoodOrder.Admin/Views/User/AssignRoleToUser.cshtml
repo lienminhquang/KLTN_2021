@@ -1,0 +1,89 @@
+﻿@model FoodOrder.Core.ViewModels.Users.RoleAssignVM
+@using FoodOrder.Core.ViewModels.AppRoles;
+
+@{
+    ViewData["Title"] = "AssignRoleToUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Change role of user</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+        <li class="breadcrumb-item active">Change role of userr</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a asp-action="Index">Back to list</a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="AssignRoleToUser">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="userID" class="control-label"></label>
+                            <input asp-for="userID" class="form-control" />
+                            <span asp-validation-for="userID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="demo-section k-content">
+                                <label for="required">Roles</label>
+                                <select id="required" asp-for="roles" multiple="multiple" data-placeholder="Select Roles...">
+                                    @foreach (var item in (ViewBag.Roles as List<AppRoleVM>))
+                                    {
+                                        <option value="@item.Name">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Submit" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+@section CustomScripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            // create MultiSelect from select HTML element
+            var required = $("#required").kendoMultiSelect().data("kendoMultiSelect");
+
+
+            $("#get").click(function () {
+                alert("Attendees:\n\nRequired: " + required.value() + "\nOptional: " + optional.value());
+            });
+
+            var multiSelect = $("#required").data("kendoMultiSelect");
+            multiSelect.options.filter = "contains";
+        });
+    </script>
+}
+@section CustomCss{
+    <style>
+        .demo-section label {
+            display: block;
+            margin: 15px 0 5px 0;
+        }
+
+        #get {
+            float: right;
+            margin: 25px auto 0;
+        }
+    </style>
+}

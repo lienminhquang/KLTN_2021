@@ -1,10 +1,12 @@
-﻿using FoodOrder.API.Services;
+﻿using FoodOrder.API.Identity;
+using FoodOrder.API.Services;
 using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,6 +20,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderDetailsController : ControllerBase
     {
         private readonly OrderDetailServices _orderDetailServices;
@@ -28,6 +31,7 @@ namespace FoodOrder.API.Controllers
         }
         // GET: api/<ValuesController>
         [HttpGet]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request)
         {
             var result = await _orderDetailServices.GetAllPaging(request);
@@ -40,6 +44,7 @@ namespace FoodOrder.API.Controllers
 
         // GET api/<ValuesController>/details?
         [HttpGet("details")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Get([FromQuery] int orderID, [FromQuery] int foodID)
         {
             var result = await _orderDetailServices.GetByID(orderID, foodID);
@@ -52,6 +57,7 @@ namespace FoodOrder.API.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Post([FromBody] OrderDetailCreateVM vM)
         {
             var result = await _orderDetailServices.Create(vM);
@@ -67,6 +73,7 @@ namespace FoodOrder.API.Controllers
 
         // PUT api/<ValuesController>/5
         [HttpPut]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> PutAsync(int orderID, int foodID, [FromBody] OrderDetailEditVM value)
         {
             var result = await _orderDetailServices.Edit(orderID, foodID, value);
@@ -79,6 +86,7 @@ namespace FoodOrder.API.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Delete(int orderID, int foodID)
         {
             var result = await _orderDetailServices.Delete(orderID, foodID);

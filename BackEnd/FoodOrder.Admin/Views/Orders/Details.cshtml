@@ -39,7 +39,8 @@
                         @Html.DisplayNameFor(model => model.AppUserID)
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.AppUserID)
+                        @Html.ActionLink(Model.AppUserID.ToString(), "Details", "User", new { id = Model.AppUserID });
+
                     </dd>
                     <dt class="col-sm-2">
                         Name
@@ -79,7 +80,7 @@
                         @Html.DisplayNameFor(model => model.PromotionID)
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.PromotionID)
+                        @Html.ActionLink(Model.PromotionID.ToString(), "Details", "Promotions", new { id = Model.PromotionID })
                     </dd>
                     <dt class="col-sm-2">
                         @Html.DisplayNameFor(model => model.PromotionAmount)
@@ -117,7 +118,9 @@
                                 {
                                     <tr>
                                         <th scope="row">@i</th>
-                                        <td>@Model.OrderDetailVMs[i].FoodVM.Name</td>
+                                        <td>
+                                            @Html.ActionLink(@Model.OrderDetailVMs[i].FoodVM.Name, "Details", "Foods", new { id = @Model.OrderDetailVMs[i].FoodVM.ID })
+                                        </td>
                                         <td>@Model.OrderDetailVMs[i].Amount</td>
                                         <td>@Model.OrderDetailVMs[i].Price</td>
                                     </tr>

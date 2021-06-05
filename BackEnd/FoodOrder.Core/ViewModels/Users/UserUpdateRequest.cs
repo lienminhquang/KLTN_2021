@@ -9,6 +9,7 @@ namespace FoodOrder.Core.ViewModels.Users
 {
     public class UserUpdateRequest
     {
+        [Display(Name = "User ID")]
         public Guid UserID { get; set; }
 
         public string FirstName { get; set; }
@@ -23,10 +24,12 @@ namespace FoodOrder.Core.ViewModels.Users
 
         //public string Username { get; set; }
 
-        //[DataType(DataType.Password)]
-        //public string Password { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        public string NewPassword { get; set; }
 
-        //[DataType(DataType.Password)]
-        //public string ConfirmPassword { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        public string ConfirmPassword { get; set; }
     }
 }

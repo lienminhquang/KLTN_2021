@@ -37,7 +37,9 @@ namespace FoodOrder.Admin.Controllers
 
             if (!vm.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = vm.ErrorMessage;
+
+                //TempData[AppConfigs.ErrorMessageString] = vm.ErrorMessage;
+                return this.RedirectToErrorPage(vm.ErrorMessage);
             }
 
             return View(vm.PayLoad);

@@ -11,6 +11,8 @@ using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.API.Services;
 using FoodOrder.Core.ViewModels.Carts;
+using Microsoft.AspNetCore.Authorization;
+using FoodOrder.API.Identity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,6 +20,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CartsController : ControllerBase
     {
         private readonly CartServices _cartServices;
@@ -28,6 +31,7 @@ namespace FoodOrder.API.Controllers
         }
         // GET: api/<ValuesController>
         [HttpGet]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request)
         {
             var result = await _cartServices.GetCartPaging(request);
@@ -39,6 +43,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("user")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> GetAsync([FromQuery] string userID)
         {
             var result = await _cartServices.GetByUserID(userID);
@@ -51,6 +56,7 @@ namespace FoodOrder.API.Controllers
 
         // GET api/<ValuesController>/details?
         [HttpGet("details")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Get([FromQuery] Guid userId, [FromQuery] int foodID)
         {
             var result = await _cartServices.GetByID(userId, foodID);
@@ -63,6 +69,7 @@ namespace FoodOrder.API.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Post([FromBody] CartCreateVM cart)
         {
             var result = await _cartServices.Create(cart);
@@ -77,6 +84,7 @@ namespace FoodOrder.API.Controllers
 
         // POST api/<ValuesController>
         [HttpPost("edit_or_create")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> EditOrCreate([FromBody] CartCreateVM cart)
         {
             var result = await _cartServices.EditOrCreate(cart);
@@ -89,6 +97,7 @@ namespace FoodOrder.API.Controllers
 
         // PUT api/<ValuesController>/5
         [HttpPut]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> PutAsync(Guid userId, int foodID, [FromBody] CartEditVM value)
         {
             var result = await _cartServices.Edit(userId, foodID, value);
@@ -101,6 +110,7 @@ namespace FoodOrder.API.Controllers
 
         // DELETE api/<ValuesController>/5
         [HttpDelete]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Delete(Guid userId, int foodID)
         {
             var result = await _cartServices.Delete(userId, foodID);

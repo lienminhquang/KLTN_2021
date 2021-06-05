@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using FoodOrder.API.Identity;
 using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels.OrderStatuses;
 using FoodOrder.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = PolicyType.Admin)]
     public class OrderStatusController : ControllerBase
     {
         public class OrderStatusCreateRequest
@@ -41,6 +44,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: api/<OrderStatusController>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             var orderStatus = from c in m_dbContext.OrderStatuses select c;
@@ -56,6 +60,7 @@ namespace FoodOrder.API.Controllers
 
         // GET api/<OrderStatusController>/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(int id)
         {
             var os = m_dbContext.OrderStatuses.FirstOrDefault(os => os.ID == id);

@@ -23,7 +23,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="UserID" class="control-label"></label>
-                            <input asp-for="UserID" class="form-control" readonly/>
+                            <input asp-for="UserID" class="form-control" readonly />
                             <span asp-validation-for="UserID" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -45,6 +45,18 @@
                             <label asp-for="Email" class="control-label"></label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                       
+                        
+                        <div class="form-group">
+                            <label asp-for="NewPassword" class="control-label"></label>
+                            <input asp-for="NewPassword" class="form-control" />
+                            <span asp-validation-for="NewPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword" class="control-label"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Save" class="btn btn-primary" />

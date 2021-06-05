@@ -1,4 +1,5 @@
-﻿using FoodOrder.API.Services;
+﻿using FoodOrder.API.Identity;
+using FoodOrder.API.Services;
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
@@ -36,12 +37,12 @@ namespace FoodOrder.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return Ok(new FailedResult<string>(ModelState.ToString()));
             }
             ApiResult<string> rs = await _userService.Authenticate(loginRequest);
-            if(!rs.IsSuccessed)
+            if (!rs.IsSuccessed)
             {
                 return BadRequest(rs);
             }
@@ -57,7 +58,7 @@ namespace FoodOrder.API.Controllers
                 return BadRequest(new FailedResult<string>(ModelState.ToString()));
             }
             var rs = await _userService.Register(registerRequest);
-            if(!rs.IsSuccessed)
+            if (!rs.IsSuccessed)
             {
                 return BadRequest(rs);
             }
@@ -66,6 +67,8 @@ namespace FoodOrder.API.Controllers
 
         // GET: api/<UsersController>
         [HttpGet]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        //[Authorize(Roles = "user")]
         public async Task<IActionResult> Get([FromQuery] PagingRequestBase request)
         {
             var rs = await _userService.GetAllPaging(request);
@@ -76,12 +79,53 @@ namespace FoodOrder.API.Controllers
             return Ok(rs);
         }
 
+        [HttpGet("role/{id}")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        public async Task<IActionResult> GetRolesOfUser(string id)
+        {
+            var result = await _userService.GetRolesOfUser(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("role/{userID}")]
+        //[Authorize(Roles = PolicyType.Admin)]
+        public async Task<IActionResult> ChangeUserRoles(string userID, [FromBody] RoleAssignVM roleAssignVM)
+        {
+            var result = await _userService.AssignRoleToUser(userID, roleAssignVM.roles);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+
+        [HttpPost("password")]
+        //[Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordVM changePasswordVM)
+        {
+            var result = await _userService.ChangePassword(changePasswordVM);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Get(string id)
         {
             var result = await _userService.GetUserByID(id);
-            if(!result.IsSuccessed)
+            if (!result.IsSuccessed)
             {
                 return BadRequest(result);
             }
@@ -97,6 +141,7 @@ namespace FoodOrder.API.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
+        //[Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Put(string id, [FromBody] UserUpdateRequest request)
         {
             var result = await _userService.EditUser(id, request);
@@ -110,6 +155,7 @@ namespace FoodOrder.API.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
+        //[Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _userService.DeleteUser(id);

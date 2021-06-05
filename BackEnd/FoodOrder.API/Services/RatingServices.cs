@@ -48,6 +48,7 @@ namespace FoodOrder.API.Services
                 var order = _dbContext.Orders.Find(item.OrderID);
                 var user = _dbContext.AppUsers.Find(order.AppUserID);
                 item.UserFullName = user.FirstName + " " + user.LastName;
+                item.UserID = user.Id.ToString();
             }
 
             return new SuccessedResult<PaginatedList<RatingVM>>(created);

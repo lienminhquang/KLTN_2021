@@ -88,7 +88,7 @@
                                 <tr>
 
                                     <td>@item.ID</td>
-                                    <td>@item.Name</td>
+                                    <td>@Html.ActionLink(item.Name, "Details", "Foods", new { id = item.ID })</td>
                                     <td>@item.Price</td>
                                 </tr>
                             }
