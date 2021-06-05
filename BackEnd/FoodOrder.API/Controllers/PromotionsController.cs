@@ -18,6 +18,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PromotionsController : ControllerBase
     {
         private readonly PromotionServices _promotionServices;

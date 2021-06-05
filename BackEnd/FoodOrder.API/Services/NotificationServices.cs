@@ -43,6 +43,7 @@ namespace FoodOrder.API.Services
         public ApiResult<bool> NotificationReceived(NotificationReceivedVM notificationReceivedVM)
         {
             var vMs = _dbContext.Notifications.Find(notificationReceivedVM.NotificationID);
+           
             if (vMs == null)
             {
                 return new FailedResult<bool>("Notification not found");
@@ -51,6 +52,7 @@ namespace FoodOrder.API.Services
             if (vMs.UserID.ToString() == notificationReceivedVM.ReceiverID)
             {
                 vMs.UserReceived = true;
+                _dbContext.SaveChangesAsync();
                 return new SuccessedResult<bool>(true);
 
             }

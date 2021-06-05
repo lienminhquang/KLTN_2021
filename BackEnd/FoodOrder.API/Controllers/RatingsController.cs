@@ -18,6 +18,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RatingsController : ControllerBase
     {
         private readonly RatingServices _ratingServices;

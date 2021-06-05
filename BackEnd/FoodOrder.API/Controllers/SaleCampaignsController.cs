@@ -13,6 +13,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SaleCampaignsController : ControllerBase
     {
         private readonly SaleCampaignServices _saleCampaignServices;
@@ -85,7 +86,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
-        [AllowAnonymous]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
         {
             var result = await _saleCampaignServices.GetAllPaging(request);

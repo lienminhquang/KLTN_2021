@@ -29,6 +29,7 @@ namespace FoodOrder.API.Controllers
 
         // GET: CategoryController
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery]PagingRequestBase request)
         {
             var result = await _categoryServices.GetAllPaging(request);
@@ -40,6 +41,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(int id)
         {
             var result = await _categoryServices.GetByID(id);
@@ -51,6 +53,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("{id}/foods")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetFoodsInCategory(int id, [FromQuery]PagingRequestBase request)
         {
             var result = await _categoryServices.GetFoodInCategory(id, request);

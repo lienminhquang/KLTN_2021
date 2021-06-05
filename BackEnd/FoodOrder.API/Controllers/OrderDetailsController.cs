@@ -24,10 +24,12 @@ namespace FoodOrder.API.Controllers
     public class OrderDetailsController : ControllerBase
     {
         private readonly OrderDetailServices _orderDetailServices;
+        private readonly OrderServices _orderServices;
 
-        public OrderDetailsController(OrderDetailServices orderDetailServices)
+        public OrderDetailsController(OrderDetailServices orderDetailServices, OrderServices orderServices)
         {
             _orderDetailServices = orderDetailServices;
+            _orderServices = orderServices;
         }
         // GET: api/<ValuesController>
         [HttpGet]
@@ -47,6 +49,16 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Get([FromQuery] int orderID, [FromQuery] int foodID)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                var order = _orderServices.GetByID(orderID);
+                if (order.IsSuccessed && userIDInClaim != order.PayLoad.AppUserID.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _orderDetailServices.GetByID(orderID, foodID);
             if (!result.IsSuccessed)
             {
@@ -57,9 +69,19 @@ namespace FoodOrder.API.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        [Authorize(Roles = PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Post([FromBody] OrderDetailCreateVM vM)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                var order = _orderServices.GetByID(vM.OrderID);
+                if (order.IsSuccessed && userIDInClaim != order.PayLoad.AppUserID.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _orderDetailServices.Create(vM);
             if (!result.IsSuccessed)
             {

@@ -46,6 +46,15 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> GetAsync([FromQuery] string userID)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != userID)
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _cartServices.GetByUserID(userID);
             if (!result.IsSuccessed)
             {
@@ -59,6 +68,15 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Get([FromQuery] Guid userId, [FromQuery] int foodID)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != userId.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _cartServices.GetByID(userId, foodID);
             if (!result.IsSuccessed)
             {
@@ -72,6 +90,15 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Post([FromBody] CartCreateVM cart)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != cart.AppUserId.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _cartServices.Create(cart);
             if (!result.IsSuccessed)
             {
@@ -87,6 +114,15 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> EditOrCreate([FromBody] CartCreateVM cart)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != cart.AppUserId.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _cartServices.EditOrCreate(cart);
             if (!result.IsSuccessed)
             {
@@ -100,6 +136,15 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> PutAsync(Guid userId, int foodID, [FromBody] CartEditVM value)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != value.AppUserId.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _cartServices.Edit(userId, foodID, value);
             if (!result.IsSuccessed)
             {
@@ -113,6 +158,15 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Delete(Guid userId, int foodID)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != userId.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _cartServices.Delete(userId, foodID);
             if (!result.IsSuccessed)
             {

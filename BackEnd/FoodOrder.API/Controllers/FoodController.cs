@@ -34,6 +34,7 @@ namespace FoodOrder.API.Controllers
 
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByID(int id)
         {
 
@@ -46,6 +47,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet("best_selling")]
+        [AllowAnonymous]
         public IActionResult GetBestSelling()
         {
             var result = _foodServices.GetBestSelling(new PagingRequestBase());
@@ -132,6 +134,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery]PagingRequestBase request)
         {
             var result = await _foodServices.GetAllPaging(request);

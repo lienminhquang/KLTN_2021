@@ -18,7 +18,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = PolicyType.Admin)]
+    [Authorize]
     public class OrderStatusController : ControllerBase
     {
         public class OrderStatusCreateRequest
@@ -48,9 +48,6 @@ namespace FoodOrder.API.Controllers
         public async Task<IActionResult> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
         {
             var orderStatus = from c in m_dbContext.OrderStatuses select c;
-           
-
-           
 
             orderStatus = Core.Helpers.Utilities<OrderStatus>.Sort(orderStatus, sortOrder, "ID");
 
@@ -70,6 +67,7 @@ namespace FoodOrder.API.Controllers
 
         // POST api/<OrderStatusController>
         [HttpPost]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Post([FromBody] OrderStatusCreateRequest value)
         {
             var rs = await m_dbContext.OrderStatuses.AddAsync(new OrderStatus
@@ -90,6 +88,7 @@ namespace FoodOrder.API.Controllers
 
         // PUT api/<OrderStatusController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Put(int id, [FromBody] OrderStatusUpdateRequest value)
         {
             var rs = await m_dbContext.OrderStatuses.FindAsync(id);
@@ -112,6 +111,8 @@ namespace FoodOrder.API.Controllers
 
         // DELETE api/<OrderStatusController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = PolicyType.Admin)]
+
         public async Task<IActionResult> Delete(int id)
         {
             var rs = await m_dbContext.OrderStatuses.FindAsync(id);

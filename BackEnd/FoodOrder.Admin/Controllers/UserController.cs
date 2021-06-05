@@ -237,7 +237,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpGet]
-        
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromQuery] string returnUrl)
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -246,7 +246,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpPost]
-        
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
             if (!ModelState.IsValid)

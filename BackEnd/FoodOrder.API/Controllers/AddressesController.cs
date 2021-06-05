@@ -17,10 +17,12 @@ namespace FoodOrder.API.Controllers
     public class AddressesController : Controller
     {
         private readonly AddressServices _addressServices;
+        private readonly UserServices _userSerivces;
 
-        public AddressesController(AddressServices services)
+        public AddressesController(AddressServices services, UserServices userServices)
         {
             _addressServices = services;
+            _userSerivces = userServices;
         }
         // GET: api/<ValuesController>
         [HttpGet]
@@ -40,6 +42,14 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> GetByUserID([FromQuery] string userID)
         {
+            if(!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                if(HttpContext.User.Claims.First(x => x.Type == "UserID").Value != userID)
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _addressServices.GetByUserID(userID);
             if (!result.IsSuccessed)
             {
@@ -54,6 +64,16 @@ namespace FoodOrder.API.Controllers
         public IActionResult Get([FromQuery] int id)
         {
             var result = _addressServices.GetByID(id);
+
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if(result.IsSuccessed && result.PayLoad.AppUserID.ToString() != userID)
+                {
+                    return Forbid();
+                }
+            }
+
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -66,6 +86,15 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Post([FromBody] AddressCreateVM vM)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userID != vM.AppUserID.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _addressServices.Create(vM);
             if (!result.IsSuccessed)
             {
@@ -79,6 +108,15 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] AddressEditVM value)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userID != value.AppUserID.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _addressServices.Edit(id, value);
             if (!result.IsSuccessed)
             {
@@ -92,6 +130,16 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Delete(int id)
         {
+            var address = _addressServices.GetByID(id);
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (address.IsSuccessed == true && userID != address.PayLoad.AppUserID.ToString())
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _addressServices.Delete(id);
             if (!result.IsSuccessed)
             {
