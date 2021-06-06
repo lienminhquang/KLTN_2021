@@ -24,7 +24,12 @@ class AddressServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PaginatedList<AddressVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -62,7 +67,8 @@ class AddressServices {
       log("Post $url");
       response = await ioClient.post(Uri.parse(url),
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
           },
           body: jsonEncode(addressCreateVM));
     } catch (e) {
@@ -94,7 +100,8 @@ class AddressServices {
       log("PUT $url");
       response = await ioClient.put(Uri.parse(url),
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
           },
           body: jsonEncode(addressEditVM));
     } catch (e) {
@@ -122,7 +129,12 @@ class AddressServices {
     Response? response;
     try {
       log("DELETE: " + url);
-      response = await ioClient.delete(Uri.parse(url));
+      response = await ioClient.delete(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       print(e);
       return ApiResult<bool>.failedApiResult(

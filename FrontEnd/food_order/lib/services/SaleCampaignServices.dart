@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
 import 'HttpClientFactory.dart';
+import 'UserServices.dart';
 
 class SaleCampaignServices {
   final String baseRoute = AppConfigs.URL_SaleCampaignsRouteAPI;
@@ -20,7 +21,12 @@ class SaleCampaignServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PaginatedList<SaleCampaignVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -53,7 +59,12 @@ class SaleCampaignServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<SaleCampaignVM>.failedApiResult(
           "Could not connect to server. Check your connection!");

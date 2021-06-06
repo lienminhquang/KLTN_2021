@@ -27,7 +27,8 @@ class RatingServices {
       log("Post $url");
       response = await ioClient.post(Uri.parse(url),
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
           },
           body: jsonEncode(ratingCreateVM));
     } catch (e) {
@@ -56,7 +57,12 @@ class RatingServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<RatingVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -87,7 +93,12 @@ class RatingServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PaginatedList<RatingVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");

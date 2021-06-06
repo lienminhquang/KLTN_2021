@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
 import 'HttpClientFactory.dart';
+import 'UserServices.dart';
 
 class OrderServices {
   final String baseRoute = AppConfigs.URL_OrdersRouteAPI;
@@ -20,7 +21,12 @@ class OrderServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<List<OrderVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -48,7 +54,12 @@ class OrderServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<OrderVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -80,7 +91,8 @@ class OrderServices {
       log("Post $url");
       response = await ioClient.post(Uri.parse(url),
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
           },
           body: jsonEncode(orderCreateVM));
     } catch (e) {

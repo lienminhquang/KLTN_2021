@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
 import 'HttpClientFactory.dart';
+import 'UserServices.dart';
 
 class PromotionServices {
   final String baseRoute = AppConfigs.URL_PromotionsRouteAPI;
@@ -21,7 +22,12 @@ class PromotionServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PaginatedList<PromotionVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -55,7 +61,12 @@ class PromotionServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PromotionVM>.failedApiResult(
           "Could not connect to server. Check your connection!");

@@ -10,6 +10,8 @@ import 'package:food_delivery/services/HttpClientFactory.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
+import 'UserServices.dart';
+
 class CartServices {
   final String baseRoute = AppConfigs.URL_CartsRouteAPI;
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
@@ -20,7 +22,12 @@ class CartServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PaginatedList<CartVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -53,7 +60,12 @@ class CartServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       print(e);
       return ApiResult<CartVM>.failedApiResult(
@@ -84,7 +96,12 @@ class CartServices {
     Response? response;
     try {
       log("DELETE: " + url);
-      response = await ioClient.delete(Uri.parse(url));
+      response = await ioClient.delete(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       print(e);
       return ApiResult<bool>.failedApiResult(
@@ -122,7 +139,8 @@ class CartServices {
       log("Post $url");
       response = await ioClient.post(Uri.parse(url),
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
           },
           body: jsonEncode(cartCreateVM));
     } catch (e) {

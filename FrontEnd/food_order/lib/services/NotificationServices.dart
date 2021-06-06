@@ -12,6 +12,7 @@ import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
 import 'HttpClientFactory.dart';
+import 'UserServices.dart';
 
 class NotificationServices {
   final String baseRoute = AppConfigs.URL_NotificationsRouteAPI;
@@ -24,7 +25,12 @@ class NotificationServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PaginatedList<NotificationVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -65,7 +71,8 @@ class NotificationServices {
       log("Post $url");
       response = await ioClient.post(Uri.parse(url),
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
           },
           body: jsonEncode(notificationReceivedVM));
     } catch (e) {
@@ -101,7 +108,8 @@ class NotificationServices {
       log("PUT $url");
       response = await ioClient.put(Uri.parse(url),
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
           },
           body: jsonEncode(editVM));
     } catch (e) {
@@ -129,7 +137,12 @@ class NotificationServices {
     Response? response;
     try {
       log("DELETE: " + url);
-      response = await ioClient.delete(Uri.parse(url));
+      response = await ioClient.delete(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       print(e);
       return ApiResult<bool>.failedApiResult(

@@ -10,6 +10,8 @@ import 'package:food_delivery/view_models/commons/PagingRequest.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
+import 'UserServices.dart';
+
 class FoodServices {
   final String baseRoute = AppConfigs.URL_FoodRouteAPI;
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
@@ -20,7 +22,12 @@ class FoodServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<FoodVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -52,7 +59,12 @@ class FoodServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
@@ -91,7 +103,12 @@ class FoodServices {
     Response? response;
     try {
       log("GET: " + url);
-      response = await ioClient.get(Uri.parse(url));
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
     } catch (e) {
       return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
           "Could not connect to server! Please re-try later!");
