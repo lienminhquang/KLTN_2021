@@ -174,82 +174,63 @@ class OrderDetailsBody extends StatelessWidget {
   }
 
   Widget _comment(BuildContext context, OrderDetailVM model) {
+    double _rating = 0;
     if (model.ratingVM == null) {
       //_commentController.text = model.ratingVM!.comment;
       return Container(
         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                child: TextField(
-                  controller: _commentController,
-                  textAlignVertical: TextAlignVertical.center,
-                  style: TextStyle(fontSize: 13, height: 1),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Bạn thấy món này như thế nào?',
-                  ),
-                ),
-              ),
-            ),
-            IconButton(
-                onPressed: () async {
-                  if (_commentController.text.isNotEmpty) {
-                    double _rating = 0;
-                    var result = await showDialog<bool>(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(true);
-                                  },
-                                  child: Text("OK")),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(false);
-                                  },
-                                  child: Text("Cancel"))
-                            ],
-                            title: Center(
-                                child: Text(
-                              "Bạn chấm món này mấy điểm? :)",
-                              textAlign: TextAlign.center,
-                            )),
-                            content: Container(
-                              height: 50,
-                              alignment: Alignment.center,
-                              child: RatingButton((rating) {
-                                _rating = rating;
-                              }, _rating),
-                            ),
-                          );
-                        });
-                    if (result == true) {
-                      var rs = await context
-                          .read<OrderDetailsBloc>()
-                          .createReview(RatingCreateVM(
-                              model.orderID,
-                              model.foodID,
-                              _rating.toInt(),
-                              _commentController.text));
-                      if (rs.isSuccessed == false) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(rs.errorMessage!)));
-                      }
-                      context
-                          .read<OrderDetailsBloc>()
-                          .add(OrderDetailStartedEvent(model.orderID));
-                    }
-                  }
-                },
-                icon: Icon(
-                  Icons.send,
-                  color: Colors.blue,
-                ))
-          ],
+        child: Container(
+          child: RatingButton((rating) async {
+            _rating = rating;
+            var result = await showDialog<bool>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                          },
+                          child: Text("OK")),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                          child: Text("Cancel"))
+                    ],
+                    title: Center(
+                      child: RatingButton((rating) {
+                        _rating = rating;
+                      }, rating),
+                    ),
+                    content: Container(
+                      height: 50,
+                      alignment: Alignment.center,
+                      child: TextField(
+                        controller: _commentController,
+                        textAlignVertical: TextAlignVertical.center,
+                        style: TextStyle(fontSize: 13, height: 1),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Bạn thấy món này như thế nào?',
+                        ),
+                      ),
+                    ),
+                  );
+                });
+            if (result == true) {
+              var rs = await context.read<OrderDetailsBloc>().createReview(
+                  RatingCreateVM(model.orderID, model.foodID, _rating.toInt(),
+                      _commentController.text));
+              if (rs.isSuccessed == false) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(rs.errorMessage!)));
+              }
+              context
+                  .read<OrderDetailsBloc>()
+                  .add(OrderDetailStartedEvent(model.orderID));
+            }
+          }, _rating),
         ),
       );
     }

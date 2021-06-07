@@ -1,6 +1,7 @@
 ﻿using FoodOrder.API.Identity;
 using FoodOrder.API.Services;
 using FoodOrder.Core.Helpers;
+using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Ratings;
@@ -22,10 +23,12 @@ namespace FoodOrder.API.Controllers
     public class RatingsController : ControllerBase
     {
         private readonly RatingServices _ratingServices;
+        private readonly OrderServices _orderServices;
 
-        public RatingsController(RatingServices services)
+        public RatingsController(RatingServices services, OrderServices orderServices)
         {
             _ratingServices = services;
+            _orderServices = orderServices;
         }
         // GET: api/<ValuesController>
         [HttpGet]
@@ -67,9 +70,23 @@ namespace FoodOrder.API.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Post([FromBody] RatingCreateVM vM)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                var order = _orderServices.GetByID(vM.OrderID);
+                if(order.IsSuccessed == false)
+                {
+                    return BadRequest(new FailedResult<RatingVM>("Order not found!"));
+                }
+                if (order.PayLoad.AppUserID.ToString() != userID)
+                {
+                    return Forbid();
+                }
+            }
+
             var result = await _ratingServices.Create(vM);
             if (!result.IsSuccessed)
             {

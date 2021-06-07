@@ -100,7 +100,7 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> ChangOrderStatus([FromBody] ChangeOrderStatusVM vm)
         {
-            if (!(HttpContext.User.IsInRole(PolicyType.Admin)))
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
             {
                 var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
                 var order = _orderServices.GetByID(vm.ID);
