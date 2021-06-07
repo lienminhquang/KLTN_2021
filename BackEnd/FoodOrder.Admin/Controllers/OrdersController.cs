@@ -124,11 +124,10 @@ namespace FoodOrder.Admin.Controllers
             if (rs.IsSuccessed)
             {
                 TempData[AppConfigs.SuccessMessageString] = "Order status changed!";
-                
             }
 
             TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
-            return RedirectToAction("Details", new { id = rs.PayLoad.ID });
+            return RedirectToAction("Details", new { id = changeOrderStatus.ID });
         }
 
         // GET: CartsController/Edit/5
