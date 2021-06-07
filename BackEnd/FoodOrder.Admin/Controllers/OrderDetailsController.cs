@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
+using FoodOrder.Admin.Identity;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.OrderDetails;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
+    [Authorize(Roles = RoleTypes.ManagerGroup)]
     public class OrderDetailsController : Controller
     {
         private readonly OrderDetailServices _oDServices;
@@ -50,6 +53,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Create
+        [Authorize(Roles = RoleTypes.Admin)]
         public ActionResult Create()
         {
             if (!this.ValidateTokenInCookie())
@@ -63,6 +67,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> CreateAsync([FromForm] OrderDetailCreateVM createVM)
         {
             if (!this.ValidateTokenInCookie())
@@ -87,6 +92,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Edit/5
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> EditAsync(int orderID, int foodID)
         {
             if (!this.ValidateTokenInCookie())
@@ -108,6 +114,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> EditAsync([FromForm] OrderDetailEditVM editVM)
         {
             if (!this.ValidateTokenInCookie())
@@ -132,6 +139,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Delete/5
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> DeleteAsync(int orderID, int foodID)
         {
             if (!this.ValidateTokenInCookie())
@@ -150,6 +158,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete(int orderID, int foodID)
         {
             if (!this.ValidateTokenInCookie())

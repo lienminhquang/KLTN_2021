@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
+using FoodOrder.Admin.Identity;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Promotions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
+    [Authorize(Roles = RoleTypes.ManagerGroup)]
     public class PromotionsController : Controller
     {
         private readonly PromotionServices _promotionServices;
@@ -163,6 +166,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Delete/5
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> DeleteAsync(int id)
         {
             if (!this.ValidateTokenInCookie())
@@ -181,6 +185,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete(int id)
         {
             if (!this.ValidateTokenInCookie())

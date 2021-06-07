@@ -138,7 +138,19 @@
                     </dd>
                 </dl>
             </div>
-            
+
+            <div>
+                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                {
+                    <a class="btn btn-primary" href=@Url.Action("Delete", new { id = Model.ID })>Delete</a>
+                }
+                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                {
+                    <a class="btn btn-primary" href=@Url.Action("Edit", new { id = Model.ID })>Edit</a>
+                }
+            </div>
+            <div style="height:20px"></div>
+
             <div class="card">
                 <div class="card-body">
                     <form class="form-inline" asp-action="ChangeStatus">
@@ -160,11 +172,9 @@
                         <button type="submit" class="btn btn-primary mb-2">Confirm change</button>
                     </form>
                 </div>
-            </div>
-            <div style="height:100px"></div>
-            <div>
-                @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = Model.ID })
+
+
+
             </div>
         </div>
     </div>

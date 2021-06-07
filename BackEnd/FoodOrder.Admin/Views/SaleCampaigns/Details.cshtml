@@ -97,10 +97,17 @@
                 </dd>
 
             </dl>
-        </div>
-        <div>
-            @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = Model.ID })
+
+            <div>
+
+                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                {
+                    <a class="btn btn-primary" href=@Url.Action("Delete", new { id = Model.ID })>Delete</a>
+                }
+
+                <a class="btn btn-primary" href=@Url.Action("Edit", new { id = Model.ID })>Edit</a>
+
+            </div>
         </div>
     </div>
 </div>

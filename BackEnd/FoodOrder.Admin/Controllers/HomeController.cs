@@ -1,4 +1,5 @@
-﻿using FoodOrder.Admin.Models;
+﻿using FoodOrder.Admin.Identity;
+using FoodOrder.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleTypes.ManagerGroup)]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

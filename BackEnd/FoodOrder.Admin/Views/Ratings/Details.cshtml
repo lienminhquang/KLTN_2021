@@ -17,7 +17,7 @@
         </div>
         <div class="card-body">
             <dl class="row">
-              
+
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.FoodID)
                 </dt>
@@ -43,10 +43,17 @@
                     @Html.DisplayFor(model => model.TimeCreate)
                 </dd>
             </dl>
-        </div>
-        <div>
-            @Html.ActionLink("Edit", "Edit", new { orderID = Model.OrderID,  foodID = Model.FoodID}) |
-            @Html.ActionLink("Delete", "Delete", new { orderID = Model.OrderID,  foodID = Model.FoodID })
+
+            <div>
+                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                {
+                    <a class="btn btn-primary" href=@Url.Action("Delete", new { orderID = Model.OrderID, foodID = Model.FoodID })>Delete</a>
+                }
+                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                {
+                    <a class="btn btn-primary" href=@Url.Action("Edit", new { orderID = Model.OrderID, foodID = Model.FoodID })>Edit</a>
+                }
+            </div>
         </div>
     </div>
 </div>

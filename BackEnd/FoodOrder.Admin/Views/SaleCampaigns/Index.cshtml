@@ -27,22 +27,22 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Name)
                             </th>
-                          
-                           
+
+
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().StartDate)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().EndDate)
                             </th>
-                         
+
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Percent)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Enabled)
                             </th>
-                           
+
                             <th></th>
                         </tr>
                     </thead>
@@ -58,25 +58,37 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
-                                   
+
                                     <td>
                                         @Html.DisplayFor(modelItem => item.StartDate.Date)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.EndDate.Date)
                                     </td>
-                                  
+
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Percent)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Enabled)
                                     </td>
-                                   
+
                                     <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Action
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Details", new { id = item.ID })>Details</a>
+
+                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Delete", new { id = item.ID })>Delete</a>
+
+                                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                                {
+                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Edit", new { id = item.ID })>Edit</a>
+                                                }
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }

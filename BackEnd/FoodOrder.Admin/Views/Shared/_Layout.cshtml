@@ -1,5 +1,4 @@
 ﻿@using FoodOrder.Admin.Configs
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,7 +70,10 @@
                         <div class="collapse" id="collapseUser" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" asp-action="Index" asp-controller="User">List</a>
-                                <a class="nav-link" asp-action="Create" asp-controller="User">Create</a>
+                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                {
+                                    <a class="nav-link" asp-action="Create" asp-controller="User">Create</a>
+                                }
                             </nav>
                         </div>
                         <!---------------------------- End Users ----------------------------->
@@ -84,7 +86,10 @@
                         <div class="collapse" id="collapseAddresses" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" asp-action="Index" asp-controller="Addresses">List</a>
-                                <a class="nav-link" asp-action="Create" asp-controller="Addresses">Create</a>
+                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                {
+                                    <a class="nav-link" asp-action="Create" asp-controller="Addresses">Create</a>
+                                }
                             </nav>
                         </div>
                         <!---------------------------- End Addresses ----------------------------->
@@ -97,7 +102,10 @@
                         <div class="collapse" id="collapseCarts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" asp-action="Index" asp-controller="Carts">List</a>
-                                <a class="nav-link" asp-action="Create" asp-controller="Carts">Create</a>
+                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                {
+                                    <a class="nav-link" asp-action="Create" asp-controller="Carts">Create</a>
+                                }
                             </nav>
                         </div>
                         <!---------------------------- End Carts ----------------------------->
@@ -136,7 +144,10 @@
                         <div class="collapse" id="collapseOrderDetails" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" asp-action="Index" asp-controller="OrderDetails">List</a>
-                                <a class="nav-link" asp-action="Create" asp-controller="OrderDetails">Create</a>
+                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                {
+                                    <a class="nav-link" asp-action="Create" asp-controller="OrderDetails">Create</a>
+                                }
                             </nav>
                         </div>
                         <!---------------------------- End OrderDetails ----------------------------->
@@ -149,7 +160,10 @@
                         <div class="collapse" id="collapseOrder" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" asp-action="Index" asp-controller="Orders">List</a>
-                                <a class="nav-link" asp-action="Create" asp-controller="Orders">Create</a>
+                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                {
+                                    <a class="nav-link" asp-action="Create" asp-controller="Orders">Create</a>
+                                }
                             </nav>
                         </div>
                         <!---------------------------- End Orders ----------------------------->
@@ -162,7 +176,9 @@
                         <div class="collapse" id="collapsePromotions" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" asp-action="Index" asp-controller="Promotions">List</a>
+
                                 <a class="nav-link" asp-action="Create" asp-controller="Promotions">Create</a>
+
                             </nav>
                         </div>
                         <!---------------------------- End Promotions ----------------------------->
@@ -188,7 +204,10 @@
                         <div class="collapse" id="collapseRatings" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" asp-action="Index" asp-controller="Ratings">List</a>
-                                <a class="nav-link" asp-action="Create" asp-controller="Ratings">Create</a>
+                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                {
+                                    <a class="nav-link" asp-action="Create" asp-controller="Ratings">Create</a>
+                                }
                             </nav>
                         </div>
                         <!---------------------------- End Ratings ----------------------------->
@@ -206,20 +225,23 @@
                         </div>
                         <!---------------------------- End Users ----------------------------->
                         <!---------------------------- AppRoles ----------------------------->
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAppRoles" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            AppRoles
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseAppRoles" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" asp-action="Index" asp-controller="AppRoles">List</a>
-                                <a class="nav-link" asp-action="Create" asp-controller="AppRoles">Create</a>
-                            </nav>
-                        </div>
+                        @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                        {
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAppRoles" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                AppRoles
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseAppRoles" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" asp-action="Index" asp-controller="AppRoles">List</a>
+                                    <a class="nav-link" asp-action="Create" asp-controller="AppRoles">Create</a>
+                                </nav>
+                            </div>
+                        }
                         <!---------------------------- End AppRoles ----------------------------->
                         <!---------------------------- Images ----------------------------->
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseImages" aria-expanded="false" aria-controls="collapseLayouts">
+                        @*<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseImages" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             Images
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -229,7 +251,7 @@
                                 <a class="nav-link" asp-action="Index" asp-controller="Images">List</a>
                                 <a class="nav-link" asp-action="Create" asp-controller="Images">Create</a>
                             </nav>
-                        </div>
+                        </div>*@
                         <!---------------------------- End Images ----------------------------->
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
@@ -333,7 +355,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
 
     <script src="~/kendo-ui/js/kendo.all.min.js"></script>
-    
+
 
     @RenderSection("Scripts", required: false)
     @RenderSection("CustomScripts", false)

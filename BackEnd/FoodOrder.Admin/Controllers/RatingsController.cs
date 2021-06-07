@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
+using FoodOrder.Admin.Identity;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Ratings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
+    [Authorize(Roles = RoleTypes.ManagerGroup)]
     public class RatingsController : Controller
     {
         private readonly RatingServices _ratingServices;
@@ -85,6 +88,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Edit/5
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> EditAsync([FromQuery] int orderID, [FromQuery] int foodID)
         {
             if (!this.ValidateTokenInCookie())
@@ -106,6 +110,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> EditAsync([FromForm] RatingEditVM editVM)
         {
             if (!this.ValidateTokenInCookie())
@@ -131,6 +136,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Delete/5
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> DeleteAsync([FromQuery] int orderID, [FromQuery] int foodID)
         {
             if (!this.ValidateTokenInCookie())
@@ -149,6 +155,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete([FromForm] RatingVM model)
         {
             if (!this.ValidateTokenInCookie())

@@ -1,8 +1,11 @@
 using FluentValidation.AspNetCore;
+using FoodOrder.Admin.Identity;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.AutoMapper;
+using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FoodOrder.Admin
@@ -38,6 +42,7 @@ namespace FoodOrder.Admin
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             services.AddHttpClient();
+            
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -46,7 +51,14 @@ namespace FoodOrder.Admin
                     options.AccessDeniedPath = "/user/forbidden";
                 });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(RoleTypes.Admin, policy => policy.RequireRole(RoleTypes.Admin));  
+                options.AddPolicy(RoleTypes.Manager, policy => policy.RequireRole(RoleTypes.Manager));  
+            });
+
             // DI
+            services.AddSingleton<IAuthorizationHandler, CustomClaimHandler>();
             services.AddTransient<AdminUserService, AdminUserService>();
             services.AddTransient<AddressServices, AddressServices>();
             services.AddTransient<CartServices, CartServices>();

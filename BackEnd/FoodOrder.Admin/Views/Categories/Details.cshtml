@@ -45,8 +45,14 @@
                 </dl>
             </div>
             <div>
-                @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = Model.ID })
+
+
+                <a class="btn btn-primary" href=@Url.Action("Edit", new { id = Model.ID })>Edit</a>
+
+                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                {
+                    <a class="btn btn-primary" href=@Url.Action("Delete", new { id = Model.ID })>Delete</a>
+                }
             </div>
         </div>
     </div>

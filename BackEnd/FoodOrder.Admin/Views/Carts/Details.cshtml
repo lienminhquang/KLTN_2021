@@ -21,7 +21,7 @@
                     @Html.DisplayNameFor(model => model.AppUserId)
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.ActionLink(Model.AppUserId.ToString(), "Details","User" , Model.AppUserId.ToString())
+                    @Html.ActionLink(Model.AppUserId.ToString(), "Details", "User", Model.AppUserId.ToString())
                 </dd>
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.FoodID)
@@ -38,8 +38,14 @@
             </dl>
 
             <div>
-                @Html.ActionLink("Edit", "Edit", new { userID = Model.AppUserId, foodID = Model.FoodID }) |
-                @Html.ActionLink("Delete", "Delete", new { userID = Model.AppUserId, foodID = Model.FoodID })
+                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                {
+                    <a class="btn btn-primary" href=@Url.Action("Edit", new { userID = Model.AppUserId, foodID = Model.FoodID })>Edit</a>
+                }
+                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                {
+                    <a class="btn btn-primary" href=@Url.Action("Delete", new { userID = Model.AppUserId, foodID = Model.FoodID })>Delete</a>
+                }
             </div>
         </div>
     </div>

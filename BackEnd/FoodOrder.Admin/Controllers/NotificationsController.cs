@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
+using FoodOrder.Admin.Identity;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Notifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
+    [Authorize(Roles = RoleTypes.ManagerGroup)]
     public class NotificationsController : Controller
     {
         private readonly NotificationServices _notiServices;

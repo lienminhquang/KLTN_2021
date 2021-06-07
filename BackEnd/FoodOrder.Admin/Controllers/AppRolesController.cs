@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
+using FoodOrder.Admin.Identity;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.AppRoles;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleTypes.Admin)]
     public class AppRolesController : Controller
     {
         private readonly AppRoleServices _appRoleServices;

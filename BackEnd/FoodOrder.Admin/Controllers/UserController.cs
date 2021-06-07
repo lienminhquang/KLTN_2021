@@ -1,5 +1,6 @@
 ﻿using FoodOrder.Admin.Configs;
 using FoodOrder.Admin.Extensions;
+using FoodOrder.Admin.Identity;
 using FoodOrder.Admin.Services;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Users;
@@ -19,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrder.Admin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleTypes.ManagerGroup)]
     public class UserController : Controller
     {
         private readonly AdminUserService _adminUserService;
@@ -37,6 +38,12 @@ namespace FoodOrder.Admin.Controllers
             _cartServices = cartServices;
             _addressServices = addressServices;
             _roleServices = appRoleServices;
+        }
+
+        [AllowAnonymous]
+        public IActionResult Forbidden()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -58,7 +65,8 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        [Authorize(Roles = RoleTypes.Admin)]
+        public ActionResult Create()
         {
             if (!this.ValidateTokenInCookie())
             {
@@ -69,6 +77,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Create([FromForm] RegisterRequest request)
         {
             if (!this.ValidateTokenInCookie())
@@ -132,6 +141,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpGet()]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> AssignRoleToUser([FromRoute] string id)
         {
             if (!this.ValidateTokenInCookie())
@@ -158,6 +168,7 @@ namespace FoodOrder.Admin.Controllers
             return View();
         }
         [HttpPost()]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> AssignRoleToUser([FromRoute] string id, [FromForm] RoleAssignVM roleAssignVM)
         {
             if (!this.ValidateTokenInCookie())
@@ -181,6 +192,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Edit([FromForm] UserUpdateRequest request)
         {
             if (!this.ValidateTokenInCookie())
@@ -204,6 +216,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Edit(string id)
         {
             if (!this.ValidateTokenInCookie())
@@ -289,6 +302,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Delete(string id, [FromForm] UserDeleteVM userDeleteVM)
         {
             if (!this.ValidateTokenInCookie())
@@ -307,6 +321,7 @@ namespace FoodOrder.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Delete(string id)
         {
             if (!this.ValidateTokenInCookie())

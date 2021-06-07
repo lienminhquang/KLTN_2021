@@ -55,9 +55,23 @@
                                         @Html.DisplayFor(modelItem => item.Price)
                                     </td>
                                     <td>
-                                        @Html.ActionLink("Edit", "Edit", new { foodID = item.FoodID, orderID = item.OrderID }) |
-                                        @Html.ActionLink("Details", "Details", new { foodID = item.FoodID, orderID = item.OrderID }) |
-                                        @Html.ActionLink("Delete", "Delete", new { foodID = item.FoodID, orderID = item.OrderID })
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Action
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Details", new { foodID = item.FoodID, orderID = item.OrderID })>Details</a>
+
+                                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                                {
+                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Delete", new { foodID = item.FoodID, orderID = item.OrderID })>Delete</a>
+                                                }
+                                                @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                                {
+                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Edit", new { foodID = item.FoodID, orderID = item.OrderID })>Edit</a>
+                                                }
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }
