@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FoodOrder.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace FoodOrder.API.Controllers
 {
@@ -9,16 +11,19 @@ namespace FoodOrder.API.Controllers
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly HomeServices _homeServices;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, HomeServices homeServices)
         {
             _logger = logger;
+            _homeServices = homeServices;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            return Ok();
+            var rs = _homeServices.Get();
+            return Ok(rs);
         }
 
         [HttpGet("privacy")]

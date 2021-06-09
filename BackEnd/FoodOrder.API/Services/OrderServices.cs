@@ -233,8 +233,9 @@ namespace FoodOrder.API.Services
                         return new FailedResult<OrderVM>("Mã giảm giá không hợp lệ hoặc đã hết hạn!");
                     }
                 }
-
-                _logger.LogInformation("Create order: finalPrice: " + (order.PromotionAmount != null ? totalPrice - order.PromotionAmount : totalPrice));
+                double finalPrice = (order.PromotionAmount != null ? totalPrice - order.PromotionAmount.Value : totalPrice);
+                order.FinalTotalPrice = finalPrice;
+                _logger.LogInformation("Create order: finalPrice: " + finalPrice);
                 await _dbContext.SaveChangesAsync();
 
                 transaction.Commit();
@@ -297,9 +298,15 @@ namespace FoodOrder.API.Services
             }
 
             vm.OrderStatusID = changeVM.OrderStatusID;
-            if (vm.OrderStatusID == 4)
+            if (vm.OrderStatusID == OrderStatus.DaNhan)
             {// da nhan hang
                 vm.IsPaid = true;
+                vm.DatePaid = DateTime.Now;
+            }
+
+            if (vm.OrderStatusID == OrderStatus.DaHuy)
+            {
+                vm.IsPaid = false;
                 vm.DatePaid = DateTime.Now;
             }
 

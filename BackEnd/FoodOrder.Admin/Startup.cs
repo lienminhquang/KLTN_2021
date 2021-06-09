@@ -73,6 +73,7 @@ namespace FoodOrder.Admin
             services.AddTransient<ImageServices, ImageServices>();
             services.AddTransient<NotificationServices, NotificationServices>();
             services.AddTransient<SaleCampaignServices, SaleCampaignServices>();
+            services.AddTransient<HomeServices, HomeServices>();
 
 
             IMvcBuilder builder = services.AddRazorPages();

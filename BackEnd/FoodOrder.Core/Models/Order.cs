@@ -15,6 +15,7 @@ namespace FoodOrder.Core.Models
         public int OrderStatusID { get; set; }
         public int? PromotionID { get; set; }
         public double? PromotionAmount { get; set; }
+        public double FinalTotalPrice { get; set; }
 
         public string AddressString { get; set; }
         public string AddressName { get; set; }

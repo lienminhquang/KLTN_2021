@@ -18,6 +18,7 @@ namespace FoodOrder.Core.ViewModels.Orders
         public DateTime? DatePaid { get; set; }
         public int OrderStatusID { get; set; }
         public int? PromotionID { get; set; }
+        public double FinalTotalPrice { get; set; }
         public double? PromotionAmount { get; set; }
 
         public string AddressString { get; set; }

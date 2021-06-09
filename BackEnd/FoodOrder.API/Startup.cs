@@ -103,6 +103,7 @@ namespace FoodOrder.API
             services.AddTransient<FileServices, FileServices>();
             services.AddTransient<NotificationServices, NotificationServices>();
             services.AddTransient<SaleCampaignServices, SaleCampaignServices>();
+            services.AddTransient<HomeServices, HomeServices>();
 
             #endregion
 

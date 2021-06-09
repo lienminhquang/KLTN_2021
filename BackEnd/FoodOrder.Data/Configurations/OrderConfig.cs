@@ -15,6 +15,7 @@ namespace FoodOrder.Data.Configurations
 
             builder.Property(x => x.AddressString).IsRequired().IsUnicode();
             builder.Property(x => x.AddressName).IsRequired().IsUnicode();
+            builder.Property(x => x.FinalTotalPrice).IsRequired().HasDefaultValue(0);
 
             builder.HasMany(x => x.OrderDetails).WithOne(x => x.Order).HasForeignKey(x => x.OrderID);
         }

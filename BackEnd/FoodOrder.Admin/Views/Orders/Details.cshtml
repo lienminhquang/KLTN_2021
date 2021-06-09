@@ -11,7 +11,8 @@
     int foodCount = 0;
     for (int i = 0; i < Model.OrderDetailVMs.Count(); i++)
     {
-        totalPrice += Model.OrderDetailVMs[i].Price * Model.OrderDetailVMs[i].Amount;
+        totalPrice += Model.OrderDetailVMs[i].Price * Model.OrderDetailVMs[i].Amount *
+                                        (100 - (Model.OrderDetailVMs[i].SaleCampaignID == null ? 0 : Model.OrderDetailVMs[i].SalePercent.Value)) / 100;
         foodCount += Model.OrderDetailVMs[i].Amount;
     }
 }
@@ -89,6 +90,12 @@
                         @Html.DisplayFor(model => model.PromotionAmount)
                     </dd>
                     <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.FinalTotalPrice)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.FinalTotalPrice)
+                    </dd>
+                    <dt class="col-sm-2">
                         @Html.DisplayNameFor(model => model.AddressName)
                     </dt>
                     <dd class="col-sm-10">
@@ -116,13 +123,15 @@
                             <tbody>
                                 @for (int i = 0; i < Model.OrderDetailVMs.Count(); i++)
                                 {
+                                    var price = Model.OrderDetailVMs[i].Price * Model.OrderDetailVMs[i].Amount * 
+                                        (100 - (Model.OrderDetailVMs[i].SaleCampaignID == null ? 0 : Model.OrderDetailVMs[i].SalePercent)) / 100;
                                     <tr>
                                         <th scope="row">@i</th>
                                         <td>
                                             @Html.ActionLink(@Model.OrderDetailVMs[i].FoodVM.Name, "Details", "Foods", new { id = @Model.OrderDetailVMs[i].FoodVM.ID })
                                         </td>
                                         <td>@Model.OrderDetailVMs[i].Amount</td>
-                                        <td>@Model.OrderDetailVMs[i].Price</td>
+                                        <td>@price</td>
                                     </tr>
                                 }
                                 <tr class="bg-info">
