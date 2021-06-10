@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:dialogflow_grpc/generated/google/protobuf/struct.pb.dart';
+import 'package:dialogflow_grpc/generated/google/protobuf/unittest.pbgrpc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
@@ -55,7 +57,7 @@ class _ChatState extends State<Chat> {
 
     // TODO Get a Service account
     final serviceAccount = ServiceAccount.fromString(
-        '${(await rootBundle.loadString('assets/amee.json'))}');
+        '${(await rootBundle.loadString('assets/amee2.json'))}');
     // Create a DialogflowGrpc Instance
     dialogflow = DialogflowGrpcV2Beta1.viaServiceAccount(serviceAccount);
   }
@@ -80,11 +82,18 @@ class _ChatState extends State<Chat> {
     setState(() {
       _messages.insert(0, message);
     });
+
     DetectIntentResponse data = await dialogflow!.detectIntent(text, 'en-US');
+    print('---------------------------------------------------------');
+    // error Unhandled Exception: Null check operator used on a null value
+    String map = data.queryResult.parameters.fields['esanpham']!.stringValue;
+
+    print('---------------------------------------------------------');
+
     String fulfillmentText = data.queryResult.fulfillmentText;
     if (fulfillmentText.isNotEmpty) {
       ChatMessage botMessage = ChatMessage(
-        text: fulfillmentText,
+        text: fulfillmentText + 'a', // text response của Bot
         name: "Bot",
         type: false,
       );
@@ -100,7 +109,7 @@ class _ChatState extends State<Chat> {
 
     _audioStream = BehaviorSubject<List<int>>();
     _audioStreamSubscription = _recorder.audioStream.listen((data) {
-      print(data);
+      //print(data);
       _audioStream!.add(data);
     });
 
@@ -138,11 +147,8 @@ class _ChatState extends State<Chat> {
             type: true,
           );
 
-          ChatMessage botMessage = new ChatMessage(
-            text: fulfillmentText,
-            name: "Bot",
-            type: false,
-          );
+          ChatMessage botMessage =
+              new ChatMessage(text: fulfillmentText, name: "Bot", type: false);
 
           _messages.insert(0, message);
           _textController.clear();
@@ -187,7 +193,7 @@ class _ChatState extends State<Chat> {
                       controller: _textController,
                       onSubmitted: handleSubmitted,
                       decoration:
-                          InputDecoration.collapsed(hintText: "Send a message"),
+                          InputDecoration.collapsed(hintText: "Gửi tin nhắn"),
                     ),
                   ),
                   Container(
@@ -215,7 +221,11 @@ class _ChatState extends State<Chat> {
 //
 //------------------------------------------------------------------------------------
 class ChatMessage extends StatelessWidget {
-  ChatMessage({required this.text, required this.name, required this.type});
+  ChatMessage({
+    required this.text,
+    required this.name,
+    required this.type,
+  });
 
   final String text;
   final String name;

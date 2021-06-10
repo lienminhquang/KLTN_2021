@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "amee2-fphj",
+  "private_key_id": "8acff681fc6fe877471d0b9a92943d2c9b60d69a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCiKMWvfYUz1qi0\nrZjHXPMswsEFBDUjOLaFkpAi6oYfK25SkUJEwvirgH2vc2/6no4RI92gRtRMuPpm\nkrzME1W9oFWyR650+o0XrXyoGdBZB7dW6XnHa+c0uyZu0WPnxv4i7lsE+ZG/pPqo\nx/amVzA83GOvc/lKFnvyvlAd2MOC3Vqk31nvjn/C4hbHTC5s1KPSQf6gYTE5iMD/\nVeGKdKbw7YeMq66cI4bsXoQPVmr5RgkipYvMNx7SDIXaBvEPWMnROnB6ujbDtavl\nyex3BDLAIFM18u55jsmlP6dlj4Mh0/xDStsPUnSvymO+Egk3PBTBPbBAb/eQfiPa\ni5ncxMpZAgMBAAECggEAEh9xJ4GlXEOob2fq2BYZ6dXavVko6KavFGrKv9I62tsv\nXVw1Xiq1oLIvqccCm+1yNnVuEJp14dy3BHVwEvUyuwqDJVV4SIPTdrLZiI54/+g6\nO+UESo6zRGwJma8+ZYISdzwxETNkr/jL2Ebf2JuMLTMa03ooQVjVsa2GFe3avOJb\nUyQmvT0i0kgVxmMMw7BYROChZcVKMWqp0qQjvAJr/R03HbWjwxlQDpuyXa08Utqb\nZVxgj6TJm4cYdTS8eXFYwME5kCNQeSrnUiYVZl9bXNhYHZOWkfSqrMXohuBvMMFL\nO9U0ISuVMRSPWwyf/LE1CSfZABcpOn2dclzAnIdREQKBgQDbbE5Tc2cauQMgkMZv\n8PxaLzr+2gKH/9dQDfW/AAX6Sd0Mf91q9xRR42q/auYH6wp7+Wr6j1Dha6e1Xy74\nFs2lzhklQ4K4SimiGxnBZTCtr7AmizzVKlUO6mUSDgvlIpcMsCc/U7GYYgNkRaHf\nxM31tT7uVfPPEvWe9NYMazqmaQKBgQC9MMgmAs4+YWFgxfHJseg36JOABDXdZZSC\nnQwCpFxwOnrBsu5t+wMQkMdzPnoK18e4n+25ZHPeaozjGT9B7A8SjN35a5HyBG2J\n8ezEwRHlaRYOmjK+syYU+j6nKET31p2pMwPfmKJa7szXa65wupO0NnhStdQvqutV\nmpzYzYfmcQKBgD7fovYAnGuo1f+P3HyZBgZlgDckixMjOTQkO+WWASB958w8G1sa\nH4Vzb9QXsoBUVjW9+2x+goOFUJIFCzVle1nmW4g09xENly5vK4siDrfGHuh8f1rp\nfWP/wCRTSA9JQRUOqMBZoAr1Etm5pi+zefzNCZJLqMgOO7lnmKoIU875AoGBAI+v\nsvMbgmRiNUD4VVBoLAP6Qbwidn51nbstZ2fCSOp7n6vpJ6ij0YoNS029j5cYlvkj\njbsWDeJIbkQ0cpSwoinmjtfV2PxEXKU99iLgt6TSkQv6FLw895lLDbaKoQbSGt/c\nfP6ev//sCes6Pzwil/dwvyWiL0sctqtHSARo5OQhAoGAHdHI3nJtcah/NZb1zeTg\nba66OwwUS/XtZ/DOgXtPSy8HeykqdwHWC3n5x+0MsVCEcQF2MVzS+/7yFoI1vo3h\nfy6y+Iu9nKs6XzkYaKY+f3qwctZXJDsPloj+7ueK96jVPAa17IJXRtwLfZCkqPrf\n5JfeT5LI3AZGskymtZvh7/g=\n-----END PRIVATE KEY-----\n",
+  "client_email": "flutte-dialogflow@amee2-fphj.iam.gserviceaccount.com",
+  "client_id": "108165331179155643899",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/flutte-dialogflow%40amee2-fphj.iam.gserviceaccount.com"
+}
