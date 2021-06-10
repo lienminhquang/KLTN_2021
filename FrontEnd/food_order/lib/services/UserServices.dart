@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/helper/TokenParser.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
+import 'package:food_delivery/view_models/Users/RegisterRequest.dart';
 import 'package:food_delivery/view_models/Users/UserVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/services/FileServices.dart';
@@ -118,6 +119,41 @@ class UserServices {
         JWT = result.payLoad;
         PayloadMap = parseJWT(result.payLoad!);
         print(PayloadMap);
+        return ApiResult.succesedApiResult(true);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
+  }
+
+  Future<ApiResult<bool>> register(RegisterRequest request) async {
+    //saveUserAccountToCache(loginVM.username!, loginVM.password!);
+
+    log("RegisterRequest " + jsonEncode(request.toJson()));
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    Response? response;
+    try {
+      response = await ioClient.post(Uri.parse(baseRoute + '/Register'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(request));
+    } catch (e) {
+      return ApiResult<bool>.failedApiResult(
+          "Could not connect to server. Check your connection!");
+    }
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<String>.fromJson(json, (a) => a.toString());
+      if (result.isSuccessed == true) {
+        log("User created !");
+        //log("JWT: " + result.payLoad!);
+        //JWT = result.payLoad;
+        // PayloadMap = parseJWT(result.payLoad!);
+        //print(PayloadMap);
         return ApiResult.succesedApiResult(true);
       } else {
         return ApiResult.failedApiResult(result.errorMessage);

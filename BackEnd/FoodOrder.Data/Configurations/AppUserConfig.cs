@@ -12,6 +12,7 @@ namespace FoodOrder.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.FirstName).IsUnicode().HasMaxLength(100);
             builder.Property(x => x.LastName).IsUnicode().HasMaxLength(100).IsRequired();
+            //builder.Property(x => x.IsBanned).IsRequired().HasDefaultValue(false);
             
 
             builder.HasMany(x => x.Orders).WithOne(x => x.AppUser).HasForeignKey(x => x.AppUserID);

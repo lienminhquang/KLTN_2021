@@ -107,10 +107,11 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _usenameTextController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Username!';
+                            return 'Vui lòng nhập số điện thoại!';
                           }
                           return null;
                         },
+                        keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                             hintText: 'Số điện thoại',
                             prefix: Icon(Icons.phone),
@@ -183,9 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                           top: 15.0,
                         ),
                         child: InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, CartScreen.routeName);
-                          },
+                          onTap: () {},
                           child: Center(
                             child: Text(
                               'Quên mật khẩu',
@@ -254,7 +253,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, SignupPage.routeName);
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return SignupPage();
+                  }));
                 },
                 child: Text('Đăng ký',
                     style: TextStyle(

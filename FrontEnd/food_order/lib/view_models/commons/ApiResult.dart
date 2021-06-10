@@ -7,6 +7,7 @@ class ApiResult<T> {
   T? payLoad;
   bool isSuccessed = false;
   String? errorMessage;
+  String? errorCode;
 
   ApiResult(this.payLoad, this.isSuccessed, this.errorMessage);
   ApiResult.failedApiResult(this.errorMessage) {

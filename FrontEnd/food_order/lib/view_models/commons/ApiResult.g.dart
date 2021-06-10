@@ -14,7 +14,7 @@ ApiResult<T> _$ApiResultFromJson<T>(
     _$nullableGenericFromJson(json['payLoad'], fromJsonT),
     json['isSuccessed'] as bool,
     json['errorMessage'] as String?,
-  );
+  )..errorCode = json['errorCode'] as String?;
 }
 
 Map<String, dynamic> _$ApiResultToJson<T>(
@@ -25,6 +25,7 @@ Map<String, dynamic> _$ApiResultToJson<T>(
       'payLoad': _$nullableGenericToJson(instance.payLoad, toJsonT),
       'isSuccessed': instance.isSuccessed,
       'errorMessage': instance.errorMessage,
+      'errorCode': instance.errorCode,
     };
 
 T? _$nullableGenericFromJson<T>(

@@ -1,5 +1,7 @@
 ﻿using FoodOrder.API.Identity;
 using FoodOrder.API.Services;
+using FoodOrder.Core.Helpers;
+using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Addresses;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +21,7 @@ namespace FoodOrder.API.Controllers
         private readonly AddressServices _addressServices;
         private readonly UserServices _userSerivces;
 
+
         public AddressesController(AddressServices services, UserServices userServices)
         {
             _addressServices = services;
@@ -29,6 +32,13 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request)
         {
+            var validated = await _userSerivces.ValidateJWTAsync(this.HttpContext.User);
+            if(validated == false)
+            {
+                return BadRequest(new FailedResult<PaginatedList<AddressVM>>("Token expired!", ApiResult<bool>.TokenExpiredCode));
+            }
+
+
             var result = await _addressServices.GetAllPaging(request);
             if (!result.IsSuccessed)
             {

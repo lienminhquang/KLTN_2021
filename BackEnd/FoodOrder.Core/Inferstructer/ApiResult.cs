@@ -11,6 +11,9 @@ namespace FoodOrder.Core.Inferstructer
         public T PayLoad { get; set; }
         public bool IsSuccessed { get; set; }
         public string ErrorMessage { get; set; }
+        public string ErrorCode { get; set; }
+
+        public static string TokenExpiredCode = "TokenExpiredCode";
     }
 
     public class SuccessedResult<T> : ApiResult<T>
@@ -35,10 +38,11 @@ namespace FoodOrder.Core.Inferstructer
 
         }
 
-        public FailedResult(string message)
+        public FailedResult(string message, string errorCode = null)
         {
             IsSuccessed = false;
             ErrorMessage = message;
+            ErrorCode = errorCode;
         }
     }
 }

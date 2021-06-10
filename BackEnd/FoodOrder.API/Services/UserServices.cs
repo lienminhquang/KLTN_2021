@@ -7,9 +7,11 @@ using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.AppRoles;
 using FoodOrder.Core.ViewModels.Users;
 using FoodOrder.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -48,25 +50,44 @@ namespace FoodOrder.API.Services
             _mapper = mapper;
         }
 
+        public async Task<bool> ValidateJWTAsync(ClaimsPrincipal claims)
+        {
+            var timeCreateJWT = claims.FindFirstValue("TimeCreateJWT");
+            var user = await _userManager.FindByNameAsync(claims.FindFirstValue(ClaimTypes.Name));
+            if(user.TimeCreateJWT.ToString() != timeCreateJWT)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<ApiResult<string>> Authenticate(LoginRequest loginRequest)
         {
             var user = await _userManager.FindByNameAsync(loginRequest.Username);
+            
             if (user == null)
             {
-                return new FailedResult<string>("Username or password is incorrect!");
+                return new FailedResult<string>("Phone number or password is incorrect!");
             }
+
+            //if (user.IsBanned)
+            //{
+            //    return new FailedResult<string>("Login failed, account is banned!");
+            //}
 
             var signinResult = await _signInManager.PasswordSignInAsync(user, loginRequest.Password, loginRequest.RememberMe, true);
             if (!signinResult.Succeeded)
             {
-                return new FailedResult<string>("Username or password is incorrect!");
+                return new FailedResult<string>("Phone number or password is incorrect!");
             }
-            var claims = new List<Claim>   
+            user.TimeCreateJWT = DateTime.Now;
+            var claims = new List<Claim>
             {
                 new Claim("UserID", user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.MobilePhone, user.UserName),
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.GivenName, user.FirstName),
+                new Claim(ClaimTypes.GivenName, user.FirstName + " " + user.LastName),
+                new Claim("TimeCreateJWT", user.TimeCreateJWT.ToString())
             };
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(x => new Claim(ClaimTypes.Role, x)));
@@ -82,6 +103,8 @@ namespace FoodOrder.API.Services
                 );
 
             string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            //user.JWT = tokenString;
+            await _dbContext.SaveChangesAsync();
 
             return new SuccessedResult<string>(tokenString);
         }
@@ -92,11 +115,11 @@ namespace FoodOrder.API.Services
         {
             var user = new AppUser()
             {
-                DateOfBirth = registerRequest.Dob,
-                Email = registerRequest.Email,
+                //DateOfBirth = registerRequest.Dob,
+                //Email = registerRequest.Email,
                 FirstName = registerRequest.FirstName,
                 LastName = registerRequest.LastName,
-                UserName = registerRequest.Username,
+                UserName = registerRequest.PhoneNumber,
                 SecurityStamp = new Guid().ToString()
             };
 
@@ -147,6 +170,8 @@ namespace FoodOrder.API.Services
                 await _userManager.RemovePasswordAsync(user);
                 await _userManager.AddPasswordAsync(user, request.NewPassword);
                 await _userManager.UpdateSecurityStampAsync(user);
+                //user.JWT = null;
+                await _dbContext.SaveChangesAsync();
                
             }
             IdentityResult rs = await _userManager.UpdateAsync(user);
@@ -191,7 +216,8 @@ namespace FoodOrder.API.Services
                 await _userManager.RemovePasswordAsync(user);
                 await _userManager.AddPasswordAsync(user, request.NewPassword);
                 await _userManager.UpdateSecurityStampAsync(user);
-
+                //user.JWT = null;
+                await _dbContext.SaveChangesAsync();
             }
             IdentityResult rs = await _userManager.UpdateAsync(user);
 
