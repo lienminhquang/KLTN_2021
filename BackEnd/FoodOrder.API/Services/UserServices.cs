@@ -191,7 +191,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<bool>> ChangePassword(ChangePasswordVM request)
         {
-            AppUser user = await _userManager.FindByIdAsync(request.UserID);
+            AppUser user = await _userManager.FindByNameAsync(request.Username);
             if (user == null)
             {
                 return new FailedResult<bool>("User not found!");
@@ -199,11 +199,52 @@ namespace FoodOrder.API.Services
             
             if (!String.IsNullOrEmpty(request.NewPassword))
             {
-                if (request.NewPassword != request.ConfirmPassword)
+                var checkPasswordResult = await _userManager.CheckPasswordAsync(user, request.OldPassword);
+                if(checkPasswordResult == false)
                 {
-                    return new FailedResult<bool>("Confirm password is not match!");
+                    return new FailedResult<bool>("Mật khẩu không đúng!");
                 }
 
+                foreach (var item in _userManager.PasswordValidators)
+                {
+                    var validateResult = await item.ValidateAsync(_userManager, user, request.NewPassword);
+                    if (validateResult.Succeeded == false)
+                    {
+                        return new FailedResult<bool>(string.Join('\n', validateResult.Errors.Select(x => x.Description).ToList()));
+                    }
+                }
+
+                await _userManager.RemovePasswordAsync(user);
+                await _userManager.AddPasswordAsync(user, request.NewPassword);
+                await _userManager.UpdateSecurityStampAsync(user);
+                //user.JWT = null;
+                await _dbContext.SaveChangesAsync();
+            }
+            IdentityResult rs = await _userManager.UpdateAsync(user);
+
+            if (!rs.Succeeded)
+            {
+                String error = "";
+                foreach (var item in rs.Errors)
+                {
+                    error += item.Description + "\n";
+                }
+                return new FailedResult<bool>(error);
+            }
+
+            return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<bool>> ResetPassword(ResetPassword request)
+        {
+            AppUser user = await _userManager.FindByNameAsync(request.Username);
+            if (user == null)
+            {
+                return new FailedResult<bool>("User not found!");
+            }
+
+            if (!String.IsNullOrEmpty(request.NewPassword))
+            {
                 foreach (var item in _userManager.PasswordValidators)
                 {
                     var validateResult = await item.ValidateAsync(_userManager, user, request.NewPassword);

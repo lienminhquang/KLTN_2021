@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/helper/TokenParser.dart';
+import 'package:food_delivery/view_models/Users/ChangePasswordVM.dart';
+import 'package:food_delivery/view_models/Users/ResetPasswordVM.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/view_models/Users/RegisterRequest.dart';
 import 'package:food_delivery/view_models/Users/UserVM.dart';
@@ -24,6 +26,11 @@ class UserServices {
 
   static String getUserID() {
     return PayloadMap["UserID"];
+  }
+
+  static String getUsername() {
+    return PayloadMap[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
   }
 
   Future<ApiResult<Map<String, dynamic>>> getUserAccountFromCache() async {
@@ -140,6 +147,80 @@ class UserServices {
             'Content-Type': 'application/json; charset=UTF-8'
           },
           body: jsonEncode(request));
+    } catch (e) {
+      return ApiResult<bool>.failedApiResult(
+          "Could not connect to server. Check your connection!");
+    }
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<String>.fromJson(json, (a) => a.toString());
+      if (result.isSuccessed == true) {
+        log("User created !");
+        //log("JWT: " + result.payLoad!);
+        //JWT = result.payLoad;
+        // PayloadMap = parseJWT(result.payLoad!);
+        //print(PayloadMap);
+        return ApiResult.succesedApiResult(true);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
+  }
+
+  Future<ApiResult<bool>> resetPassword(ResetPasswordVM request) async {
+    //saveUserAccountToCache(loginVM.username!, loginVM.password!);
+
+    log("ChangePasswordVM " + jsonEncode(request.toJson()));
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    Response? response;
+    try {
+      response = await ioClient.post(Uri.parse(baseRoute + '/reset_password'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(request));
+    } catch (e) {
+      return ApiResult<bool>.failedApiResult(
+          "Could not connect to server. Check your connection!");
+    }
+    if (response.statusCode == HTTPStatusCode.OK ||
+        response.statusCode == HTTPStatusCode.BadRequest) {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<String>.fromJson(json, (a) => a.toString());
+      if (result.isSuccessed == true) {
+        log("User created !");
+        //log("JWT: " + result.payLoad!);
+        //JWT = result.payLoad;
+        // PayloadMap = parseJWT(result.payLoad!);
+        //print(PayloadMap);
+        return ApiResult.succesedApiResult(true);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
+  }
+
+  Future<ApiResult<bool>> changePassword(
+      String oldPassword, String newPassword) async {
+    //saveUserAccountToCache(loginVM.username!, loginVM.password!);
+    ChangePasswordVM changePasswordVM =
+        ChangePasswordVM(UserServices.getUsername(), newPassword, oldPassword);
+
+    log("ChangePasswordVM " + jsonEncode(changePasswordVM.toJson()));
+    IOClient ioClient = _httpClientFactory.createIOClient();
+    Response? response;
+    try {
+      response = await ioClient.post(Uri.parse(baseRoute + '/password'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
+          },
+          body: jsonEncode(changePasswordVM));
     } catch (e) {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server. Check your connection!");

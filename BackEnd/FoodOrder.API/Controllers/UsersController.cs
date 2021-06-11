@@ -93,7 +93,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpPost("role/{userID}")]
-        //[Authorize(Roles = PolicyType.Admin)]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> ChangeUserRoles(string userID, [FromBody] RoleAssignVM roleAssignVM)
         {
             var result = await _userService.AssignRoleToUser(userID, roleAssignVM.roles);
@@ -108,9 +108,31 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost("password")]
         //[Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        [Authorize(Roles = PolicyType.User)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordVM changePasswordVM)
         {
+            var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+            var user = await _userService.GetUserByID(userID);
+            if(user.IsSuccessed == false || user.PayLoad.Username != changePasswordVM.Username)
+            {
+                return Forbid();
+            }
+
             var result = await _userService.ChangePassword(changePasswordVM);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("reset_password")]
+        //[Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword)
+        {
+            var result = await _userService.ResetPassword(resetPassword);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
