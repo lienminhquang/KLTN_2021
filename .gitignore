@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+bot/venv/*
+bot/venv/
+
 # User-specific files
 *.rsuser
 *.suo
@@ -338,3 +341,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+bot/venv/Lib/site-packages/aio_pika/robust_exchange.py
