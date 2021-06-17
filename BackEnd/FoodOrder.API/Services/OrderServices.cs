@@ -85,7 +85,7 @@ namespace FoodOrder.API.Services
                 if(rating != null)
                 {
                     item.RatingVM = _mapper.Map<RatingVM>(rating);
-                    item.RatingVM.UserFullName = userVM.FirstName  + " " + userVM.LastName;
+                    item.RatingVM.UserFullName = userVM.Name  + " " + userVM.Name;
                 }
             }
 

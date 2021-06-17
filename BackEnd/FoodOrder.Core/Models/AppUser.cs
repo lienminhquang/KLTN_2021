@@ -18,8 +18,8 @@ namespace FoodOrder.Core.Models
         }
 
         //public bool IsBanned { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        //public string FirstName { get; set; }
+        public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime TimeCreateJWT { get; set; }
 

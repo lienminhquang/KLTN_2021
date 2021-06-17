@@ -86,7 +86,7 @@ namespace FoodOrder.API.Services
                 new Claim("UserID", user.Id.ToString()),
                 new Claim(ClaimTypes.MobilePhone, user.UserName),
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.GivenName, user.FirstName + " " + user.LastName),
+                new Claim(ClaimTypes.GivenName, user.Name),
                 new Claim("TimeCreateJWT", user.TimeCreateJWT.ToString())
             };
             var roles = await _userManager.GetRolesAsync(user);
@@ -117,8 +117,8 @@ namespace FoodOrder.API.Services
             {
                 //DateOfBirth = registerRequest.Dob,
                 //Email = registerRequest.Email,
-                FirstName = registerRequest.FirstName,
-                LastName = registerRequest.LastName,
+                //FirstName = registerRequest.FirstName,
+                Name = registerRequest.LastName,
                 UserName = registerRequest.PhoneNumber,
                 SecurityStamp = new Guid().ToString()
             };
@@ -146,8 +146,8 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<UserUpdateRequest>("User not found!");
             }
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
+            //user.FirstName = request.FirstName;
+            user.Name = request.Name;
             user.Email = request.Email;
             user.DateOfBirth = request.Dob;
 
@@ -330,8 +330,8 @@ namespace FoodOrder.API.Services
                         select new UserVM()
                         {
                             Username = c.UserName,
-                            FirstName = c.FirstName,
-                            LastName = c.LastName,
+                            //FirstName = c.FirstName,
+                            Name = c.Name,
                             DateOfBirth = c.DateOfBirth,
 
                             Email = c.Email,
@@ -341,8 +341,8 @@ namespace FoodOrder.API.Services
             if (!String.IsNullOrEmpty(request.SearchString))
             {
                 users = users.Where(c => c.Username.Contains(request.SearchString)
-                || c.FirstName.Contains(request.SearchString)
-                || c.LastName.Contains(request.SearchString)
+                //|| c.FirstName.Contains(request.SearchString)
+                || c.Name.Contains(request.SearchString)
                 || c.Email.Contains(request.SearchString));
             }
 
@@ -366,8 +366,8 @@ namespace FoodOrder.API.Services
                 Username = user.UserName,
                 DateOfBirth = user.DateOfBirth,
                 Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName
+                //FirstName = user.FirstName,
+                Name = user.Name
             };
             var roles = await GetRolesOfUser(id);
             userVM.AppRoles = roles.PayLoad;
