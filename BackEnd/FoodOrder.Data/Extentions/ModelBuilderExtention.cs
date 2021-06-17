@@ -16,8 +16,8 @@ namespace FoodOrder.Data.Extentions
             var user1 = new AppUser
             {
                 Id = new Guid(adminID),
-                FirstName = "Mary",
-                LastName = "Jame",
+                //FirstName = "Mary",
+                Name = "Jame",
                 DateOfBirth = new DateTime(1999, 5, 21),
                 UserName = "admin",
                 //PasswordHash = passwordHasher.HashPassword(null, "123456"),
@@ -32,8 +32,8 @@ namespace FoodOrder.Data.Extentions
             var user2 = new AppUser
             {
                 Id = new Guid(userID),
-                FirstName = "Lonen",
-                LastName = "Messi",
+                //FirstName = "Lonen",
+                Name = "Messi",
                 DateOfBirth = new DateTime(1990, 7, 5),
                 UserName = "messi10",
                 // PasswordHash = passwordHasher.HashPassword(null, "123456"),

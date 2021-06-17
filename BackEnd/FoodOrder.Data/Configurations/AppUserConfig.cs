@@ -10,8 +10,8 @@ namespace FoodOrder.Data.Configurations
         {
             builder.ToTable("AppUser");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.FirstName).IsUnicode().HasMaxLength(100);
-            builder.Property(x => x.LastName).IsUnicode().HasMaxLength(100).IsRequired();
+           // builder.Property(x => x.FirstName).IsUnicode().HasMaxLength(100);
+            builder.Property(x => x.Name).IsUnicode().HasMaxLength(100).IsRequired();
             //builder.Property(x => x.IsBanned).IsRequired().HasDefaultValue(false);
             
 

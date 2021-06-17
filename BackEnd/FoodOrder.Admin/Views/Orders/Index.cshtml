@@ -55,7 +55,7 @@
                             {
                                 if (item.OrderStatusID != 4 && item.OrderStatusID != 5)
                                 {
-                                    string fullName = item.UserVM.FirstName + " " + item.UserVM.LastName;
+                                    string fullName = item.UserVM.Name;
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.ID)
@@ -132,7 +132,7 @@
                             {
                                 if (item.OrderStatusID == OrderStatus.DaNhan && item.DatePaid.Value.Date == DateTime.Now.Date)
                                 {
-                                    string fullName = item.UserVM.FirstName + " " + item.UserVM.LastName;
+                                    string fullName = item.UserVM.Name;
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.ID)
@@ -202,7 +202,7 @@
                             {
                                 if (item.OrderStatusID == OrderStatus.DaHuy && item.DatePaid.HasValue && item.DatePaid.Value.Date == DateTime.Now.Date)
                                 {
-                                    string fullName = item.UserVM.FirstName + " " + item.UserVM.LastName;
+                                    string fullName = item.UserVM.Name;
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.ID)
@@ -281,7 +281,7 @@
                         {
                             @foreach (var item in Model.Items)
                             {
-                                string fullName = item.UserVM.FirstName + " " + item.UserVM.LastName;
+                                string fullName = item.UserVM.Name;
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ID)

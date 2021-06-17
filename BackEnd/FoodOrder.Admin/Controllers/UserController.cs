@@ -236,8 +236,8 @@ namespace FoodOrder.Admin.Controllers
             {
                 Dob = userVM.DateOfBirth,
                 Email = userVM.Email,
-                FirstName = userVM.FirstName,
-                LastName = userVM.LastName,
+               // FirstName = userVM.FirstName,
+                Name = userVM.Name,
                 UserID = userVM.ID
             });
         }
@@ -339,8 +339,8 @@ namespace FoodOrder.Admin.Controllers
                 Dob = /*new DateTime(),//*/ result.PayLoad.DateOfBirth,
                 Email = /*"test@gmail.com", //*/ result.PayLoad.Email,
                 UserID = /*new Guid(), //*/result.PayLoad.ID,
-                FirstName = /*"test", //*/result.PayLoad.FirstName,
-                LastName = /*"test", //*/result.PayLoad.LastName
+                //FirstName = /*"test", //*/result.PayLoad.FirstName,
+                Name = /*"test", //*/result.PayLoad.Name
             };
             return View(userDeleteVM);
         }
