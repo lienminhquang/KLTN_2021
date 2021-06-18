@@ -27,6 +27,8 @@ intents:
     use_entities: true
 - inform:
     use_entities: true
+- nlu_fallback:
+    use_entities: true
 entities:
 - cuisine
 - number
@@ -52,36 +54,36 @@ slots:
     influence_conversation: false
 responses:
   utter_out_of_scope:
-  - text: out of scope
+  - text: Xin lỗi. Tôi chưa hiểu ý của bạn, bạn có thể nói lại được không?
   utter_greet:
-  - text: Hey! How are you?
+  - text: Chào! Hôm nay bạn thế nào?
   utter_cheer_up:
   - image: https://i.imgur.com/nGF1K8f.jpg
-    text: 'Here is something to cheer you up:'
+    text: Xem nè
   utter_did_that_help:
-  - text: Did that help you?
+  - text: Nó có giúp bạn tốt lên chưa?
   utter_happy:
-  - text: Great, carry on!
+  - text: Tuyệt vời, tiếp tục nào!
   utter_goodbye:
-  - text: Bye
+  - text: Tạm biệt
   utter_iamabot:
-  - text: I am a bot, powered by Rasa.
+  - text: Tôi là robot, được lập trình để giúp đỡ thế giới. Hihi!
   utter_ask_continue:
-  - text: do you want to continue?
+  - text: Bạn có muốn tiếp tục không?
   utter_ask_cuisine:
-  - text: What cuisine?
+  - text: Loại ẩm thực gì?
   utter_ask_num_people:
-  - text: How many people?
+  - text: Có bao nhiêu người?
   utter_ask_outdoor_seating:
-  - text: Do you want to sit outside?
+  - text: Bạn có muốn ngồi bên ngoài không?
   utter_submit:
   - text: All done!
   utter_slots_values:
   - text: |-
-      Im going to run a restaurant search using the follwing parameters:
-       - cuisine: {cuisine}
-       - num_people: {num_people}
-       - outdoor_seating: {outdoor_seating}
+      Tôi sẽ tìm giúp bạn một nhà hàng tới những thông tin sau:
+       - Ẩm thực : {cuisine}
+       - Sô người : {num_people}
+       - Ngồi bên ngoài: {outdoor_seating}
 actions: []
 forms:
   restaurant_form:

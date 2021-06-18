@@ -2,37 +2,28 @@ version: "2.0"
 nlu:
 - intent: stop
   examples: |
-    - ok then you cant help me
-    - that was shit, you're not helping
-    - you can't help me
-    - you can't help me with what i need
-    - i guess you can't help me then
-    - ok i guess you can't help me
-    - that's not what i want
-    - ok, but that doesnt help me
-    - this is leading to nothing
-    - this conversation is not really helpful
-    - you cannot help me with what I want
-    - I think you cant help me
-    - hm i don't think you can do what i want
+    - dừng lại
+    - quay lại
+    - không giúp được gì
+    - bạn không giúp được tôi
+    - cuộc nói chuyện này không có tác dụng
+    - không còn gì nữa à?
+    - còn gì nữa không?
     - stop
-    - stop go back
-    - do you get anything?
-    - and you call yourself bot company? pff
-    - and that's it?
-    - nothing else?
 - intent: request_restaurant
   examples: |
-    - im looking for a restaurant
-    - can i get [swedish](cuisine) food in any area
-    - a restaurant that serves [caribbean](cuisine) food
-    - id like a restaurant
-    - im looking for a restaurant that serves [meditterance](causine) food
-    - can i find a restaurant that serves [chinese](food)
-    - restaurant
+    - tôi muốn tìm nhà hàng
+    - một nhà hàng phục vụ đồ ăn [swedish](cuisine)
+    - tôi muốn một nhà hàng
+    - nhà hàng
+    - tôi có thể tìm một nhà hàng phục vụ [chinese](food) không?
 - intent: inform
   examples: |
-    - [afghan](cuisine) food
+    - đồ ăn [afghan](cuisine)
+    - mười người
+    - 10 người
+    - 10
+    - tôi muốn đồ ăn [english](cuisine)
     - how about [asia oriental](cuisine) food
     - uh how about [turkish](cuisine) type of food
     - um [english](cuisine)
@@ -42,86 +33,69 @@ nlu:
     - book for sevent people
     - 2 please
     - nine people
+    - mười
+    - [english](cuisine)[english](cuisine)
 - intent: greet
   examples: |
+    - xin chào
+    - chào
     - hey
-    - hello
-    - hi
-    - hello there
-    - good morning
-    - good evening
-    - moin
-    - hey there
-    - let's go
-    - hey dude
-    - goodmorning
-    - goodevening
-    - good afternoon
+    - chào bạn
+    - này
+    - nè
+    - bạn ơi
+    - chao
+    - Hi there!
+    - Xin chào
 - intent: goodbye
   examples: |
-    - good afternoon
-    - cu
-    - good by
-    - cee you later
-    - good night
+    - chào tạm biệt
+    - tạm biệt
     - bye
-    - goodbye
-    - have a nice day
-    - see you around
     - bye bye
-    - see you later
+    - hẹn gặp lại
 - intent: affirm
   examples: |
-    - yes
-    - y
-    - indeed
-    - of course
-    - that sounds good
-    - correct
+    - có
+    - vâng
+    - dạ
+    - đúng
+    - đúng rồi
+    - ừ
+    - tất nhiên
+    - được
 - intent: deny
   examples: |
+    - không
+    - không bao giờ
     - no
-    - n
-    - never
-    - I don't think so
-    - don't like that
-    - no way
-    - not really
+    - không thể nào
 - intent: mood_great
   examples: |
-    - perfect
-    - great
-    - amazing
-    - feeling like a king
-    - wonderful
-    - I am feeling very good
-    - I am great
-    - I am amazing
-    - I am going to save the world
-    - super stoked
-    - extremely good
-    - so so perfect
-    - so good
+    - ngon
+    - đỉnh
+    - tốt
+    - tuyệt vời
+    - làm tốt đấy
+    - làm tốt lắm
     - so perfect
 - intent: mood_unhappy
   examples: |
-    - my day was horrible
-    - I am sad
-    - I don't feel very well
-    - I am disappointed
-    - super sad
-    - I'm so sad
-    - sad
-    - very sad
-    - unhappy
-    - not good
-    - not very good
-    - extremly sad
-    - so saad
-    - so sad
+    - tôi buồn
+    - tôi rất buồn
+    - buồn
+    - không vui
+    - không bui cho lắm
+    - không tốt lắm
+    - buồn quá
+    - tôi không hài lòng
+    - địt
 - intent: bot_challenge
   examples: |
-    - are you a bot?
-    - are you a human?
-    - am I talking to a bot?
-    - am I talking to a human?
+    - bạn có phải robot không?
+    - bạn có phải người không?
+    - bạn là người hay bot?
+    - tôi đang nói chuyện với người hay bot vậy?
+    - tôi đang nói chuyện với bot hả?
+    - tôi đang nói chuyện với người hả?
+    - bạn là bot hả
