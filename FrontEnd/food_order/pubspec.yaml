@@ -52,6 +52,8 @@ dependencies:
   equatable: ^2.0.2
 
   rxdart: ^0.27.0
+  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,6 +77,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
     - assets/amee.json
+    - assets/amee2.json
 
     - images/cat.jpg
     - images/ladybug.jpg
