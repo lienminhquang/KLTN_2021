@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class Body extends StatelessWidget {
   Widget _buildLoadeState(BuildContext context, ProfileLoadedState state) {
-    String fullname = state.userVM.firstName + " " + state.userVM.lastName;
+    String fullname = state.userVM.name;
     return Column(
       children: [
         ProfilePic(),

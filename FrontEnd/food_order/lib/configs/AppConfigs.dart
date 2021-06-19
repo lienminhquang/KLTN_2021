@@ -1,6 +1,9 @@
 import 'package:intl/intl.dart';
 
 class AppConfigs {
+  static const String URL_BaseBotAPI =
+      "http://localhost:5005/webhooks/rest/webhook";
+
   static const String URL_BaseAPI = "https://localhost:6001";
   static const String URL_UserRouteAPI = URL_BaseAPI + "/api/Users";
   static const String URL_CategoryRouteAPI = URL_BaseAPI + "/api/Category";

@@ -89,7 +89,6 @@ nlu:
     - không tốt lắm
     - buồn quá
     - tôi không hài lòng
-    - địt
 - intent: bot_challenge
   examples: |
     - bạn có phải robot không?

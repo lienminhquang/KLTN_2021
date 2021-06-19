@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'chat.dart';
+import 'ChatBody.dart';
 
 class ChatBotScreen extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         title: Text('Chat Bot'),
       ),
       body: Center(
-        child: Chat(),
+        child: ChatBody(),
       ),
     );
   }

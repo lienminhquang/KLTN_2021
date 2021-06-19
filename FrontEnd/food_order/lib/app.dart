@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/bloc/Chat/ChatBloc.dart';
+import 'package:food_delivery/bloc/Chat/ChatEvent.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
 import 'package:food_delivery/bloc/Profile/ProfileBloc.dart';
 import 'package:food_delivery/bloc/Profile/ProfileEvent.dart';
+import 'package:food_delivery/pages/chatbot/TestChat.dart';
 import 'package:food_delivery/pages/chatbot/chatbotScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
@@ -27,6 +30,7 @@ class _MotherBoardState extends State<MotherBoard> {
     // NoficationScreen(),
     ProfileScreen(),
     ChatBotScreen()
+    //TestChat(title: "test chat")
   ];
 
   @override
@@ -85,7 +89,9 @@ class _MotherBoardState extends State<MotherBoard> {
         break;
       case 3:
         context.read<ProfileBloc>().add(ProfileStartedEvent());
-
+        break;
+      case 4:
+        context.read<ChatBloc>().add(ChatStartedEvent());
         break;
       default:
     }

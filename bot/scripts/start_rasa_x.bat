@@ -1,0 +1,1 @@
+rasa x -m models --enable-api --cors "*"

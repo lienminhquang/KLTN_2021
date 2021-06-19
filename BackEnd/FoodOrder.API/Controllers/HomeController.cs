@@ -6,7 +6,7 @@ using System;
 
 namespace FoodOrder.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("socket.io")]
     [ApiController]
     public class HomeController : ControllerBase
     {

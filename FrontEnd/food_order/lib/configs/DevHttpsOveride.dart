@@ -5,7 +5,7 @@ class DevHttpOverrides extends HttpOverrides {
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        if (host == "localhost" && port == 6001) {
+        if (host == "localhost") {
           return true;
         }
         return false;

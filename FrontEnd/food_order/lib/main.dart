@@ -6,6 +6,7 @@ import 'package:food_delivery/bloc/Cart/CartEvent.dart';
 import 'package:food_delivery/bloc/Address/AddressBloc.dart';
 import 'package:food_delivery/bloc/Address/AddressEvent.dart';
 import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
+import 'package:food_delivery/bloc/Chat/ChatBloc.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
 import 'package:food_delivery/bloc/Home/HomeBloc.dart';
 import 'package:food_delivery/bloc/Home/HomeEvent.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<OrderDetailsBloc>(create: (_) => OrderDetailsBloc()),
         BlocProvider<ProfileBloc>(create: (_) => ProfileBloc()),
         BlocProvider<SignUpBloc>(create: (_) => SignUpBloc()),
+        BlocProvider<ChatBloc>(create: (_) => ChatBloc()),
       ],
       child: MaterialApp(
         title: 'Food Delivery',

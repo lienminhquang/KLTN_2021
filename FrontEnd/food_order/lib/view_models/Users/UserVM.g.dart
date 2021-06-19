@@ -10,8 +10,7 @@ UserVM _$UserVMFromJson(Map<String, dynamic> json) {
   return UserVM(
     json['id'] as String,
     json['username'] as String,
-    json['firstName'] as String,
-    json['lastName'] as String,
+    json['name'] as String,
     DateTime.parse(json['dateOfBirth'] as String),
     json['email'] as String,
   );
@@ -20,8 +19,7 @@ UserVM _$UserVMFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$UserVMToJson(UserVM instance) => <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
+      'name': instance.name,
       'dateOfBirth': instance.dateOfBirth.toIso8601String(),
       'email': instance.email,
     };
