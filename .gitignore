@@ -12,6 +12,9 @@ bot/venv/
 *.user
 *.userosscache
 *.sln.docstates
+*.db
+*.db-shm
+*.db-wall
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
