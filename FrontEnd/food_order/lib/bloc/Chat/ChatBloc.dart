@@ -6,13 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Chat/ChatEvent.dart';
 import 'package:food_delivery/bloc/Chat/ChatState.dart';
-import 'package:food_delivery/pages/chatbot/MessageWidget.dart';
+//import 'package:food_delivery/pages/chatbot/MessageWidget.dart';
 
 import 'dart:async';
 
 import 'package:dialogflow_grpc/dialogflow_grpc.dart';
 
 import 'package:dialogflow_grpc/generated/google/cloud/dialogflow/v2beta1/session.pb.dart';
+import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/services/CategoriesServices.dart';
 import 'package:food_delivery/services/ChatBotServices.dart';
 import 'package:food_delivery/view_models/ChatBots/MessageData.dart';
@@ -32,6 +33,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
 
     _socket.on('connect_error', (data) {
+      this.add(ChatErrorEvent("Could not connect to server!"));
+      _socket.disconnect();
       print("connect_error: ");
       print(data);
     });
@@ -42,10 +45,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
 
     _socket.on('connect_timeout', (data) {
+      this.add(ChatErrorEvent("Could not connect to server!"));
+      _socket.disconnect();
       print("connect_timeout: ");
       print(data);
     });
     _socket.on('disconnect', (data) {
+      this.add(ChatErrorEvent("Could not connect to server!"));
+      _socket.disconnect();
       print("disconnect: ");
       print(data);
     });
@@ -74,6 +81,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       lastName: "quang");
   var _bot = const types.User(
       id: '0a8e1841-05e7-42d3-8bc0-9c05be14f74e',
+      imageUrl: AppConfigs.URL_Images + "/icons/" + "icons8-bot-64.png",
       firstName: "",
       lastName: "Amee");
 
@@ -127,6 +135,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   @override
   Stream<ChatState> mapEventToState(ChatEvent event) async* {
+    if (event is ChatReconnectEvent) {
+      if (_socket.disconnected) {
+        _socket.connect();
+      }
+      return;
+    }
+    if (event is ChatErrorEvent) {
+      yield ChatErrorState(event.error);
+      return;
+    }
     if (event is ChatStartedEvent) {
       if (_socket.disconnected) {
         print("Socket connecting!");

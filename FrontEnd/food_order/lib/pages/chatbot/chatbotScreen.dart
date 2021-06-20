@@ -13,8 +13,9 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text('Chat Bot'),
+        title: Text('Amee assistant'),
+        centerTitle: true,
+        backgroundColor: Colors.blue.shade100,
       ),
       body: Center(
         child: ChatBody(),

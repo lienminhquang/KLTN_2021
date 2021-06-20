@@ -14,7 +14,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:dialogflow_grpc/dialogflow_grpc.dart';
 import 'package:sound_stream/sound_stream.dart';
 
-import 'MessageWidget.dart';
+//import 'MessageWidget.dart';
 
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
@@ -38,6 +38,8 @@ class _ChatBodyState extends State<ChatBody> {
 
   // TODO DialogflowGrpc class instance
   DialogflowGrpcV2Beta1? dialogflow;
+
+  bool _isConnectingDialogShowing = false;
 
   @override
   void initState() {
@@ -99,6 +101,10 @@ class _ChatBodyState extends State<ChatBody> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
+      if (_isConnectingDialogShowing) {
+        Navigator.of(context).pop();
+        _isConnectingDialogShowing = false;
+      }
       if (state is ChatLoadedState) {
         return _loadedState(context, state);
       }
@@ -106,6 +112,53 @@ class _ChatBodyState extends State<ChatBody> {
         return Container(
             child: Center(
           child: CircularProgressIndicator(),
+        ));
+      }
+      if (state is ChatErrorState) {
+        return Container(
+            child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(state.message),
+              TextButton(
+                  onPressed: () {
+                    context.read<ChatBloc>().add(ChatReconnectEvent());
+                    _isConnectingDialogShowing = true;
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return WillPopScope(
+                            onWillPop: () async {
+                              _isConnectingDialogShowing = false;
+                              return true;
+                            },
+                            child: AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0))),
+                              backgroundColor: Colors.black87,
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    child: Text(
+                                      "Connecting ...",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                  ),
+                                  CircularProgressIndicator(),
+                                ],
+                              ),
+                            ));
+                      },
+                    );
+                  },
+                  child: Text("Reconnect"))
+            ],
+          ),
         ));
       }
       throw "Unknow state!";

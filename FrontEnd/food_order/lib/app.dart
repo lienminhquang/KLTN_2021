@@ -5,8 +5,8 @@ import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
 import 'package:food_delivery/bloc/Profile/ProfileBloc.dart';
 import 'package:food_delivery/bloc/Profile/ProfileEvent.dart';
-import 'package:food_delivery/pages/chatbot/TestChat.dart';
-import 'package:food_delivery/pages/chatbot/chatbotScreen.dart';
+
+import 'package:food_delivery/pages/chatbot/ChatbotScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery/pages/cart/cart_screen.dart';
 import 'package:food_delivery/pages/home/Home.dart';

@@ -85,6 +85,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
     - assets/amee.json
     - assets/amee2.json
+    - assets/icons8-bot.gif
 
     - images/cat.jpg
     - images/ladybug.jpg
