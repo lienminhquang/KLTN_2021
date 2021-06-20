@@ -14,7 +14,7 @@ bot/venv/
 *.sln.docstates
 *.db
 *.db-shm
-*.db-wall
+*.db-wal
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
