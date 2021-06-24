@@ -139,7 +139,7 @@ class _BodyState extends State<Body> {
               ),
             ),
             Text(
-              "What are you craving?",
+              "Bạn muốn ăn uống gì nhỉ?",
               style: TextStyle(color: Colors.grey[500], fontSize: 15.0),
             )
           ],
@@ -239,7 +239,7 @@ class CategoryItem extends StatelessWidget {
               CachedNetworkImage(
                 width: double.infinity,
                 height: double.infinity,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
                 placeholder: (context, url) => CircularProgressIndicator(),
                 imageUrl: AppConfigs.URL_Images + "/$image",
               ),
@@ -274,35 +274,39 @@ class CategoryItem extends StatelessWidget {
 
 Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
   if (saleCampaignVM == null) {
-    return Text(
-      AppConfigs.toPrice(foodVM.price),
-      style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.black.withOpacity(0.9)),
+    return Center(
+      child: Text(
+        AppConfigs.toPrice(foodVM.price),
+        style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black.withOpacity(0.9)),
+      ),
     );
   } else
-    return Row(
-      children: [
-        Text(
-          AppConfigs.toPrice(
-              foodVM.price * (100 - saleCampaignVM.percent) / 100),
-          style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black.withOpacity(0.9)),
-        ),
-        Container(
-          width: 10,
-        ),
-        Text(
-          AppConfigs.toPrice(foodVM.price),
-          style: TextStyle(
-              fontSize: 15,
-              color: Colors.black.withOpacity(0.6),
-              decoration: TextDecoration.lineThrough),
-        ),
-      ],
+    return Center(
+      child: Row(
+        children: [
+          Text(
+            AppConfigs.toPrice(
+                foodVM.price * (100 - saleCampaignVM.percent) / 100),
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black.withOpacity(0.9)),
+          ),
+          Container(
+            width: 10,
+          ),
+          Text(
+            AppConfigs.toPrice(foodVM.price),
+            style: TextStyle(
+                fontSize: 15,
+                color: Colors.black.withOpacity(0.6),
+                decoration: TextDecoration.lineThrough),
+          ),
+        ],
+      ),
     );
 }
 
@@ -368,23 +372,26 @@ class PromotionContainer extends StatelessWidget {
                           width: 200,
                           child: Column(
                             children: [
-                              Expanded(
+                              SizedBox(
+                                height: 150,
+                                width: 200,
                                 //padding: const EdgeInsets.all(16.0),
                                 child: CachedNetworkImage(
-                                  // width: double.infinity,
-                                  //height: 150,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
-                                  imageUrl: AppConfigs.URL_Images +
-                                      "/${foodVM.imagePath}",
-                                ),
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    imageUrl: AppConfigs.URL_Images +
+                                        "/${foodVM.imagePath}",
+                                    fit: BoxFit.cover),
                               ),
-                              ListTile(
-                                //leading: Icon(Icons.arrow_drop_down_circle),
-                                title: Text(foodVM.name),
-                                subtitle:
-                                    _priceWidget(foodVM, foodVM.saleCampaignVM),
+                              Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Text(foodVM.name),
+                              ),
+                              Expanded(
+                                child: Align(
+                                    alignment: FractionalOffset.bottomCenter,
+                                    child: _priceWidget(
+                                        foodVM, foodVM.saleCampaignVM)),
                               ),
                             ],
                           ),
@@ -460,7 +467,9 @@ class SaleContainer extends StatelessWidget {
                             width: 200,
                             child: Column(
                               children: [
-                                Expanded(
+                                SizedBox(
+                                  width: 200,
+                                  height: 150,
                                   //padding: const EdgeInsets.all(16.0),
                                   child: CachedNetworkImage(
                                     // width: double.infinity,
@@ -472,11 +481,16 @@ class SaleContainer extends StatelessWidget {
                                         "/${foodVM.imagePath}",
                                   ),
                                 ),
-                                ListTile(
-                                    //leading: Icon(Icons.arrow_drop_down_circle),
-                                    title: Text(foodVM.name),
-                                    subtitle:
-                                        _priceWidget(foodVM, _saleCampaignVM)),
+                                Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Text(foodVM.name),
+                                ),
+                                Expanded(
+                                  child: Align(
+                                      alignment: FractionalOffset.bottomCenter,
+                                      child: _priceWidget(
+                                          foodVM, _saleCampaignVM)),
+                                ),
                               ],
                             ),
                           ),

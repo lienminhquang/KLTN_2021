@@ -1,100 +1,129 @@
 version: "2.0"
 nlu:
-- intent: stop
-  examples: |
-    - dừng lại
-    - quay lại
-    - không giúp được gì
-    - bạn không giúp được tôi
-    - cuộc nói chuyện này không có tác dụng
-    - không còn gì nữa à?
-    - còn gì nữa không?
-    - stop
-- intent: request_restaurant
-  examples: |
-    - tôi muốn tìm nhà hàng
-    - một nhà hàng phục vụ đồ ăn [swedish](cuisine)
-    - tôi muốn một nhà hàng
-    - nhà hàng
-    - tôi có thể tìm một nhà hàng phục vụ [chinese](food) không?
-- intent: inform
-  examples: |
-    - đồ ăn [afghan](cuisine)
-    - mười người
-    - 10 người
-    - 10
-    - tôi muốn đồ ăn [english](cuisine)
-    - how about [asia oriental](cuisine) food
-    - uh how about [turkish](cuisine) type of food
-    - um [english](cuisine)
-    - id [mroccan](cuisine) food
-    - for ten people
-    - juts one people
-    - book for sevent people
-    - 2 please
-    - nine people
-    - mười
-    - [english](cuisine)[english](cuisine)
 - intent: greet
   examples: |
-    - xin chào
     - chào
-    - hey
-    - chào bạn
-    - này
-    - nè
-    - bạn ơi
-    - chao
-    - Hi there!
-    - Xin chào
+    - xin chào
+    - hi
 - intent: goodbye
   examples: |
-    - chào tạm biệt
-    - tạm biệt
     - bye
-    - bye bye
-    - hẹn gặp lại
-- intent: affirm
+    - tạm biệt
+- intent: bot_challenge
   examples: |
-    - có
-    - vâng
-    - dạ
-    - đúng
-    - đúng rồi
-    - ừ
-    - tất nhiên
-    - được
+    - bạn là bot à
+- intent: thanks
+  examples: |
+    - cảm ơn
+- intent: ask_func
+  examples: |
+    - bạn làm được gì
+- intent: ask_find_food
+  examples: |
+    - tôi muốn tìm món
+    - cho tôi tìm món
+    - tìm món
+    - có món gì nhỉ
+    - có món gì
+- intent: ask_find_promotion
+  examples: |
+    - hiện tại có khuyến mãi gì vậy
+    - có khuyến mãi gì nhỉ
+    - đang có ưu đãi gì
+    - đang có khuyến mãi gì
+    - khuyến mãi
+- intent: ask_check_dishes
+  examples: |
+    - tôi muốn kiểm tra đơn hàng
+    - kiểm tra đơn hàng
+    - kiểm tra
+    - check dùm tôi đơn hàng
+    - kiểm tra đơn hàng giúp tôi
+    - check đơn
+    - check món giúp
+    - kiểm tra món giúp
+- intent: ask_cancel_dishes
+  examples: |
+    - hủy đơn
+    - tôi muốn hủy đơn
+    - cho tôi hủy đơn
+    - tôi muốn hủy món
+    - hủy đơn như thế nào nhỉ
+    - hủy món giúp tôi với
+- intent: inform_find_food_category
+  examples: |
+    - [món bò](category)
+    - [cơm](category)
+    - [trà sữa](category)
+    - [bánh ngọt](category)
+    - tôi muốn tìm [món bò](category)
+    - tôi muốn đặt [trà sữa](category)
+    - có [món bò](category) nào nhỉ
+    - có loại [trà sữa](category) nào nhỉ
+    - có loại [cơm](category) nào
+    - có những [món cơm](category) nào
+    - [cơm](category) như thế nào
+    - [bánh ngọt](category) như thế nào
+    - cho tôi thông tin [bánh ngọt](category)
+    - cho tôi thông tin [bò](category)
+    - [trà sữa](category) có loại nào
+    - tôi muốn mua [trà sữa](category)
+    - muốn mua [bánh ngọt](category)
+    - muốn mua [cơm](category)
+    - muốn mua [món bò](category)
+    - tôi muốn tìm [trà sữa](category)
+    - muốn tìm [bánh ngọt](category)
+    - muốn tìm [cơm](category)
+- intent: ask_name
+  examples: |
+    - bạn tên gì nhỉ
+    - tên bạn là gì
+- intent: explain
+  examples: |
+    - tại sao tôi phải trả lời
+    - bạn hỏi chi vậy
+    - tại sao lại hỏi
+    - hỏi chi
+    - sao phải trả lời chi 
 - intent: deny
   examples: |
     - không
-    - không bao giờ
+    - không muốn
+    - thôi không
+    - không nha
     - no
-    - không thể nào
-- intent: mood_great
+- intent: affirm
   examples: |
-    - ngon
-    - đỉnh
-    - tốt
-    - tuyệt vời
-    - làm tốt đấy
-    - làm tốt lắm
-    - so perfect
-- intent: mood_unhappy
+    - có
+    - tôi muốn
+    - có nha
+    - yes
+    - đồng ý
+- intent: out_of_category
   examples: |
-    - tôi buồn
-    - tôi rất buồn
-    - buồn
-    - không vui
-    - không bui cho lắm
-    - không tốt lắm
-    - buồn quá
-    - tôi không hài lòng
-- intent: bot_challenge
+    - còn món nào khác không
+    - ngoài mấy món này còn món nào không
+    - có món khác không
+    - còn món nào nữa 
+    - còn gì khác không
+##SYNONYMS
+- synonym: bo
   examples: |
-    - bạn có phải robot không?
-    - bạn có phải người không?
-    - bạn là người hay bot?
-    - tôi đang nói chuyện với người hay bot vậy?
-    - tôi đang nói chuyện với bot hả?
-    - tôi đang nói chuyện với người hả?
-    - bạn là bot hả
+    - bò
+    - món bò
+    - crows
+    - beafsteak
+- synonym: com
+  examples: |
+    - cơm
+    - món cơm
+    - rice
+- synonym: trasua
+  examples: |
+    - trà sữa
+    - milk tea
+- synonym: banhngot
+  examples: |
+    - bánh ngọt
+    - cake
+    - cakes

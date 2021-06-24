@@ -118,6 +118,9 @@ class _ResultItem extends StatelessWidget {
         child: CachedNetworkImage(
           placeholder: (context, url) => CircularProgressIndicator(),
           imageUrl: AppConfigs.URL_Images + "/${_foodVM.imagePath}",
+          height: 50,
+          width: 50,
+          fit: BoxFit.cover,
         ),
       ),
       title: Text(_foodVM.name),
