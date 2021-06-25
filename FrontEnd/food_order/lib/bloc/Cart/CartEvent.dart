@@ -11,6 +11,8 @@ class CartAddPromotionEvent extends CartEvent {
   CartAddPromotionEvent(this.promotionID);
 }
 
+class CartRemovePromotionEvent extends CartEvent {}
+
 class CartRefreshdEvent extends CartEvent {}
 
 class CartDeletedEvent extends CartEvent {

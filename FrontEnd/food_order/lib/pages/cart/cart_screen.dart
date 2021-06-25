@@ -79,7 +79,18 @@ class CheckoutCart extends StatelessWidget {
                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                     child: promotionCode == null
                         ? Container()
-                        : Text(promotionCode)),
+                        : Row(
+                            children: [
+                              Text(promotionCode),
+                              IconButton(
+                                  onPressed: () {
+                                    context
+                                        .read<CartBloc>()
+                                        .add(CartRemovePromotionEvent());
+                                  },
+                                  icon: Icon(Icons.cancel))
+                            ],
+                          )),
                 Spacer(),
                 GestureDetector(
                     onTap: () {

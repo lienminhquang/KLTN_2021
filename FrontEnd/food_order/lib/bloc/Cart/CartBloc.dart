@@ -38,6 +38,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield* _mapRefreshEventToState();
     } else if (event is CartAddPromotionEvent) {
       yield* _mapAddPromotionEventToState(event, state);
+    } else if (event is CartRemovePromotionEvent) {
+      _promotionID = null;
+      yield await _fetchAll();
     }
   }
 
@@ -112,7 +115,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
 
     if (promotionVM != null && promotionVM.minPrice! > total) {
-      print("Disable promotion due to invalid condition: ${promotionVM.minPrice!} <= ${total}");
+      print(
+          "Disable promotion due to invalid condition: ${promotionVM.minPrice!} <= ${total}");
       promotionVM = null;
       _promotionID = null;
     }
