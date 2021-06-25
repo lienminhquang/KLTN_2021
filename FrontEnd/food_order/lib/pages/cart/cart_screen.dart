@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,10 +35,13 @@ class CheckoutCart extends StatelessWidget {
   Widget _buildLoadedState(BuildContext context, CartLoadedState state) {
     // context.select<CartModel, List<CartVM>>((value) => value.items);
     double totalPrice = state.getTotalPrice();
+    double finalPrice = totalPrice;
     String? promotionCode;
     if (state.promotionVM != null) {
       promotionCode = state.promotionVM!.code;
-      totalPrice = totalPrice * (100 - state.promotionVM!.percent) / 100;
+      finalPrice = totalPrice -
+          min(state.promotionVM!.max!,
+              totalPrice * (state.promotionVM!.percent) / 100);
     }
 
     return Container(
@@ -108,7 +113,7 @@ class CheckoutCart extends StatelessWidget {
                       text: 'Thành tiền:\n',
                       children: [
                         TextSpan(
-                            text: '${AppConfigs.toPrice(totalPrice)}',
+                            text: '${AppConfigs.toPrice(finalPrice)}',
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,

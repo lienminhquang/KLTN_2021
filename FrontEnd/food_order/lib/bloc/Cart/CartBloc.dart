@@ -49,6 +49,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  void _checkValidPromotionID() {}
+
   Stream<CartState> _mapDeletedEventToState(
       CartDeletedEvent event, CartState state) async* {
     if (state is CartLoadedState) {
@@ -100,6 +102,21 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     var listCartVM = await _fetchCartItems();
     var address = await _fetchAddress();
     var promotionVM = await _fetchPromotion(_promotionID);
+    double total = 0;
+
+    for (var item in listCartVM) {
+      double discount = item.foodVM.saleCampaignVM == null
+          ? 0
+          : item.foodVM.saleCampaignVM!.percent;
+      total += item.quantity * item.foodVM.price * (100 - discount) / 100;
+    }
+
+    if (promotionVM != null && promotionVM.minPrice! > total) {
+      print("Disable promotion due to invalid condition: ${promotionVM.minPrice!} <= ${total}");
+      promotionVM = null;
+      _promotionID = null;
+    }
+
     return CartLoadedState(address, listCartVM, promotionVM);
   }
 

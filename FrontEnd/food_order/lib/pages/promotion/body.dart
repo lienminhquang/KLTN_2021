@@ -22,10 +22,8 @@ class Body extends StatelessWidget {
           return (totalPreis == 0 ||
                   totalPreis! < state.listPromotionVMs[index].minPrice! ||
                   totalPreis == null)
-              ? DisableItemPromotion(
-                  state.listPromotionVMs[index], this.totalPreis)
-              : UnableItemPromotion(
-                  state.listPromotionVMs[index], this.totalPreis);
+              ? DisableItemPromotion(state.listPromotionVMs[index], totalPreis)
+              : UseableItemPromotion(state.listPromotionVMs[index], totalPreis);
         },
       ),
     );
@@ -63,10 +61,10 @@ class Body extends StatelessWidget {
   }
 }
 
-class UnableItemPromotion extends StatelessWidget {
+class UseableItemPromotion extends StatelessWidget {
   final PromotionVM _promotionVM;
   final double? totalPreis;
-  UnableItemPromotion(this._promotionVM, this.totalPreis);
+  UseableItemPromotion(this._promotionVM, this.totalPreis);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -86,10 +84,9 @@ class UnableItemPromotion extends StatelessWidget {
                     builder: (context) => Dialog(
                         backgroundColor: Colors.transparent,
                         insetPadding: EdgeInsets.all(10),
-                        child: Stack(
-                          overflow: Overflow.visible,
-                          alignment: Alignment.center,
-                          children: <Widget>[
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
                             Container(
                               width: double.infinity,
                               height: 200,
@@ -98,24 +95,28 @@ class UnableItemPromotion extends StatelessWidget {
                                   color: Colors.white),
                               padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
                               child: Column(children: [
-                                Text("Khuyến mãi của bạn",
+                                Text(_promotionVM.name,
                                     style: TextStyle(
-                                        fontSize: 24,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center),
                                 SizedBox(height: 20),
                                 Text(_promotionVM.desciption.toString(),
                                     style: TextStyle(
                                         fontSize: 14,
-                                        color: Colors.grey.shade700))
+                                        color: Colors.grey.shade700)),
+                                Text(
+                                    "Áp dụng cho đơn hàng từ: ${AppConfigs.toPrice(_promotionVM.minPrice!)}",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade700)),
+                                Text(
+                                    "Tối đa: ${AppConfigs.toPrice(_promotionVM.max!)}",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade700)),
                               ]),
                             ),
-                            Positioned(
-                                top: -100,
-                                child: Image.network(
-                                    "https://media.giphy.com/media/90tLdnyy0XPOWZ5mwE/giphy.gif",
-                                    width: 150,
-                                    height: 150))
                           ],
                         )),
                   );
@@ -248,36 +249,39 @@ class DisableItemPromotion extends StatelessWidget {
                     builder: (context) => Dialog(
                         backgroundColor: Colors.transparent,
                         insetPadding: EdgeInsets.all(10),
-                        child: Stack(
-                          overflow: Overflow.visible,
-                          alignment: Alignment.center,
-                          children: <Widget>[
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
                             Container(
                               width: double.infinity,
-                              height: 200,
+                              //height: 200,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.white),
-                              padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+                              padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
                               child: Column(children: [
-                                Text("Khuyến mãi của bạn",
+                                Text(_promotionVM.name,
                                     style: TextStyle(
-                                        fontSize: 24,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center),
                                 SizedBox(height: 20),
                                 Text(_promotionVM.desciption.toString(),
                                     style: TextStyle(
                                         fontSize: 14,
-                                        color: Colors.grey.shade700))
+                                        color: Colors.grey.shade700)),
+                                Text(
+                                    "Áp dụng cho đơn hàng từ: ${AppConfigs.toPrice(_promotionVM.minPrice!)}",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade700)),
+                                Text(
+                                    "Tối đa: ${AppConfigs.toPrice(_promotionVM.max!)}",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade700)),
                               ]),
                             ),
-                            Positioned(
-                                top: -100,
-                                child: Image.network(
-                                    "https://media.giphy.com/media/90tLdnyy0XPOWZ5mwE/giphy.gif",
-                                    width: 150,
-                                    height: 150))
                           ],
                         )),
                   );
@@ -306,10 +310,15 @@ class DisableItemPromotion extends StatelessWidget {
                   padding: EdgeInsets.only(left: 5, top: 5, bottom: 5),
                   height: 100,
                   onPressed: () {
-                    // context
-                    //     .read<CartBloc>()
-                    //     .add(CartAddPromotionEvent(_promotionVM.id));
-                    // Navigator.of(context).pop();
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("Không thể áp dụng mã khuyến mãi!"),
+                            content: Text(
+                                "Đơn hàng của bạn không đủ điều kiện để sử dụng mã khuyến mãi này. Vui lòng kiểm ra lại!"),
+                          );
+                        });
                   },
                   child: Column(
                     children: [

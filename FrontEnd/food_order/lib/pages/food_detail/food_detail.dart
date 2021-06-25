@@ -68,12 +68,6 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
             flex: 2,
             child: new InkWell(
               onTap: () async {
-                // if (promotion != null) {
-                //   context
-                //       .read<CartBloc>()
-                //       .add(CartAddPromotionEvent(promotionID!));
-                // }
-
                 var result = await context
                     .read<FoodDetailBloc>()
                     .createCart(state.foodVM.id, count);
