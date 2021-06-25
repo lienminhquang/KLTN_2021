@@ -48,7 +48,7 @@ class Body extends StatelessWidget {
         ),
         ProfileMenu(
           icon: Icon(Icons.phone),
-          text: '0392131844',
+          text: state.userVM.username,
           press: () {},
         ),
         ProfileMenu(
