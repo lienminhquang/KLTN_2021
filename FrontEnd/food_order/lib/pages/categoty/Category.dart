@@ -27,15 +27,6 @@ class _CategoryPageState extends State<CategoryPage> {
         title: new Text((state.categoryVM.name == null
             ? "Category"
             : state.categoryVM.name)!),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(
-                    context: context,
-                    delegate: _Search(["cau luong", "com cho"]));
-              }),
-        ],
       ),
       body: Container(
           //color: Colors.grey,

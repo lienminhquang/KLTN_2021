@@ -147,13 +147,14 @@ class Item extends StatelessWidget {
                       Icon(
                         Icons.check_circle,
                         size: 15,
+                        color: Colors.green,
                       ),
                       Container(
                         margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
                         child: Text(
                           orderVM.orderStatusVM.name,
                           style: TextStyle(
-                              color: Colors.grey,
+                              color: Colors.green,
                               fontWeight: FontWeight.w500,
                               fontSize: 13),
                         ),
@@ -161,6 +162,7 @@ class Item extends StatelessWidget {
                       Icon(
                         Icons.remove,
                         size: 15,
+                        color: Colors.grey,
                       ),
                       Container(
                         margin: EdgeInsets.fromLTRB(2, 0, 0, 0),

@@ -119,7 +119,7 @@ class _MfooterState extends State<Mfooter> with SingleTickerProviderStateMixin {
             isScrollable: true,
             controller: _controller,
             tabs: _tabs,
-            indicatorColor: Colors.black26,
+            indicatorColor: Colors.blue,
           ),
           new Divider(
             height: 1.0,

@@ -6,6 +6,7 @@ class OrderDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: OrderDetailsBody(),
       appBar: _buildAppBar(context),
     );

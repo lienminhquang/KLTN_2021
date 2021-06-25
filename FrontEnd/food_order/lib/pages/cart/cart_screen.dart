@@ -11,6 +11,7 @@ import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'body.dart';
 import 'package:provider/provider.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class CartScreen extends StatelessWidget {
   static String routeName = "/cart";
@@ -131,13 +132,14 @@ class CheckoutCart extends StatelessWidget {
                             builder: (context) {
                               return AlertDialog(
                                 title: Text("Error!"),
-                                content: Text("Giỏ hàng rỗng!"),
+                                content: Text("Giỏ hàng đang rỗng!"),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: const Text('Ok'),
+                                    child: const Text('Ok',
+                                        style: TextStyle(color: Colors.white)),
                                   ),
                                 ],
                               );
@@ -157,7 +159,10 @@ class CheckoutCart extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: const Text('Ok'),
+                                    child: const Text(
+                                      'Ok',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ],
                               );
@@ -233,7 +238,10 @@ Widget buildSuccessedOrderDialog(BuildContext context) {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context, 'Ok'),
-        child: const Text('Ok'),
+        child: const Text(
+          'Ok',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     ],
   );
@@ -249,7 +257,7 @@ Widget buildFailedOrderDialog(BuildContext context, String? error) {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context, 'Ok'),
-        child: const Text('Ok'),
+        child: const Text('Ok', style: TextStyle(color: Colors.white)),
       ),
     ],
   );
@@ -260,7 +268,7 @@ AppBar buildAppBar(BuildContext context) {
   int count = 0;
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.blue.shade100,
+    backgroundColor: Colors.lightBlue,
     title: Column(
       children: [
         Text(

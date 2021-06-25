@@ -60,6 +60,8 @@ dependencies:
   flutter_chat_ui: ^1.1.4
 
   flutter_chat_types: ^2.2.0
+  ##alert dialog
+  awesome_dialog: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -50,9 +51,13 @@ class OrderDetailsBody extends StatelessWidget {
           Container(
             height: 40,
             child: Row(children: [
-              Text("Trạng thái"),
+              Text("Trạng thái", style: AppTheme.subTitleStyle),
               Spacer(),
-              Text(state.orderVM.orderStatusVM.name),
+              Text(state.orderVM.orderStatusVM.name,
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold)),
             ]),
           ),
           Divider(),
@@ -120,7 +125,7 @@ class OrderDetailsBody extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 60,
+            height: 80,
             child: Row(
               children: [
                 Expanded(
@@ -191,12 +196,16 @@ class OrderDetailsBody extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pop(true);
                           },
-                          child: Text("OK")),
+                          child: Text(
+                            "OK",
+                            style: TextStyle(color: Colors.white),
+                          )),
                       TextButton(
                           onPressed: () {
                             Navigator.of(context).pop(false);
                           },
-                          child: Text("Cancel"))
+                          child: Text("Cancel",
+                              style: TextStyle(color: Colors.white)))
                     ],
                     title: Center(
                       child: RatingButton((rating) {
@@ -204,7 +213,7 @@ class OrderDetailsBody extends StatelessWidget {
                       }, rating),
                     ),
                     content: Container(
-                      height: 50,
+                      height: 100,
                       alignment: Alignment.center,
                       child: TextField(
                         controller: _commentController,

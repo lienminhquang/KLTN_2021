@@ -5,105 +5,94 @@ session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 intents:
-- request_restaurant:
-    use_entities: true
-- stop:
-    use_entities: true
 - greet:
     use_entities: true
 - goodbye:
+    use_entities: true
+- bot_challenge:
+    use_entities: true
+- nlu_fallback:
+    use_entities: true
+- thanks:
+    use_entities: true
+- ask_func:
+    use_entities: true
+- ask_find_food:
+    use_entities: true
+- ask_find_promotion:
+    use_entities: true
+- ask_check_dishes:
+    use_entities: true
+- ask_cancel_dishes:
+    use_entities: true
+- inform_find_food_category:
+    use_entities: true
+- ask_name:
+    use_entities: true
+- explain:
+    use_entities: true
+- out_of_category:
     use_entities: true
 - affirm:
     use_entities: true
 - deny:
     use_entities: true
-- mood_great:
-    use_entities: true
-- mood_unhappy:
-    use_entities: true
-- bot_challenge:
-    use_entities: true
-- number:
-    use_entities: true
-- inform:
-    use_entities: true
-- nlu_fallback:
-    use_entities: true
 entities:
-- cuisine
-- number
-- causine
-- food
+- category
 slots:
-  cuisine:
+  category:
     type: rasa.shared.core.slots.TextSlot
     initial_value: null
-    auto_fill: false
-    influence_conversation: false
-  num_people:
-    type: rasa.shared.core.slots.FloatSlot
+    auto_fill: true
+    influence_conversation: true
+  requested_slot:
+    type: rasa.shared.core.slots.CategoricalSlot
     initial_value: null
-    auto_fill: false
-    influence_conversation: false
-    max_value: 1.0
-    min_value: 0.0
-  outdoor_seating:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
-    auto_fill: false
-    influence_conversation: false
+    auto_fill: true
+    influence_conversation: true
+    values:
+    - category
 responses:
-  utter_out_of_scope:
-  - text: Xin lỗi. Tôi chưa hiểu ý của bạn, bạn có thể nói lại được không?
   utter_greet:
-  - text: Chào! Hôm nay bạn thế nào?
-  utter_cheer_up:
-  - image: https://i.imgur.com/nGF1K8f.jpg
-    text: Xem nè
-  utter_did_that_help:
-  - text: Nó có giúp bạn tốt lên chưa?
-  utter_happy:
-  - text: Tuyệt vời, tiếp tục nào!
+  - text: Chào bạn. Tôi có thể giúp gì cho bạn.
   utter_goodbye:
-  - text: Tạm biệt
-  utter_iamabot:
-  - text: Tôi là robot, được lập trình để giúp đỡ thế giới. Hihi!
-  utter_ask_continue:
-  - text: Bạn có muốn tiếp tục không?
-  utter_ask_cuisine:
-  - text: Loại ẩm thực gì?
-  utter_ask_num_people:
-  - text: Có bao nhiêu người?
-  utter_ask_outdoor_seating:
-  - text: Bạn có muốn ngồi bên ngoài không?
-  utter_submit:
-  - text: All done!
-  utter_slots_values:
+  - text: Tạm biệt! Chúc bạn một ngày tốt lành
+  utter_bot_challenge:
+  - text: Vâng, Tôi là một ChatBot
+  utter_out_of_scope:
+  - text: Xin lỗi, tôi không hiểu. Bạn có thể nhắc lại được không ?
+  utter_thanks:
+  - text: Vâng, không có gì !
+  utter_ask_func:
   - text: |-
-      Tôi sẽ tìm giúp bạn một nhà hàng tới những thông tin sau:
-       - Ẩm thực : {cuisine}
-       - Sô người : {num_people}
-       - Ngồi bên ngoài: {outdoor_seating}
-actions: []
-forms:
-  restaurant_form:
-    ignored_intents:
-    - chitchat
-    required_slots:
-      cuisine:
-      - entity: cuisine
-        type: from_entity
-      num_people:
-      - entity: number
-        intent:
-        - inform
-        - request_restaurant
-        type: from_entity
-      outdoor_seating:
-      - intent: affirm
-        type: from_intent
-        value: true
-      - intent: deny
-        type: from_intent
-        value: false
+      Tôi có thể giúp bạn:
+      - tìm món
+      - tìm khuyến mãi
+      - kiểm tra đơn hàng
+      - hủy món
+  utter_ask_find_food:
+  - text: |-
+      bạn muốn tìm món nào:
+      - bò
+      - trà sữa
+      - cơm
+      - bánh ngọt
+  utter_ask_find_promotion:
+  - text: hiện nay đang có khuyến mãi 50% tất cả các món ăn
+  utter_ask_check_dishes:
+  - text: đang kiểm tra món
+  utter_ask_cancel_dishes:
+  - text: đang hủy món
+  utter_ask_name:
+  - text: Tôi tên là Amee !
+  utter_explain_find_food:
+  - text: Tôi muốn biết để có thể tìm món đúng cho bạn ^^
+  utter_ask_continue_find_food:
+  - text: Bạn muốn tiếp tục tìm món không?
+  utter_out_of_category:
+  - text: Dạ không! hiện tại cửa hàng chỉ có các món Bò, Cơm, Trà sữa, Bánh ngọt thôi ạ
+actions:
+- action_find_food_category
+- action_default_fallback
+forms: {}
 e2e_actions: []
