@@ -181,7 +181,7 @@ class OrderDetailsBody extends StatelessWidget {
   Widget _comment(BuildContext context, OrderDetailVM model) {
     double _rating = 0;
     if (model.ratingVM == null) {
-      //_commentController.text = model.ratingVM!.comment;
+      _commentController.text = "";
       return Container(
         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
         child: Container(
@@ -207,23 +207,30 @@ class OrderDetailsBody extends StatelessWidget {
                           child: Text("Cancel",
                               style: TextStyle(color: Colors.white)))
                     ],
-                    title: Center(
-                      child: RatingButton((rating) {
-                        _rating = rating;
-                      }, rating),
-                    ),
-                    content: Container(
-                      height: 100,
-                      alignment: Alignment.center,
-                      child: TextField(
-                        controller: _commentController,
-                        textAlignVertical: TextAlignVertical.center,
-                        style: TextStyle(fontSize: 13, height: 1),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Bạn thấy món này như thế nào?',
+                    title: Text("Đánh giá"),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Center(
+                          child: RatingButton((rating) {
+                            _rating = rating;
+                          }, rating),
                         ),
-                      ),
+                        Container(
+                          //height: 100,
+                          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          alignment: Alignment.center,
+                          child: TextField(
+                            controller: _commentController,
+                            textAlignVertical: TextAlignVertical.center,
+                            style: TextStyle(fontSize: 13, height: 1),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Bạn thấy món này như thế nào?',
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 });
