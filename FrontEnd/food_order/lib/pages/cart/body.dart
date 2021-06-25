@@ -130,7 +130,11 @@ class _BodyState extends State<Body> {
             "Tổng: ",
             style: TextStyle(color: Colors.grey),
           ),
-          Text(AppConfigs.toPrice(state.getTotalPrice()))
+          Text(AppConfigs.toPrice(state.getTotalPrice())),
+          Text(
+            " (${state.getTotalProduct()} sản phẩm)",
+            style: TextStyle(color: Colors.grey),
+          )
         ],
       ),
     );

@@ -275,10 +275,10 @@ AppBar buildAppBar(BuildContext context) {
           'Giỏ hàng',
           style: TextStyle(color: Colors.black),
         ),
-        Text(
-          '$count sản phẩm',
-          style: Theme.of(context).textTheme.caption,
-        )
+        // Text(
+        //   '$count sản phẩm',
+        //   style: Theme.of(context).textTheme.caption,
+        // )
       ],
     ),
   );

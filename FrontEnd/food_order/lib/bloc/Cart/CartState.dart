@@ -31,4 +31,14 @@ class CartLoadedState extends CartState {
     }
     return total;
   }
+
+  int getTotalProduct() {
+    // Todo: apply promotions
+    int total = 0;
+
+    for (var item in listCartVM) {
+      total += item.quantity;
+    }
+    return total;
+  }
 }

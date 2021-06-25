@@ -84,6 +84,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Đã thêm vào giỏ hàng!")));
                   Navigator.of(context).pop();
+                  context.read<CartBloc>().add(CartRefreshdEvent());
                 }
               },
               child: ClipRRect(
