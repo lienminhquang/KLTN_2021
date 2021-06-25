@@ -279,34 +279,33 @@ Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
         AppConfigs.toPrice(foodVM.price),
         style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
             color: Colors.black.withOpacity(0.9)),
       ),
     );
   } else
-    return Center(
-      child: Row(
-        children: [
-          Text(
-            AppConfigs.toPrice(
-                foodVM.price * (100 - saleCampaignVM.percent) / 100),
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black.withOpacity(0.9)),
-          ),
-          Container(
-            width: 10,
-          ),
-          Text(
-            AppConfigs.toPrice(foodVM.price),
-            style: TextStyle(
-                fontSize: 15,
-                color: Colors.black.withOpacity(0.6),
-                decoration: TextDecoration.lineThrough),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          AppConfigs.toPrice(
+              foodVM.price * (100 - saleCampaignVM.percent) / 100),
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Colors.black.withOpacity(0.9)),
+        ),
+        Container(
+          width: 10,
+        ),
+        Text(
+          AppConfigs.toPrice(foodVM.price),
+          style: TextStyle(
+              fontSize: 15,
+              color: Colors.black.withOpacity(0.6),
+              decoration: TextDecoration.lineThrough),
+        ),
+      ],
     );
 }
 
@@ -383,11 +382,18 @@ class PromotionContainer extends StatelessWidget {
                                         "/${foodVM.imagePath}",
                                     fit: BoxFit.cover),
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(foodVM.name),
+                              Expanded(
+                                flex: 6,
+                                child: Padding(
+                                  padding: EdgeInsets.all(7),
+                                  child: Text(
+                                    foodVM.name,
+                                    style: TextStyle(fontSize: 17),
+                                  ),
+                                ),
                               ),
                               Expanded(
+                                flex: 4,
                                 child: Align(
                                     alignment: FractionalOffset.bottomCenter,
                                     child: _priceWidget(
@@ -481,11 +487,20 @@ class SaleContainer extends StatelessWidget {
                                         "/${foodVM.imagePath}",
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.all(5),
-                                  child: Text(foodVM.name),
+                                Expanded(
+                                  flex: 6,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(7),
+                                    child: Text(
+                                      foodVM.name,
+                                      style: TextStyle(fontSize: 17),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
                                 ),
                                 Expanded(
+                                  flex: 4,
                                   child: Align(
                                       alignment: FractionalOffset.bottomCenter,
                                       child: _priceWidget(
