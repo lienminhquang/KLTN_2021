@@ -39,9 +39,7 @@ class CheckoutCart extends StatelessWidget {
     String? promotionCode;
     if (state.promotionVM != null) {
       promotionCode = state.promotionVM!.code;
-      finalPrice = totalPrice -
-          min(state.promotionVM!.max!,
-              totalPrice * (state.promotionVM!.percent) / 100);
+      finalPrice = totalPrice - state.getPromotedAmount();
     }
 
     return Container(

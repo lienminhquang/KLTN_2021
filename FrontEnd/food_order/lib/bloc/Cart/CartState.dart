@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
@@ -30,6 +32,14 @@ class CartLoadedState extends CartState {
       total += item.quantity * item.foodVM.price * (100 - discount) / 100;
     }
     return total;
+  }
+
+  double getPromotedAmount() {
+    var totalPrice = getTotalPrice();
+    if (promotionVM != null)
+      return min(promotionVM!.max!, totalPrice * (promotionVM!.percent) / 100);
+    else
+      return 0;
   }
 
   int getTotalProduct() {

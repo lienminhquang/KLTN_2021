@@ -123,18 +123,36 @@ class _BodyState extends State<Body> {
 
   Widget totalSession(BuildContext context, CartLoadedState state) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 10, 0, 10),
-      child: Row(
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Column(
         children: [
-          Text(
-            "Tổng: ",
-            style: TextStyle(color: Colors.grey),
+          Row(
+            children: [
+              Text(
+                "Tạm tính: ",
+                style: TextStyle(color: Colors.grey),
+              ),
+              Text(
+                " (${state.getTotalProduct()} sản phẩm)",
+                style: TextStyle(color: Colors.grey),
+              ),
+              Spacer(),
+              Text(AppConfigs.toPrice(state.getTotalPrice())),
+            ],
           ),
-          Text(AppConfigs.toPrice(state.getTotalPrice())),
-          Text(
-            " (${state.getTotalProduct()} sản phẩm)",
-            style: TextStyle(color: Colors.grey),
-          )
+          Row(
+            children: [
+              Text(
+                "Mã giảm giá: ",
+                style: TextStyle(color: Colors.grey),
+              ),
+              Spacer(),
+              Text(
+                "-" + AppConfigs.toPrice(state.getPromotedAmount()),
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
         ],
       ),
     );
