@@ -50,10 +50,17 @@ class __SearchBarState extends State<_SearchBar> {
       onChanged: (text) {
         _searchBloc.add(SearchTextChangedEvent(text));
       },
+      cursorColor: Colors.red,
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.search),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.redAccent,
+          ),
           suffixIcon: GestureDetector(
-            child: Icon(Icons.clear),
+            child: Icon(
+              Icons.clear,
+              color: Colors.redAccent,
+            ),
             onTap: () {
               _onClearTapped();
             },

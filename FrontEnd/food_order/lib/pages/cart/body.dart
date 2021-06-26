@@ -176,7 +176,7 @@ class _BodyState extends State<Body> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               "Địa điểm nhận hàng",
-                              style: AppTheme.subTitleStyle,
+                              style: AppTheme.titleStyle,
                             )),
                       ),
                       Container(
@@ -187,8 +187,7 @@ class _BodyState extends State<Body> {
                               addressVM == null
                                   ? "Không tìm thấy địa chỉ nào!"
                                   : addressVM.addressString,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                              style: AppTheme.subTitleStyle,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             )),
@@ -229,16 +228,6 @@ class _BodyState extends State<Body> {
             //indent: 20,
             //endIndent: 20,
           ),
-          Container(
-            margin: EdgeInsets.fromLTRB(10, 0, 0, 10),
-            child: Align(
-              child: Text(
-                "Đơn hàng",
-                style: AppTheme.subTitleStyle,
-              ),
-              alignment: Alignment.centerLeft,
-            ),
-          )
         ],
       ),
     );

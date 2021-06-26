@@ -14,6 +14,7 @@ class EditAdressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.redAccent,
         title: Text('Sửa địa chỉ'),
       ),
       body: buildBody(context),
@@ -32,17 +33,28 @@ class EditAdressScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               TextField(
-                decoration: InputDecoration(labelText: 'Tên'),
+                decoration: InputDecoration(
+                    labelText: 'Tên',
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent)),
+                    labelStyle: TextStyle(color: Colors.grey)),
                 controller: _nameController,
+                cursorColor: Colors.red,
                 onChanged: (text) {},
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Địa chỉ'),
+                decoration: InputDecoration(
+                    labelText: 'Địa chỉ',
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent)),
+                    labelStyle: TextStyle(color: Colors.grey)),
                 controller: _adressController,
+                cursorColor: Colors.red,
                 onChanged: (text) {},
               ),
               Padding(padding: const EdgeInsets.symmetric(vertical: 30)),
               TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
                 child: Container(
                     alignment: Alignment.center,
                     height: 40,

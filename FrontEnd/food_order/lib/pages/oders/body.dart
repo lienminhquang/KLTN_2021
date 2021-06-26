@@ -48,6 +48,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
             TabBar(
               unselectedLabelColor: Colors.black,
               labelColor: Colors.red,
+              indicatorColor: Colors.red,
               tabs: myTabs,
               controller: _tabController,
               indicatorSize: TabBarIndicatorSize.tab,

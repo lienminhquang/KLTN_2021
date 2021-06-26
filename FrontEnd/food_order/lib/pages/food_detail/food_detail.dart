@@ -85,7 +85,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                 borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
                 child: new Container(
                   decoration: new BoxDecoration(
-                    color: Theme.of(context).primaryColor,
+                    color: Colors.redAccent,
                   ),
                   height: 50.0,
                   child: new Padding(
@@ -116,6 +116,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                 color: Theme.of(context).primaryColor,
               ),
               child: TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
                 onPressed: () {
                   setState(() {
                     if (count > 1) count--;
@@ -151,6 +152,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                 color: Theme.of(context).primaryColor,
               ),
               child: TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
                 onPressed: () {
                   setState(() {
                     count++;

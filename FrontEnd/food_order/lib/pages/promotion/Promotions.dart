@@ -11,6 +11,7 @@ class PromotionScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Mã khuyến mãi'),
+          backgroundColor: Colors.redAccent,
         ),
         body: Body(totalPreis));
   }

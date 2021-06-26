@@ -10,6 +10,7 @@ class ChangePasswordScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Đổi mật khẩu'),
+        backgroundColor: Colors.redAccent,
       ),
       body: buildBody(context),
     );
@@ -33,8 +34,11 @@ Widget buildBody(BuildContext context) {
             children: <Widget>[
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Mật khẩu cũ',
-                ),
+                    labelText: 'Mật khẩu cũ',
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent)),
+                    labelStyle: TextStyle(color: Colors.grey)),
+                cursorColor: Colors.red,
                 controller: _oldPasswordController,
                 onChanged: (text) {},
                 validator: (value) {
@@ -45,8 +49,13 @@ Widget buildBody(BuildContext context) {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Mật khẩu mới'),
+                decoration: InputDecoration(
+                    labelText: 'Mật khẩu mới',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent))),
                 controller: _newPasswordController,
+                cursorColor: Colors.red,
                 onChanged: (text) {},
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -56,8 +65,13 @@ Widget buildBody(BuildContext context) {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Nhập lại mật khẩu mới'),
+                decoration: InputDecoration(
+                    labelText: 'Nhập lại mật khẩu mới',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent))),
                 controller: _confirmNewPasswordController,
+                cursorColor: Colors.red,
                 onChanged: (text) {},
                 validator: (value) {
                   if (value == null ||
@@ -70,6 +84,7 @@ Widget buildBody(BuildContext context) {
               ),
               Padding(padding: const EdgeInsets.symmetric(vertical: 30)),
               TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
                 child: Container(
                     alignment: Alignment.center,
                     height: 40,

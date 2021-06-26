@@ -15,12 +15,12 @@ class Search extends StatelessWidget {
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.blue.shade100,
+    backgroundColor: Colors.redAccent,
     title: Column(
       children: [
         Text(
           'Tìm kiếm',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
       ],
     ),

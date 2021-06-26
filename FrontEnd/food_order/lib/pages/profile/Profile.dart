@@ -17,12 +17,12 @@ class ProfileScreen extends StatelessWidget {
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.lightBlue,
+    backgroundColor: Colors.redAccent,
     title: Column(
       children: [
         Text(
           'Thông tin cá nhân',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
       ],
     ),

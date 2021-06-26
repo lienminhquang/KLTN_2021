@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dialogflow_grpc/generated/google/type/color.pb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/OrderDetails/OrderDetailsBloc.dart';
@@ -196,6 +197,8 @@ class OrderDetailsBody extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pop(true);
                           },
+                          style: TextButton.styleFrom(
+                              backgroundColor: Colors.redAccent),
                           child: Text(
                             "OK",
                             style: TextStyle(color: Colors.white),
@@ -204,6 +207,8 @@ class OrderDetailsBody extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).pop(false);
                           },
+                          style: TextButton.styleFrom(
+                              backgroundColor: Colors.redAccent),
                           child: Text("Cancel",
                               style: TextStyle(color: Colors.white)))
                     ],

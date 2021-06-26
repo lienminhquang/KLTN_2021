@@ -21,10 +21,10 @@ class AddressScreen extends StatelessWidget {
                 Navigator.of(context).pop();
               }),
           centerTitle: true,
-          backgroundColor: Colors.blue.shade100,
+          backgroundColor: Colors.redAccent,
           title: Text(
             'Địa chỉ',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
         ),
         body: Body(addressScreenCallBack));

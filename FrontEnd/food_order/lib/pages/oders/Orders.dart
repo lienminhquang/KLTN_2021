@@ -16,12 +16,12 @@ class OderScreen extends StatelessWidget {
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.lightBlue,
+    backgroundColor: Colors.redAccent,
     title: Column(
       children: [
         Text(
           'Hóa đơn của bạn',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
       ],
     ),

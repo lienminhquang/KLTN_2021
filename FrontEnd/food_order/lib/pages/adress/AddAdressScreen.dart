@@ -17,6 +17,7 @@ class _AddAdressState extends State<AddAdressScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Thêm địa chỉ'),
+        backgroundColor: Colors.redAccent,
       ),
       body: BodyAdressScreen(),
     );
@@ -42,25 +43,38 @@ class _BodyAdressScreenState extends State<BodyAdressScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               TextField(
-                decoration: InputDecoration(labelText: 'Tên'),
+                decoration: InputDecoration(
+                    labelText: 'Tên',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent))),
                 controller: _nameController,
+                cursorColor: Colors.red,
                 onChanged: (text) {},
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Địa chỉ'),
+                decoration: InputDecoration(
+                    labelText: 'Địa chỉ',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent))),
                 controller: _adressController,
+                cursorColor: Colors.red,
                 onChanged: (text) {},
               ),
               Padding(padding: const EdgeInsets.symmetric(vertical: 30)),
               TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
                 child: Container(
-                    alignment: Alignment.center,
-                    height: 40,
-                    width: 150,
-                    child: Text(
-                      'Thêm địa chỉ',
-                      style: TextStyle(color: Colors.white),
-                    )),
+                  padding: EdgeInsets.all(0),
+                  alignment: Alignment.center,
+                  height: 40,
+                  width: 150,
+                  child: Text(
+                    'Thêm địa chỉ',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
                 onPressed: () async {
                   if (_nameController.text.isEmpty ||
                       _adressController.text.isEmpty) {

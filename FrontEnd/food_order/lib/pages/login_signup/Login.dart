@@ -115,13 +115,13 @@ class _LoginPageState extends State<LoginPage> {
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                             hintText: 'Số điện thoại',
-                            prefix: Icon(Icons.phone),
+                            prefix: Icon(Icons.phone, color: Colors.redAccent),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue))),
+                                borderSide: BorderSide(color: Colors.red))),
                       ), //
                       SizedBox(
                         height: 15.0,
@@ -137,16 +137,18 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         decoration: InputDecoration(
                             hintText: 'Mật khẩu ',
-                            prefix: Icon(Icons.lock),
+                            prefix: Icon(Icons.lock, color: Colors.redAccent),
                             suffixIcon: InkWell(
                                 onTap: _togglePasswordView,
-                                child: Icon(Icons.visibility)),
+                                child: Icon(
+                                  Icons.visibility,
+                                )),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue))),
+                                borderSide: BorderSide(color: Colors.red))),
                         obscureText: isHiddenPassword,
                       ),
                       SizedBox(
@@ -157,8 +159,8 @@ class _LoginPageState extends State<LoginPage> {
                         height: 40.0,
                         child: Material(
                           borderRadius: BorderRadius.circular(20),
-                          shadowColor: Colors.blueAccent,
-                          color: Colors.blue,
+                          shadowColor: Colors.red,
+                          color: Colors.redAccent,
                           elevation: 7.0,
                           child: GestureDetector(
                             onTap: () {
@@ -266,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: Text('Đăng ký',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Colors.redAccent,
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Montserrat',

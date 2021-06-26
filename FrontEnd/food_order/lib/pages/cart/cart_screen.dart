@@ -69,7 +69,7 @@ class CheckoutCart extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.confirmation_num_outlined,
-                    color: Colors.orange,
+                    color: Colors.redAccent,
                     size: 25,
                   ),
                 ),
@@ -137,7 +137,7 @@ class CheckoutCart extends StatelessWidget {
                   child: MaterialButton(
                     height: 50,
                     minWidth: 100,
-                    color: Colors.orange.shade400,
+                    color: Colors.redAccent,
                     child: Text(
                       'Thanh toán',
                       style: TextStyle(color: Colors.white),
@@ -176,6 +176,8 @@ class CheckoutCart extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: Colors.redAccent),
                                     child: const Text(
                                       'Ok',
                                       style: TextStyle(color: Colors.white),
@@ -255,6 +257,7 @@ Widget buildSuccessedOrderDialog(BuildContext context) {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context, 'Ok'),
+        style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
         child: const Text(
           'Ok',
           style: TextStyle(color: Colors.white),
@@ -274,6 +277,7 @@ Widget buildFailedOrderDialog(BuildContext context, String? error) {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context, 'Ok'),
+        style: TextButton.styleFrom(backgroundColor: Colors.redAccent),
         child: const Text('Ok', style: TextStyle(color: Colors.white)),
       ),
     ],
@@ -285,12 +289,12 @@ AppBar buildAppBar(BuildContext context) {
   int count = 0;
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.lightBlue,
+    backgroundColor: Colors.redAccent,
     title: Column(
       children: [
         Text(
           'Giỏ hàng',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
         // Text(
         //   '$count sản phẩm',

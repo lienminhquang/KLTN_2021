@@ -41,17 +41,17 @@ class _MotherBoardState extends State<MotherBoard> {
           currentIndex: _currentIndex,
           items: [
             new BottomNavigationBarItem(
-                backgroundColor: Colors.black87,
+                backgroundColor: Colors.red,
                 icon: Icon(
                   Icons.home,
                 ),
                 label: "Home"),
             new BottomNavigationBarItem(
-                backgroundColor: Colors.black87,
+                backgroundColor: Colors.red,
                 icon: Icon(Icons.receipt_long),
                 label: "Order"),
             new BottomNavigationBarItem(
-                backgroundColor: Colors.black87,
+                backgroundColor: Colors.red,
                 icon: Icon(Icons.shopping_cart),
                 label: "Cart"),
             // new BottomNavigationBarItem(
@@ -59,12 +59,12 @@ class _MotherBoardState extends State<MotherBoard> {
             //     icon: Icon(Icons.notifications_active_outlined),
             //     label: "Notification"),
             new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
+              backgroundColor: Colors.red,
               icon: Icon(Icons.person),
               label: "Profile",
             ),
             new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
+              backgroundColor: Colors.red,
               icon: Icon(Icons.support_agent_outlined),
               label: "Amee",
             )
