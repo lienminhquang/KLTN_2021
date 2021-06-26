@@ -1,12 +1,12 @@
 ﻿USE [master]
 GO
-/****** Object:  Database [FoodOrder]    Script Date: 6/25/2021 2:12:06 PM ******/
+/****** Object:  Database [FoodOrder]    Script Date: 6/26/2021 5:56:58 PM ******/
 CREATE DATABASE [FoodOrder]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'FoodOrder', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\FoodOrder.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'FoodOrder', FILENAME = N'C:\SQL_2019_dev_setup_folder\MSSQL15.MSSQLSERVER\MSSQL\DATA\FoodOrder.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
  LOG ON 
-( NAME = N'FoodOrder_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\FoodOrder_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+( NAME = N'FoodOrder_log', FILENAME = N'C:\SQL_2019_dev_setup_folder\MSSQL15.MSSQLSERVER\MSSQL\DATA\FoodOrder_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
 GO
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
 begin
@@ -133,7 +133,7 @@ ALTER DATABASE SCOPED CONFIGURATION SET XTP_QUERY_EXECUTION_STATISTICS = OFF;
 GO
 USE [FoodOrder]
 GO
-/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 6/25/2021 2:12:08 PM ******/
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 6/26/2021 5:56:59 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -147,7 +147,7 @@ CREATE TABLE [dbo].[__EFMigrationsHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Address]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Address]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -163,7 +163,7 @@ CREATE TABLE [dbo].[Address](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppRole]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[AppRole]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -180,7 +180,7 @@ CREATE TABLE [dbo].[AppRole](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppRoleClaim]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[AppRoleClaim]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -196,7 +196,7 @@ CREATE TABLE [dbo].[AppRoleClaim](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUser]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[AppUser]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -220,13 +220,15 @@ CREATE TABLE [dbo].[AppUser](
 	[LockoutEnabled] [bit] NOT NULL,
 	[AccessFailedCount] [int] NOT NULL,
 	[TimeCreateJWT] [datetime2](7) NOT NULL,
+	[RefreshToken] [nvarchar](max) NULL,
+	[RefreshTokenExpire] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_AppUser] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUserClaim]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[AppUserClaim]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -242,7 +244,7 @@ CREATE TABLE [dbo].[AppUserClaim](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUserLogin]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[AppUserLogin]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -258,7 +260,7 @@ CREATE TABLE [dbo].[AppUserLogin](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUserRole]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[AppUserRole]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -273,7 +275,7 @@ CREATE TABLE [dbo].[AppUserRole](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUserToken]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[AppUserToken]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -289,7 +291,7 @@ CREATE TABLE [dbo].[AppUserToken](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Cart]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Cart]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -305,7 +307,7 @@ CREATE TABLE [dbo].[Cart](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Category]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Category]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -321,7 +323,7 @@ CREATE TABLE [dbo].[Category](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Food]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Food]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -340,7 +342,7 @@ CREATE TABLE [dbo].[Food](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[FoodCategory]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[FoodCategory]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -355,7 +357,7 @@ CREATE TABLE [dbo].[FoodCategory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Image]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Image]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -373,7 +375,7 @@ CREATE TABLE [dbo].[Image](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Notification]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Notification]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -392,7 +394,7 @@ CREATE TABLE [dbo].[Notification](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Order]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Order]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -416,7 +418,7 @@ CREATE TABLE [dbo].[Order](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[OrderDetail]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[OrderDetail]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -435,7 +437,7 @@ CREATE TABLE [dbo].[OrderDetail](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[OrderStatus]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[OrderStatus]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -450,7 +452,7 @@ CREATE TABLE [dbo].[OrderStatus](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Promotion]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Promotion]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -475,7 +477,7 @@ CREATE TABLE [dbo].[Promotion](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Rating]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[Rating]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -494,7 +496,7 @@ CREATE TABLE [dbo].[Rating](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SaleCampaign]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[SaleCampaign]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -514,7 +516,7 @@ CREATE TABLE [dbo].[SaleCampaign](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SaleCampaignFood]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Table [dbo].[SaleCampaignFood]    Script Date: 6/26/2021 5:57:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -557,6 +559,7 @@ INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20210608154150_Add_FinalPrice_column_to_Order_for_statistic_Purpose', N'5.0.6')
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20210610104341_Add_timeCreateJWT_to_user_to_validate_jwt', N'5.0.6')
 INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20210611052700_ReplaceFirstName_Lastname_with_Name', N'5.0.6')
+INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20210626070923_Add_RefreshToken_and_RefreshTokenExpire', N'5.0.6')
 SET IDENTITY_INSERT [dbo].[Address] ON 
 
 INSERT [dbo].[Address] ([ID], [AppUserID], [Name], [AddressString]) VALUES (1, N'5d597675-8179-4575-7872-08d90b25fb90', N'Ký túc xá', N'140/11 Đường Bình Quới')
@@ -565,25 +568,26 @@ INSERT [dbo].[Address] ([ID], [AppUserID], [Name], [AddressString]) VALUES (13, 
 INSERT [dbo].[Address] ([ID], [AppUserID], [Name], [AddressString]) VALUES (14, N'5d597675-8179-4575-7872-08d90b25fb90', N'test', N'test')
 INSERT [dbo].[Address] ([ID], [AppUserID], [Name], [AddressString]) VALUES (15, N'77cc3017-42fa-44f0-dae7-08d9365953c4', N'hoàng phong sang', N'620 đỗ xuân hợp')
 INSERT [dbo].[Address] ([ID], [AppUserID], [Name], [AddressString]) VALUES (16, N'3a418542-eddd-407d-dae8-08d9365953c4', N'hoàng long', N'123 tân bình, quận 9')
+INSERT [dbo].[Address] ([ID], [AppUserID], [Name], [AddressString]) VALUES (17, N'2594afe6-daf1-4bfc-94a8-08d92c06723d', N'nhà', N'140/11 Bình Quới')
 SET IDENTITY_INSERT [dbo].[Address] OFF
-INSERT [dbo].[AppRole] ([Id], [Description], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'74d17d8b-3f91-4d3a-893f-09b4e51e3834', N'This is User role.', N'user', N'USER', N'b1d35fd3-a507-4bf1-94c4-e60ff76bfbe6')
-INSERT [dbo].[AppRole] ([Id], [Description], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'1267bf30-8eea-4370-bbcd-12f74e29c656', N'This is Manager role.', N'manager', N'MANAGER', N'65e2c623-4774-4971-9069-c0ced2ce15db')
-INSERT [dbo].[AppRole] ([Id], [Description], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'b9e08f48-883c-42dc-a700-da5cf1d81aa3', N'This is Admintrator role.', N'admin', N'ADMIN', N'374fbb46-3e0a-4001-90e7-aa7751217955')
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'cb3e2dbe-bcfa-482f-e070-08d90b22d283', N'Lien Minh', CAST(N'2021-04-04T00:00:00.0000000' AS DateTime2), N'admin', N'ADMIN', N'quang@gmail.com', N'QUANG@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEKjagYUseYWIHsqNAFeA6DNyAuVKtb/FtRfk577UAQOGmS3MQDCBIAxgAchPbd/Xlg==', N'CODK33HAJEEDGGAAM3RPO2SYTZENHL5A', N'0d064502-4465-448f-bf5b-1d3dc83ab2bd', NULL, 0, 0, CAST(N'2021-06-03T13:26:46.0939323+00:00' AS DateTimeOffset), 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'dd292c53-6484-47fb-da8b-08d90b239691', N'Quang', CAST(N'2021-04-29T00:00:00.0000000' AS DateTime2), N'quang.lienminh', N'QUANG.LIENMINH', N'quang.lienminh@gameloft.com', N'QUANG.LIENMINH@GAMELOFT.COM', 0, NULL, N'D2LOCU2VAZDWIHZGGIYWANP7QLQANG5M', N'd4f59c0a-c593-46df-9170-3e114a04b547', NULL, 0, 0, NULL, 1, 2, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'5d597675-8179-4575-7872-08d90b25fb90', N'admin', CAST(N'2021-04-29T00:00:00.0000000' AS DateTime2), N'admin2', N'ADMIN2', N'quang@gmail.com', N'QUANG@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEN1rpZFc37EJ07GfBctD7qYfN8Ly1PHPrqcB2grqflLzIMaJISGT720qnj6JuEUgaw==', N'YWGRVV7LEAW34TN6G4OBV3OIVACNYZRM', N'6a60ea8a-29fd-4d37-88f6-7a9614277de8', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-24T20:29:32.8790509' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'd102d641-a67f-462e-709d-08d90d51d53e', N'dung', CAST(N'2021-05-05T00:00:00.0000000' AS DateTime2), N'dung', N'DUNG', N'dung@gmail.com', N'DUNG@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAELk6gwfL8HDbgX7YlZpvOUj3efuQWt/ySOLHHpdxMkJNQOVAU+cLt1jYwrkjtMLMlA==', N'IMXLAGMD23O2BLQ667MQMH3GJIMCACL5', N'95ea9b2f-33e2-4d52-a548-352fc34287ca', NULL, 0, 0, NULL, 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'ca0740d8-cd01-45e1-fa78-08d925bd8d37', N'Pape', CAST(N'2021-06-15T00:00:00.0000000' AS DateTime2), N'empape', N'EMPAPE', N'empape@gmail.com', N'EMPAPE@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEA8cPyG/Gp2xETIDtEzcV/GcZftNIqucP0GWz84DSSO+mbJP2CQwlWSTjYGTxLbdPg==', N'QAHBOAGA2QZEG7GHB2KEVWAHNNVOT6XN', N'0b33868f-7833-4f99-8e17-a94425b43aba', NULL, 0, 0, NULL, 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'879239a7-f194-4d0d-4484-08d926a1a06c', N'grandma', CAST(N'2021-06-07T00:00:00.0000000' AS DateTime2), N'grandma', N'GRANDMA', N'grandma@gmail.com', N'GRANDMA@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEFpYu0UlmEbJwKRwM0lEcaOF3256gB33Qx3U4io28N7tvVIngO82hoeWRneX25SBeA==', N'JOWQKQ2SEXXWH3XIDG3APPTANHPITFR2', N'113f22f9-b328-40e7-aab4-bd51e0925a99', NULL, 0, 0, NULL, 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'8cc76e82-270a-4aaf-e215-08d928271684', N'test2', CAST(N'2021-06-23T00:00:00.0000000' AS DateTime2), N'test2', N'TEST2', N'test2@test2.com', N'TEST2@TEST2.COM', 0, N'AQAAAAEAACcQAAAAEOVbGEhtaTUpbHLhL2iz4XXieLIVryqqkUH8mWgAkB5fQaduiW6b+V5guUq6K9+CPg==', N'ZQQKLPGNI3KGAFOORJWD4ZCS3D3SRSG4', N'f10f1bbc-84ce-4fbe-bbc4-f35831262376', NULL, 0, 0, NULL, 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'6edea615-d41f-4370-fb61-08d9298eedeb', N'manager', CAST(N'2021-06-15T00:00:00.0000000' AS DateTime2), N'manager', N'MANAGER', N'manager@gmail.com', N'MANAGER@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEHyfwsvGh9mokpr7KV2uxykSgVm8S046ZHwbJ4K6iWDjc+UUlznunqCLrfdJqu1NEg==', N'KHQE6GOVC4JIBZ75ASHBUFUVB5WPLTIM', N'fd84489c-dfdb-4bab-900f-8635c12f077e', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-11T11:37:52.0384131' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'a79e3090-9cd5-461a-7489-08d92be5dcb8', N'Sin', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'096156120', N'096156120', NULL, NULL, 0, N'AQAAAAEAACcQAAAAECUXlnL1Cg/eVbbz3/MVMvrfhnnsTVIMCVQTMeyilbY36HJAlWvkIJXkuyOumfxz5A==', N'DNCQEGNT7MPTPYWCTGXL5W4FVY6GKRG4', N'0e5a9b6d-1a6e-4d57-a926-e4c6418039f6', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-10T18:42:30.3634861' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'2594afe6-daf1-4bfc-94a8-08d92c06723d', N'lmq', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'0123456789', N'0123456789', NULL, NULL, 0, N'AQAAAAEAACcQAAAAENrd512h7W4b1O0x8I1Nn6t0mdj1E6AQXvOqp/TL7kAK2YtROkFJgm8BvyQTyG07fQ==', N'AF4FEU3KTJF5OMR5GAGC2UDDHCDRWYSM', N'b0632990-41aa-43d0-8260-e5d9523fe309', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-20T13:19:53.9293117' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'070b8c29-8460-4c39-0732-08d9363044b9', N'Phong Sang', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'sang', N'SANG', NULL, NULL, 0, N'AQAAAAEAACcQAAAAEEce/y3Sxkh+9gYGNn1YlpQAZ/POx9cY18B+FnO6dnBfjiTM+MtiwRZr+BvFxRcWtg==', N'DW7BZ6KKBJ6TUUQ4277HSI3SKEZQS6BY', N'64345d9e-1f85-4357-b7c8-675d5e81850e', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-23T17:19:47.1486616' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'77cc3017-42fa-44f0-dae7-08d9365953c4', N'Phong Sang', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'0392131844', N'0392131844', NULL, NULL, 0, N'AQAAAAEAACcQAAAAEDsAdgvmwJPYWtZE5PmQQdyNtkecBJ80rYwBm5CzsY2djCdzqriIPyl2snu+QW8+HQ==', N'TIFT23WU4YTYW3K2VIGB4ETSZGYXHHWU', N'9dd308d8-eb78-449d-9e55-edcabba2e1a0', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-24T21:21:48.2868293' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'3a418542-eddd-407d-dae8-08d9365953c4', N'Long Hoàng', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'0392131888', N'0392131888', NULL, NULL, 0, N'AQAAAAEAACcQAAAAEPLuNoaGDLEIv/GujF2xctsgC7vXhTGekQhudQQODL/PzmfwXbfntbwbprLJsrl35Q==', N'IQTWYK6MEBRCJ5RJ34F2AWZO2DQPTBTV', N'4fe152e7-c06b-4958-ada2-fac90448fec4', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-24T14:41:25.9847419' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'daeb6f0d-eefe-4250-9ecd-28b3243eb684', N'Messi', CAST(N'1990-07-05T00:00:00.0000000' AS DateTime2), N'messi10', NULL, N'messi10@gmail.com', N'MESSI10@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEPe+ZiqU9A4zSQY0Hawqhi9G+SKY4oLvav///hcsTiR9RVmD565+nJiLbc/YwZNhTA==', NULL, N'5b744150-e9d5-4b3a-80eb-614c5bcbc59f', N'+111111111', 0, 0, NULL, 0, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
-INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT]) VALUES (N'b4e253b2-756e-48b8-9c42-b5acb139bed4', N'Jame', CAST(N'1999-05-21T00:00:00.0000000' AS DateTime2), N'admin', NULL, N'jame@gmail.com', N'JAME@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEP7wi8ng70Ppz6nhmfRiyYv96iapxDuWCkTxpunqkufa0bBntxf+760xnaLciIq3fw==', NULL, N'31ca2c13-d0f1-4835-8dcf-6227da4ed40a', N'+111111111', 0, 0, NULL, 0, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppRole] ([Id], [Description], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'74d17d8b-3f91-4d3a-893f-09b4e51e3834', N'This is User role.', N'user', N'USER', N'72b73871-1cbb-440d-8dba-e9b93b298c9e')
+INSERT [dbo].[AppRole] ([Id], [Description], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'1267bf30-8eea-4370-bbcd-12f74e29c656', N'This is Manager role.', N'manager', N'MANAGER', N'52394018-f122-4ccd-aa33-9f75b5600b0d')
+INSERT [dbo].[AppRole] ([Id], [Description], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'b9e08f48-883c-42dc-a700-da5cf1d81aa3', N'This is Admintrator role.', N'admin', N'ADMIN', N'c84897d5-7fce-4268-9cca-ad83fdfcd22d')
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'cb3e2dbe-bcfa-482f-e070-08d90b22d283', N'Lien Minh', CAST(N'2021-04-04T00:00:00.0000000' AS DateTime2), N'admin', N'ADMIN', N'quang@gmail.com', N'QUANG@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEKjagYUseYWIHsqNAFeA6DNyAuVKtb/FtRfk577UAQOGmS3MQDCBIAxgAchPbd/Xlg==', N'CODK33HAJEEDGGAAM3RPO2SYTZENHL5A', N'0d064502-4465-448f-bf5b-1d3dc83ab2bd', NULL, 0, 0, CAST(N'2021-06-03T13:26:46.0939323+00:00' AS DateTimeOffset), 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'dd292c53-6484-47fb-da8b-08d90b239691', N'Quang', CAST(N'2021-04-29T00:00:00.0000000' AS DateTime2), N'quang.lienminh', N'QUANG.LIENMINH', N'quang.lienminh@gameloft.com', N'QUANG.LIENMINH@GAMELOFT.COM', 0, NULL, N'D2LOCU2VAZDWIHZGGIYWANP7QLQANG5M', N'd4f59c0a-c593-46df-9170-3e114a04b547', NULL, 0, 0, NULL, 1, 2, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'5d597675-8179-4575-7872-08d90b25fb90', N'admin', CAST(N'2021-04-29T00:00:00.0000000' AS DateTime2), N'admin2', N'ADMIN2', N'quang@gmail.com', N'QUANG@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEN1rpZFc37EJ07GfBctD7qYfN8Ly1PHPrqcB2grqflLzIMaJISGT720qnj6JuEUgaw==', N'YWGRVV7LEAW34TN6G4OBV3OIVACNYZRM', N'6a60ea8a-29fd-4d37-88f6-7a9614277de8', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-26T10:41:30.5556497' AS DateTime2), N'4g9BPTslu5t92VLxu2ttxtSZHvCGWdcd/tCvC1uVzC4=', CAST(N'2021-06-26T12:41:30.5606127' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'd102d641-a67f-462e-709d-08d90d51d53e', N'dung', CAST(N'2021-05-05T00:00:00.0000000' AS DateTime2), N'dung', N'DUNG', N'dung@gmail.com', N'DUNG@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAELk6gwfL8HDbgX7YlZpvOUj3efuQWt/ySOLHHpdxMkJNQOVAU+cLt1jYwrkjtMLMlA==', N'IMXLAGMD23O2BLQ667MQMH3GJIMCACL5', N'95ea9b2f-33e2-4d52-a548-352fc34287ca', NULL, 0, 0, NULL, 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'ca0740d8-cd01-45e1-fa78-08d925bd8d37', N'Pape', CAST(N'2021-06-15T00:00:00.0000000' AS DateTime2), N'empape', N'EMPAPE', N'empape@gmail.com', N'EMPAPE@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEA8cPyG/Gp2xETIDtEzcV/GcZftNIqucP0GWz84DSSO+mbJP2CQwlWSTjYGTxLbdPg==', N'QAHBOAGA2QZEG7GHB2KEVWAHNNVOT6XN', N'0b33868f-7833-4f99-8e17-a94425b43aba', NULL, 0, 0, NULL, 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'879239a7-f194-4d0d-4484-08d926a1a06c', N'grandma', CAST(N'2021-06-07T00:00:00.0000000' AS DateTime2), N'grandma', N'GRANDMA', N'grandma@gmail.com', N'GRANDMA@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEFpYu0UlmEbJwKRwM0lEcaOF3256gB33Qx3U4io28N7tvVIngO82hoeWRneX25SBeA==', N'JOWQKQ2SEXXWH3XIDG3APPTANHPITFR2', N'113f22f9-b328-40e7-aab4-bd51e0925a99', NULL, 0, 0, NULL, 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'8cc76e82-270a-4aaf-e215-08d928271684', N'test2', CAST(N'2021-06-23T00:00:00.0000000' AS DateTime2), N'test2', N'TEST2', N'test2@test2.com', N'TEST2@TEST2.COM', 0, N'AQAAAAEAACcQAAAAEOVbGEhtaTUpbHLhL2iz4XXieLIVryqqkUH8mWgAkB5fQaduiW6b+V5guUq6K9+CPg==', N'ZQQKLPGNI3KGAFOORJWD4ZCS3D3SRSG4', N'f10f1bbc-84ce-4fbe-bbc4-f35831262376', NULL, 0, 0, NULL, 1, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'6edea615-d41f-4370-fb61-08d9298eedeb', N'manager', CAST(N'2021-06-15T00:00:00.0000000' AS DateTime2), N'manager', N'MANAGER', N'manager@gmail.com', N'MANAGER@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEHyfwsvGh9mokpr7KV2uxykSgVm8S046ZHwbJ4K6iWDjc+UUlznunqCLrfdJqu1NEg==', N'KHQE6GOVC4JIBZ75ASHBUFUVB5WPLTIM', N'fd84489c-dfdb-4bab-900f-8635c12f077e', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-11T11:37:52.0384131' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'a79e3090-9cd5-461a-7489-08d92be5dcb8', N'Sin', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'096156120', N'096156120', NULL, NULL, 0, N'AQAAAAEAACcQAAAAECUXlnL1Cg/eVbbz3/MVMvrfhnnsTVIMCVQTMeyilbY36HJAlWvkIJXkuyOumfxz5A==', N'DNCQEGNT7MPTPYWCTGXL5W4FVY6GKRG4', N'0e5a9b6d-1a6e-4d57-a926-e4c6418039f6', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-10T18:42:30.3634861' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'2594afe6-daf1-4bfc-94a8-08d92c06723d', N'lmq', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'0123456789', N'0123456789', NULL, NULL, 0, N'AQAAAAEAACcQAAAAEB1QW/EgAMQKYtV3LlIva2759DtCeInKowTysJXE2IESEwTa0CzWDlWGuhU8JVGERw==', N'N4QAANBPRTL34EXU5ALYTZMD5OTBUQTA', N'1ebd9b42-d50e-472b-afd9-0869391c87fc', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-26T10:41:36.4127914' AS DateTime2), N'DJLaq4P0hgJWFTsDoHjNRJZfDMD8Vue7nuBE7zxQijQ=', CAST(N'2021-06-26T12:41:36.4172633' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'070b8c29-8460-4c39-0732-08d9363044b9', N'Phong Sang', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'sang', N'SANG', NULL, NULL, 0, N'AQAAAAEAACcQAAAAEEce/y3Sxkh+9gYGNn1YlpQAZ/POx9cY18B+FnO6dnBfjiTM+MtiwRZr+BvFxRcWtg==', N'DW7BZ6KKBJ6TUUQ4277HSI3SKEZQS6BY', N'64345d9e-1f85-4357-b7c8-675d5e81850e', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-23T17:19:47.1486616' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'77cc3017-42fa-44f0-dae7-08d9365953c4', N'Phong Sang', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'0392131844', N'0392131844', NULL, NULL, 0, N'AQAAAAEAACcQAAAAEDsAdgvmwJPYWtZE5PmQQdyNtkecBJ80rYwBm5CzsY2djCdzqriIPyl2snu+QW8+HQ==', N'TIFT23WU4YTYW3K2VIGB4ETSZGYXHHWU', N'9dd308d8-eb78-449d-9e55-edcabba2e1a0', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-24T21:21:48.2868293' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'3a418542-eddd-407d-dae8-08d9365953c4', N'Long Hoàng', CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), N'0392131888', N'0392131888', NULL, NULL, 0, N'AQAAAAEAACcQAAAAEPLuNoaGDLEIv/GujF2xctsgC7vXhTGekQhudQQODL/PzmfwXbfntbwbprLJsrl35Q==', N'IQTWYK6MEBRCJ5RJ34F2AWZO2DQPTBTV', N'4fe152e7-c06b-4958-ada2-fac90448fec4', NULL, 0, 0, NULL, 1, 0, CAST(N'2021-06-24T14:41:25.9847419' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'daeb6f0d-eefe-4250-9ecd-28b3243eb684', N'Messi', CAST(N'1990-07-05T00:00:00.0000000' AS DateTime2), N'messi10', NULL, N'messi10@gmail.com', N'MESSI10@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEKsdcsydcrH1SyBXM/wpAlTWPK3iCGzVeOvWP6vjwdTRPovc1ZBT3uEq0Z+qTeHcNg==', NULL, N'24f08308-e00c-4a7b-ba76-de5488061c3b', N'+111111111', 0, 0, NULL, 0, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
+INSERT [dbo].[AppUser] ([Id], [Name], [DateOfBirth], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [TimeCreateJWT], [RefreshToken], [RefreshTokenExpire]) VALUES (N'b4e253b2-756e-48b8-9c42-b5acb139bed4', N'Jame', CAST(N'1999-05-21T00:00:00.0000000' AS DateTime2), N'admin', NULL, N'jame@gmail.com', N'JAME@GMAIL.COM', 0, N'AQAAAAEAACcQAAAAEIcyI9zWffkdH+s8+WEXgcxr6UgZRck5Lh7Coyrr218wFM+SV6g4zbjeeu4UACc9Mg==', NULL, N'3148aba7-5071-4966-8ce5-eb97f3c85c9d', N'+111111111', 0, 0, NULL, 0, 0, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2), NULL, CAST(N'0001-01-01T00:00:00.0000000' AS DateTime2))
 INSERT [dbo].[AppUserRole] ([UserId], [RoleId]) VALUES (N'cb3e2dbe-bcfa-482f-e070-08d90b22d283', N'74d17d8b-3f91-4d3a-893f-09b4e51e3834')
 INSERT [dbo].[AppUserRole] ([UserId], [RoleId]) VALUES (N'dd292c53-6484-47fb-da8b-08d90b239691', N'74d17d8b-3f91-4d3a-893f-09b4e51e3834')
 INSERT [dbo].[AppUserRole] ([UserId], [RoleId]) VALUES (N'd102d641-a67f-462e-709d-08d90d51d53e', N'74d17d8b-3f91-4d3a-893f-09b4e51e3834')
@@ -604,6 +608,7 @@ INSERT [dbo].[AppUserRole] ([UserId], [RoleId]) VALUES (N'879239a7-f194-4d0d-448
 INSERT [dbo].[AppUserRole] ([UserId], [RoleId]) VALUES (N'070b8c29-8460-4c39-0732-08d9363044b9', N'b9e08f48-883c-42dc-a700-da5cf1d81aa3')
 INSERT [dbo].[AppUserRole] ([UserId], [RoleId]) VALUES (N'b4e253b2-756e-48b8-9c42-b5acb139bed4', N'b9e08f48-883c-42dc-a700-da5cf1d81aa3')
 INSERT [dbo].[Cart] ([AppUserId], [FoodID], [Quantity]) VALUES (N'77cc3017-42fa-44f0-dae7-08d9365953c4', 44, 1)
+INSERT [dbo].[Cart] ([AppUserId], [FoodID], [Quantity]) VALUES (N'2594afe6-daf1-4bfc-94a8-08d92c06723d', 51, 1)
 SET IDENTITY_INSERT [dbo].[Category] ON 
 
 INSERT [dbo].[Category] ([ID], [Name], [Description], [ImagePath]) VALUES (3, N'Bánh', N'Bánh ngọt, bánh bông lan các loại', N'ab49404d-133e-479f-9d3c-aaab58cc9426.jpg')
@@ -697,6 +702,9 @@ INSERT [dbo].[Order] ([ID], [AppUserID], [CreatedDate], [IsPaid], [DatePaid], [O
 INSERT [dbo].[Order] ([ID], [AppUserID], [CreatedDate], [IsPaid], [DatePaid], [OrderStatusID], [PromotionID], [PromotionAmount], [AddressName], [AddressString], [SaleCampaignID], [FinalTotalPrice]) VALUES (98, N'77cc3017-42fa-44f0-dae7-08d9365953c4', CAST(N'2021-06-24T19:50:34.3253838' AS DateTime2), 1, CAST(N'2021-06-24T20:30:18.9876446' AS DateTime2), 4, NULL, NULL, N'hoàng phong sang', N'620 đỗ xuân hợp', NULL, 30000)
 INSERT [dbo].[Order] ([ID], [AppUserID], [CreatedDate], [IsPaid], [DatePaid], [OrderStatusID], [PromotionID], [PromotionAmount], [AddressName], [AddressString], [SaleCampaignID], [FinalTotalPrice]) VALUES (99, N'77cc3017-42fa-44f0-dae7-08d9365953c4', CAST(N'2021-06-24T19:51:04.2036503' AS DateTime2), 1, CAST(N'2021-06-24T20:30:31.4052735' AS DateTime2), 4, NULL, NULL, N'hoàng phong sang', N'620 đỗ xuân hợp', NULL, 17000)
 INSERT [dbo].[Order] ([ID], [AppUserID], [CreatedDate], [IsPaid], [DatePaid], [OrderStatusID], [PromotionID], [PromotionAmount], [AddressName], [AddressString], [SaleCampaignID], [FinalTotalPrice]) VALUES (100, N'77cc3017-42fa-44f0-dae7-08d9365953c4', CAST(N'2021-06-24T20:52:36.5486256' AS DateTime2), 0, NULL, 2, NULL, NULL, N'hoàng phong sang', N'620 đỗ xuân hợp', NULL, 12000)
+INSERT [dbo].[Order] ([ID], [AppUserID], [CreatedDate], [IsPaid], [DatePaid], [OrderStatusID], [PromotionID], [PromotionAmount], [AddressName], [AddressString], [SaleCampaignID], [FinalTotalPrice]) VALUES (101, N'2594afe6-daf1-4bfc-94a8-08d92c06723d', CAST(N'2021-06-25T21:01:31.9517989' AS DateTime2), 0, NULL, 2, NULL, NULL, N'nhà', N'140/11 Bình Quới', NULL, 34000)
+INSERT [dbo].[Order] ([ID], [AppUserID], [CreatedDate], [IsPaid], [DatePaid], [OrderStatusID], [PromotionID], [PromotionAmount], [AddressName], [AddressString], [SaleCampaignID], [FinalTotalPrice]) VALUES (102, N'2594afe6-daf1-4bfc-94a8-08d92c06723d', CAST(N'2021-06-25T21:05:34.9181555' AS DateTime2), 1, CAST(N'2021-06-25T21:58:12.6551004' AS DateTime2), 4, 1, 5000, N'nhà', N'140/11 Bình Quới', NULL, 80000)
+INSERT [dbo].[Order] ([ID], [AppUserID], [CreatedDate], [IsPaid], [DatePaid], [OrderStatusID], [PromotionID], [PromotionAmount], [AddressName], [AddressString], [SaleCampaignID], [FinalTotalPrice]) VALUES (103, N'2594afe6-daf1-4bfc-94a8-08d92c06723d', CAST(N'2021-06-25T21:28:42.0587762' AS DateTime2), 1, CAST(N'2021-06-25T21:52:11.7117485' AS DateTime2), 4, 1, 5000, N'nhà', N'140/11 Bình Quới', NULL, 131000)
 SET IDENTITY_INSERT [dbo].[Order] OFF
 INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (80, 44, 5, 20000, NULL, NULL)
 INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (88, 55, 2, 80000, NULL, NULL)
@@ -728,6 +736,11 @@ INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaig
 INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (98, 45, 1, 30000, NULL, NULL)
 INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (99, 40, 1, 20000, 1, 15)
 INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (100, 46, 1, 12000, NULL, NULL)
+INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (101, 40, 2, 20000, 1, 15)
+INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (102, 40, 2, 20000, 1, 15)
+INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (102, 51, 1, 60000, 1, 15)
+INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (103, 40, 2, 20000, 1, 15)
+INSERT [dbo].[OrderDetail] ([OrderID], [FoodID], [Amount], [Price], [SaleCampaignID], [SalePercent]) VALUES (103, 51, 2, 60000, 1, 15)
 SET IDENTITY_INSERT [dbo].[OrderStatus] ON 
 
 INSERT [dbo].[OrderStatus] ([ID], [Name], [Description]) VALUES (2, N'Đang chuẩn bị', N'')
@@ -737,7 +750,7 @@ INSERT [dbo].[OrderStatus] ([ID], [Name], [Description]) VALUES (5, N'Đã hủy
 SET IDENTITY_INSERT [dbo].[OrderStatus] OFF
 SET IDENTITY_INSERT [dbo].[Promotion] ON 
 
-INSERT [dbo].[Promotion] ([ID], [Name], [Code], [Desciption], [StartDate], [EndDate], [UseTimes], [Percent], [Enabled], [Max], [MinPrice], [IsGlobal], [Priority]) VALUES (1, N'Chào thành viên mới | Giảm 50%', N'THANHVIENMOI', N'Chào thành viên mới, giảm ngay 50% cho tất cả các đơn hàng. Tối đa 50.000 đồng.', CAST(N'2021-06-11T12:26:59.0856311' AS DateTime2), CAST(N'2022-01-01T00:00:00.0000000' AS DateTime2), 3, 50, 1, 5000, 50000, 1, 4)
+INSERT [dbo].[Promotion] ([ID], [Name], [Code], [Desciption], [StartDate], [EndDate], [UseTimes], [Percent], [Enabled], [Max], [MinPrice], [IsGlobal], [Priority]) VALUES (1, N'Chào thành viên mới | Giảm 50%', N'THANHVIENMOI', N'Chào thành viên mới, giảm ngay 50% cho tất cả các đơn hàng. ', CAST(N'2021-06-26T14:09:21.8013241' AS DateTime2), CAST(N'2022-01-01T00:00:00.0000000' AS DateTime2), 3, 50, 1, 25000, 50000, 1, 4)
 INSERT [dbo].[Promotion] ([ID], [Name], [Code], [Desciption], [StartDate], [EndDate], [UseTimes], [Percent], [Enabled], [Max], [MinPrice], [IsGlobal], [Priority]) VALUES (3, N'Ăn ở nhà cũng ngon | Khao 60%.', N'KHAO60', N'Ăn ở nhà cũng ngon. Khao 60% cho tất cả các đơn hàng từ ngày 5/5/2021 đến 5/6/2021. Tối đa 30K.', CAST(N'2021-05-05T17:56:00.0000000' AS DateTime2), CAST(N'2021-06-05T17:56:00.0000000' AS DateTime2), 3, 60, 1, 60000, 0, 0, 0)
 SET IDENTITY_INSERT [dbo].[Promotion] OFF
 INSERT [dbo].[Rating] ([AppUserId], [FoodID], [Star], [Comment], [TimeCreate], [OrderID]) VALUES (NULL, 44, 3, N'bánh ngon nhưng hơi nhạt', CAST(N'2021-06-23T22:25:29.0772667' AS DateTime2), 80)
@@ -766,6 +779,9 @@ INSERT [dbo].[Rating] ([AppUserId], [FoodID], [Star], [Comment], [TimeCreate], [
 INSERT [dbo].[Rating] ([AppUserId], [FoodID], [Star], [Comment], [TimeCreate], [OrderID]) VALUES (NULL, 40, 5, N'tín đồ của trà sữa như tui đã đổ gục trước món trà sữa ở quán mình', CAST(N'2021-06-24T15:30:03.0156209' AS DateTime2), 94)
 INSERT [dbo].[Rating] ([AppUserId], [FoodID], [Star], [Comment], [TimeCreate], [OrderID]) VALUES (NULL, 56, 5, N'pizza tuyyệt vời cho cả gia đình', CAST(N'2021-06-24T15:29:38.0085250' AS DateTime2), 95)
 INSERT [dbo].[Rating] ([AppUserId], [FoodID], [Star], [Comment], [TimeCreate], [OrderID]) VALUES (NULL, 48, 5, N'ta nói nó ngon k thể cưỡng lại được', CAST(N'2021-06-24T15:29:16.7334391' AS DateTime2), 96)
+INSERT [dbo].[Rating] ([AppUserId], [FoodID], [Star], [Comment], [TimeCreate], [OrderID]) VALUES (NULL, 40, 4, N'ngon', CAST(N'2021-06-25T21:58:24.4914021' AS DateTime2), 102)
+INSERT [dbo].[Rating] ([AppUserId], [FoodID], [Star], [Comment], [TimeCreate], [OrderID]) VALUES (NULL, 51, 4, N'tốt', CAST(N'2021-06-25T21:58:31.2351817' AS DateTime2), 102)
+INSERT [dbo].[Rating] ([AppUserId], [FoodID], [Star], [Comment], [TimeCreate], [OrderID]) VALUES (NULL, 40, 4, N'ngon', CAST(N'2021-06-25T21:52:52.8950218' AS DateTime2), 103)
 SET IDENTITY_INSERT [dbo].[SaleCampaign] ON 
 
 INSERT [dbo].[SaleCampaign] ([ID], [Name], [Desciption], [StartDate], [EndDate], [Percent], [Enabled], [Priority]) VALUES (1, N'Ăn no không lo giá | Giảm 15%', N'Giảm 15% tất cả các món ăn trong danh sách', CAST(N'2021-05-11T16:39:00.0000000' AS DateTime2), CAST(N'2021-06-30T16:39:00.0000000' AS DateTime2), 15, 1, 1)
@@ -775,7 +791,7 @@ INSERT [dbo].[SaleCampaignFood] ([FoodID], [SaleCampaignID]) VALUES (40, 1)
 INSERT [dbo].[SaleCampaignFood] ([FoodID], [SaleCampaignID]) VALUES (51, 1)
 INSERT [dbo].[SaleCampaignFood] ([FoodID], [SaleCampaignID]) VALUES (53, 1)
 INSERT [dbo].[SaleCampaignFood] ([FoodID], [SaleCampaignID]) VALUES (56, 1)
-/****** Object:  Index [IX_Address_AppUserID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Address_AppUserID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Address_AppUserID] ON [dbo].[Address]
 (
 	[AppUserID] ASC
@@ -783,7 +799,7 @@ CREATE NONCLUSTERED INDEX [IX_Address_AppUserID] ON [dbo].[Address]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [RoleNameIndex]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [RoleNameIndex]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [RoleNameIndex] ON [dbo].[AppRole]
 (
 	[NormalizedName] ASC
@@ -791,7 +807,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [RoleNameIndex] ON [dbo].[AppRole]
 WHERE ([NormalizedName] IS NOT NULL)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_AppRoleClaim_RoleId]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_AppRoleClaim_RoleId]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_AppRoleClaim_RoleId] ON [dbo].[AppRoleClaim]
 (
 	[RoleId] ASC
@@ -799,7 +815,7 @@ CREATE NONCLUSTERED INDEX [IX_AppRoleClaim_RoleId] ON [dbo].[AppRoleClaim]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [EmailIndex]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [EmailIndex]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [EmailIndex] ON [dbo].[AppUser]
 (
 	[NormalizedEmail] ASC
@@ -807,7 +823,7 @@ CREATE NONCLUSTERED INDEX [EmailIndex] ON [dbo].[AppUser]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UserNameIndex]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [UserNameIndex]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [UserNameIndex] ON [dbo].[AppUser]
 (
 	[NormalizedUserName] ASC
@@ -815,103 +831,105 @@ CREATE UNIQUE NONCLUSTERED INDEX [UserNameIndex] ON [dbo].[AppUser]
 WHERE ([NormalizedUserName] IS NOT NULL)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_AppUserClaim_UserId]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_AppUserClaim_UserId]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_AppUserClaim_UserId] ON [dbo].[AppUserClaim]
 (
 	[UserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_AppUserRole_RoleId]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_AppUserRole_RoleId]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_AppUserRole_RoleId] ON [dbo].[AppUserRole]
 (
 	[RoleId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Cart_AppUserId]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Cart_AppUserId]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Cart_AppUserId] ON [dbo].[Cart]
 (
 	[AppUserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Food_SaleCampaignID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Food_SaleCampaignID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Food_SaleCampaignID] ON [dbo].[Food]
 (
 	[SaleCampaignID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_FoodCategory_CategoryID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_FoodCategory_CategoryID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_FoodCategory_CategoryID] ON [dbo].[FoodCategory]
 (
 	[CategoryID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Image_FoodID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Image_FoodID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Image_FoodID] ON [dbo].[Image]
 (
 	[FoodID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Notification_UserID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Notification_UserID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Notification_UserID] ON [dbo].[Notification]
 (
 	[UserID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_AppUserID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Order_AppUserID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_AppUserID] ON [dbo].[Order]
 (
 	[AppUserID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_OrderStatusID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Order_OrderStatusID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_OrderStatusID] ON [dbo].[Order]
 (
 	[OrderStatusID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_PromotionID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Order_PromotionID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_PromotionID] ON [dbo].[Order]
 (
 	[PromotionID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_SaleCampaignID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Order_SaleCampaignID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_SaleCampaignID] ON [dbo].[Order]
 (
 	[SaleCampaignID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_OrderDetail_FoodID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_OrderDetail_FoodID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_OrderDetail_FoodID] ON [dbo].[OrderDetail]
 (
 	[FoodID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_OrderDetail_SaleCampaignID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_OrderDetail_SaleCampaignID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_OrderDetail_SaleCampaignID] ON [dbo].[OrderDetail]
 (
 	[SaleCampaignID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Rating_AppUserId]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Rating_AppUserId]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Rating_AppUserId] ON [dbo].[Rating]
 (
 	[AppUserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Rating_FoodID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_Rating_FoodID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_Rating_FoodID] ON [dbo].[Rating]
 (
 	[FoodID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_SaleCampaignFood_SaleCampaignID]    Script Date: 6/25/2021 2:12:09 PM ******/
+/****** Object:  Index [IX_SaleCampaignFood_SaleCampaignID]    Script Date: 6/26/2021 5:57:00 PM ******/
 CREATE NONCLUSTERED INDEX [IX_SaleCampaignFood_SaleCampaignID] ON [dbo].[SaleCampaignFood]
 (
 	[SaleCampaignID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[AppUser] ADD  DEFAULT ('0001-01-01T00:00:00.0000000') FOR [TimeCreateJWT]
+GO
+ALTER TABLE [dbo].[AppUser] ADD  DEFAULT ('0001-01-01T00:00:00.0000000') FOR [RefreshTokenExpire]
 GO
 ALTER TABLE [dbo].[Cart] ADD  DEFAULT ((1)) FOR [Quantity]
 GO
@@ -929,9 +947,9 @@ ALTER TABLE [dbo].[Order] ADD  DEFAULT ((0.0000000000000000e+000)) FOR [FinalTot
 GO
 ALTER TABLE [dbo].[OrderDetail] ADD  DEFAULT ((1)) FOR [Amount]
 GO
-ALTER TABLE [dbo].[Promotion] ADD  DEFAULT ('2021-06-11T12:26:59.0111949+07:00') FOR [StartDate]
+ALTER TABLE [dbo].[Promotion] ADD  DEFAULT ('2021-06-26T14:09:21.7628373+07:00') FOR [StartDate]
 GO
-ALTER TABLE [dbo].[Promotion] ADD  DEFAULT ('2021-06-11T12:26:59.0128278+07:00') FOR [EndDate]
+ALTER TABLE [dbo].[Promotion] ADD  DEFAULT ('2021-06-26T14:09:21.7640531+07:00') FOR [EndDate]
 GO
 ALTER TABLE [dbo].[Promotion] ADD  DEFAULT (CONVERT([real],(10))) FOR [Percent]
 GO

@@ -89,7 +89,6 @@ namespace FoodOrder.API.Services
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.GivenName, user.Name),
                 new Claim("TimeCreateJWT", user.TimeCreateJWT.ToString()),
-                new Claim("AAA", "LoginClaim")
             };
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(x => new Claim(ClaimTypes.Role, x)));
@@ -172,7 +171,6 @@ namespace FoodOrder.API.Services
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.GivenName, user.Name),
                 new Claim("TimeCreateJWT", user.TimeCreateJWT.ToString()),
-                new Claim("AAA", "Refresh")
             };
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(x => new Claim(ClaimTypes.Role, x)));
