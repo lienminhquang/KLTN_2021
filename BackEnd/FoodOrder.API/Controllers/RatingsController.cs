@@ -71,6 +71,7 @@ namespace FoodOrder.API.Controllers
         // POST api/<ValuesController>
         [HttpPost]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Post([FromBody] RatingCreateVM vM)
         {
             if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
@@ -99,6 +100,7 @@ namespace FoodOrder.API.Controllers
         // PUT api/<ValuesController>/5
         [HttpPut]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin )]
+        [ValidTokenRequirement]
         public async Task<IActionResult> PutAsync([FromQuery] int orderID, [FromQuery] int foodID, [FromBody] RatingEditVM value)
         {
             var result = await _ratingServices.Edit(orderID, foodID, value);
@@ -112,6 +114,7 @@ namespace FoodOrder.API.Controllers
         // DELETE api/<ValuesController>/5
         [HttpDelete]
         [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Delete([FromQuery] int orderID, [FromQuery] int foodID)
         {
             var result = await _ratingServices.Delete(orderID, foodID);

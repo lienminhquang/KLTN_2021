@@ -11,14 +11,20 @@ namespace FoodOrder.Admin.Extensions
     {
         public static string GetTokenFromCookie(this Controller controller)
         {
-            string token = "";
-            controller.HttpContext.Request.Cookies.TryGetValue("Token", out token);
-            return token;
+
+            var a = controller.HttpContext.Items["Token"] as string;
+            if (a == null)
+            {
+                string token;
+                controller.HttpContext.Request.Cookies.TryGetValue("Token", out token);
+                return token;
+            }
+            return a;
         }
 
-        public static ActionResult RedirectToLoginPage(this Controller controller, string returnUrl=null)
+        public static ActionResult RedirectToLoginPage(this Controller controller, string returnUrl = null)
         {
-            if(returnUrl != null)
+            if (returnUrl != null)
             {
                 return controller.RedirectToAction("Login", "User", new { returnUrl = returnUrl });
             }
@@ -32,5 +38,5 @@ namespace FoodOrder.Admin.Extensions
         }
     }
 
-    
+
 }

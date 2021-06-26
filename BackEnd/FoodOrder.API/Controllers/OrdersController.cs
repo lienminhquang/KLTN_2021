@@ -19,6 +19,7 @@ namespace FoodOrder.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ValidTokenRequirement]
     public class OrdersController : ControllerBase
     {
 
@@ -32,7 +33,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
-        public async Task<IActionResult> GetByID(int id)
+        public IActionResult GetByID(int id)
         {
             if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
             {

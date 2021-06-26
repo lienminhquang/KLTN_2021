@@ -67,6 +67,7 @@ namespace FoodOrder.API.Controllers
         [HttpPost]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         [Consumes("multipart/form-data")]
+        [ValidTokenRequirement]
         public async Task<IActionResult> CreateAsync([FromForm] CategoryCreateVM request)
         {
             var result = await _categoryServices.Create(request);
@@ -80,6 +81,7 @@ namespace FoodOrder.API.Controllers
         [HttpPut]
         [Consumes("multipart/form-data")]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> EditAsync(int id, [FromForm] CategoryEditVM category)
         {
             var result = await _categoryServices.Edit(id ,category);
@@ -92,6 +94,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var result = await _categoryServices.Delete(id);

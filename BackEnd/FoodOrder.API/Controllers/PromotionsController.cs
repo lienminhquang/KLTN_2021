@@ -43,6 +43,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Create([FromBody] PromotionCreateVM createVM)
         {
             var result = await _promotionServices.Create(createVM);
@@ -56,6 +57,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPut]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Edit(int id, [FromBody] PromotionEditVM editVM)
         {
             // Todo: please handle this kind of error
@@ -74,6 +76,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = PolicyType.Admin )]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)

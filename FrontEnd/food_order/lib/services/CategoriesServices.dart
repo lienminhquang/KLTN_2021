@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
@@ -23,7 +24,7 @@ class CategoriesServices {
     pagingRequest.searchString = "";
     pagingRequest.sortOrder = "";
 
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute +
         "?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
     Response? response;
@@ -39,8 +40,8 @@ class CategoriesServices {
       return ApiResult<PaginatedList<CategoryVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<CategoryVM>>.fromJson(json, (paginatedJson) {
@@ -62,7 +63,7 @@ class CategoriesServices {
   }
 
   Future<ApiResult<CategoryVM>> getByID(int id) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/$id";
     Response? response;
     try {
@@ -77,8 +78,8 @@ class CategoriesServices {
       return ApiResult<CategoryVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CategoryVM>.fromJson(json, (paginatedJson) {
         return CategoryVM.fromJson(paginatedJson as Map<String, dynamic>);
@@ -101,7 +102,7 @@ class CategoriesServices {
     pagingRequest.searchString = "";
     pagingRequest.sortOrder = "";
 
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute +
         "/$id/foods?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
     Response? response;
@@ -117,8 +118,8 @@ class CategoriesServices {
       return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<FoodVM>>.fromJson(json, (paginatedJson) {

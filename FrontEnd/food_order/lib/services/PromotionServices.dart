@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
@@ -17,7 +18,7 @@ class PromotionServices {
 
   Future<ApiResult<PaginatedList<PromotionVM>>> getAllValid(
       String userID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/valid?userID=$userID";
     Response? response;
     try {
@@ -32,8 +33,8 @@ class PromotionServices {
       return ApiResult<PaginatedList<PromotionVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<PromotionVM>>.fromJson(json, (foodJson) {
@@ -56,7 +57,7 @@ class PromotionServices {
   }
 
   Future<ApiResult<PromotionVM>> getByID(int id) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/$id";
     Response? response;
     try {
@@ -71,8 +72,8 @@ class PromotionServices {
       return ApiResult<PromotionVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<PromotionVM>.fromJson(json, (foodJson) {
         return PromotionVM.fromJson(foodJson as Map<String, dynamic>);

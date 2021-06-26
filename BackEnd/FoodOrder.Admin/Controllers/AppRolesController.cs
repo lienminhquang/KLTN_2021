@@ -19,11 +19,13 @@ namespace FoodOrder.Admin.Controllers
     {
         private readonly AppRoleServices _appRoleServices;
         private readonly IMapper _mapper;
+        private readonly AdminUserService _adminUserService;
 
-        public AppRolesController(AppRoleServices appRoleServices, IMapper mapper)
+        public AppRolesController(AppRoleServices appRoleServices, IMapper mapper, AdminUserService adminUserService)
         {
             _appRoleServices = appRoleServices;
             _mapper = mapper;
+            _adminUserService = adminUserService;
         }
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
@@ -52,9 +54,9 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -67,7 +69,7 @@ namespace FoodOrder.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync([FromForm] AppRoleCreateVM createVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -91,7 +93,7 @@ namespace FoodOrder.Admin.Controllers
         // GET: CartsController/Edit/5
         public async Task<ActionResult> EditAsync(string id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 string returnUrl = this.Url.ActionLink("Edit", values: new { @id = id });
                 return this.RedirectToLoginPage(returnUrl);
@@ -112,7 +114,7 @@ namespace FoodOrder.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync([FromForm] AppRoleEditVm editVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 this.RedirectToLoginPage();
             }
@@ -136,7 +138,7 @@ namespace FoodOrder.Admin.Controllers
         // GET: CartsController/Delete/5
         public async Task<ActionResult> DeleteAsync(string id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -154,7 +156,7 @@ namespace FoodOrder.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }

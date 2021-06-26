@@ -23,6 +23,9 @@ namespace FoodOrder.Core.Models
         public DateTime DateOfBirth { get; set; }
         public DateTime TimeCreateJWT { get; set; }
 
+        public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpire { get; set; }
+
         public List<Order> Orders { get; set; }
         public List<Rating> Ratings { get; set; }
         public List<Cart> Carts { get; set; }

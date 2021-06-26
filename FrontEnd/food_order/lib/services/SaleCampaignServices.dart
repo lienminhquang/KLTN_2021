@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/SaleCampaigns/SaleCampaignVM.dart';
@@ -16,7 +17,7 @@ class SaleCampaignServices {
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
 
   Future<ApiResult<PaginatedList<SaleCampaignVM>>> getAllValid() async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/valid";
     Response? response;
     try {
@@ -54,7 +55,7 @@ class SaleCampaignServices {
   }
 
   Future<ApiResult<SaleCampaignVM>> getByID(int id) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/$id";
     Response? response;
     try {
@@ -69,8 +70,8 @@ class SaleCampaignServices {
       return ApiResult<SaleCampaignVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<SaleCampaignVM>.fromJson(json, (foodJson) {
         return SaleCampaignVM.fromJson(foodJson as Map<String, dynamic>);

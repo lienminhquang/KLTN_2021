@@ -61,6 +61,7 @@ namespace FoodOrder.API.Controllers
         [HttpPost]
         [Authorize(Roles = PolicyType.Admin + "," + PolicyType.Manager)]
         [Consumes("multipart/form-data")]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Create([FromForm] FoodCreateVM foodCreateVM)
         {
             var result = await _foodServices.Create(foodCreateVM);
@@ -75,6 +76,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost("{id}/categories")]
         [Authorize(Roles = PolicyType.Admin + "," + PolicyType.Manager)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> AddFoodToCategories(int id, [FromBody] List<string> categoryIDs)
         {
             var fcResult = await _foodServices.AddFoodToCategories(categoryIDs, id);
@@ -87,6 +89,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpDelete("{id}/categories")]
         [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> DeleteFoodFromCategory(int id)
         {
             var fcResult = await _foodServices.DeleteFoodFromAllCategory(id);
@@ -100,6 +103,7 @@ namespace FoodOrder.API.Controllers
         [HttpPut]
         [Consumes("multipart/form-data")]
         [Authorize(Roles = PolicyType.Admin + "," + PolicyType.Manager)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Edit(int id, [FromForm] FoodEditVM food)
         {
             // Todo: please handle this kind of error
@@ -118,6 +122,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)

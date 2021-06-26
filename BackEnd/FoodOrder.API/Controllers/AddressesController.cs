@@ -2,9 +2,11 @@
 using FoodOrder.API.Services;
 using FoodOrder.Core.Helpers;
 using FoodOrder.Core.Inferstructer;
+using FoodOrder.Core.Models;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Addresses;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,29 +18,26 @@ namespace FoodOrder.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [ValidTokenRequirement]
     public class AddressesController : Controller
     {
         private readonly AddressServices _addressServices;
         private readonly UserServices _userSerivces;
+        private readonly UserManager<AppUser> _userManager;
 
-
-        public AddressesController(AddressServices services, UserServices userServices)
+        public AddressesController(UserManager<AppUser> userManager,AddressServices services, UserServices userServices)
         {
             _addressServices = services;
             _userSerivces = userServices;
+            _userManager = userManager;
         }
         // GET: api/<ValuesController>
         [HttpGet]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        
         public async Task<IActionResult> GetAsync([FromQuery] PagingRequestBase request)
         {
-            var validated = await _userSerivces.ValidateJWTAsync(this.HttpContext.User);
-            if(validated == false)
-            {
-                return BadRequest(new FailedResult<PaginatedList<AddressVM>>("Token expired!", ApiResult<bool>.TokenExpiredCode));
-            }
-
-
+            
             var result = await _addressServices.GetAllPaging(request);
             if (!result.IsSuccessed)
             {
@@ -50,9 +49,12 @@ namespace FoodOrder.API.Controllers
         // GET api/<ValuesController>/details?
         [HttpGet("user")]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        
         public async Task<IActionResult> GetByUserID([FromQuery] string userID)
         {
-            if(!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+           
+
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
             {
                 if(HttpContext.User.Claims.First(x => x.Type == "UserID").Value != userID)
                 {
@@ -73,12 +75,13 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public IActionResult Get([FromQuery] int id)
         {
+
             var result = _addressServices.GetByID(id);
 
             if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
             {
                 var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
-                if(result.IsSuccessed && result.PayLoad.AppUserID.ToString() != userID)
+                if (result.IsSuccessed && result.PayLoad.AppUserID.ToString() != userID)
                 {
                     return Forbid();
                 }
@@ -96,6 +99,7 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Post([FromBody] AddressCreateVM vM)
         {
+            
             if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
             {
                 var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
@@ -110,7 +114,7 @@ namespace FoodOrder.API.Controllers
             {
                 return BadRequest(result);
             }
-            return CreatedAtAction(nameof(Get), result.PayLoad.ID, result);
+            return CreatedAtAction(nameof(GetAsync), result.PayLoad.ID, result);
         }
 
         // PUT api/<ValuesController>/5
@@ -118,6 +122,7 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> PutAsync(int id, [FromBody] AddressEditVM value)
         {
+            
             if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
             {
                 var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
@@ -140,6 +145,8 @@ namespace FoodOrder.API.Controllers
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Delete(int id)
         {
+           
+
             var address = _addressServices.GetByID(id);
             if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
             {

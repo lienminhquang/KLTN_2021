@@ -49,7 +49,7 @@ namespace FoodOrder.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] PagingRequestBase request)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return RedirectToAction("Login", "User");
             }
@@ -66,9 +66,9 @@ namespace FoodOrder.Admin.Controllers
 
         [HttpGet]
         [Authorize(Roles = RoleTypes.Admin)]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return RedirectToAction("Login", "User");
             }
@@ -80,7 +80,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Create([FromForm] RegisterRequest request)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return RedirectToAction("Login", "User");
             }
@@ -105,7 +105,7 @@ namespace FoodOrder.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> DetailsAsync(string id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return RedirectToAction("Login", "User");
             }
@@ -144,7 +144,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> AssignRoleToUser([FromRoute] string id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return RedirectToAction("Login", "User");
             }
@@ -171,7 +171,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> AssignRoleToUser([FromRoute] string id, [FromForm] RoleAssignVM roleAssignVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return RedirectToAction("Login", "User");
             }
@@ -195,7 +195,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Edit([FromForm] UserUpdateRequest request)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -219,7 +219,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Edit(string id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -275,10 +275,10 @@ namespace FoodOrder.Admin.Controllers
                 return View(loginRequest);
             }
 
-            var userPrincipal = this.ValidateToken(token.PayLoad);
+            var userPrincipal = this.ValidateToken(token.PayLoad.AccessToken);
             var authProperties = new AuthenticationProperties()
             {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
+                ExpiresUtc = DateTime.MaxValue,
                 IsPersistent = true
             };
 
@@ -289,15 +289,16 @@ namespace FoodOrder.Admin.Controllers
                 );
             //HttpContext.Session.Set("Token", Encoding.UTF8.GetBytes(token.PayLoad));
 
-            HttpContext.Response.Cookies.Append("Token", token.PayLoad, new Microsoft.AspNetCore.Http.CookieOptions()
+            HttpContext.Response.Cookies.Append("Token", token.PayLoad.AccessToken, new Microsoft.AspNetCore.Http.CookieOptions()
             {
-                Expires = DateTime.Now.AddHours(1)
+                Expires = DateTime.MaxValue
+            });
+            HttpContext.Response.Cookies.Append("RefreshToken", token.PayLoad.RefreshToken, new Microsoft.AspNetCore.Http.CookieOptions()
+            {
+                Expires = token.PayLoad.RefreshTokenExpire
             });
 
-            //if (!String.IsNullOrEmpty(loginRequest.ReturnUrl))
-            //{
-            //    return Redirect(loginRequest.ReturnUrl);
-            //}
+          
             return RedirectToAction("Index", "Home");
         }
 
@@ -305,7 +306,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Delete(string id, [FromForm] UserDeleteVM userDeleteVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -324,7 +325,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<IActionResult> Delete(string id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }

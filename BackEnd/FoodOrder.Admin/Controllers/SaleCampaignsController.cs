@@ -21,12 +21,14 @@ namespace FoodOrder.Admin.Controllers
         private readonly SaleCampaignServices _saleCampaignServices;
         private readonly FoodServices _foodServices;
         private readonly IMapper _mapper;
+        private readonly AdminUserService _adminUserService;
 
-        public SaleCampaignsController(SaleCampaignServices services, IMapper mapper, FoodServices foodServices)
+        public SaleCampaignsController(AdminUserService adminUserService, SaleCampaignServices services, IMapper mapper, FoodServices foodServices)
         {
             _foodServices = foodServices;
             _saleCampaignServices = services;
             _mapper = mapper;
+            _adminUserService = adminUserService;
         }
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
@@ -57,7 +59,7 @@ namespace FoodOrder.Admin.Controllers
         // GET: CartsController/Create
         public async Task<ActionResult> CreateAsync()
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -76,7 +78,7 @@ namespace FoodOrder.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync([FromForm] SaleCampaignCreateVM createVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -108,7 +110,7 @@ namespace FoodOrder.Admin.Controllers
         // GET: CartsController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 string returnUrl = Url.ActionLink("Edit", values: new { id });
                 return this.RedirectToLoginPage(returnUrl);
@@ -138,7 +140,7 @@ namespace FoodOrder.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync([FromForm] SaleCampaignEditVM editVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 this.RedirectToLoginPage();
             }
@@ -170,7 +172,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -189,7 +191,7 @@ namespace FoodOrder.Admin.Controllers
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete(int id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }

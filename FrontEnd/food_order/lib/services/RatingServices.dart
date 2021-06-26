@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/services/UserServices.dart';
@@ -19,7 +20,7 @@ class RatingServices {
   Future<ApiResult<RatingVM>> create(RatingCreateVM ratingCreateVM) async {
     var userID = UserServices.getUserID();
     log("create rating: " + ratingCreateVM.toJson().toString());
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
 
     try {
@@ -35,8 +36,8 @@ class RatingServices {
       return ApiResult<RatingVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.Created ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.created ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<RatingVM>.fromJson(
           json, (a) => RatingVM.fromJson(a as Map<String, dynamic>));
@@ -52,7 +53,7 @@ class RatingServices {
   }
 
   Future<ApiResult<RatingVM>> getByID(int orderID, int foodID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/details?orderID=$orderID&foodID=$foodID";
     Response? response;
     try {
@@ -67,8 +68,8 @@ class RatingServices {
       return ApiResult<RatingVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<RatingVM>.fromJson(json, (foodJson) {
         return RatingVM.fromJson(foodJson as Map<String, dynamic>);
@@ -88,7 +89,7 @@ class RatingServices {
 
   Future<ApiResult<PaginatedList<RatingVM>>> getRatingsOfFood(
       int foodID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/food?foodID=$foodID";
     Response? response;
     try {
@@ -103,8 +104,8 @@ class RatingServices {
       return ApiResult<PaginatedList<RatingVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<RatingVM>>.fromJson(json, (foodJson) {

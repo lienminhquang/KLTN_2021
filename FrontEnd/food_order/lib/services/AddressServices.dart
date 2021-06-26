@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/services/UserServices.dart';
@@ -19,7 +20,7 @@ class AddressServices {
 
   Future<ApiResult<PaginatedList<AddressVM>>> getAddressOfUser(
       String userID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/user?userID=$userID";
     Response? response;
     try {
@@ -34,8 +35,8 @@ class AddressServices {
       return ApiResult<PaginatedList<AddressVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<AddressVM>>.fromJson(json, (foodJson) {
@@ -59,7 +60,7 @@ class AddressServices {
 
   Future<ApiResult<AddressVM>> create(AddressCreateVM addressCreateVM) async {
     log("Create address: ${addressCreateVM.toJson()}");
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
 
     try {
@@ -75,8 +76,8 @@ class AddressServices {
       return ApiResult<AddressVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.Created ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.created ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -92,7 +93,7 @@ class AddressServices {
 
   Future<ApiResult<AddressVM>> edit(AddressEditVM addressEditVM) async {
     log("Edit address: ${addressEditVM.toJson()}");
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
 
     try {
@@ -108,8 +109,8 @@ class AddressServices {
       return ApiResult<AddressVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -124,7 +125,7 @@ class AddressServices {
   }
 
   Future<ApiResult<bool>> delete(int id) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "?id=$id";
     Response? response;
     try {
@@ -140,8 +141,8 @@ class AddressServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;

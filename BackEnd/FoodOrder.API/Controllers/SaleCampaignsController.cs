@@ -38,6 +38,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Create([FromBody] SaleCampaignCreateVM createVM)
         {
             var result = await _saleCampaignServices.Create(createVM);
@@ -51,6 +52,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPut]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Edit(int id, [FromBody] SaleCampaignEditVM editVM)
         {
             // Todo: please handle this kind of error
@@ -69,6 +71,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)
@@ -87,6 +90,7 @@ namespace FoodOrder.API.Controllers
         [HttpGet]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> GetAllPaging([FromQuery] PagingRequestBase request)
         {
             var result = await _saleCampaignServices.GetAllPaging(request);

@@ -19,10 +19,13 @@ namespace FoodOrder.Admin.Controllers
     {
         private readonly ImageServices _imageServices;
         private readonly IMapper _mapper;
-        public ImagesController(ImageServices imageServices, IMapper mapper)
+        private readonly AdminUserService _adminUserService;
+
+        public ImagesController(ImageServices imageServices, IMapper mapper, AdminUserService adminUserService)
         {
             _imageServices = imageServices;
             _mapper = mapper;
+            _adminUserService = adminUserService;
         }
 
         // GET: CategoriesController
@@ -63,7 +66,7 @@ namespace FoodOrder.Admin.Controllers
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateAsync([FromForm] ImageCreateVM categoryCreateVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -87,7 +90,7 @@ namespace FoodOrder.Admin.Controllers
         // GET: CategoriesController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -109,7 +112,7 @@ namespace FoodOrder.Admin.Controllers
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> EditAsync(int id, [FromForm] ImageEditVM vm)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -133,7 +136,7 @@ namespace FoodOrder.Admin.Controllers
         // GET: CategoriesController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -151,7 +154,7 @@ namespace FoodOrder.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteAsync(int id, ImageVM categoryVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }

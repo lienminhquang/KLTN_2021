@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Carts/CartCreateVM.dart';
@@ -17,7 +18,7 @@ class CartServices {
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
 
   Future<ApiResult<PaginatedList<CartVM>>> getAllByUserID(String userID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/user?userID=$userID";
     Response? response;
     try {
@@ -32,8 +33,8 @@ class CartServices {
       return ApiResult<PaginatedList<CartVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<CartVM>>.fromJson(json, (paginatedJson) {
@@ -55,7 +56,7 @@ class CartServices {
   }
 
   Future<ApiResult<CartVM>> getByID(int foodID, String userID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/details?foodID=$foodID&userId=$userID";
     Response? response;
     try {
@@ -71,8 +72,8 @@ class CartServices {
       return ApiResult<CartVM>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CartVM>.fromJson(json, (foodJson) {
         return CartVM.fromJson(foodJson as Map<String, dynamic>);
@@ -91,7 +92,7 @@ class CartServices {
   }
 
   Future<ApiResult<bool>> delete(int foodID, String userID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "?foodID=$foodID&userId=$userID";
     Response? response;
     try {
@@ -107,8 +108,8 @@ class CartServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;
@@ -128,7 +129,7 @@ class CartServices {
   Future<ApiResult<CartVM>> editOrCreate(
       int foodID, int quantity, String userID) async {
     log("editOrCreate cart: $userID $foodID $quantity");
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
     CartCreateVM cartCreateVM = CartCreateVM();
     cartCreateVM.appUserId = userID;
@@ -147,8 +148,8 @@ class CartServices {
       return ApiResult<CartVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<CartVM>.fromJson(
           json, (a) => CartVM.fromJson(a as Map<String, dynamic>));

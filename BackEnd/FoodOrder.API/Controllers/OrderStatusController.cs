@@ -19,6 +19,7 @@ namespace FoodOrder.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [ValidTokenRequirement]
     public class OrderStatusController : ControllerBase
     {
         public class OrderStatusCreateRequest

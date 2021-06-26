@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,24 +51,24 @@ namespace FoodOrder.API.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> ValidateJWTAsync(ClaimsPrincipal claims)
-        {
-            var timeCreateJWT = claims.FindFirstValue("TimeCreateJWT");
-            var user = await _userManager.FindByNameAsync(claims.FindFirstValue(ClaimTypes.Name));
-            if(user.TimeCreateJWT.ToString() != timeCreateJWT)
-            {
-                return false;
-            }
-            return true;
-        }
+        //public async Task<bool> ValidateJWTAsync(ClaimsPrincipal claims)
+        //{
+        //    var timeCreateJWT = claims.FindFirstValue("TimeCreateJWT");
+        //    var user = await _userManager.FindByNameAsync(claims.FindFirstValue(ClaimTypes.Name));
+        //    if(user.TimeCreateJWT.ToString() != timeCreateJWT)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
-        public async Task<ApiResult<string>> Authenticate(LoginRequest loginRequest)
+        public async Task<ApiResult<LoginResponse>> Authenticate(LoginRequest loginRequest)
         {
             var user = await _userManager.FindByNameAsync(loginRequest.Username);
-            
+
             if (user == null)
             {
-                return new FailedResult<string>("Phone number or password is incorrect!");
+                return new FailedResult<LoginResponse>("Phone number or password is incorrect!");
             }
 
             //if (user.IsBanned)
@@ -78,16 +79,17 @@ namespace FoodOrder.API.Services
             var signinResult = await _signInManager.PasswordSignInAsync(user, loginRequest.Password, loginRequest.RememberMe, true);
             if (!signinResult.Succeeded)
             {
-                return new FailedResult<string>("Phone number or password is incorrect!");
+                return new FailedResult<LoginResponse>("Phone number or password is incorrect!");
             }
-            user.TimeCreateJWT = DateTime.Now;
+            user.TimeCreateJWT = DateTime.UtcNow;
             var claims = new List<Claim>
             {
                 new Claim("UserID", user.Id.ToString()),
                 new Claim(ClaimTypes.MobilePhone, user.UserName),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.GivenName, user.Name),
-                new Claim("TimeCreateJWT", user.TimeCreateJWT.ToString())
+                new Claim("TimeCreateJWT", user.TimeCreateJWT.ToString()),
+                new Claim("AAA", "LoginClaim")
             };
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(x => new Claim(ClaimTypes.Role, x)));
@@ -98,15 +100,121 @@ namespace FoodOrder.API.Services
             var token = new JwtSecurityToken(_config["Tokens:Issuer"],
                     _config["Tokens:Issuer"],
                     claims,
-                    expires: DateTime.Now.AddHours(1),
+                    expires: DateTime.UtcNow.AddHours(1),
+                    signingCredentials: creds
+                );
+
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            user.RefreshTokenExpire = DateTime.UtcNow.AddHours(2);
+            user.RefreshToken = GenRefreshToken();
+            //user.JWT = tokenString;
+            await _dbContext.SaveChangesAsync();
+
+
+            LoginResponse response = new LoginResponse()
+            {
+                AccessToken = tokenString,
+                RefreshToken = user.RefreshToken,
+                RefreshTokenExpire = user.RefreshTokenExpire
+            };
+
+
+            return new SuccessedResult<LoginResponse>(response);
+        }
+
+        public async Task<ApiResult<LoginResponse>> RefreshToken(RefreshTokenRequest refreshTokenRequest)
+        {
+            string issuer = _config.GetValue<string>("Tokens:Issuer");
+            string signingKey = _config.GetValue<string>("Tokens:Key");
+            byte[] signingKeyBytes = System.Text.Encoding.UTF8.GetBytes(signingKey);
+
+
+            var tokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+            {
+                ValidateIssuer = true,
+                ValidIssuer = issuer,
+                ValidateAudience = true,
+                ValidAudience = issuer,
+                ValidateLifetime = false, // because this is old token,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = System.TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(refreshTokenRequest.OldToken, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null)
+            {
+                return new FailedResult<LoginResponse>("Invalid token!");
+            }
+
+            var user = await _userManager.FindByNameAsync(
+                jwtSecurityToken.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault().Value);
+
+            if (user == null)
+            {
+                return new FailedResult<LoginResponse>("Invalid token!");
+            }
+
+            if (user.RefreshToken != refreshTokenRequest.RefreshToken || user.RefreshTokenExpire < DateTime.UtcNow)
+            {
+                return new FailedResult<LoginResponse>("Invalid token!");
+            }
+
+            user.TimeCreateJWT = DateTime.UtcNow;
+            _logger.LogInformation(user.TimeCreateJWT.ToString());
+            var claims = new List<Claim>
+            {
+                new Claim("UserID", user.Id.ToString()),
+                new Claim(ClaimTypes.MobilePhone, user.UserName),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.GivenName, user.Name),
+                new Claim("TimeCreateJWT", user.TimeCreateJWT.ToString()),
+                new Claim("AAA", "Refresh")
+            };
+            var roles = await _userManager.GetRolesAsync(user);
+            claims.AddRange(roles.Select(x => new Claim(ClaimTypes.Role, x)));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(_config["Tokens:Issuer"],
+                    _config["Tokens:Issuer"],
+                    claims,
+                    expires: DateTime.UtcNow.AddHours(1),
                     signingCredentials: creds
                 );
 
             string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
             //user.JWT = tokenString;
+            user.RefreshTokenExpire = DateTime.UtcNow.AddHours(2);
+            user.RefreshToken = GenRefreshToken();
+            //user.JWT = tokenString;
             await _dbContext.SaveChangesAsync();
+            _logger.LogInformation(user.TimeCreateJWT.ToString());
 
-            return new SuccessedResult<string>(tokenString);
+
+            LoginResponse response = new LoginResponse()
+            {
+                AccessToken = tokenString,
+                RefreshToken = user.RefreshToken,
+                RefreshTokenExpire = user.RefreshTokenExpire
+            };
+
+
+            return new SuccessedResult<LoginResponse>(response);
+        }
+
+        private string GenRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
 
         //public async Task<ApiResult<UserVM>> GetUserInfo()
@@ -153,7 +261,7 @@ namespace FoodOrder.API.Services
 
             if (!String.IsNullOrEmpty(request.NewPassword))
             {
-                if(request.NewPassword != request.ConfirmPassword)
+                if (request.NewPassword != request.ConfirmPassword)
                 {
                     return new FailedResult<UserUpdateRequest>("Confirm password is not match!");
                 }
@@ -171,8 +279,9 @@ namespace FoodOrder.API.Services
                 await _userManager.AddPasswordAsync(user, request.NewPassword);
                 await _userManager.UpdateSecurityStampAsync(user);
                 //user.JWT = null;
+                user.TimeCreateJWT = DateTime.MinValue;
                 await _dbContext.SaveChangesAsync();
-               
+
             }
             IdentityResult rs = await _userManager.UpdateAsync(user);
 
@@ -196,11 +305,11 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<bool>("User not found!");
             }
-            
+
             if (!String.IsNullOrEmpty(request.NewPassword))
             {
                 var checkPasswordResult = await _userManager.CheckPasswordAsync(user, request.OldPassword);
-                if(checkPasswordResult == false)
+                if (checkPasswordResult == false)
                 {
                     return new FailedResult<bool>("Mật khẩu không đúng!");
                 }
@@ -218,6 +327,7 @@ namespace FoodOrder.API.Services
                 await _userManager.AddPasswordAsync(user, request.NewPassword);
                 await _userManager.UpdateSecurityStampAsync(user);
                 //user.JWT = null;
+                user.TimeCreateJWT = DateTime.MinValue;
                 await _dbContext.SaveChangesAsync();
             }
             IdentityResult rs = await _userManager.UpdateAsync(user);
@@ -306,14 +416,14 @@ namespace FoodOrder.API.Services
                 //_dbContext.UserRoles.RemoveRange(currentRole);
                 var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRole);
 
-                if(roles != null)
+                if (roles != null)
                 {
                     foreach (var role in roles)
                     {
                         await _userManager.AddToRoleAsync(user, role);
                     }
                 }
-                
+
                 transaction.Commit();
                 return new SuccessedResult<bool>(true);
             }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Addresses/AddressEditVM.dart';
@@ -20,7 +21,7 @@ class NotificationServices {
 
   Future<ApiResult<PaginatedList<NotificationVM>>> getUnreceivedNotifications(
       String userID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/unreceived?userID=$userID";
     Response? response;
     try {
@@ -35,8 +36,8 @@ class NotificationServices {
       return ApiResult<PaginatedList<NotificationVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result =
           ApiResult<PaginatedList<NotificationVM>>.fromJson(json, (foodJson) {
@@ -61,7 +62,7 @@ class NotificationServices {
   Future<ApiResult<bool>> notificationReceived(
       int notificationID, String userID) async {
     log("notificationReceived: $notificationID by $userID");
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
     NotificationReceivedVM notificationReceivedVM = NotificationReceivedVM();
     notificationReceivedVM.notificationID = notificationID;
@@ -79,8 +80,8 @@ class NotificationServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (a) => a as bool);
       if (result.isSuccessed == true) {
@@ -96,7 +97,7 @@ class NotificationServices {
   Future<ApiResult<AddressVM>> edit(
       int id, String userID, String name, String addressString) async {
     log("Edit address: $userID $name $addressString");
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
     AddressEditVM editVM = AddressEditVM();
     editVM.id = id;
@@ -116,8 +117,8 @@ class NotificationServices {
       return ApiResult<AddressVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<AddressVM>.fromJson(
           json, (a) => AddressVM.fromJson(a as Map<String, dynamic>));
@@ -132,7 +133,7 @@ class NotificationServices {
   }
 
   Future<ApiResult<bool>> delete(int id) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "?id=$id";
     Response? response;
     try {
@@ -148,8 +149,8 @@ class NotificationServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server! Please re-try later!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<bool>.fromJson(json, (child) {
         return child as bool;

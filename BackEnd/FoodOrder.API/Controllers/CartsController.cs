@@ -21,6 +21,7 @@ namespace FoodOrder.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [ValidTokenRequirement]
     public class CartsController : ControllerBase
     {
         private readonly CartServices _cartServices;

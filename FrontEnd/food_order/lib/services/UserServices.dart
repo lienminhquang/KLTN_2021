@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/helper/TokenParser.dart';
 import 'package:food_delivery/view_models/Users/ChangePasswordVM.dart';
+import 'package:food_delivery/view_models/Users/LoginResponse.dart';
 import 'package:food_delivery/view_models/Users/ResetPasswordVM.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/view_models/Users/RegisterRequest.dart';
@@ -18,6 +19,8 @@ import 'package:http/io_client.dart';
 class UserServices {
   static String? JWT;
   static Map<String, dynamic> PayloadMap = {};
+  static String? RefreshToken;
+  static DateTime? RefreshTokenExpire;
   final String baseRoute = AppConfigs.URL_UserRouteAPI;
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
   final String _userAccountFilename = "/Data.txt";
@@ -104,7 +107,7 @@ class UserServices {
     saveUserAccountToCache(loginVM.username!, loginVM.password!);
 
     log("LoginVM " + jsonEncode(loginVM.toJson()));
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
     try {
       response = await ioClient.post(Uri.parse(baseRoute + '/Login'),
@@ -116,15 +119,18 @@ class UserServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
-      var result = ApiResult<String>.fromJson(json, (a) => a.toString());
+      var result = ApiResult<LoginResponse>.fromJson(
+          json, (a) => LoginResponse.fromJson(a as Map<String, dynamic>));
       if (result.isSuccessed == true) {
         log("Signin succesed!");
-        log("JWT: " + result.payLoad!);
-        JWT = result.payLoad;
-        PayloadMap = parseJWT(result.payLoad!);
+        log("Login response: " + result.payLoad!.toJson().toString());
+        JWT = result.payLoad!.accessToken;
+        RefreshToken = result.payLoad!.refreshToken;
+        RefreshTokenExpire = result.payLoad!.refreshTokenExpire;
+        PayloadMap = parseJWT(result.payLoad!.accessToken);
         print(PayloadMap);
         return ApiResult.succesedApiResult(true);
       } else {
@@ -139,7 +145,7 @@ class UserServices {
     //saveUserAccountToCache(loginVM.username!, loginVM.password!);
 
     log("RegisterRequest " + jsonEncode(request.toJson()));
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
     try {
       response = await ioClient.post(Uri.parse(baseRoute + '/Register'),
@@ -151,8 +157,8 @@ class UserServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<String>.fromJson(json, (a) => a.toString());
       if (result.isSuccessed == true) {
@@ -174,7 +180,7 @@ class UserServices {
     //saveUserAccountToCache(loginVM.username!, loginVM.password!);
 
     log("ChangePasswordVM " + jsonEncode(request.toJson()));
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
     try {
       response = await ioClient.post(Uri.parse(baseRoute + '/reset_password'),
@@ -186,8 +192,8 @@ class UserServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<String>.fromJson(json, (a) => a.toString());
       if (result.isSuccessed == true) {
@@ -212,7 +218,7 @@ class UserServices {
         ChangePasswordVM(UserServices.getUsername(), newPassword, oldPassword);
 
     log("ChangePasswordVM " + jsonEncode(changePasswordVM.toJson()));
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
     try {
       response = await ioClient.post(Uri.parse(baseRoute + '/password'),
@@ -225,8 +231,8 @@ class UserServices {
       return ApiResult<bool>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<String>.fromJson(json, (a) => a.toString());
       if (result.isSuccessed == true) {
@@ -245,7 +251,7 @@ class UserServices {
   }
 
   Future<ApiResult<UserVM>> getUser() async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
     String userID = UserServices.getUserID();
 
@@ -260,8 +266,8 @@ class UserServices {
       return ApiResult<UserVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<UserVM>.fromJson(
           json, (a) => UserVM.fromJson(a as Map<String, dynamic>));

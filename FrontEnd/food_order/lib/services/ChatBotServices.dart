@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/ChatBots/MessageData.dart';
@@ -18,7 +19,7 @@ class ChatBotServices {
   Future<ApiResult<MessageData>> sendMessage(
       SendMessageRequest sendMessageRequest) async {
     log("User send message to chat bot: ${sendMessageRequest.toJson()}");
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
 
     try {
@@ -34,7 +35,7 @@ class ChatBotServices {
           "Could not connect to server. Check your connection!");
     }
     print(response.body);
-    if (response.statusCode == HTTPStatusCode.OK) {
+    if (response.statusCode == HttpStatus.ok) {
       var json = jsonDecode(response.body);
 
       var messageResponse = MessageData.fromJson(json[0]);

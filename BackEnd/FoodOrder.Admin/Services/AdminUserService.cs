@@ -20,15 +20,16 @@ namespace FoodOrder.Admin.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _config;
-
+        
         public AdminUserService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _config = configuration;
         }
 
-        public async Task<ApiResult<string>> Authenticate(LoginRequest loginRequest)
+        public async Task<ApiResult<LoginResponse>> Authenticate(LoginRequest loginRequest)
         {
+           
             var loginRequestJson = JsonConvert.SerializeObject(loginRequest);
             var httpContent = new StringContent(loginRequestJson, Encoding.UTF8, "application/json");
 
@@ -38,10 +39,10 @@ namespace FoodOrder.Admin.Services
             if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 var body = await rs.Content.ReadAsStringAsync();
-                var vm = JsonConvert.DeserializeObject<ApiResult<string>>(body);
+                var vm = JsonConvert.DeserializeObject<ApiResult<LoginResponse>>(body);
                 return vm;
             }
-            return new FailedResult<string>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
+            return new FailedResult<LoginResponse>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<List<string>>> GetRolesOfUser(string userID, string token)
@@ -151,6 +152,30 @@ namespace FoodOrder.Admin.Services
                 return vm;
             }
             return new FailedResult<UserVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
+        }
+
+        public async Task<ApiResult<LoginResponse>> RefreshToken(string oldToken, string refreshToken)
+        {
+            var request = new RefreshTokenRequest()
+            {
+                OldToken = oldToken,
+                RefreshToken = refreshToken
+            };
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var client = _httpClientFactory.CreateClient();
+            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var rs = await client.PostAsync(_config["BaseAddress"] + "/api/Users/RefreshToken", httpContent);
+
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<LoginResponse>>(body);
+                return vm;
+            }
+            return new FailedResult<LoginResponse>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<bool>> DeleteUser(string id, string token)

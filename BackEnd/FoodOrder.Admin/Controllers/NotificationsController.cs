@@ -20,11 +20,13 @@ namespace FoodOrder.Admin.Controllers
     {
         private readonly NotificationServices _notiServices;
         private readonly IMapper _mapper;
+        private readonly AdminUserService _adminUserService;
 
-        public NotificationsController(NotificationServices services, IMapper mapper)
+        public NotificationsController(NotificationServices services, IMapper mapper, AdminUserService adminUserService)
         {
             _notiServices = services;
             _mapper = mapper;
+            _adminUserService = adminUserService;
         }
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
@@ -53,9 +55,9 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CartsController/Create
-        public ActionResult Create()
+        public async Task< ActionResult >Create()
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -68,7 +70,7 @@ namespace FoodOrder.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync([FromForm] NotificationCreateVM createVM)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -138,7 +140,7 @@ namespace FoodOrder.Admin.Controllers
         // GET: CartsController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }
@@ -156,7 +158,7 @@ namespace FoodOrder.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete([FromForm] NotificationVM model)
         {
-            if (!this.ValidateTokenInCookie())
+            if (!await this.ValidateTokenInCookie(_adminUserService))
             {
                 return this.RedirectToLoginPage();
             }

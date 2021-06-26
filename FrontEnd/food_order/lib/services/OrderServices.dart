@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/view_models/Orders/OrderCreateVM.dart';
@@ -16,7 +17,7 @@ class OrderServices {
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
 
   Future<ApiResult<List<OrderVM>>> getAllByUserID(String userID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/user?userID=$userID";
     Response? response;
     try {
@@ -31,8 +32,8 @@ class OrderServices {
       return ApiResult<List<OrderVM>>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<List<OrderVM>>.fromJson(json, (json) {
         return (json as List<dynamic>).map((e) => OrderVM.fromJson(e)).toList();
@@ -49,7 +50,7 @@ class OrderServices {
   }
 
   Future<ApiResult<OrderVM>> getByID(int orderID) async {
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     final String url = baseRoute + "/$orderID";
     Response? response;
     try {
@@ -64,8 +65,8 @@ class OrderServices {
       return ApiResult<OrderVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.OK ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<OrderVM>.fromJson(json, (json) {
         return OrderVM.fromJson(json as Map<String, dynamic>);
@@ -83,7 +84,7 @@ class OrderServices {
 
   Future<ApiResult<OrderVM>> create(OrderCreateVM orderCreateVM) async {
     log("editOrCreate cart: ${orderCreateVM.toJson()}");
-    IOClient ioClient = _httpClientFactory.createIOClient();
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;
 
     try {
@@ -99,8 +100,8 @@ class OrderServices {
       return ApiResult<OrderVM>.failedApiResult(
           "Could not connect to server. Check your connection!");
     }
-    if (response.statusCode == HTTPStatusCode.Created ||
-        response.statusCode == HTTPStatusCode.BadRequest) {
+    if (response.statusCode == HttpStatus.created ||
+        response.statusCode == HttpStatus.badRequest) {
       var json = jsonDecode(response.body);
       var result = ApiResult<OrderVM>.fromJson(
           json, (a) => OrderVM.fromJson(a as Map<String, dynamic>));

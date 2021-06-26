@@ -39,9 +39,25 @@ namespace FoodOrder.API.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Ok(new FailedResult<string>(ModelState.ToString()));
+                return Ok(new FailedResult<LoginResponse>(ModelState.ToString()));
             }
-            ApiResult<string> rs = await _userService.Authenticate(loginRequest);
+            ApiResult<LoginResponse> rs = await _userService.Authenticate(loginRequest);
+            if (!rs.IsSuccessed)
+            {
+                return BadRequest(rs);
+            }
+            return Ok(rs);
+        }
+
+        [HttpPost("RefreshToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Ok(new FailedResult<LoginResponse>(ModelState.ToString()));
+            }
+            ApiResult<LoginResponse> rs = await _userService.RefreshToken(refreshTokenRequest);
             if (!rs.IsSuccessed)
             {
                 return BadRequest(rs);
@@ -69,6 +85,7 @@ namespace FoodOrder.API.Controllers
         [HttpGet]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         //[Authorize(Roles = "user")]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Get([FromQuery] PagingRequestBase request)
         {
             var rs = await _userService.GetAllPaging(request);
@@ -81,6 +98,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet("role/{id}")]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> GetRolesOfUser(string id)
         {
             var result = await _userService.GetRolesOfUser(id);
@@ -94,6 +112,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost("role/{userID}")]
         [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> ChangeUserRoles(string userID, [FromBody] RoleAssignVM roleAssignVM)
         {
             var result = await _userService.AssignRoleToUser(userID, roleAssignVM.roles);
@@ -109,6 +128,7 @@ namespace FoodOrder.API.Controllers
         [HttpPost("password")]
         //[Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         [Authorize(Roles = PolicyType.User)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordVM changePasswordVM)
         {
             var userID = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
@@ -144,6 +164,7 @@ namespace FoodOrder.API.Controllers
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Get(string id)
         {
             var result = await _userService.GetUserByID(id);
@@ -157,13 +178,15 @@ namespace FoodOrder.API.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
+        [ValidTokenRequirement]
         public void Post([FromBody] string value)
         {
         }
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        //[Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Put(string id, [FromBody] UserUpdateRequest request)
         {
             var result = await _userService.EditUser(id, request);
@@ -177,7 +200,8 @@ namespace FoodOrder.API.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        //[Authorize(Roles = PolicyType.Admin)]
+        [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _userService.DeleteUser(id);

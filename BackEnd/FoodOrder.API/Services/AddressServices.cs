@@ -127,6 +127,7 @@ namespace FoodOrder.API.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return new FailedResult<bool>("Some thing went wrong!");
             }
             return new SuccessedResult<bool>(true);

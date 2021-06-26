@@ -15,6 +15,7 @@ namespace FoodOrder.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [ValidTokenRequirement]
     public class NotificationsController : Controller
     {
         private readonly NotificationServices _notiServices;
