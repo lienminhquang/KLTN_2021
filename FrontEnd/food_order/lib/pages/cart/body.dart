@@ -188,7 +188,7 @@ class _BodyState extends State<Body> {
                                   ? "Không tìm thấy địa chỉ nào!"
                                   : addressVM.addressString,
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             )),
@@ -274,13 +274,7 @@ class _BodyState extends State<Body> {
                   color: Color(0xFFFFE6E6),
                 ),
                 child: Row(
-                  children: [
-                    Spacer(),
-                    Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    )
-                  ],
+                  children: [Spacer(), Icon(Icons.delete, color: Colors.red)],
                 )),
             onDismissed: (direction) async {
               context

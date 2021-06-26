@@ -74,12 +74,15 @@ class CheckoutCart extends StatelessWidget {
                   ),
                 ),
                 Container(
-                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
                     child: promotionCode == null
                         ? Container()
                         : Row(
                             children: [
-                              Text(promotionCode),
+                              Text(
+                                promotionCode,
+                                style: TextStyle(fontSize: 12),
+                              ),
                               IconButton(
                                   onPressed: () {
                                     context

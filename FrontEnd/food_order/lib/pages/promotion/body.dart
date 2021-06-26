@@ -93,7 +93,7 @@ class UseableItemPromotion extends StatelessWidget {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.white),
-                              padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+                              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
                               child: Column(children: [
                                 Text(_promotionVM.name,
                                     style: TextStyle(
@@ -254,11 +254,11 @@ class DisableItemPromotion extends StatelessWidget {
                           children: [
                             Container(
                               width: double.infinity,
-                              //height: 200,
+                              //height: 400,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.white),
-                              padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
                               child: Column(children: [
                                 Text(_promotionVM.name,
                                     style: TextStyle(
