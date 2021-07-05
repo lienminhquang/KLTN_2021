@@ -345,3 +345,5 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 bot/venv/Lib/site-packages/aio_pika/robust_exchange.py
+
+bot/bot/data/vietnamese_fasttext_model/*

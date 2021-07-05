@@ -5,6 +5,12 @@ session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 intents:
+- ask_find_most_discounted_food:
+    use_entities: true
+- ask_find_best_selling_food:
+    use_entities: true
+- inform:
+    use_entities: true
 - greet:
     use_entities: true
 - goodbye:
@@ -21,37 +27,33 @@ intents:
     use_entities: true
 - ask_find_promotion:
     use_entities: true
-- ask_check_dishes:
-    use_entities: true
-- ask_cancel_dishes:
-    use_entities: true
-- inform_find_food_category:
-    use_entities: true
 - ask_name:
     use_entities: true
 - explain:
-    use_entities: true
-- out_of_category:
     use_entities: true
 - affirm:
     use_entities: true
 - deny:
     use_entities: true
+- check_order_status:
+    use_entities: true
+- cancel_order:
+    use_entities: true
 entities:
-- category
+- food_name
 slots:
-  category:
+  food_name:
     type: rasa.shared.core.slots.TextSlot
     initial_value: null
-    auto_fill: true
-    influence_conversation: true
+    auto_fill: false
+    influence_conversation: false
   requested_slot:
     type: rasa.shared.core.slots.CategoricalSlot
     initial_value: null
     auto_fill: true
     influence_conversation: true
     values:
-    - category
+    - food_name
 responses:
   utter_greet:
   - text: Chào bạn. Tôi có thể giúp gì cho bạn.
@@ -59,40 +61,59 @@ responses:
   - text: Tạm biệt! Chúc bạn một ngày tốt lành
   utter_bot_challenge:
   - text: Vâng, Tôi là một ChatBot
-  utter_out_of_scope:
-  - text: Xin lỗi, tôi không hiểu. Bạn có thể nhắc lại được không ?
+  utter_ask_rephrase:
+  - text: Xin lỗi, tôi không hiểu. Bạn có thể diễn đạt lại không?
+  utter_default:
+  - text: Xin lỗi, tôi chưa hiểu ý bạn. Bạn có thể diễn đạt lại không?
   utter_thanks:
   - text: Vâng, không có gì !
   utter_ask_func:
   - text: |-
       Tôi có thể giúp bạn:
-      - tìm món
-      - tìm khuyến mãi
-      - kiểm tra đơn hàng
-      - hủy món
-  utter_ask_find_food:
+      - Tìm món
+      - Tìm món đang giảm giá nhiều nhất
+      - Tìm món bán chạy nhất
+      - Kiểm tra trạng thái đơn hàng
+  utter_ask_food_name:
+  - text: Bạn muốn tìm món tên gì?
+  utter_list_category_and_ask_category:
   - text: |-
-      bạn muốn tìm món nào:
-      - bò
-      - trà sữa
-      - cơm
-      - bánh ngọt
+      Chúng tôi đang phục vụ các loại đồ ăn dưới đây:
+      {list_category}
+      Bạn muốn tìm các món thuộc loại nào?
   utter_ask_find_promotion:
   - text: hiện nay đang có khuyến mãi 50% tất cả các món ăn
-  utter_ask_check_dishes:
-  - text: đang kiểm tra món
+  utter_list_order_status:
+  - text: |-
+      Danh sách các đơn hàng đang thực hiện của bạn:
+      {list_order}
+  utter_internal_error:
+  - text: |-
+      Xin lỗi!. Hệ thống đang gặp sự cố ngoài ý muốn :(. 
+      Xin vui lòng thực hiện lại sau.
   utter_ask_cancel_dishes:
   - text: đang hủy món
   utter_ask_name:
   - text: Tôi tên là Amee !
-  utter_explain_find_food:
-  - text: Tôi muốn biết để có thể tìm món đúng cho bạn ^^
+  utter_explain_food_name:
+  - text: Tôi cần biết tên món để có thể tìm giúp bạn ^^
   utter_ask_continue_find_food:
   - text: Bạn muốn tiếp tục tìm món không?
   utter_out_of_category:
   - text: Dạ không! hiện tại cửa hàng chỉ có các món Bò, Cơm, Trà sữa, Bánh ngọt thôi ạ
+  utter_finding_food:
+  - text: Chờ một chút nhé. Tôi đang tìm {food_name}
 actions:
 - action_find_food_category
 - action_default_fallback
-forms: {}
+- action_check_order_status
+- action_find_food
+- action_find_most_discounted_food
+- action_find_best_selling_food
+forms:
+  find_food_form:
+    required_slots:
+      food_name:
+      - entity: food_name
+        type: from_entity
 e2e_actions: []

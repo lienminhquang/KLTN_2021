@@ -1,136 +1,130 @@
 version: "2.0"
 
 stories:
+  # - story: find food happy path
+  #   steps:
+  #     - intent: greet
+  #     - action: utter_greet
+  #     - intent: ask_func
+  #     - action: utter_ask_func
+  #     - intent: ask_find_food
+  #     - action: utter_ask_how_to_find_food
+  #     - intent: confirm_find_food_by_name
+  #     - action: utter_ask_food_name
+  #     - intent: find_food_by_name
+  #     - action: action_find_food_by_name
+  #     - intent: thanks
+  #     - action: utter_thanks
 
-- story: find food happy path
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_func
-  - action: utter_ask_func
-  - intent: ask_find_food
-  - action: utter_ask_find_food
-  - intent: inform_find_food_category
-  - action: action_find_food_category
-  - intent: thanks
-  - action: utter_thanks
+  # - story: find promotion
+  #   steps:
+  #     - intent: greet
+  #     - action: utter_greet
+  #     - intent: ask_find_promotion
+  #     - action: utter_ask_find_promotion
+  #     - intent: thanks
+  #     - action: utter_thanks
 
-- story: find promotion
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_find_promotion
-  - action: utter_ask_find_promotion
-  - intent: thanks
-  - action: utter_thanks
+  # - story: check order status
+  #   steps:
+  #     - intent: greet
+  #     - action: utter_greet
+  #     - intent: check_order_status
+  #     - action: action_check_order_status
+  #     - intent: thanks
+  #     - action: utter_thanks
 
-- story: check
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_check_dishes
-  - action: utter_ask_check_dishes
-  - intent: thanks
-  - action: utter_thanks
+  # - story: cancel order
+  #   steps:
+  #     - intent: greet
+  #     - action: utter_greet
+  #     - intent: cancel_order
+  #     - action: utter_ask_cancel_dishes
+  #     - intent: thanks
+  #     - action: utter_thanks
 
-- story: cancel
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_cancel_dishes
-  - action: utter_ask_cancel_dishes
-  - intent: thanks
-  - action: utter_thanks
+  - story: food_name interjection
+    steps:
+      - intent: ask_find_food
+      - action: find_food_form
+      - active_loop: find_food_form
+      - slot_was_set:
+          - requested_slot: food_name
+      - intent: explain
+      - action: utter_explain_food_name
+      - action: find_food_form
 
-- story: find food - User Interjections
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_func
-  - action: utter_ask_func
-  - intent: ask_find_food
-  - action: utter_ask_find_food
-  - slot_was_set:
-    - requested_slot: category
-  - intent: explain
-  - action: utter_explain_find_food
-  - action: utter_ask_find_food
-  - intent: inform_find_food_category
-  - action: action_find_food_category
-  - intent: thanks
-  - action: utter_thanks
+    # - story: find food - Switch to find promotions + stop
+    #   steps:
+    #     - intent: greet
+    #     - action: utter_greet
+    #     - intent: ask_find_food
+    #     - action: utter_ask_find_food
+    #     - intent: ask_find_promotion
+    #     - action: utter_ask_find_promotion
+    #     - action: utter_ask_continue_find_food
+    #     - intent: deny
+    #     - action: utter_goodbye
 
-- story: find food - Switch to find promotions + stop
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_find_food
-  - action: utter_ask_find_food
-  - intent: ask_find_promotion
-  - action: utter_ask_find_promotion
-  - action: utter_ask_continue_find_food
-  - intent: deny
-  - action: utter_goodbye
+    # - story: find food - Switch to find promotions + continue
+    #   steps:
+    #     - intent: greet
+    #     - action: utter_greet
+    #     - intent: ask_find_food
+    #     - action: utter_ask_find_food
+    #     - intent: ask_find_promotion
+    #     - action: utter_ask_find_promotion
+    #     - action: utter_ask_continue_find_food
+    #     - intent: affirm
+    #     - action: utter_ask_find_food
+    #     - slot_was_set:
+    #         - requested_slot: category
+    #     - intent: explain
+    #     - action: utter_explain_find_food
+    #     - action: utter_ask_find_food
+    #     - intent: inform_find_food_category
+    #     - action: action_find_food_category
+    #     - intent: thanks
+    #     - action: utter_thanks
+    #     - action: utter_goodbye
 
-- story: find food - Switch to find promotions + continue
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_find_food
-  - action: utter_ask_find_food
-  - intent: ask_find_promotion
-  - action: utter_ask_find_promotion
-  - action: utter_ask_continue_find_food
-  - intent: affirm
-  - action: utter_ask_find_food
-  - slot_was_set:
-    - requested_slot: category
-  - intent: explain
-  - action: utter_explain_find_food
-  - action: utter_ask_find_food
-  - intent: inform_find_food_category
-  - action: action_find_food_category
-  - intent: thanks
-  - action: utter_thanks
-  - action: utter_goodbye
+    # - story: out of category
+    #   steps:
+    #     - intent: greet
+    #     - action: utter_greet
+    #     - intent: ask_find_food
+    #     - action: utter_ask_find_food
+    #     - intent: out_of_category
+    #     - action: utter_out_of_category
+    #     - intent: thanks
+    #     - action: utter_thanks
+    #     - action: utter_goodbye
 
-- story: out of category
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_find_food
-  - action: utter_ask_find_food
-  - intent: out_of_category
-  - action: utter_out_of_category
-  - intent: thanks
-  - action: utter_thanks
-  - action: utter_goodbye
+    # - story: out of category stop
+    #   steps:
+    #     - intent: greet
+    #     - action: utter_greet
+    #     - intent: ask_find_food
+    #     - action: utter_ask_find_food
+    #     - intent: out_of_category
+    #     - action: utter_out_of_category
+    #     - action: utter_ask_continue_find_food
+    #     - intent: deny
+    #     - action: utter_goodbye
 
-- story: out of category stop
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_find_food
-  - action: utter_ask_find_food
-  - intent: out_of_category
-  - action: utter_out_of_category
-  - action: utter_ask_continue_find_food
-  - intent: deny
-  - action: utter_goodbye
-
-- story: out of category continue
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: ask_find_food
-  - action: utter_ask_find_food
-  - intent: out_of_category
-  - action: utter_out_of_category
-  - action: utter_ask_continue_find_food
-  - intent: affirm
-  - action: utter_ask_find_food
-  - intent: inform_find_food_category
-  - action: action_find_food_category
-  - intent: thanks
-  - action: utter_thanks
-  - action: utter_goodbye
+    # - story: out of category continue
+    #   steps:
+    #     - intent: greet
+    #     - action: utter_greet
+    #     - intent: ask_find_food
+    #     - action: utter_ask_find_food
+    #     - intent: out_of_category
+    #     - action: utter_out_of_category
+    #     - action: utter_ask_continue_find_food
+    #     - intent: affirm
+    #     - action: utter_ask_find_food
+    #     - intent: inform_find_food_category
+    #     - action: action_find_food_category
+    #     - intent: thanks
+    #     - action: utter_thanks
+    #     - action: utter_goodbye

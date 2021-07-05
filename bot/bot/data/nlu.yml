@@ -12,12 +12,46 @@ nlu:
 - intent: bot_challenge
   examples: |
     - bạn là bot à
+    - bạn là ai?
+    - bạn là gì?
 - intent: thanks
   examples: |
     - cảm ơn
+    - thanks
+    - đa tạ
 - intent: ask_func
   examples: |
     - bạn làm được gì
+    - bạn có thể làm gì?
+    - chức năng của bạn là gì?
+    - bạn có chức năng gì?
+- intent: ask_find_most_discounted_food
+  examples: |
+    - tìm món giảm giá
+    - tìm món giảm giá nhiều nhất
+    - món nào đang giảm giá
+    - món nào đang giảm giá nhiều nhất
+    - có món nào đang giảm giá không?
+    - món giảm giá
+- intent: ask_find_best_selling_food
+  examples: |
+    - tìm món bán chạy
+    - tìm món bán chạy nhất
+    - món nào đang bán chạy
+    - món nào đang bán chạy nhiều nhất
+    - có món nào đang bán chạy
+    - món bán chạy
+- intent: inform
+  examples: |
+    - [trà sữa](food_name)
+    - [bánh](food_name)
+    - [pizza](food_name)
+    - món [trà sữa](food_name)
+    - món [bánh](food_name)
+    - món [pizza](food_name)
+    - món [burger](food_name) đi
+    - món [pizza](food_name) đi
+    - món [bánh](food_name) đi
 - intent: ask_find_food
   examples: |
     - tôi muốn tìm món
@@ -25,6 +59,15 @@ nlu:
     - tìm món
     - có món gì nhỉ
     - có món gì
+    - có món [trà sữa](food_name) không?
+    - có món [bánh](food_name) không?
+    - có món [pizza](food_name) không?
+    - có [trà sữa](food_name) không?
+    - có [bánh](food_name) không?
+    - có [pizza](food_name) không?
+    - có bán [trà sữa](food_name) không?
+    - có bán [bánh](food_name) không?
+    - có bán [pizza](food_name) không?
 - intent: ask_find_promotion
   examples: |
     - hiện tại có khuyến mãi gì vậy
@@ -32,7 +75,7 @@ nlu:
     - đang có ưu đãi gì
     - đang có khuyến mãi gì
     - khuyến mãi
-- intent: ask_check_dishes
+- intent: check_order_status
   examples: |
     - tôi muốn kiểm tra đơn hàng
     - kiểm tra đơn hàng
@@ -40,9 +83,7 @@ nlu:
     - check dùm tôi đơn hàng
     - kiểm tra đơn hàng giúp tôi
     - check đơn
-    - check món giúp
-    - kiểm tra món giúp
-- intent: ask_cancel_dishes
+- intent: cancel_order
   examples: |
     - hủy đơn
     - tôi muốn hủy đơn
@@ -50,41 +91,18 @@ nlu:
     - tôi muốn hủy món
     - hủy đơn như thế nào nhỉ
     - hủy món giúp tôi với
-- intent: inform_find_food_category
-  examples: |
-    - [món bò](category)
-    - [cơm](category)
-    - [trà sữa](category)
-    - [bánh ngọt](category)
-    - tôi muốn tìm [món bò](category)
-    - tôi muốn đặt [trà sữa](category)
-    - có [món bò](category) nào nhỉ
-    - có loại [trà sữa](category) nào nhỉ
-    - có loại [cơm](category) nào
-    - có những [món cơm](category) nào
-    - [cơm](category) như thế nào
-    - [bánh ngọt](category) như thế nào
-    - cho tôi thông tin [bánh ngọt](category)
-    - cho tôi thông tin [bò](category)
-    - [trà sữa](category) có loại nào
-    - tôi muốn mua [trà sữa](category)
-    - muốn mua [bánh ngọt](category)
-    - muốn mua [cơm](category)
-    - muốn mua [món bò](category)
-    - tôi muốn tìm [trà sữa](category)
-    - muốn tìm [bánh ngọt](category)
-    - muốn tìm [cơm](category)
 - intent: ask_name
   examples: |
     - bạn tên gì nhỉ
     - tên bạn là gì
 - intent: explain
   examples: |
+    - tại sao?
     - tại sao tôi phải trả lời
     - bạn hỏi chi vậy
     - tại sao lại hỏi
     - hỏi chi
-    - sao phải trả lời chi 
+    - sao phải trả lời chi
 - intent: deny
   examples: |
     - không
@@ -99,31 +117,3 @@ nlu:
     - có nha
     - yes
     - đồng ý
-- intent: out_of_category
-  examples: |
-    - còn món nào khác không
-    - ngoài mấy món này còn món nào không
-    - có món khác không
-    - còn món nào nữa 
-    - còn gì khác không
-##SYNONYMS
-- synonym: bo
-  examples: |
-    - bò
-    - món bò
-    - crows
-    - beafsteak
-- synonym: com
-  examples: |
-    - cơm
-    - món cơm
-    - rice
-- synonym: trasua
-  examples: |
-    - trà sữa
-    - milk tea
-- synonym: banhngot
-  examples: |
-    - bánh ngọt
-    - cake
-    - cakes

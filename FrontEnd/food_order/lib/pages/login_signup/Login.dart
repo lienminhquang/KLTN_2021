@@ -160,8 +160,8 @@ class _LoginPageState extends State<LoginPage> {
                           shadowColor: Colors.blueAccent,
                           color: Colors.blue,
                           elevation: 7.0,
-                          child: GestureDetector(
-                            onTap: () {
+                          child: TextButton(
+                            onPressed: () {
                               login(context);
                             },
                             child: Center(

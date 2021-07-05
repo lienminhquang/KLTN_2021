@@ -139,6 +139,46 @@ namespace FoodOrder.API.Services
 
         }
 
+        public ApiResult<List<OrderVM>> GetProcessingByUserID(string userID)
+        {
+            var orders = (from o in _dbContext.Orders
+                          where o.AppUserID.ToString() == userID
+                          select o)
+                    .Include(a => a.OrderDetails)
+                    .Include(a => a.OrderStatus)
+                    .ToList();
+
+
+            var orderVMs = orders.Where(c => c.OrderStatusID != OrderStatus.DaHuy && c.OrderStatusID != OrderStatus.DaNhan)
+                .Select(c => _mapper.Map<Order, OrderVM>(c)).ToList();
+            for (int i = 0; i < orderVMs.Count(); i++)
+            {
+                orderVMs[i].OrderStatusVM = _mapper.Map<OrderStatusVM>(orders[i].OrderStatus);
+                orderVMs[i].OrderDetailVMs = orders[i].OrderDetails.Select(f => _mapper.Map<OrderDetailVM>(f)).ToList();
+                foreach (var detail in orderVMs[i].OrderDetailVMs)
+                {
+                    //detail.OrderVM = _mapper.Map<OrderVM>(_dbContext.Orders.Find(detail.OrderID));
+                    detail.FoodVM = _mapper.Map<FoodVM>(_dbContext.Foods.Find(detail.FoodID));
+                }
+            }
+
+            orderVMs.Sort(new Comparison<OrderVM>((a, b) =>
+            {
+                if (a.CreatedDate == b.CreatedDate)
+                {
+                    return 0;
+                }
+                if (a.CreatedDate > b.CreatedDate)
+                {
+                    return -1;
+                }
+                return 1;
+            }));
+
+            return new SuccessedResult<List<OrderVM>>(orderVMs);
+
+        }
+
 
         public async Task<ApiResult<OrderVM>> Create(OrderCreateVM vm)
         {

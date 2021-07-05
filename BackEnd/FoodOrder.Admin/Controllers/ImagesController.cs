@@ -62,7 +62,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CategoriesController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateAsync([FromForm] ImageCreateVM categoryCreateVM)
         {
@@ -108,7 +108,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CategoriesController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> EditAsync(int id, [FromForm] ImageEditVM vm)
         {
@@ -151,7 +151,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CategoriesController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteAsync(int id, ImageVM categoryVM)
         {
             if (!await this.ValidateTokenInCookie(_adminUserService))

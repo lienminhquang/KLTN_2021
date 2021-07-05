@@ -104,6 +104,65 @@ namespace FoodOrder.API.Services
             // get sale campaign for each food
             foreach (var item in created.Items)
             {
+                var ratings = from r in _dbContext.Ratings
+                              where r.FoodID == item.ID
+                              select r;
+                if (ratings != null && ratings.Count() > 0)
+                {
+                    item.AgvRating = ratings.Average(a => a.Star);
+                    item.TotalRating = ratings.Count();
+                }
+
+
+                var query = from cf in _dbContext.SaleCampaignFoods
+                            join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
+                            where (cf.FoodID == item.ID)
+                            && (c.Enabled == true)
+                            && (c.StartDate <= DateTime.Now)
+                            && (c.EndDate >= DateTime.Now)
+                            select c;
+                query = query.OrderBy(x => x.Priority);
+                if (query.Count() > 0)
+                {
+                    item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(query.First());
+                }
+                else
+                {
+                    item.SaleCampaignVM = null;
+                }
+            }
+
+            return new SuccessedResult<PaginatedList<FoodVM>>(created);
+        }
+
+        public ApiResult<PaginatedList<FoodVM>> GetMostDiscounted(PagingRequestBase request)
+        {
+            var food = from f in _dbContext.Foods
+                       join fsc in _dbContext.SaleCampaignFoods
+                       on f.ID equals fsc.FoodID
+                       join sc in _dbContext.SaleCampaigns
+                       on fsc.SaleCampaignID equals sc.ID
+                       where (sc.Enabled == true)
+                            && (sc.StartDate <= DateTime.Now)
+                            && (sc.EndDate >= DateTime.Now)
+                       select new { f, sc };
+            food.ToList().Sort( (x ,y) => { return (int)(y.sc.Percent - x.sc.Percent); });
+            var listFoodVM = food.Select(x => _mapper.Map<FoodVM>(x.f)).ToList();
+
+            var created = PaginatedList<FoodVM>.CreateFromList(listFoodVM, request.PageNumber ?? 1, 5);
+
+            // get sale campaign for each food
+            foreach (var item in created.Items)
+            {
+                var ratings = from r in _dbContext.Ratings
+                              where r.FoodID == item.ID
+                              select r;
+                if (ratings != null && ratings.Count() > 0)
+                {
+                    item.AgvRating = ratings.Average(a => a.Star);
+                    item.TotalRating = ratings.Count();
+                }
+
                 var query = from cf in _dbContext.SaleCampaignFoods
                             join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
                             where (cf.FoodID == item.ID)

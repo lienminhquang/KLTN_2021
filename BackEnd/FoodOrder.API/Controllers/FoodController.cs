@@ -58,6 +58,18 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("most_discounted")]
+        [AllowAnonymous]
+        public IActionResult GetMostDiscounted()
+        {
+            var result = _foodServices.GetMostDiscounted(new PagingRequestBase());
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpPost]
         [Authorize(Roles = PolicyType.Admin + "," + PolicyType.Manager)]
         [Consumes("multipart/form-data")]

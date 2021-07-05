@@ -98,7 +98,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateAsync([FromForm] FoodCreateVM createVM)
         {
@@ -164,7 +164,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> EditAsync([FromForm] FoodEditVM editVM)
         {
@@ -222,7 +222,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete(int id)
         {

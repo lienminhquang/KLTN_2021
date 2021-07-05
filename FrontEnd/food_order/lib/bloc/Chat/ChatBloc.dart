@@ -72,7 +72,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _socket.on('bot_uttered', _onBotUttered);
   }
   List<types.Message> _messages = [];
-  DialogflowGrpcV2Beta1? dialogflow;
+  //DialogflowGrpcV2Beta1? dialogflow;
   CategoriesServices _categoriesServices = CategoriesServices();
   ChatBotServices _chatBotServices = ChatBotServices();
   var _user = const types.User(
@@ -95,36 +95,50 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           .build());
 
   void _onBotUttered(data) {
-    var map = data as Map<String, dynamic>;
-    print("Bot uttered: " + map.toString());
-    var res = MessageData.fromJson(map);
+    print(data);
+    if (data is Map<String, dynamic>) {
+      if (data['list_food'] != null) {
+        var list_food = data['list_food'];
+        print("Bot uttered list food: ");
+        print(list_food);
+        var message = types.CustomMessage(
+            author: _bot,
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            id: _randomString(),
+            metadata: {'type': 'list_food', 'payload': list_food});
+        _messages.insert(0, message);
+      } else {
+        var map = data;
+        print("Bot uttered: " + map.toString());
+        var res = MessageData.fromJson(map);
 
-    if (res.text != null && res.attachment == null) {
-      final textMessage = types.TextMessage(
-        author: _bot,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        id: _randomString(),
-        text: res.text!,
-      );
-      _messages.insert(0, textMessage);
-    } else {
-      if (res.attachment!['type'] == 'image') {
-        final imageMessage = types.ImageMessage(
-          author: _bot,
-          createdAt: DateTime.now().millisecondsSinceEpoch,
-          //height: image.height.toDouble(),
-          id: _randomString(),
-          name: "image",
-          size: 0,
-          uri: res.attachment!['payload']['src'],
-          //width: image.width.toDouble(),
-        );
-        _messages.insert(0, imageMessage);
+        if (res.text != null && res.attachment == null) {
+          final textMessage = types.TextMessage(
+            author: _bot,
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            id: _randomString(),
+            text: res.text!,
+          );
+          _messages.insert(0, textMessage);
+        } else {
+          if (res.attachment!['type'] == 'image') {
+            final imageMessage = types.ImageMessage(
+              author: _bot,
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              //height: image.height.toDouble(),
+              id: _randomString(),
+              name: "image",
+              size: 0,
+              uri: res.attachment!['payload']['src'],
+              //width: image.width.toDouble(),
+            );
+            _messages.insert(0, imageMessage);
+          }
+        }
       }
+      // todo may be we need the difference event here
+      this.add(ChatStartedEvent());
     }
-
-    // todo may be we need the difference event here
-    this.add(ChatStartedEvent());
   }
 
   String _randomString() {

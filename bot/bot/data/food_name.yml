@@ -1,0 +1,37 @@
+version: "2.0"
+nlu:
+- lookup: food_name
+  examples: |
+    - vitamin Day
+    - chè dưỡng nhan
+    - bạc xỉu
+    - trà sữa chân trâu
+    - matcha sữa dừa
+    - dragon Fruit Yakult
+    - bánh phô mai tươi Đài Loan
+    - bánh cuộn cam tươi
+    - bánh quy phô mai hạnh nhân
+    - bánh bông lan bơ chanh
+    - bò tắm phô mai
+    - Burger bò nướng khoai tây lát
+    - Burger siêu nhân phô mai
+    - Burger bò khoai giòn tràn phô mai 
+    - Burger bò phô mai
+    - pizza Hải Sản Xốt Mayonnaise - Ocean Mania
+    - pizza Thập Cẩm
+    - pizza 5 Loại Thịt Thượng Hạng - Meat Lovers
+    - pizza Xúc Xích Ý Truyền Thống
+    - pizza Bò & Tôm Nướng Kiểu Mỹ
+    - pizza Gà Xốt Tương Kiểu Nhật
+    - pizza
+    - bánh
+    - chè
+    - burger
+    - trà sữa
+    - gà
+    - gà rán
+    - phô mai
+    - trà
+    - trà đào
+    - trà vải
+    - trà chanh

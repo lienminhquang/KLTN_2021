@@ -75,7 +75,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync([FromForm] SaleCampaignCreateVM createVM)
         {
             if (!await this.ValidateTokenInCookie(_adminUserService))
@@ -137,8 +137,8 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync([FromForm] SaleCampaignEditVM editVM)
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditAsync(int id, [FromForm] SaleCampaignEditVM editVM)
         {
             if (!await this.ValidateTokenInCookie(_adminUserService))
             {
@@ -187,7 +187,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete(int id)
         {

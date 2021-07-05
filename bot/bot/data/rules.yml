@@ -1,30 +1,63 @@
 version: "2.0"
 
 rules:
+  - rule: say hello anytime
+    steps:
+      - intent: greet
+      - action: utter_greet
+  - rule: Say goodbye anytime the user says goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+  - rule: Say 'I am a bot' anytime the user challenges
+    steps:
+      - intent: bot_challenge
+      - action: utter_bot_challenge
+  - rule: Ask the user to rephrase whenever they send a message with low NLU confidence
+    steps:
+      - intent: nlu_fallback
+      - action: utter_ask_rephrase
+  - rule: ask func
+    steps:
+      - intent: ask_func
+      - action: utter_ask_func
+  - rule: ask name
+    steps:
+      - intent: ask_name
+      - action: utter_ask_name
 
-- rule: say hello anytime
-  steps:
-  - intent: greet
-  - action: utter_greet
-- rule: Say goodbye anytime the user says goodbye
-  steps:
-  - intent: goodbye
-  - action: utter_goodbye
-- rule: Say 'I am a bot' anytime the user challenges
-  steps:
-  - intent: bot_challenge
-  - action: utter_bot_challenge
-- rule: out_of_scope
-  steps:
-  - intent: nlu_fallback
-  - action: utter_out_of_scope
-- rule: ask func
-  steps:
-  - intent: ask_func
-  - action: utter_ask_func
-- rule: ask name
-  steps:
-  - intent: ask_name
-  - action: utter_ask_name
+  - rule: activate find food form
+    steps:
+      - intent: ask_find_food
+      - action: find_food_form
+      - active_loop: find_food_form
 
+  - rule: submit find food form
+    condition:
+    - active_loop: find_food_form
+    steps:
+      - action: find_food_form
+      - active_loop: null
+      - action: utter_finding_food
+      - action: action_find_food
 
+  - rule: find most discounted food
+    steps:
+      - intent: ask_find_most_discounted_food
+      - action: action_find_most_discounted_food
+
+  - rule: find best selling food
+    steps:
+      - intent: ask_find_best_selling_food
+      - action: action_find_best_selling_food
+
+  - rule: check order status
+    steps:
+      - intent: check_order_status
+      - action: action_check_order_status
+
+  # - rule: Two-stage-fallback
+  #   steps:
+  #     - intent: nlu_fallback
+  #     - action: action_two_stage_fallback
+  #     - active_loop: action_two_stage_fallback

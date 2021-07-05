@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,9 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:food_delivery/bloc/Chat/ChatBloc.dart';
 import 'package:food_delivery/bloc/Chat/ChatEvent.dart';
 import 'package:food_delivery/bloc/Chat/ChatState.dart';
+import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:dialogflow_grpc/dialogflow_grpc.dart';
@@ -86,12 +90,14 @@ class _ChatBodyState extends State<ChatBody> {
 
   Widget _loadedState(BuildContext context, ChatLoadedState state) {
     return Chat(
-      messages: state.messages,
-      onSendPressed: _handleSendPressed,
-      user: state.user,
-      showUserAvatars: true,
-      showUserNames: true,
-    );
+        messages: state.messages,
+        onSendPressed: _handleSendPressed,
+        user: state.user,
+        showUserAvatars: false,
+        showUserNames: true,
+        buildCustomMessage: (message) {
+          return buildCustomeMessage(message as types.CustomMessage);
+        });
   }
 
   void _handleSendPressed(types.PartialText message) {
@@ -163,5 +169,217 @@ class _ChatBodyState extends State<ChatBody> {
       }
       throw "Unknow state!";
     });
+  }
+
+  Widget buildCustomeMessage(types.CustomMessage message) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 16,
+      ),
+      child: _messageContent(message, context),
+    );
+  }
+
+  Widget _messageContent(types.CustomMessage message, BuildContext context) {
+    var list_food = message.metadata!['payload'] as List;
+    return Container(
+      height: 100.0 * list_food.length,
+      child: ListView.builder(
+          //scrollDirection: Axis.vertical,
+          itemCount: list_food.length,
+          itemBuilder: (BuildContext context, int index) {
+            return FoodCard(
+              foodVM: FoodVM.fromJson(list_food[index]),
+              bottomBorder: BorderSide(width: 1.0, color: Colors.grey.shade300),
+            );
+          }),
+    );
+    // final color = getUserAvatarNameColor(message.author,
+    //     InheritedChatTheme.of(context).theme.userAvatarNameColors);
+    // final name = getUserName(message.author);
+
+    // return Column(
+    //   crossAxisAlignment: CrossAxisAlignment.start,
+    //   children: [
+    //     if (showName)
+    //       Padding(
+    //         padding: const EdgeInsets.only(bottom: 6.0),
+    //         child: Text(
+    //           name,
+    //           maxLines: 1,
+    //           overflow: TextOverflow.ellipsis,
+    //           style: InheritedChatTheme.of(context)
+    //               .theme
+    //               .userNameTextStyle
+    //               .copyWith(color: color),
+    //         ),
+    //       ),
+    //     SelectableText(
+    //       message.text,
+    //       style: user.id == message.author.id
+    //           ? InheritedChatTheme.of(context).theme.sentMessageBodyTextStyle
+    //           : InheritedChatTheme.of(context)
+    //               .theme
+    //               .receivedMessageBodyTextStyle,
+    //       textWidthBasis: TextWidthBasis.longestLine,
+    //     ),
+    //   ],
+    // );
+  }
+}
+
+class FoodCard extends StatelessWidget {
+  final FoodVM foodVM;
+  FoodCard({required this.foodVM, this.bottomBorder = BorderSide.none});
+  final BorderSide bottomBorder;
+
+  Widget _priceWidget(FoodVM foodVM) {
+    if (foodVM.saleCampaignVM != null) {
+      double discount = foodVM.saleCampaignVM!.percent;
+      return Row(
+        children: [
+          Text(
+            AppConfigs.toPrice(foodVM.price * (100 - discount) / 100) + "  ",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          ),
+          Text(
+            AppConfigs.toPrice(foodVM.price),
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.lineThrough,
+                color: Colors.grey),
+          ),
+        ],
+      );
+    }
+
+    return Row(
+      children: [
+        Text(
+          AppConfigs.toPrice(foodVM.price),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          //top: BorderSide(width: 1.0, color: Color(0xFFFFFFFF)),
+          //left: BorderSide(width: 1.0, color: Color(0xFFFFFFFF)),
+          // right: BorderSide(width: 1.0, color: Color(0xFF000000)),
+          bottom: bottomBorder,
+        ),
+      ),
+      padding: const EdgeInsets.all(0.0),
+      child: GestureDetector(
+        onTap: () async {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FoodDetail(
+                        foodID: foodVM.id,
+                        promotionID: null,
+                      )));
+        },
+        child: Container(
+          //height: 80,
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                    child: Stack(children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
+                    ),
+                  ),
+                ])),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                width: 130,
+                height: 100,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 10, 5, 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          foodVM.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: _priceWidget(foodVM)),
+                              Container(
+                                height: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      //width: 110,
+                                      //color: Colors.white38,
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                            size: 18,
+                                          ),
+                                          Text(
+                                            "${foodVM.agvRating.toStringAsPrecision(2)}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black),
+                                          ),
+                                          Text(
+                                            " (${foodVM.totalRating})",
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

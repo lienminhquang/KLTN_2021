@@ -1,16 +1,17 @@
-
 language: vi
 
 pipeline:
-  - name: WhitespaceTokenizer
+  - name: components.VietnameseTokenizer.VietnameseTokenizer
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
-  - name: CRFEntityExtractor
   - name: CountVectorsFeaturizer
     analyzer: "char_wb"
     min_ngram: 1
     max_ngram: 4
+  # - name: rasa_nlu_examples.featurizers.dense.FastTextFeaturizer
+  #   cache_dir: "data/vietnamese_fasttext_model"
+  #  file: "cc.vi.300.bin"
   - name: "DIETClassifier"
     epochs: 100
     constrain_similarities: true
@@ -19,20 +20,19 @@ pipeline:
     epochs: 100
     constrain_similarities: true
   - name: FallbackClassifier
-    threshold: 0.8
+    threshold: 0.7
     ambiguity_threshold: 0.1
-  # - name: DucklingEntityExtractor
-  #   dimensions: ["number"]
-  #   url: "http://localhost:8000"
-
 
 policies:
   - name: MemoizationPolicy
+   
   - name: RulePolicy
     core_fallback_threshold: 0.4
     core_fallback_action_name: "action_default_fallback"
     enable_fallback_prediction: True
+    
   - name: TEDPolicy
     max_history: 10
     epochs: 100
     constrain_similarities: true
+    #model_confidence: linear_norm

@@ -74,6 +74,28 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("processing/user")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
+        public async Task<IActionResult> GetProcessingByUserID([FromQuery] string userID)
+        {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+
+                if (userIDInClaim != userID)
+                {
+                    return Forbid();
+                }
+            }
+
+            var result = _orderServices.GetProcessingByUserID(userID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpPost]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         public async Task<IActionResult> Create([FromBody] OrderCreateVM createVM)
