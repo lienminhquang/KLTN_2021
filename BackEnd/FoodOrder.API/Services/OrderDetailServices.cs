@@ -43,7 +43,7 @@ namespace FoodOrder.API.Services
 
             odVMs = Core.Helpers.Utilities<OrderDetail>.Sort(odVMs, request.SortOrder, "FoodID");
 
-            var created = await PaginatedList<OrderDetailVM>.CreateAsync(odVMs.Select(f => _mapper.Map<OrderDetail, OrderDetailVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<OrderDetailVM>.CreateAsync(odVMs.Select(f => _mapper.Map<OrderDetail, OrderDetailVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<OrderDetailVM>>(created);
         }

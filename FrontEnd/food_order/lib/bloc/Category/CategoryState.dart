@@ -12,8 +12,11 @@ class CategoryLoadedState extends CategoryState {
   //CategoryLoadedState(this.listCategory);
 
   final CategoryVM categoryVM;
-  final List<FoodVM> listFood;
-  CategoryLoadedState(this.listFood, this.categoryVM);
+  final List<FoodVM> allFood;
+  final List<FoodVM> bestSelling;
+  final List<FoodVM> promoting;
+  CategoryLoadedState(
+      this.allFood, this.bestSelling, this.promoting, this.categoryVM);
 }
 
 class CategoryErrorState extends CategoryState {

@@ -456,7 +456,7 @@ namespace FoodOrder.API.Services
 
             users = Core.Helpers.Utilities<UserVM>.Sort(users, request.SortOrder, "Username");
 
-            var created = await PaginatedList<UserVM>.CreateAsync(users, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<UserVM>.CreateAsync(users, request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<UserVM>>(created);
         }

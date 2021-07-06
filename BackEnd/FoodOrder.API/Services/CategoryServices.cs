@@ -44,7 +44,7 @@ namespace FoodOrder.API.Services
 
             categoryVMs = Core.Helpers.Utilities<Category>.Sort(categoryVMs, request.SortOrder, "ID");
 
-            var created = await PaginatedList<CategoryVM>.CreateAsync(categoryVMs.Select(a => _mapper.Map<CategoryVM>(a)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<CategoryVM>.CreateAsync(categoryVMs.Select(a => _mapper.Map<CategoryVM>(a)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<CategoryVM>>(created);
         }
@@ -66,7 +66,115 @@ namespace FoodOrder.API.Services
                         select f;
 
 
-            var created = await PaginatedList<FoodVM>.CreateAsync(foods.Select(f => _mapper.Map<Food, FoodVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<FoodVM>.CreateAsync(foods.Select(f => _mapper.Map<Food, FoodVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
+
+            foreach (var item in created.Items)
+            {
+                // get rating
+                var ratings = from r in _dbContext.Ratings
+                              where r.FoodID == item.ID
+                              select r;
+                if (ratings != null && ratings.Count() > 0)
+                {
+                    item.AgvRating = ratings.Average(a => a.Star);
+                    item.TotalRating = ratings.Count();
+                }
+
+                // get sale campaign
+                var query = from fs in _dbContext.SaleCampaignFoods
+                            join f in _dbContext.Foods on fs.FoodID equals f.ID
+                            join sc in _dbContext.SaleCampaigns on fs.SaleCampaignID equals sc.ID
+                            where f.ID == item.ID
+                            select sc;
+                var list = query.OrderBy(x => x.Priority).ToList();
+                if (list.Count > 0)
+                {
+                    item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(list.First());
+                }
+            }
+
+            return new SuccessedResult<PaginatedList<FoodVM>>(created);
+        }
+
+        public async Task<ApiResult<PaginatedList<FoodVM>>> GetBestSellingInCategory(int id, PagingRequestBase request)
+        {
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
+            if (category == null)
+            {
+                return new FailedResult<PaginatedList<FoodVM>>("Category not found!");
+            }
+
+            var food = from f in _dbContext.Foods
+                       join od in _dbContext.OrderDetails on f.ID equals od.FoodID 
+                       join fc in _dbContext.FoodCategories on f.ID equals fc.FoodID
+                       where fc.CategoryID == id
+                       group f by f.ID into g
+                       
+                       select new { id = g.Key, count = g.Count()};
+
+           
+            var listFood = from f in _dbContext.Foods
+                           join fid in food on f.ID equals fid.id
+                           orderby fid.count descending
+                           select f;
+
+            var created = await PaginatedList<FoodVM>.CreateAsync(
+                listFood.Select(x => _mapper.Map<FoodVM>(x)), 
+                request.PageNumber ?? 1,
+                request.PageSize ?? -1);
+
+            // now the size of list is small
+            foreach (var item in created.Items)
+            {
+                // get rating
+                var ratings = from r in _dbContext.Ratings
+                              where r.FoodID == item.ID
+                              select r;
+                if (ratings != null && ratings.Count() > 0)
+                {
+                    item.AgvRating = ratings.Average(a => a.Star);
+                    item.TotalRating = ratings.Count();
+                }
+
+                // get sale campaign
+                var query = from fs in _dbContext.SaleCampaignFoods
+                            join f in _dbContext.Foods on fs.FoodID equals f.ID
+                            join sc in _dbContext.SaleCampaigns on fs.SaleCampaignID equals sc.ID
+                            where f.ID == item.ID
+                            select sc;
+                var list = query.OrderBy(x => x.Priority).ToList();
+                if (list.Count > 0)
+                {
+                    item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(list.First());
+                }
+            }
+
+            return new SuccessedResult<PaginatedList<FoodVM>>(created);
+        }
+
+        public async Task<ApiResult<PaginatedList<FoodVM>>> GetPromotingInCategory(int id, PagingRequestBase request)
+        {
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
+            if (category == null)
+            {
+                return new FailedResult<PaginatedList<FoodVM>>("Category not found!");
+            }
+
+            var food = from f in _dbContext.Foods
+                       join fsc in _dbContext.SaleCampaignFoods on f.ID equals fsc.FoodID
+                       join sc in _dbContext.SaleCampaigns on fsc.SaleCampaignID equals sc.ID
+                       where (sc.Enabled == true)
+                            && (sc.StartDate <= DateTime.Now)
+                            && (sc.EndDate >= DateTime.Now)
+                       select new { f, sc };
+            food = from f in food
+                   join fc in _dbContext.FoodCategories on f.f.ID equals fc.FoodID
+                   select f;
+
+            food.ToList().Sort((x, y) => { return (int)(y.sc.Percent - x.sc.Percent); });
+            var listFoodVM = food.Select(x => _mapper.Map<FoodVM>(x.f)).ToList();
+
+            var created = PaginatedList<FoodVM>.CreateFromList(listFoodVM, request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             foreach (var item in created.Items)
             {

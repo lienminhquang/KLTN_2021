@@ -46,13 +46,13 @@ namespace FoodOrder.API.Controllers
         // GET: api/<OrderStatusController>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber)
+        public async Task<IActionResult> Get(string sortOrder, string searchString, string currentFilter, int? pageNumber, int? pageSize)
         {
             var orderStatus = from c in m_dbContext.OrderStatuses select c;
 
             orderStatus = Core.Helpers.Utilities<OrderStatus>.Sort(orderStatus, sortOrder, "ID");
 
-            return Ok(new SuccessedResult<PaginatedList<OrderStatusVM>>(await PaginatedList<OrderStatusVM>.CreateAsync(orderStatus.Select(c => _mapper.Map<OrderStatusVM>(c)), pageNumber ?? 1, Core.Helpers.Configs.PageSize)));
+            return Ok(new SuccessedResult<PaginatedList<OrderStatusVM>>(await PaginatedList<OrderStatusVM>.CreateAsync(orderStatus.Select(c => _mapper.Map<OrderStatusVM>(c)), pageNumber ?? 1, pageSize ?? Core.Helpers.Configs.DefaultPageSize)));
 
         }
 

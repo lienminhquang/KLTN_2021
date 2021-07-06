@@ -35,7 +35,7 @@ namespace FoodOrder.API.Services
 
             //vMs = Core.Helpers.Utilities<Notification>.Sort(vMs, request.SortOrder, "TimeCreated");
 
-            var created = await PaginatedList<NotificationVM>.CreateAsync(vMs.Select(f => _mapper.Map<NotificationVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<NotificationVM>.CreateAsync(vMs.Select(f => _mapper.Map<NotificationVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<NotificationVM>>(created);
         }
@@ -68,7 +68,7 @@ namespace FoodOrder.API.Services
 
             //vMs = Core.Helpers.Utilities<Notification>.Sort(vMs, request.SortOrder, "TimeCreated");
 
-            var created = await PaginatedList<NotificationVM>.CreateAsync(vMs.Select(f => _mapper.Map<NotificationVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<NotificationVM>.CreateAsync(vMs.Select(f => _mapper.Map<NotificationVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<NotificationVM>>(created);
         }
@@ -83,7 +83,7 @@ namespace FoodOrder.API.Services
 
             //vMs = Core.Helpers.Utilities<Rating>.Sort(vMs, request.SortOrder, "TimeCreated");
 
-            var created = await PaginatedList<NotificationVM>.CreateAsync(vMs.Select(f => _mapper.Map<NotificationVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<NotificationVM>.CreateAsync(vMs.Select(f => _mapper.Map<NotificationVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<NotificationVM>>(created);
         }

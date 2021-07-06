@@ -48,7 +48,6 @@ namespace FoodOrder.Core.Helpers
                 return new PaginatedList<T>(items, count, pageIndex, pageSize);
             }
 
-
             return new PaginatedList<T>(await source.ToListAsync(), count, pageIndex, pageSize);
         }
 

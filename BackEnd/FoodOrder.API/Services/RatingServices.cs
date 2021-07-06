@@ -42,7 +42,7 @@ namespace FoodOrder.API.Services
 
             vMs = Core.Helpers.Utilities<Rating>.Sort(vMs, request.SortOrder, "TimeCreate_desc");
 
-            var created = await PaginatedList<RatingVM>.CreateAsync(vMs.Select(f => _mapper.Map<Rating, RatingVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<RatingVM>.CreateAsync(vMs.Select(f => _mapper.Map<Rating, RatingVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
             foreach (var item in created.Items)
             {
                 var order = _dbContext.Orders.Find(item.OrderID);
@@ -69,7 +69,7 @@ namespace FoodOrder.API.Services
 
             vMs = Core.Helpers.Utilities<Rating>.Sort(vMs, request.SortOrder, "FoodID");
 
-            var created = await PaginatedList<RatingVM>.CreateAsync(vMs.Select(f => _mapper.Map<Rating, RatingVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<RatingVM>.CreateAsync(vMs.Select(f => _mapper.Map<Rating, RatingVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<RatingVM>>(created);
         }

@@ -31,7 +31,11 @@ class _CategoryPageState extends State<CategoryPage> {
       body: Container(
           //color: Colors.grey,
           child: Column(
-        children: [BestSelling(state), Expanded(child: AllFood(state))],
+        children: [
+          BestSelling(state),
+          _PromotingItems(state),
+          Expanded(child: AllFood(state))
+        ],
       )
           //TODO: [bestSelling] what is this???
           ),
@@ -104,10 +108,54 @@ class _BestSellingState extends State<BestSelling> {
               child: ListView.builder(
                   //shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: _categoryLoadedState.listFood.length,
+                  itemCount: _categoryLoadedState.bestSelling.length,
                   itemBuilder: (BuildContext context, int index) {
                     return FoodCard(
-                        foodVM: _categoryLoadedState.listFood[index]);
+                        foodVM: _categoryLoadedState.bestSelling[index]);
+                  }),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PromotingItems extends StatelessWidget {
+  final CategoryLoadedState _categoryLoadedState;
+  _PromotingItems(this._categoryLoadedState);
+  @override
+  Widget build(BuildContext context) {
+    final categoryID = _categoryLoadedState.categoryVM.id;
+
+    return Container(
+      //padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+      height: 150,
+      color: Colors.white,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(15.0, 10.0, 10.0, 0.0),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Món đang giảm giá",
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            Container(
+              height: 110,
+              child: ListView.builder(
+                  //shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _categoryLoadedState.promoting.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return FoodCard(
+                        foodVM: _categoryLoadedState.promoting[index]);
                   }),
             )
           ],
@@ -146,10 +194,10 @@ class AllFood extends StatelessWidget {
           Expanded(
             child: ListView.builder(
                 //scrollDirection: Axis.vertical,
-                itemCount: _categoryLoadedState.listFood.length,
+                itemCount: _categoryLoadedState.allFood.length,
                 itemBuilder: (BuildContext context, int index) {
                   return FoodCard(
-                    foodVM: _categoryLoadedState.listFood[index],
+                    foodVM: _categoryLoadedState.allFood[index],
                     bottomBorder:
                         BorderSide(width: 1.0, color: Colors.grey.shade300),
                   );

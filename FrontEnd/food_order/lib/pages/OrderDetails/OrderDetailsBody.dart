@@ -1,4 +1,3 @@
-import 'dart:developer';
 //import 'dart:html';
 import 'dart:ui';
 
@@ -13,13 +12,12 @@ import 'package:food_delivery/pages/commons/start_ratings.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
-import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderDetailVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderVM.dart';
 import 'package:food_delivery/view_models/ratings/RatingCreateVM.dart';
 
 class OrderDetailsBody extends StatelessWidget {
-  var _commentController = TextEditingController();
+  final _commentController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrderDetailsBloc, OrderDetailsState>(

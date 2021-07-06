@@ -53,12 +53,12 @@ namespace FoodOrder.API.Services
 
             carts = Core.Helpers.Utilities<CartVM>.Sort(carts, request.SortOrder, "AppUserId");
 
-            var created = await PaginatedList<CartVM>.CreateAsync(carts, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<CartVM>.CreateAsync(carts, request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<CartVM>>(created);
         }
 
-        public async Task<ApiResult<PaginatedList<CartVM>>> GetByUserID(string userID)
+        public async Task<ApiResult<PaginatedList<CartVM>>> GetByUserID(string userID, PagingRequestBase request)
         {
             var carts = from c in _dbContext.Carts where c.AppUserId.ToString() == userID
                         select new CartVM()
@@ -69,7 +69,7 @@ namespace FoodOrder.API.Services
                             Quantity = c.Quantity
                         };
 
-            var created = await PaginatedList<CartVM>.CreateAsync(carts, 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<CartVM>.CreateAsync(carts, 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             foreach (var item in created.Items)
             {

@@ -41,7 +41,7 @@ namespace FoodOrder.API.Services
             vms = Core.Helpers.Utilities<Image>.Sort(vms, request.SortOrder, "ID");
             var mapped = vms.Select(i => _mapper.Map<ImageVM>(i));
 
-            var created = await PaginatedList<ImageVM>.CreateAsync(mapped, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<ImageVM>.CreateAsync(mapped, request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
             
             return new SuccessedResult<PaginatedList<ImageVM>>(created);
         }

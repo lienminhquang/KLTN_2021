@@ -139,4 +139,95 @@ class CategoriesServices {
 
     return ApiResult.failedApiResult("Some thing went wrong!");
   }
+
+  Future<ApiResult<PaginatedList<FoodVM>>> getBestSellingFoodsInCategory(
+      int id) async {
+    PagingRequest pagingRequest = PagingRequest();
+    pagingRequest.pageNumber = 1;
+    pagingRequest.searchString = "";
+    pagingRequest.sortOrder = "";
+    pagingRequest.pageSize = 5;
+
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
+    final String url = baseRoute +
+        "/$id/best_selling?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}&pageSize=${pagingRequest.pageSize}";
+    Response? response;
+    try {
+      log("GET: " + url);
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
+    } catch (e) {
+      return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
+          "Could not connect to server! Please re-try later!");
+    }
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
+      var json = jsonDecode(response.body);
+      var result =
+          ApiResult<PaginatedList<FoodVM>>.fromJson(json, (paginatedJson) {
+        return PaginatedList.fromJson(paginatedJson as Map<String, dynamic>,
+            (categoryJson) {
+          return FoodVM.fromJson(categoryJson as Map<String, dynamic>);
+        });
+      });
+
+      if (result.isSuccessed == true) {
+        log("Fetched: " + result.payLoad!.toString());
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
+  }
+
+  Future<ApiResult<PaginatedList<FoodVM>>> getPromotingFoodsInCategory(
+      int id) async {
+    PagingRequest pagingRequest = PagingRequest();
+    pagingRequest.pageNumber = 1;
+    pagingRequest.searchString = "";
+    pagingRequest.sortOrder = "";
+
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
+    final String url = baseRoute +
+        "/$id/promoting?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
+    Response? response;
+    try {
+      log("GET: " + url);
+      response = await ioClient.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': 'Bearer ' + UserServices.JWT!
+        },
+      );
+    } catch (e) {
+      return ApiResult<PaginatedList<FoodVM>>.failedApiResult(
+          "Could not connect to server! Please re-try later!");
+    }
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
+      var json = jsonDecode(response.body);
+      var result =
+          ApiResult<PaginatedList<FoodVM>>.fromJson(json, (paginatedJson) {
+        return PaginatedList.fromJson(paginatedJson as Map<String, dynamic>,
+            (categoryJson) {
+          return FoodVM.fromJson(categoryJson as Map<String, dynamic>);
+        });
+      });
+
+      if (result.isSuccessed == true) {
+        log("Fetched: " + result.payLoad!.toString());
+        return ApiResult.succesedApiResult(result.payLoad);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
+  }
 }

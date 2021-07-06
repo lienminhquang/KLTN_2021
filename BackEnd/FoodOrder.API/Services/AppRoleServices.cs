@@ -46,7 +46,7 @@ namespace FoodOrder.API.Services
                 vms = Core.Helpers.Utilities<AppRole>.Sort(vms, request.SortOrder, "Name");
             }
 
-            var created = await PaginatedList<AppRoleVM>.CreateAsync(vms.Select(f => _mapper.Map<AppRole, AppRoleVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<AppRoleVM>.CreateAsync(vms.Select(f => _mapper.Map<AppRole, AppRoleVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<AppRoleVM>>(created);
         }

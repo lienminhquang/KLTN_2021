@@ -50,7 +50,7 @@ namespace FoodOrder.API.Controllers
         [HttpGet("user")]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         
-        public async Task<IActionResult> GetByUserID([FromQuery] string userID)
+        public async Task<IActionResult> GetByUserID([FromQuery] string userID, [FromQuery] PagingRequestBase request)
         {
            
 
@@ -62,7 +62,7 @@ namespace FoodOrder.API.Controllers
                 }
             }
 
-            var result = await _addressServices.GetByUserID(userID);
+            var result = await _addressServices.GetByUserID(userID, request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

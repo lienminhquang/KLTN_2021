@@ -48,9 +48,9 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet("best_selling")]
         [AllowAnonymous]
-        public IActionResult GetBestSelling()
+        public async Task<IActionResult> GetBestSellingAsync([FromQuery] PagingRequestBase request)
         {
-            var result = _foodServices.GetBestSelling(new PagingRequestBase());
+            var result = await _foodServices.GetBestSellingAsync(request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -60,9 +60,9 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet("most_discounted")]
         [AllowAnonymous]
-        public IActionResult GetMostDiscounted()
+        public IActionResult GetMostDiscounted([FromQuery] PagingRequestBase request)
         {
-            var result = _foodServices.GetMostDiscounted(new PagingRequestBase());
+            var result = _foodServices.GetMostDiscounted(request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

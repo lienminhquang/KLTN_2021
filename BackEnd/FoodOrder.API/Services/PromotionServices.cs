@@ -59,7 +59,7 @@ namespace FoodOrder.API.Services
             });
 
             var created = PaginatedList<PromotionVM>.CreateFromList(a.Select(c => _mapper.Map<Promotion, PromotionVM>(c)).ToList(), 
-                request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+                request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
             
             return new SuccessedResult<PaginatedList<PromotionVM>>(created);
         }
@@ -77,7 +77,7 @@ namespace FoodOrder.API.Services
 
             vMs = Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority");
 
-            var created = await PaginatedList<PromotionVM>.CreateAsync(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<PromotionVM>.CreateAsync(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<PromotionVM>>(created);
         }

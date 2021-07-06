@@ -40,18 +40,18 @@ namespace FoodOrder.API.Services
 
             addresses = Core.Helpers.Utilities<Address>.Sort(addresses, request.SortOrder, "ID");
 
-            var created = await PaginatedList<AddressVM>.CreateAsync(addresses.Select(a => _mapper.Map<AddressVM>(a)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<AddressVM>.CreateAsync(addresses.Select(a => _mapper.Map<AddressVM>(a)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<AddressVM>>(created);
         }
 
-        public async Task<ApiResult<PaginatedList<AddressVM>>> GetByUserID(string userID)
+        public async Task<ApiResult<PaginatedList<AddressVM>>> GetByUserID(string userID, PagingRequestBase request)
         {
             var addresses = from c in _dbContext.Addresses
                         where c.AppUserID.ToString() == userID
                         select _mapper.Map<AddressVM>(c);
 
-            var created = await PaginatedList<AddressVM>.CreateAsync(addresses, 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<AddressVM>.CreateAsync(addresses, 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             return new SuccessedResult<PaginatedList<AddressVM>>(created);
         }

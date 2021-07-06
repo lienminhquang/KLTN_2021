@@ -53,7 +53,7 @@ namespace FoodOrder.API.Services
                 food = Core.Helpers.Utilities<Food>.Sort(food, request.SortOrder, "Name");
             }
 
-            var created = await PaginatedList<FoodVM>.CreateAsync(food.Select(f => _mapper.Map<Food, FoodVM>(f)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<FoodVM>.CreateAsync(food.Select(f => _mapper.Map<Food, FoodVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             // get sale campaign for each food
             foreach (var item in created.Items)
@@ -89,27 +89,25 @@ namespace FoodOrder.API.Services
             return new SuccessedResult<PaginatedList<FoodVM>>(created);
         }
 
-        public ApiResult<PaginatedList<FoodVM>> GetBestSelling(PagingRequestBase request)
+        public async Task<ApiResult<PaginatedList<FoodVM>>> GetBestSellingAsync(PagingRequestBase request)
         {
             var food = from f in _dbContext.Foods
-                       join od in _dbContext.OrderDetails
-                       on f.ID equals od.FoodID into joined
-                       from p in joined.DefaultIfEmpty()
-                       select new { f, p };
-            var a = from x in food
-                    group x by x.f.ID
-                    into grouped
-                    select new { grouped.Key, Count = grouped.Count() };
-            var listID = a.OrderByDescending(x => x.Count).ToList();
-            List<FoodVM> listFoodVM = new List<FoodVM>();
+                       join od in _dbContext.OrderDetails on f.ID equals od.FoodID
+                       group f by f.ID into g
+                       select new { id = g.Key, count = g.Count() };
 
-            foreach (var item in listID)
-            {
-                listFoodVM.Add(_mapper.Map<FoodVM>(_dbContext.Foods.Find(item.Key)));
-            }
 
-            var created = PaginatedList<FoodVM>.CreateFromList(listFoodVM, request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var listFood = from f in _dbContext.Foods
+                           join fid in food on f.ID equals fid.id
+                           orderby fid.count descending
+                           select f;
 
+            var created = await PaginatedList<FoodVM>.CreateAsync(
+                listFood.Select(x => _mapper.Map<FoodVM>(x)),
+                request.PageNumber ?? 1,
+                request.PageSize?? -1);
+
+            
             // get sale campaign for each food
             foreach (var item in created.Items)
             {
@@ -147,10 +145,8 @@ namespace FoodOrder.API.Services
         public ApiResult<PaginatedList<FoodVM>> GetMostDiscounted(PagingRequestBase request)
         {
             var food = from f in _dbContext.Foods
-                       join fsc in _dbContext.SaleCampaignFoods
-                       on f.ID equals fsc.FoodID
-                       join sc in _dbContext.SaleCampaigns
-                       on fsc.SaleCampaignID equals sc.ID
+                       join fsc in _dbContext.SaleCampaignFoods on f.ID equals fsc.FoodID
+                       join sc in _dbContext.SaleCampaigns on fsc.SaleCampaignID equals sc.ID
                        where (sc.Enabled == true)
                             && (sc.StartDate <= DateTime.Now)
                             && (sc.EndDate >= DateTime.Now)
@@ -158,7 +154,7 @@ namespace FoodOrder.API.Services
             food.ToList().Sort( (x ,y) => { return (int)(y.sc.Percent - x.sc.Percent); });
             var listFoodVM = food.Select(x => _mapper.Map<FoodVM>(x.f)).ToList();
 
-            var created = PaginatedList<FoodVM>.CreateFromList(listFoodVM, request.PageNumber ?? 1, 5);
+            var created = PaginatedList<FoodVM>.CreateFromList(listFoodVM, request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             // get sale campaign for each food
             foreach (var item in created.Items)

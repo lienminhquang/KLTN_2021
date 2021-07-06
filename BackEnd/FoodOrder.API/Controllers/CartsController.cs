@@ -45,7 +45,7 @@ namespace FoodOrder.API.Controllers
 
         [HttpGet("user")]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
-        public async Task<IActionResult> GetAsync([FromQuery] string userID)
+        public async Task<IActionResult> GetAsync([FromQuery] string userID, [FromQuery] PagingRequestBase request)
         {
             if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
             {
@@ -56,7 +56,7 @@ namespace FoodOrder.API.Controllers
                 }
             }
 
-            var result = await _cartServices.GetByUserID(userID);
+            var result = await _cartServices.GetByUserID(userID, request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

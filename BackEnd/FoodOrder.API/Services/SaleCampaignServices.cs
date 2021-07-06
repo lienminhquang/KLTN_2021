@@ -40,7 +40,7 @@ namespace FoodOrder.API.Services
 
             vMs = Core.Helpers.Utilities<SaleCampaign>.Sort(vMs, request.SortOrder, "Priority_desc");
 
-            var created = await PaginatedList<SaleCampaignVM>.CreateAsync(vMs.Select(c => _mapper.Map<SaleCampaign, SaleCampaignVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<SaleCampaignVM>.CreateAsync(vMs.Select(c => _mapper.Map<SaleCampaign, SaleCampaignVM>(c)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             foreach (var item in created.Items)
             {
@@ -73,7 +73,7 @@ namespace FoodOrder.API.Services
 
             vMs = Core.Helpers.Utilities<SaleCampaign>.Sort(vMs, request.SortOrder, "Priority");
 
-            var created = await PaginatedList<SaleCampaignVM>.CreateAsync(vMs.Select(c => _mapper.Map<SaleCampaign, SaleCampaignVM>(c)), request.PageNumber ?? 1, Core.Helpers.Configs.PageSize);
+            var created = await PaginatedList<SaleCampaignVM>.CreateAsync(vMs.Select(c => _mapper.Map<SaleCampaign, SaleCampaignVM>(c)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             foreach (var item in created.Items)
             {

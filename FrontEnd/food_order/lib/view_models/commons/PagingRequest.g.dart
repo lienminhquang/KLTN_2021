@@ -11,6 +11,7 @@ PagingRequest _$PagingRequestFromJson(Map<String, dynamic> json) {
     searchString: json['searchString'] as String?,
     sortOrder: json['sortOrder'] as String?,
     pageNumber: json['pageNumber'] as int?,
+    pageSize: json['pageSize'] as int?,
   );
 }
 
@@ -19,4 +20,5 @@ Map<String, dynamic> _$PagingRequestToJson(PagingRequest instance) =>
       'sortOrder': instance.sortOrder,
       'searchString': instance.searchString,
       'pageNumber': instance.pageNumber,
+      'pageSize': instance.pageSize,
     };

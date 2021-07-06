@@ -64,6 +64,30 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}/best_selling")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetBestSellingInCategory(int id, [FromQuery] PagingRequestBase request)
+        {
+            var result = await _categoryServices.GetBestSellingInCategory(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/promoting")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPromotingInCategory(int id, [FromQuery] PagingRequestBase request)
+        {
+            var result = await _categoryServices.GetPromotingInCategory(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpPost]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
         [Consumes("multipart/form-data")]
