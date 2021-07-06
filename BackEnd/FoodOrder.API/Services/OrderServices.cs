@@ -144,8 +144,8 @@ namespace FoodOrder.API.Services
             var orders = (from o in _dbContext.Orders
                           where o.AppUserID.ToString() == userID
                           select o)
-                    .Include(a => a.OrderDetails)
-                    .Include(a => a.OrderStatus)
+                    //.Include(a => a.OrderDetails)
+                    //.Include(a => a.OrderStatus)
                     .ToList();
 
 
@@ -153,8 +153,9 @@ namespace FoodOrder.API.Services
                 .Select(c => _mapper.Map<Order, OrderVM>(c)).ToList();
             for (int i = 0; i < orderVMs.Count(); i++)
             {
-                orderVMs[i].OrderStatusVM = _mapper.Map<OrderStatusVM>(orders[i].OrderStatus);
-                orderVMs[i].OrderDetailVMs = orders[i].OrderDetails.Select(f => _mapper.Map<OrderDetailVM>(f)).ToList();
+                orderVMs[i].OrderStatusVM = _mapper.Map<OrderStatusVM>(_dbContext.OrderStatuses.Find(orderVMs[i].OrderStatusID));
+                orderVMs[i].OrderDetailVMs = _dbContext.OrderDetails.Where(x => x.OrderID == orderVMs[i].ID)
+                    .Select(f => _mapper.Map<OrderDetailVM>(f)).ToList();
                 foreach (var detail in orderVMs[i].OrderDetailVMs)
                 {
                     //detail.OrderVM = _mapper.Map<OrderVM>(_dbContext.Orders.Find(detail.OrderID));

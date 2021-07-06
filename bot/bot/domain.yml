@@ -84,9 +84,9 @@ responses:
   utter_ask_find_promotion:
   - text: hiện nay đang có khuyến mãi 50% tất cả các món ăn
   utter_list_order_status:
-  - text: |-
-      Danh sách các đơn hàng đang thực hiện của bạn:
-      {list_order}
+  - text: Danh sách các đơn hàng đang xử lý của bạn
+  utter_list_order_empty:
+  - text: Bạn không có đơn hàng nào đang xử lý.
   utter_internal_error:
   - text: |-
       Xin lỗi!. Hệ thống đang gặp sự cố ngoài ý muốn :(. 

@@ -18,6 +18,12 @@ class HttpClientFactory {
     //     ((X509Certificate cert, String host, int port) {
     //   return true;
     // });
+    try {
+      var client = new IOClientWrapper();
+      return client;
+    } catch (e) {
+      print(e.toString());
+    }
     return new IOClientWrapper();
   }
 }

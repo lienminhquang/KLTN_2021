@@ -58,6 +58,15 @@ namespace FoodOrder.API.Services
             // get sale campaign for each food
             foreach (var item in created.Items)
             {
+                var ratings = from r in _dbContext.Ratings
+                              where r.FoodID == item.ID
+                              select r;
+                if (ratings != null && ratings.Count() > 0)
+                {
+                    item.AgvRating = ratings.Average(a => a.Star);
+                    item.TotalRating = ratings.Count();
+                }
+
                 var query = from cf in _dbContext.SaleCampaignFoods
                             join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
                             where (cf.FoodID == item.ID)

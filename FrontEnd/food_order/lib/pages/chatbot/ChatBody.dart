@@ -12,7 +12,11 @@ import 'package:food_delivery/bloc/Chat/ChatEvent.dart';
 import 'package:food_delivery/bloc/Chat/ChatState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/oders/OrderItem.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
+import 'package:food_delivery/view_models/Orders/OrderDetailVM.dart';
+import 'package:food_delivery/view_models/Orders/OrderStatusVM.dart';
+import 'package:food_delivery/view_models/Orders/OrderVM.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:dialogflow_grpc/dialogflow_grpc.dart';
@@ -174,27 +178,56 @@ class _ChatBodyState extends State<ChatBody> {
   Widget buildCustomeMessage(types.CustomMessage message) {
     return Container(
       margin: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 16,
+        horizontal: 10,
+        vertical: 10,
       ),
       child: _messageContent(message, context),
     );
   }
 
   Widget _messageContent(types.CustomMessage message, BuildContext context) {
-    var list_food = message.metadata!['payload'] as List;
-    return Container(
-      height: 100.0 * list_food.length,
-      child: ListView.builder(
-          //scrollDirection: Axis.vertical,
-          itemCount: list_food.length,
-          itemBuilder: (BuildContext context, int index) {
+    var type = message.metadata!['type'];
+    if (type == 'list_food' || type == 'list_order') {
+      var list = message.metadata!['payload'] as List;
+      return Container(
+        //height: 100.0 * list.length,
+        child: Column(
+            children: List.generate(list.length, (index) {
+          if (type == 'list_food') {
             return FoodCard(
-              foodVM: FoodVM.fromJson(list_food[index]),
+              foodVM: FoodVM.fromJson(list[index]),
               bottomBorder: BorderSide(width: 1.0, color: Colors.grey.shade300),
             );
-          }),
-    );
+          } else {
+            return OrderItem(OrderVM()
+              ..id = list[index]['id'] as int
+              ..appUserID = list[index]['appUserID'] as String
+              ..createdDate =
+                  DateTime.parse(list[index]['createdDate'] as String)
+              ..isPaid = list[index]['isPaid'] as bool
+              ..datePaid = list[index]['datePaid'] == null
+                  ? null
+                  : DateTime.parse(list[index]['datePaid'] as String)
+              ..orderStatusID = list[index]['orderStatusID'] as int
+              ..promotionID = list[index]['promotionID'] as int?
+              ..promotionAmount =
+                  (list[index]['promotionAmount'] as num?)?.toDouble()
+              ..addressString = list[index]['addressString'][0]
+                  as String // ??? is that a bug ???
+              ..addressName = list[index]['addressName'] as String
+              ..orderDetailVMs = (list[index]['orderDetailVMs']
+                      as List<dynamic>)
+                  .map((e) => OrderDetailVM.fromJson(e as Map<String, dynamic>))
+                  .toList()
+              ..orderStatusVM = OrderStatusVM.fromJson(
+                  list[index]['orderStatusVM'] as Map<String, dynamic>));
+          }
+        })),
+      );
+    }
+
+    return Container();
+
     // final color = getUserAvatarNameColor(message.author,
     //     InheritedChatTheme.of(context).theme.userAvatarNameColors);
     // final name = getUserName(message.author);

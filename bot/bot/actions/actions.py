@@ -71,23 +71,17 @@ class ActionCheckOrderStatus(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        
+        logInfo(tracker.latest_message)
         logInfo("sender_id: " + str(tracker.sender_id))
-        
-        result = get_order_status(tracker.sender_id)
-        if type(result) is list:
-            list_order = ""
-            for i in range(0, len(result)):
-                list_order += "Mã: " + str(result[i].id) + "\n"
-                list_order += " - Danh sách món: "
-                for j in range(0, len(result[i].orderDetailVMs)):
-                    list_order += str(result[i].orderDetailVMs[j]['foodVM']['name']) + ", "
-                list_order += "\n"
-                list_order += " - Thời gian đặt: " + parser.parse(result[i].createdDate).strftime("%m/%d/%Y, %H:%M:%S") + "\n"
-                list_order += " - Giao đến: " + str(result[i].addressString) + "\n"
-                list_order += " - Giá: " + locale.currency(result[i].finalTotalPrice, grouping=True) + "\n"
-                list_order += " - Trạng thái: " + result[i].orderStatusVM['name'] + "\n"
-            dispatcher.utter_message(response="utter_list_order_status", list_order = list_order)
+
+        list_order = get_order_status(tracker.sender_id)
+        if type(list_order) is list:
+            if len(list_order) > 0:
+                dispatcher.utter_message(response="utter_list_order_status")
+                dispatcher.utter_message(json_message= {"payload": "list_order", "data": {"list_order": list_order,
+                                                                                          "type":"list_order"}})
+            else:
+                dispatcher.utter_message(response="utter_list_order_empty")
         else:
             logError(type(result))
             dispatcher.utter_message(response="utter_internal_error", error_message = result)
@@ -109,7 +103,8 @@ class ActionFindMostDiscountedFood(Action):
 
             if len(list_food) > 0:
                 dispatcher.utter_message("Những món này đang giảm giá nhiều nhất nè:")
-                dispatcher.utter_message(json_message= {"payload": "list_food", "data": {"list_food": list_food}})
+                dispatcher.utter_message(json_message= {"payload": "list_food", "data": {"list_food": list_food,
+                                                                                         "type":"list_food"}})
             else: 
                 dispatcher.utter_message("Xin lỗi hiện tại chưa có món nào đang giảm giá :(")
         else:
@@ -133,7 +128,7 @@ class ActionFindBestSellingFood(Action):
 
             if len(list_food) > 0:
                 dispatcher.utter_message("Những món này đang bán chạy lắm nè: ")
-                dispatcher.utter_message(json_message=  {"payload": "list_food", "data": {"list_food": list_food}})
+                dispatcher.utter_message(json_message=  {"payload": "list_food", "data": {"list_food": list_food,"type":"list_food"}})
             else:
                 dispatcher.utter_message("Xin lỗi! Tôi không tìm thấy những món nào phù hợp với yêu cầu của bạn :(")
         else:

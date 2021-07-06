@@ -16,6 +16,7 @@ import 'package:dialogflow_grpc/generated/google/cloud/dialogflow/v2beta1/sessio
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/services/CategoriesServices.dart';
 import 'package:food_delivery/services/ChatBotServices.dart';
+import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/ChatBots/MessageData.dart';
 import 'package:food_delivery/view_models/ChatBots/SendMessageRequest.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -23,8 +24,18 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc() : super(ChatLoadingState()) {
+    final userID = UserServices.getUserID();
+    final username = UserServices.getUsername();
+    _user = types.User(id: userID, firstName: "", lastName: username);
+    _bot = types.User(
+        id: '0a8e1841-05e7-42d3-8bc0-9c05be14f74e',
+        imageUrl: AppConfigs.URL_Images + "/icons/" + "icons8-bot-64.png",
+        firstName: "",
+        lastName: "Amee");
+
     _socket.on('connect', (id) {
       print("Socked connected");
+      _socket.emit("session_request", {"session_id": _user.id});
       this.add(ChatStartedEvent());
     });
     _socket.onError((data) {
@@ -72,18 +83,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _socket.on('bot_uttered', _onBotUttered);
   }
   List<types.Message> _messages = [];
-  //DialogflowGrpcV2Beta1? dialogflow;
-  CategoriesServices _categoriesServices = CategoriesServices();
-  ChatBotServices _chatBotServices = ChatBotServices();
-  var _user = const types.User(
-      id: '06c33e8b-e835-4736-80f4-63f44b66666c',
-      firstName: "lmq",
-      lastName: "quang");
-  var _bot = const types.User(
-      id: '0a8e1841-05e7-42d3-8bc0-9c05be14f74e',
-      imageUrl: AppConfigs.URL_Images + "/icons/" + "icons8-bot-64.png",
-      firstName: "",
-      lastName: "Amee");
+
+  late final types.User _user;
+  late final types.User _bot;
 
   Socket _socket = io(
       'http://localhost:5005',
@@ -91,21 +93,28 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           .setPath("/socket.io")
           .setTransports(['websocket']) // for Flutter or Dart VM
           .disableAutoConnect() // disable auto-connection
-          //.setExtraHeaders({'t': 'NeY6Mw0'}) // optional
+          // .setExtraHeaders({
+          //   'sid': 'lmqqlmqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'
+          // }) // optional
           .build());
 
   void _onBotUttered(data) {
     print(data);
     if (data is Map<String, dynamic>) {
-      if (data['list_food'] != null) {
+      if (data['type'] == "list_food" || data['type'] == "list_order") {
         var list_food = data['list_food'];
+        var list_order = data['list_order'];
         print("Bot uttered list food: ");
         print(list_food);
+
         var message = types.CustomMessage(
             author: _bot,
             createdAt: DateTime.now().millisecondsSinceEpoch,
             id: _randomString(),
-            metadata: {'type': 'list_food', 'payload': list_food});
+            metadata: {
+              'type': data['type'],
+              'payload': list_food == null ? list_order : list_food
+            });
         _messages.insert(0, message);
       } else {
         var map = data;
@@ -185,10 +194,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   Future<void> sendMessage(String message) async {
-    var messageRequest = SendMessageRequest("test", message).toJson();
+    var messageRequest = SendMessageRequest(_user.id, message).toJson();
 
     print("sending message:" + messageRequest.toString());
 
-    _socket.emit("user_uttered", messageRequest);
+    _socket.emit("user_uttered", {"session_id": _user.id, "message": message});
   }
 }
