@@ -128,6 +128,10 @@ class _PromotingItems extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoryID = _categoryLoadedState.categoryVM.id;
 
+    if (_categoryLoadedState.promoting.isEmpty) {
+      return Container();
+    }
+
     return Container(
       //padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
       height: 150,

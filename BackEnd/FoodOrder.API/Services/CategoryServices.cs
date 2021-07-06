@@ -169,6 +169,7 @@ namespace FoodOrder.API.Services
                        select new { f, sc };
             food = from f in food
                    join fc in _dbContext.FoodCategories on f.f.ID equals fc.FoodID
+                   where fc.CategoryID == id
                    select f;
 
             food.ToList().Sort((x, y) => { return (int)(y.sc.Percent - x.sc.Percent); });
