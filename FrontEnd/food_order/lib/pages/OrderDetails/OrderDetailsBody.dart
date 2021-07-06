@@ -1,4 +1,5 @@
 import 'dart:developer';
+//import 'dart:html';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -254,31 +255,31 @@ class OrderDetailsBody extends StatelessWidget {
   }
 
   Widget _item(OrderDetailVM model, OrderVM orderVM, BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: <BoxShadow>[
-        new BoxShadow(
-          blurRadius: 3.0,
-          color: Colors.black12,
-          //offset: new Offset(0.0, 10.0))
-        )
-      ]),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () async {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return FoodDetail(foodID: model.foodID, promotionID: null);
-              }));
-            },
-            child: Container(
-              height: 70,
+    return GestureDetector(
+      onTap: () async {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return FoodDetail(foodID: model.foodID, promotionID: null);
+        }));
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(color: Colors.white, boxShadow: <BoxShadow>[
+          new BoxShadow(
+            blurRadius: 3.0,
+            color: Colors.black12,
+            //offset: new Offset(0.0, 10.0))
+          )
+        ]),
+        child: Column(
+          children: [
+            Container(
+              height: 80,
+              padding: EdgeInsets.all(10.0),
               child: Row(
                 children: <Widget>[
                   AspectRatio(
                     aspectRatio: 1.2,
                     child: Container(
-                        padding: EdgeInsets.all(10.0),
                         height: 70,
                         width: 70,
                         child: ClipRRect(
@@ -292,36 +293,46 @@ class OrderDetailsBody extends StatelessWidget {
                           ),
                         )),
                   ),
+                  Container(
+                    width: 10,
+                  ),
                   Expanded(
-                      child: ListTile(
-                          title: Text(
-                            model.foodVM!.name,
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                            ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        Text(
+                          model.foodVM!.name,
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
                           ),
-                          subtitle: _priceWidget(model),
-                          trailing: Container(
-                            width: 35,
-                            height: 35,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: LightColor.lightGrey.withAlpha(150),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Text('x${model.amount}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                )),
-                          )))
+                        ),
+                        _priceWidget(model),
+                      ])),
+                  Container(
+                    width: 35,
+                    height: 35,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: LightColor.lightGrey.withAlpha(150),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Text('x${model.amount}',
+                        style: TextStyle(
+                          fontSize: 12,
+                        )),
+                  )
                 ],
               ),
             ),
-          ),
-          orderVM.orderStatusID == OrderStatus.DaNhanHang
-              ? _comment(context, model)
-              : Container(),
-        ],
+            orderVM.orderStatusID == OrderStatus.DaNhanHang
+                ? _comment(context, model)
+                : Container(),
+          ],
+        ),
       ),
     );
   }
@@ -343,7 +354,9 @@ class OrderDetailsBody extends StatelessWidget {
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
           Text(AppConfigs.toPrice(cartVM.price * cartVM.amount),
               style: TextStyle(
-                  fontSize: 14, decoration: TextDecoration.lineThrough)),
+                  color: Colors.grey,
+                  fontSize: 14,
+                  decoration: TextDecoration.lineThrough)),
         ],
       );
     }
