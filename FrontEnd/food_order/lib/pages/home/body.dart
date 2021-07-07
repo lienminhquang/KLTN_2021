@@ -16,6 +16,7 @@ import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/home/DashlinePainter.dart';
+import 'package:food_delivery/pages/home/HomeLoadingScreen.dart';
 import 'package:food_delivery/pages/home/ZigZacVerticalLine.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'package:food_delivery/pages/search/Search.dart';
@@ -83,9 +84,7 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       if (state is HomeLoadingState) {
-        return Container(
-            color: Colors.amber,
-            child: Center(child: CircularProgressIndicator()));
+        return HomeLoadingScreen();
       }
       if (state is HomeLoadedState) {
         return _buildLoadedState(context, state);
