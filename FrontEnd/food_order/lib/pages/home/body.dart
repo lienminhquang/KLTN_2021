@@ -158,7 +158,7 @@ class _BodyState extends State<Body> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (conetxt) {
-          return PromotionScreen(null);
+          return PromotionScreen();
         }));
       },
       child: Container(

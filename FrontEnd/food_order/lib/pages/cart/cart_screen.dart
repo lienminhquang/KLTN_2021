@@ -32,6 +32,25 @@ class CheckoutCart extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  void showInvalidPromotionDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(
+                "Mã khuyến mãi không hợp lệ, vui lòng nhấn vào mã khuyến mãi để kiểm tra lại điều kiện."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Ok', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          );
+        });
+  }
+
   Widget _buildLoadedState(BuildContext context, CartLoadedState state) {
     // context.select<CartModel, List<CartVM>>((value) => value.items);
     double totalPrice = state.getTotalPrice();
@@ -40,6 +59,31 @@ class CheckoutCart extends StatelessWidget {
     if (state.promotionVM != null) {
       promotionCode = state.promotionVM!.code;
       finalPrice = totalPrice - state.getPromotedAmount();
+    }
+
+    Widget icon = Icon(
+      Icons.confirmation_num_outlined,
+      color: Colors.orange,
+      size: 25,
+    );
+
+    if (state.promotionVM != null &&
+        state.promotionVM!.minPrice! > totalPrice) {
+      icon = Container(
+        width: 25,
+        height: 25,
+        child: IconButton(
+            iconSize: 25,
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              showInvalidPromotionDialog(context);
+            },
+            icon: Icon(
+              Icons.error_outline_outlined,
+              color: Colors.orange,
+              //size: 25,
+            )),
+      );
     }
 
     return Container(
@@ -67,11 +111,7 @@ class CheckoutCart extends StatelessWidget {
                     color: Color(0xFFF5F6F9),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Icon(
-                    Icons.confirmation_num_outlined,
-                    color: Colors.orange,
-                    size: 25,
-                  ),
+                  child: icon,
                 ),
                 Container(
                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -79,14 +119,71 @@ class CheckoutCart extends StatelessWidget {
                         ? Container()
                         : Row(
                             children: [
-                              Text(promotionCode),
-                              IconButton(
-                                  onPressed: () {
-                                    context
-                                        .read<CartBloc>()
-                                        .add(CartRemovePromotionEvent());
+                              GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => Dialog(
+                                          backgroundColor: Colors.transparent,
+                                          insetPadding: EdgeInsets.all(10),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                width: double.infinity,
+                                                height: 200,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    color: Colors.white),
+                                                padding: EdgeInsets.fromLTRB(
+                                                    20, 50, 20, 20),
+                                                child: Column(children: [
+                                                  Text(state.promotionVM!.name,
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      textAlign:
+                                                          TextAlign.center),
+                                                  SizedBox(height: 20),
+                                                  Text(
+                                                      state.promotionVM!
+                                                          .desciption
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors
+                                                              .grey.shade700)),
+                                                  Text(
+                                                      "Áp dụng cho đơn hàng từ: ${AppConfigs.toPrice(state.promotionVM!.minPrice!)}",
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors
+                                                              .grey.shade700)),
+                                                  Text(
+                                                      "Tối đa: ${AppConfigs.toPrice(state.promotionVM!.max!)}",
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors
+                                                              .grey.shade700)),
+                                                ]),
+                                              ),
+                                            ],
+                                          )),
+                                    );
                                   },
-                                  icon: Icon(Icons.cancel))
+                                  child: Text(promotionCode)),
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<CartBloc>()
+                                      .add(CartRemovePromotionEvent());
+                                },
+                                icon: Icon(Icons.cancel),
+                                iconSize: 15,
+                              )
                             ],
                           )),
                 Spacer(),
@@ -97,7 +194,7 @@ class CheckoutCart extends StatelessWidget {
                           .add(PromotionStartedEvent());
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return PromotionScreen(totalPrice);
+                        return PromotionScreen();
                       }));
                     },
                     child: Text('Mã khuyến mãi')),
@@ -181,6 +278,11 @@ class CheckoutCart extends StatelessWidget {
                                 ],
                               );
                             });
+                        return;
+                      }
+                      if (state.promotionVM != null &&
+                          state.promotionVM!.minPrice! > totalPrice) {
+                        showInvalidPromotionDialog(context);
                         return;
                       }
                       var result = await context.read<CartBloc>().confirm(
