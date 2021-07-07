@@ -172,7 +172,7 @@ class _BodyState extends State<Body> {
             bottom: BorderSide(color: Colors.grey),
             left: BorderSide(color: Colors.grey),
           ),
-          color: Colors.white,
+          color: Color(0xFFEEEEEE),
         ),
         child: Stack(
           children: [
@@ -206,24 +206,27 @@ class _BodyState extends State<Body> {
     log("Rebuild CategoryList with count = " + categories.length.toString());
 
     return Container(
-        height: 150,
-        child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            //primary: false,
-            //padding: const EdgeInsets.all(20),
-            itemCount: categories.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                margin: EdgeInsets.all(10),
-                // padding: EdgeInsets.all(5),
-                // height: 20,
-                // width: 20,
-                // color: Colors.red,
-                //width: 100,
-                child: CategoryItem(categories[index].name!,
-                    categories[index].imagePath!, categories[index].id!),
-              );
-            }));
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        //height: 200,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(2, (col) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(2, (row) {
+                int index = col * 2 + row;
+                if (index < categories.length) {
+                  return CategoryItem(categories[index].name!,
+                      categories[index].imagePath!, categories[index].id!);
+                }
+                return Container(
+                  width: 100,
+                  height: 130,
+                );
+              }),
+            );
+          }),
+        ));
   }
 }
 
@@ -235,61 +238,44 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          blurRadius: 5,
-          color: Colors.grey.withOpacity(0.5),
-          spreadRadius: 4,
-          offset: Offset(0, 3),
-        )
-      ]),
-      child: GestureDetector(
-        onTap: () async {
-          context.read<CategoryBloc>().add(CategoryStatedEvent(id));
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CategoryPage()));
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(7),
-          child: Container(
-            width: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(7.0),
-              color: Colors.teal[100],
-            ),
-            padding: const EdgeInsets.all(0),
-            child: Stack(fit: StackFit.expand, children: [
-              CachedNetworkImage(
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                imageUrl: AppConfigs.URL_Images + "/$image",
-              ),
-              Positioned(
-                bottom: 0,
-                child: Container(
-                  height: 50,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          tileMode: TileMode.clamp,
-                          colors: [Colors.grey, Colors.grey.withOpacity(0.3)])),
-                  //color: Colors.grey.withOpacity(0.7),
-                  child: Center(
-                    child: Text(
-                      "$name",
-                      style: TextStyle(fontSize: 20.0, color: Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+    return GestureDetector(
+      onTap: () {
+        context.read<CategoryBloc>().add(CategoryStatedEvent(id));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return CategoryPage();
+        }));
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(5),
+            color: Color(0xFFEEEEEE)),
+        width: 150,
+        height: 150,
+        padding: EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(7),
+              child: Container(
+                width: 100,
+                height: 100,
+                child: CachedNetworkImage(
+                  fit: BoxFit.fill,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  imageUrl: AppConfigs.URL_Images + "/$image",
                 ),
-              )
-            ]),
-          ),
+              ),
+            ),
+            Container(
+                //margin: EdgeInsets.symmetric(vertical: 5),
+                child: Text(
+              this.name,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ))
+          ],
         ),
       ),
     );
@@ -298,39 +284,116 @@ class CategoryItem extends StatelessWidget {
 
 Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
   if (saleCampaignVM == null) {
-    return Center(
-      child: Text(
-        AppConfigs.toPrice(foodVM.price),
-        style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            color: Colors.black.withOpacity(0.9)),
-      ),
+    return Text(
+      AppConfigs.toPrice(foodVM.price),
+      style: TextStyle(
+          fontSize: 14,
+          //fontWeight: FontWeight.w500,
+          color: Colors.black.withOpacity(0.9)),
     );
   } else
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(
+          children: [
+            Icon(
+              Icons.local_offer_outlined,
+              size: 14,
+              color: Colors.red,
+            ),
+            Text(
+              "30% ",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.red,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            Text(
+              AppConfigs.toPrice(foodVM.price),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black.withOpacity(0.6),
+                  decoration: TextDecoration.lineThrough),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
         Text(
           AppConfigs.toPrice(
               foodVM.price * (100 - saleCampaignVM.percent) / 100),
           style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              //fontWeight: FontWeight.w500,
               color: Colors.black.withOpacity(0.9)),
-        ),
-        Container(
-          width: 10,
-        ),
-        Text(
-          AppConfigs.toPrice(foodVM.price),
-          style: TextStyle(
-              fontSize: 15,
-              color: Colors.black.withOpacity(0.6),
-              decoration: TextDecoration.lineThrough),
         ),
       ],
     );
+}
+
+class _FoodWidget extends StatelessWidget {
+  const _FoodWidget(
+      {Key? key, required this.foodVM, this.saleCampaignVM, this.promotionVM})
+      : super(key: key);
+  final FoodVM foodVM;
+  final SaleCampaignVM? saleCampaignVM;
+  final PromotionVM? promotionVM;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return FoodDetail(
+                foodID: foodVM.id,
+                promotionID: promotionVM != null ? promotionVM!.id : null,
+              );
+            }));
+          },
+          child: Container(
+            width: 150,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150,
+                  width: 200,
+                  //padding: const EdgeInsets.all(16.0),
+                  child: CachedNetworkImage(
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
+                      fit: BoxFit.cover),
+                ),
+                Container(
+                  width: 150,
+                  height: 45,
+                  padding: EdgeInsets.fromLTRB(7, 7, 7, 0),
+                  child: Text(
+                    foodVM.name,
+                    style: TextStyle(fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+                  //height: 50,
+                  width: 150,
+                  child: _priceWidget(foodVM, saleCampaignVM),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class PromotionContainer extends StatelessWidget {
@@ -348,13 +411,18 @@ class PromotionContainer extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+            margin: const EdgeInsets.fromLTRB(0.0, 3.0, 8.0, 8.0),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                _promotionVM.name,
+                _promotionVM.name.toUpperCase(),
+                overflow: TextOverflow.clip,
+                maxLines: 1,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color(0xFFFF5166)),
               ),
             ),
           ),
@@ -365,6 +433,8 @@ class PromotionContainer extends StatelessWidget {
                 _promotionVM.desciption!,
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color: Color(0xFF646D7A), fontWeight: FontWeight.w500),
               ),
               alignment: Alignment.centerLeft,
             ),
@@ -378,56 +448,10 @@ class PromotionContainer extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final foodVM = _promotionVM.foodVMs[index];
 
-                  return Container(
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return FoodDetail(
-                              foodID: foodVM.id,
-                              promotionID: _promotionVM.id,
-                            );
-                          }));
-                        },
-                        child: Container(
-                          width: 200,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 150,
-                                width: 200,
-                                //padding: const EdgeInsets.all(16.0),
-                                child: CachedNetworkImage(
-                                    placeholder: (context, url) =>
-                                        CircularProgressIndicator(),
-                                    imageUrl: AppConfigs.URL_Images +
-                                        "/${foodVM.imagePath}",
-                                    fit: BoxFit.cover),
-                              ),
-                              Expanded(
-                                flex: 6,
-                                child: Padding(
-                                  padding: EdgeInsets.all(7),
-                                  child: Text(
-                                    foodVM.name,
-                                    style: TextStyle(fontSize: 17),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 4,
-                                child: Align(
-                                    alignment: FractionalOffset.bottomCenter,
-                                    child: _priceWidget(
-                                        foodVM, foodVM.saleCampaignVM)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                  return _FoodWidget(
+                    foodVM: foodVM,
+                    promotionVM: _promotionVM,
+                    saleCampaignVM: foodVM.saleCampaignVM,
                   );
                 }),
           )
@@ -451,13 +475,18 @@ class SaleContainer extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+              margin: const EdgeInsets.fromLTRB(0.0, 3.0, 8.0, 8.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  _saleCampaignVM.name,
+                  _saleCampaignVM.name.toUpperCase(),
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Color(0xFFFF5166)),
                 ),
               ),
             ),
@@ -481,60 +510,10 @@ class SaleContainer extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     final foodVM = _saleCampaignVM.foodVMs![index];
 
-                    return Container(
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return FoodDetail(
-                                foodID: foodVM.id,
-                              );
-                            }));
-                          },
-                          child: Container(
-                            width: 200,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  width: 200,
-                                  height: 150,
-                                  //padding: const EdgeInsets.all(16.0),
-                                  child: CachedNetworkImage(
-                                    // width: double.infinity,
-                                    //height: 150,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        CircularProgressIndicator(),
-                                    imageUrl: AppConfigs.URL_Images +
-                                        "/${foodVM.imagePath}",
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 6,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(7),
-                                    child: Text(
-                                      foodVM.name,
-                                      style: TextStyle(fontSize: 17),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Align(
-                                      alignment: FractionalOffset.bottomCenter,
-                                      child: _priceWidget(
-                                          foodVM, _saleCampaignVM)),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                    return _FoodWidget(
+                      foodVM: foodVM,
+                      promotionVM: null,
+                      saleCampaignVM: _saleCampaignVM,
                     );
                   }),
             )
