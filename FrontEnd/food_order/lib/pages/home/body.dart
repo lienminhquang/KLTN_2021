@@ -248,7 +248,7 @@ class CategoryItem extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
+            //border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5),
             color: Color(0xFFEEEEEE)),
         width: 150,
