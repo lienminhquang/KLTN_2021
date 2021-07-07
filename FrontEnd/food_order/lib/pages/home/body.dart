@@ -260,7 +260,7 @@ class CategoryItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(7),
               child: Container(
-                width: 100,
+                width: 126,
                 height: 100,
                 child: CachedNetworkImage(
                   fit: BoxFit.fill,
