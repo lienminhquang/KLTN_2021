@@ -1,7 +1,5 @@
-import 'dart:math';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Cart/CartBloc.dart';
 import 'package:food_delivery/bloc/Cart/CartEvent.dart';
@@ -11,26 +9,10 @@ import 'package:food_delivery/bloc/Promotions/PromotionEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
-import 'body.dart';
-import 'package:provider/provider.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 
-class CartScreen extends StatelessWidget {
-  static String routeName = "/cart";
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: buildAppBar(context),
-        body: Body(),
-        bottomNavigationBar: CheckoutCart());
-  }
-}
-
-class CheckoutCart extends StatelessWidget {
-  const CheckoutCart({
-    Key? key,
-  }) : super(key: key);
+class CheckoutBar extends StatelessWidget {
+  const CheckoutBar({Key? key, required this.state}) : super(key: key);
+  final CartLoadedState state;
 
   void showInvalidPromotionDialog(BuildContext context) {
     showDialog(
@@ -322,28 +304,9 @@ class CheckoutCart extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, CartErrorState state) {
-    return Container(
-      child: Center(
-        child: Text(state.error),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
-      if (state is CartLoadingState) {
-        return CircularProgressIndicator();
-      }
-      if (state is CartLoadedState) {
-        return _buildLoadedState(context, state);
-      }
-      if (state is CartErrorState) {
-        return _buildErrorState(context, state);
-      }
-      throw "Unknow state";
-    });
+    return _buildLoadedState(context, state);
   }
 }
 
@@ -376,26 +339,5 @@ Widget buildFailedOrderDialog(BuildContext context, String? error) {
         child: const Text('Ok', style: TextStyle(color: Colors.white)),
       ),
     ],
-  );
-}
-
-AppBar buildAppBar(BuildContext context) {
-  //var count = context.select<CartModel, int>((value) => value.items.length);
-  int count = 0;
-  return AppBar(
-    centerTitle: true,
-    backgroundColor: Colors.lightBlue,
-    title: Column(
-      children: [
-        Text(
-          'Giỏ hàng',
-          style: TextStyle(color: Colors.black),
-        ),
-        // Text(
-        //   '$count sản phẩm',
-        //   style: Theme.of(context).textTheme.caption,
-        // )
-      ],
-    ),
   );
 }

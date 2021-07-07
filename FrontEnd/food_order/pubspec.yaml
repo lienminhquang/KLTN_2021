@@ -22,8 +22,8 @@ environment:
 
 dependencies:
 
-  sound_stream: ^0.2.0
-  dialogflow_grpc: ^0.2.9
+  #sound_stream: ^0.2.0
+  #dialogflow_grpc: ^0.2.9
   
   flutter:
     sdk: flutter

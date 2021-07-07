@@ -17,10 +17,6 @@ import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderDetailVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderStatusVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderVM.dart';
-import 'package:rxdart/rxdart.dart';
-
-import 'package:dialogflow_grpc/dialogflow_grpc.dart';
-import 'package:sound_stream/sound_stream.dart';
 
 //import 'MessageWidget.dart';
 
@@ -37,53 +33,14 @@ class _ChatBodyState extends State<ChatBody> {
   //final List<ChatMessage> _messages = <ChatMessage>[];
   final TextEditingController _textController = TextEditingController();
 
-  bool _isRecording = false;
-
-  RecorderStream _recorder = RecorderStream();
-  StreamSubscription? _recorderStatus;
-  StreamSubscription<List<int>>? _audioStreamSubscription;
-  BehaviorSubject<List<int>>? _audioStream;
-
-  // TODO DialogflowGrpc class instance
-  DialogflowGrpcV2Beta1? dialogflow;
-
-  bool _isConnectingDialogShowing = false;
-
   @override
   void initState() {
     super.initState();
-    initPlugin();
   }
 
   @override
   void dispose() {
-    _recorderStatus?.cancel();
-    _audioStreamSubscription?.cancel();
     super.dispose();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlugin() async {
-    _recorderStatus = _recorder.status.listen((status) {
-      if (mounted)
-        setState(() {
-          _isRecording = status == SoundStreamStatus.Playing;
-        });
-    });
-
-    await Future.wait([_recorder.initialize()]);
-
-    //  Get a Service account
-    final serviceAccount = ServiceAccount.fromString(
-        '${(await rootBundle.loadString('assets/amee2.json'))}');
-    // Create a DialogflowGrpc Instance
-    dialogflow = DialogflowGrpcV2Beta1.viaServiceAccount(serviceAccount);
-  }
-
-  void stopStream() async {
-    await _recorder.stop();
-    await _audioStreamSubscription?.cancel();
-    await _audioStream?.close();
   }
 
   void handleSubmitted(String text, BuildContext context) async {
@@ -111,10 +68,6 @@ class _ChatBodyState extends State<ChatBody> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
-      if (_isConnectingDialogShowing) {
-        Navigator.of(context).pop();
-        _isConnectingDialogShowing = false;
-      }
       if (state is ChatLoadedState) {
         return _loadedState(context, state);
       }
@@ -134,14 +87,13 @@ class _ChatBodyState extends State<ChatBody> {
               TextButton(
                   onPressed: () {
                     context.read<ChatBloc>().add(ChatReconnectEvent());
-                    _isConnectingDialogShowing = true;
+
                     showDialog(
                       context: context,
                       barrierDismissible: false,
                       builder: (BuildContext context) {
                         return WillPopScope(
                             onWillPop: () async {
-                              _isConnectingDialogShowing = false;
                               return true;
                             },
                             child: AlertDialog(

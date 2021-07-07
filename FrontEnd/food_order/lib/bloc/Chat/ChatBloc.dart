@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Chat/ChatEvent.dart';
 import 'package:food_delivery/bloc/Chat/ChatState.dart';
@@ -10,12 +8,7 @@ import 'package:food_delivery/bloc/Chat/ChatState.dart';
 
 import 'dart:async';
 
-import 'package:dialogflow_grpc/dialogflow_grpc.dart';
-
-import 'package:dialogflow_grpc/generated/google/cloud/dialogflow/v2beta1/session.pb.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/services/CategoriesServices.dart';
-import 'package:food_delivery/services/ChatBotServices.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/ChatBots/MessageData.dart';
 import 'package:food_delivery/view_models/ChatBots/SendMessageRequest.dart';

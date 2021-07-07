@@ -8,7 +8,7 @@ import 'package:food_delivery/bloc/Profile/ProfileEvent.dart';
 
 import 'package:food_delivery/pages/chatbot/ChatbotScreen.dart';
 import 'package:provider/provider.dart';
-import 'package:food_delivery/pages/cart/cart_screen.dart';
+import 'package:food_delivery/pages/cart/CartScreen.dart';
 import 'package:food_delivery/pages/home/Home.dart';
 import 'package:food_delivery/pages/oders/Orders.dart';
 import 'package:food_delivery/pages/profile/Profile.dart';

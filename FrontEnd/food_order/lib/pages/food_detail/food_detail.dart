@@ -6,6 +6,7 @@ import 'package:food_delivery/bloc/FoodDetail/FoodDetailBloc.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailEvent.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 
 import 'footer.dart';
 import 'package:provider/provider.dart';
@@ -222,9 +223,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
         builder: (context, state) {
       if (state is FoodDetailLoadingState) {
         print("FoodDetailLoadingState");
-        return Container(
-            color: Colors.white,
-            child: Center(child: CircularProgressIndicator()));
+        return AppLoadingScreen();
       }
       if (state is FoodDetailLoadedState) {
         return _buildLoadedState(context, state);

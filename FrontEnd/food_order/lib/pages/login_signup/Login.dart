@@ -7,11 +7,11 @@ import 'package:food_delivery/bloc/Home/HomeBloc.dart';
 import 'package:food_delivery/bloc/Home/HomeEvent.dart';
 import 'package:food_delivery/bloc/Login/LoginBloc.dart';
 import 'package:food_delivery/bloc/Login/LoginState.dart';
-import 'package:food_delivery/pages/home/HomeLoadingScreen.dart';
+import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/login_signup/ResetPassword.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
-import 'package:food_delivery/pages/cart/cart_screen.dart';
+import 'package:food_delivery/pages/cart/CartScreen.dart';
 import 'package:food_delivery/pages/login_signup/SignUp.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:provider/provider.dart';
@@ -165,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {
                               login(context);
                               // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) => HomeLoadingScreen()));
+                              //     builder: (context) => AppLoadingScreen()));
                             },
                             child: Center(
                               child: Text(

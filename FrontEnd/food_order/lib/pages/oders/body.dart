@@ -7,6 +7,7 @@ import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/OrderDetails/OrderDetails.dart';
+import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/view_models/Orders/OrderVM.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +82,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
     return BlocBuilder<OrderHistoryBloc, OrderHistoryState>(
         builder: (context, state) {
       if (state is OrderHistoryLoadingState) {
-        return Center(child: Container(child: CircularProgressIndicator()));
+        return AppLoadingScreen();
       } else if (state is OrderHistoryLoadedState) {
         return _buildLoadedState(context, state);
       } else if (state is OrderHistoryErrorState) {

@@ -16,7 +16,7 @@ import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/home/DashlinePainter.dart';
-import 'package:food_delivery/pages/home/HomeLoadingScreen.dart';
+import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/home/ZigZacVerticalLine.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'package:food_delivery/pages/search/Search.dart';
@@ -84,7 +84,7 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       if (state is HomeLoadingState) {
-        return HomeLoadingScreen();
+        return AppLoadingScreen();
       }
       if (state is HomeLoadedState) {
         return _buildLoadedState(context, state);
@@ -263,7 +263,8 @@ class CategoryItem extends StatelessWidget {
                 height: 100,
                 child: CachedNetworkImage(
                   fit: BoxFit.fill,
-                  placeholder: (context, url) => CircularProgressIndicator(),
+                  placeholder: (context, url) =>
+                      Center(child: CircularProgressIndicator()),
                   imageUrl: AppConfigs.URL_Images + "/$image",
                 ),
               ),
@@ -364,7 +365,7 @@ class _FoodWidget extends StatelessWidget {
                   //padding: const EdgeInsets.all(16.0),
                   child: CachedNetworkImage(
                       placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                          Center(child: CircularProgressIndicator()),
                       imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
                       fit: BoxFit.cover),
                 ),

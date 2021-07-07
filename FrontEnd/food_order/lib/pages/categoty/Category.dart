@@ -7,6 +7,7 @@ import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -55,7 +56,7 @@ class _CategoryPageState extends State<CategoryPage> {
     //     .firstWhere((element) => element.id == categoryID);
     return BlocBuilder<CategoryBloc, CategoryState>(builder: (context, state) {
       if (state is CategoryLoadingState) {
-        return CircularProgressIndicator();
+        return AppLoadingScreen();
       }
       if (state is CategoryLoadedState) {
         return _buildLoadedState(context, state);
@@ -285,7 +286,7 @@ class FoodCard extends StatelessWidget {
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
                       placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                          Center(child: CircularProgressIndicator()),
                       imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
                     ),
                   ),

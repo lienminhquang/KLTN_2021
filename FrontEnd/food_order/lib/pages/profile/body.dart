@@ -4,6 +4,7 @@ import 'package:food_delivery/bloc/Home/HomeBloc.dart';
 import 'package:food_delivery/bloc/Profile/ProfileBloc.dart';
 import 'package:food_delivery/bloc/Profile/ProfileState.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
+import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'change_password.dart';
@@ -68,11 +69,7 @@ class Body extends StatelessWidget {
   }
 
   Widget _buildLoadingState() {
-    return Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    return AppLoadingScreen();
   }
 
   Widget _buildErrorState(ProfileErrorState state) {

@@ -6,19 +6,16 @@ import 'package:food_delivery/bloc/Cart/CartEvent.dart';
 import 'package:food_delivery/bloc/Cart/CartState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
+import 'package:food_delivery/pages/cart/CheckoutBar.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:food_delivery/view_models/Carts/CartVM.dart';
 import 'package:provider/provider.dart';
 
-class Body extends StatefulWidget {
-  @override
-  _BodyState createState() => _BodyState();
-}
-
-class _BodyState extends State<Body> {
+class Body extends StatelessWidget {
   Widget _priceWidget(CartVM cartVM) {
     if (cartVM.foodVM.saleCampaignVM != null) {
       double discount = cartVM.foodVM.saleCampaignVM!.percent;
@@ -87,7 +84,7 @@ class _BodyState extends State<Body> {
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
                       placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                          Center(child: CircularProgressIndicator()),
                       imageUrl:
                           AppConfigs.URL_Images + "/${model.foodVM.imagePath}",
                     ),
@@ -244,52 +241,52 @@ class _BodyState extends State<Body> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   _buildLoadedState(BuildContext context, CartLoadedState state) {
     var carts = state.listCartVM;
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<CartBloc>().add(CartRefreshdEvent());
-      },
-      child: ListView.builder(
-        itemCount: carts.length + 2,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return addressSession(context, state.address);
-          } else if (index == carts.length + 1) {
-            return totalSession(context, state);
-          }
-
-          return Dismissible(
-            key: ObjectKey(carts[index - 1]),
-            direction: DismissDirection.endToStart,
-            background: Container(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFE6E6),
-                ),
-                child: Row(
-                  children: [
-                    Spacer(),
-                    Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    )
-                  ],
-                )),
-            onDismissed: (direction) async {
-              context
-                  .read<CartBloc>()
-                  .add(CartDeletedEvent(carts[index - 1].foodID));
-            },
-            child: _item(carts[index - 1], context),
-          );
+    return Scaffold(
+      bottomNavigationBar: CheckoutBar(
+        state: state,
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<CartBloc>().add(CartRefreshdEvent());
         },
+        child: ListView.builder(
+          itemCount: carts.length + 2,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return addressSession(context, state.address);
+            } else if (index == carts.length + 1) {
+              return totalSession(context, state);
+            }
+
+            return Dismissible(
+              key: ObjectKey(carts[index - 1]),
+              direction: DismissDirection.endToStart,
+              background: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFFE6E6),
+                  ),
+                  child: Row(
+                    children: [
+                      Spacer(),
+                      Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      )
+                    ],
+                  )),
+              onDismissed: (direction) async {
+                context
+                    .read<CartBloc>()
+                    .add(CartDeletedEvent(carts[index - 1].foodID));
+              },
+              child: _item(carts[index - 1], context),
+            );
+          },
+        ),
       ),
     );
   }
@@ -307,7 +304,7 @@ class _BodyState extends State<Body> {
     return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
       //return _buildErrorState(context, CartErrorState("test error"));
       if (state is CartLoadingState) {
-        return CircularProgressIndicator();
+        return AppLoadingScreen();
       }
       if (state is CartLoadedState) {
         return _buildLoadedState(context, state);
