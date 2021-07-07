@@ -304,7 +304,7 @@ Widget _priceWidget(FoodVM foodVM, SaleCampaignVM? saleCampaignVM) {
               color: Colors.red,
             ),
             Text(
-              "30% ",
+              "${saleCampaignVM.percent.toInt()}% ",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.red,
