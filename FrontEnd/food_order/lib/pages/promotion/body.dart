@@ -10,6 +10,8 @@ import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 const List<Key> keys = [Key('Network')];
 
 class Body extends StatelessWidget {
+  // if total price == null, it mean this page is not navigation from the cart page,
+  //
   double? totalPreis;
   Body(this.totalPreis);
 
@@ -19,11 +21,13 @@ class Body extends StatelessWidget {
       child: ListView.builder(
         itemCount: state.listPromotionVMs.length,
         itemBuilder: (context, index) {
-          return (totalPreis == 0 ||
-                  totalPreis! < state.listPromotionVMs[index].minPrice! ||
-                  totalPreis == null)
-              ? DisableItemPromotion(state.listPromotionVMs[index], totalPreis)
-              : UseableItemPromotion(state.listPromotionVMs[index], totalPreis);
+          // return (totalPreis != null &&
+          //         (totalPreis < state.listPromotionVMs[index].minPrice! ||
+          //             totalPreis == 0))
+          //     ? DisableItemPromotion(state.listPromotionVMs[index], totalPreis)
+          //     : UseableItemPromotion(state.listPromotionVMs[index], totalPreis);
+          return UseableItemPromotion(
+              state.listPromotionVMs[index], totalPreis);
         },
       ),
     );

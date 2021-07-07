@@ -21,6 +21,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final OrderServices _orderServices = OrderServices();
   final PromotionServices _promotionServices = PromotionServices();
   int? _promotionID;
+  PromotionVM? promotionVM;
 
   @override
   Stream<CartState> mapEventToState(CartEvent event) async* {
@@ -40,6 +41,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       yield* _mapAddPromotionEventToState(event, state);
     } else if (event is CartRemovePromotionEvent) {
       _promotionID = null;
+      promotionVM = null;
       yield await _fetchAll();
     }
   }
@@ -47,6 +49,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Stream<CartState> _mapAddPromotionEventToState(
       CartAddPromotionEvent event, CartState state) async* {
     _promotionID = event.promotionID;
+    promotionVM = null;
     if (state is CartLoadedState) {
       yield await _fetchAll();
     }
@@ -104,7 +107,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<CartLoadedState> _fetchAll() async {
     var listCartVM = await _fetchCartItems();
     var address = await _fetchAddress();
-    var promotionVM = await _fetchPromotion(_promotionID);
+    promotionVM = await _fetchPromotion(_promotionID);
     double total = 0;
 
     for (var item in listCartVM) {
@@ -114,12 +117,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       total += item.quantity * item.foodVM.price * (100 - discount) / 100;
     }
 
-    if (promotionVM != null && promotionVM.minPrice! > total) {
-      print(
-          "Disable promotion due to invalid condition: ${promotionVM.minPrice!} <= ${total}");
-      promotionVM = null;
-      _promotionID = null;
-    }
+    // if (promotionVM != null && promotionVM.minPrice! > total) {
+    //   print(
+    //       "Disable promotion due to invalid condition: ${promotionVM.minPrice!} <= $total");
+    //   promotionVM = null;
+    //   _promotionID = null;
+    // }
 
     return CartLoadedState(address, listCartVM, promotionVM);
   }

@@ -4,14 +4,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery/bloc/Cart/CartBloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryEvent.dart';
 import 'package:food_delivery/bloc/Home/HomeBloc.dart';
 import 'package:food_delivery/bloc/Home/HomeEvent.dart';
 import 'package:food_delivery/bloc/Home/HomeState.dart';
+import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
+import 'package:food_delivery/bloc/Promotions/PromotionEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/home/DashlinePainter.dart';
+import 'package:food_delivery/pages/home/ZigZacVerticalLine.dart';
+import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
@@ -100,7 +106,7 @@ class _BodyState extends State<Body> {
               //NotificationWidget(),
               fakeSearchBox(),
               buidImageCarousel(_appBannerImages),
-              offers(),
+              offers(state),
               _categoryList(state.listCategory),
               Divider(
                 height: 30,
@@ -148,32 +154,50 @@ class _BodyState extends State<Body> {
     ));
   }
 
-  Widget offers() {
-    return Container(
-      height: 50,
-      margin: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.green[100],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              "There are 100 food rewards waiting.",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 11.0,
-                  color: Colors.red[400]),
-            ),
+  Widget offers(HomeLoadedState state) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (conetxt) {
+          return PromotionScreen(null);
+        }));
+      },
+      child: Container(
+        height: 50,
+        margin: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Colors.grey),
+            right: BorderSide.none,
+            bottom: BorderSide(color: Colors.grey),
+            left: BorderSide(color: Colors.grey),
           ),
-          MaterialButton(
-            color: Colors.orange[200],
-            onPressed: () {},
-            child: Text("View"),
-          )
-        ],
+          color: Colors.white,
+        ),
+        child: Stack(
+          children: [
+            Row(
+              children: [
+                Center(
+                  child: Text(
+                    "Nhanh tay nào! Có ${state.listPromotion.length} khuyến mãi đang chờ nè",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13.0,
+                        color: Color(0xFF5B5B5B)),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+                right: 0,
+                child: CustomPaint(
+                  size: Size(1, 50),
+                  painter: ZigZacVerticalLine(),
+                ))
+          ],
+        ),
       ),
     );
   }
