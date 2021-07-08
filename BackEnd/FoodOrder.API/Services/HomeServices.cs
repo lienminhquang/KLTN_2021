@@ -30,16 +30,16 @@ namespace FoodOrder.API.Services
             var salePerMonth = getTotalSalePerMonth(DateTime.Now.AddMonths(-6), 6);
 
             homeVM.TotalSaleToday = (int)(from o in _dbContext.Orders
-                                  where o.IsPaid && o.DatePaid.Value.Date == DateTime.Now.Date
-                                  select o.FinalTotalPrice).Sum();
+                                          where o.IsPaid && o.DatePaid.Value.Date == DateTime.Now.Date
+                                          select o.FinalTotalPrice).Sum();
             homeVM.TotalOrderToday = (from o in _dbContext.Orders
-                                       where o.CreatedDate.Date == DateTime.Now.Date
-                                       select o).Count();
+                                      where o.CreatedDate.Date == DateTime.Now.Date
+                                      select o).Count();
             homeVM.TotalDeliveredToday = (from o in _dbContext.Orders
-                                          where o.OrderStatusID == OrderStatus.DaNhan && o.DatePaid.Value.Date == DateTime.Now.Date 
+                                          where o.OrderStatusID == OrderStatus.DaNhan && o.DatePaid.Value.Date == DateTime.Now.Date
                                           select o).Count();
             homeVM.TotalCanceledToday = (from o in _dbContext.Orders
-                                         where  o.OrderStatusID == OrderStatus.DaHuy && o.DatePaid.Value.Date == DateTime.Now.Date
+                                         where o.OrderStatusID == OrderStatus.DaHuy && o.DatePaid.Value.Date == DateTime.Now.Date
                                          select o).Count();
 
             if (salePerDay.IsSuccessed == true && salePerMonth.IsSuccessed)
@@ -60,9 +60,9 @@ namespace FoodOrder.API.Services
             {
                 date = date.AddDays(1);
                 var query = from o in _dbContext.Orders
-                where o.CreatedDate.Date == date.Date && o.IsPaid == true
-                select o.FinalTotalPrice;
-                if(query.Count() > 0)
+                            where o.IsPaid == true && o.DatePaid.Value.Date == date.Date
+                            select o.FinalTotalPrice;
+                if (query.Count() > 0)
                 {
                     values.Add((int)query.Sum());
                 }
@@ -81,7 +81,7 @@ namespace FoodOrder.API.Services
             {
                 date = date.AddMonths(1);
                 var query = from o in _dbContext.Orders
-                            where o.CreatedDate.Year == date.Year && o.CreatedDate.Month == date.Month && o.IsPaid == true
+                            where o.IsPaid == true && o.DatePaid.Value.Year == date.Year && o.DatePaid.Value.Month == date.Month
                             select o.FinalTotalPrice;
                 if (query.Count() > 0)
                 {

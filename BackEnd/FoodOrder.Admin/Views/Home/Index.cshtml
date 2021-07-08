@@ -1,8 +1,11 @@
 ﻿
 @model FoodOrder.Core.ViewModels.Homes.HomeVM
+@using System.Globalization
 
 @{
     ViewData["Title"] = "Home Page";
+    var maxTotalSalePerDay = Model.TotalSaleLast30Days.Max() * 1.2;
+    var maxTotalSaleLast6Months = Model.TotalSaleLast6Months.Max() * 1.2;
 }
 
 @section Scripts {
@@ -33,6 +36,7 @@
                 }],
             },
             options: {
+               
                 scales: {
                     xAxes: [{
                         time: {
@@ -49,8 +53,11 @@
 
                         ticks: {
                             min: 0,
-                            max: 200000,
-                            maxTicksLimit: 5
+                            max: @Html.Raw(Json.Serialize(maxTotalSalePerDay)),
+                            maxTicksLimit: 5,
+                            callback: function (value, index, values) {
+                                return value.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+                            }
                         },
                         gridLines: {
                             color: "rgba(0, 0, 0, .125)",
@@ -92,8 +99,11 @@
                     yAxes: [{
                         ticks: {
                             min: 0,
-                            max: 200000,
-                            maxTicksLimit: 5
+                            max: @Html.Raw(Json.Serialize(maxTotalSaleLast6Months)),
+                            maxTicksLimit: 5,
+                            callback: function (value, index, values) {
+                                return value.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+                            }
                         },
                         gridLines: {
                             display: true
@@ -128,7 +138,7 @@
             <div class="card bg-primary text-white mb-4">
                 <div class="card-body">Total sale today</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <div class="small text-white stretched-link" href="#">@Model.TotalSaleToday</div>
+                    <div class="small text-white stretched-link" href="#">@Model.TotalSaleToday.ToString("C", new CultureInfo("vi-VN"))</div>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
