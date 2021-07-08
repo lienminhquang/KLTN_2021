@@ -136,7 +136,7 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync([FromForm] PromotionEditVM editVM)
         {
             if (!await this.ValidateTokenInCookie(_adminUserService))

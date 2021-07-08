@@ -31,16 +31,25 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValidPaging(PagingRequestBase request, String userID)
         {
             var user = _dbContext.AppUsers.Find(new Guid(userID));
-            if(user == null)
+            if (user == null)
             {
-                return new  FailedResult<PaginatedList<PromotionVM>>("User not found!");
+                return new FailedResult<PaginatedList<PromotionVM>>("User not found!");
             }
 
-            var vMs = (from c in _dbContext.Promotions
-                      where (c.Enabled == true)
-                      && (c.StartDate <= DateTime.Now)
-                      && (c.EndDate >= DateTime.Now)
-                      select c);
+            var promotions = from c in _dbContext.Promotions
+                             join o in _dbContext.Orders on c.ID equals o.PromotionID
+
+                             where o.AppUserID.ToString().Equals(userID)
+                             && (c.Enabled == true)
+                             && (c.StartDate <= DateTime.Now)
+                             && (c.EndDate >= DateTime.Now)
+                             group c by c.ID into g
+                             select new { id = g.Key, count = g.Count() };
+
+            var vMs = from id in promotions
+                      join p in _dbContext.Promotions on id.id equals p.ID
+                      where id.count < p.UseTimes
+                      select p;
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {
@@ -50,17 +59,19 @@ namespace FoodOrder.API.Services
             }
 
             var vmList = await Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority").ToListAsync();
-            // 
-            var a = vmList.Where(x => {
-                var timeUsed = (from o in _dbContext.Orders
-                                where o.AppUserID.ToString().Equals(userID) && o.PromotionID == x.ID
-                                select o).Count();
-                return timeUsed < x.UseTimes;
-            });
 
-            var created = PaginatedList<PromotionVM>.CreateFromList(a.Select(c => _mapper.Map<Promotion, PromotionVM>(c)).ToList(), 
+
+
+            var created = PaginatedList<PromotionVM>.CreateFromList(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)).ToList(),
                 request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
-            
+
+            foreach (var item in created.Items)
+            {
+                item.TimeUsedByCurrentUser = (from o in _dbContext.Orders
+                                              where o.AppUserID.ToString().Equals(userID) && o.PromotionID == item.ID
+                                              select o).Count();
+            }
+
             return new SuccessedResult<PaginatedList<PromotionVM>>(created);
         }
 
@@ -89,9 +100,9 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<PromotionVM>("Order not found!");
             }
-           
+
             var vm = _mapper.Map<Promotion, PromotionVM>(c);
-           
+
 
             return new SuccessedResult<PromotionVM>(vm);
         }
@@ -105,11 +116,11 @@ namespace FoodOrder.API.Services
                 var result = await _dbContext.Promotions.AddAsync(_mapper.Map<PromotionCreateVM, Promotion>(vm));
                 await _dbContext.SaveChangesAsync();
 
-               
+
                 transaction.Commit();
 
                 var promotionVM = _mapper.Map<PromotionVM>(result.Entity);
-               
+
                 return new SuccessedResult<PromotionVM>(promotionVM);
             }
             catch (Exception e)
@@ -147,7 +158,7 @@ namespace FoodOrder.API.Services
                 transaction.Commit();
 
                 var promotionVM = _mapper.Map<PromotionVM>(promotion);
-               
+
                 return new SuccessedResult<PromotionVM>(promotionVM);
             }
             catch (Exception e)

@@ -11,6 +11,7 @@ using FoodOrder.Core.ViewModels.Ratings;
 using FoodOrder.Core.ViewModels.Users;
 using FoodOrder.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -22,13 +23,16 @@ namespace FoodOrder.API.Services
 {
     public class OrderServices
     {
+        private readonly IConfiguration _config;
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<OrderServices> _logger;
         public FoodServices _foodServices { get; set; }
 
-        public OrderServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<OrderServices> logger, FoodServices foodServices)
+
+        public OrderServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<OrderServices> logger, FoodServices foodServices, IConfiguration configuration)
         {
+            _config = configuration;
             _dbContext = applicationDBContext;
             _mapper = mapper;
             _logger = logger;
@@ -189,6 +193,16 @@ namespace FoodOrder.API.Services
                 return new  FailedResult<OrderVM>("User not found!");
             }
 
+            var numProcessingOrder = (from o in _dbContext.Orders
+                                     where (o.OrderStatusID == OrderStatus.DangGiao
+                                     || o.OrderStatusID == OrderStatus.DangChuanBi)
+                                     && o.AppUserID.Equals(vm.AppUserID)
+                                     select o).Count();
+            if(numProcessingOrder >= _config.GetValue<int>("MaxProcessingOrderPerUser"))
+            {
+                return new FailedResult<OrderVM>("Bạn đang có quá nhiều đơn hàng đang xử lý.\nVui lòng thử lại sau!");
+            }
+
             using var transaction = _dbContext.Database.BeginTransaction();
             try
             {
@@ -254,10 +268,11 @@ namespace FoodOrder.API.Services
                     {
                         return new FailedResult<OrderVM>("Promotion not found!");
                     }
+                   
                     var timeUsed = (from o in _dbContext.Orders
                                     where o.AppUserID.Equals(order.AppUserID) && o.PromotionID == promotion.ID
-                                    select o).Count();
-                   
+                                    select o).Count() - 1;
+
                     if (promotion.StartDate <= DateTime.Now
                         && promotion.EndDate >= DateTime.Now
                         && promotion.Enabled == true

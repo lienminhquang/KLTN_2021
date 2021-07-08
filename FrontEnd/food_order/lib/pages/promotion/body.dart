@@ -90,33 +90,63 @@ class PromotionItem extends StatelessWidget {
                           children: [
                             Container(
                               width: double.infinity,
-                              height: 200,
+                              //height: 200,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.white),
                               padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
-                              child: Column(children: [
-                                Text(_promotionVM.name,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center),
-                                SizedBox(height: 20),
-                                Text(_promotionVM.desciption.toString(),
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade700)),
-                                Text(
-                                    "Áp dụng cho đơn hàng từ: ${AppConfigs.toPrice(_promotionVM.minPrice!)}",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade700)),
-                                Text(
-                                    "Tối đa: ${AppConfigs.toPrice(_promotionVM.max!)}",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade700)),
-                              ]),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_promotionVM.name,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center),
+                                    SizedBox(height: 20),
+                                    Text(_promotionVM.desciption.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade700)),
+                                    Text("\nĐiều kiện:",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey.shade700)),
+                                    SizedBox(height: 3),
+                                    Text(
+                                        "Thời gian: ${AppConfigs.AppDateFormat.format(_promotionVM.startDate)} -> ${AppConfigs.AppDateFormat.format(_promotionVM.endDate)}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade700)),
+                                    SizedBox(height: 3),
+                                    Text(
+                                        "Áp dụng cho đơn hàng từ: ${AppConfigs.toPrice(_promotionVM.minPrice!)}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade700)),
+                                    SizedBox(height: 3),
+                                    Text(
+                                        "Tối đa: ${AppConfigs.toPrice(_promotionVM.max!)}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade700)),
+                                    SizedBox(height: 3),
+                                    Row(
+                                      children: [
+                                        Text(
+                                            "Số lần sử dụng: ${_promotionVM.useTimes}",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey.shade700)),
+                                        Text(
+                                            " (Đã sử dụng ${_promotionVM.timeUsedByCurrentUser} lần)",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.red)),
+                                      ],
+                                    ),
+                                  ]),
                             ),
                           ],
                         )),

@@ -18,6 +18,7 @@ class PromotionVM {
   double? max;
   double? minPrice;
   late bool isGlobal;
+  late int timeUsedByCurrentUser;
 
   @JsonKey(ignore: true)
   late List<FoodVM> foodVMs;

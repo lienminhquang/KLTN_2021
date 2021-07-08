@@ -155,6 +155,11 @@ class _BodyState extends State<Body> {
   }
 
   Widget offers(HomeLoadedState state) {
+    if (state.listPromotion.length == 0) {
+      return Container(
+        height: 20,
+      );
+    }
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (conetxt) {
@@ -176,19 +181,16 @@ class _BodyState extends State<Body> {
         ),
         child: Stack(
           children: [
-            Row(
-              children: [
-                Center(
-                  child: Text(
-                    "Nhanh tay nào! Có ${state.listPromotion.length} khuyến mãi đang chờ nè",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13.0,
-                        color: Color(0xFF5B5B5B)),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ],
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Nhanh tay nào! Có ${state.listPromotion.length} khuyến mãi đang chờ nè",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13.0,
+                    color: Color(0xFF5B5B5B)),
+                textAlign: TextAlign.left,
+              ),
             ),
             Positioned(
                 right: 0,

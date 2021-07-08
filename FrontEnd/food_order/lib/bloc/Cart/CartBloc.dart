@@ -173,6 +173,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         addressString: addressString,
         addressName: addressName,
         promotionID: promotionID));
+    if (result.isSuccessed) {
+      _promotionID = null;
+    }
     return result;
   }
 }
