@@ -32,6 +32,10 @@ namespace FoodOrder.Admin.Controllers
         // GET: CategoriesController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
         {
+            if (!await this.ValidateTokenInCookie(_adminUserService))
+            {
+                return this.RedirectToLoginPage();
+            }
             var carts = await _categoryServices.GetAllPaging(request, this.GetTokenFromCookie());
 
             if (!carts.IsSuccessed)
@@ -45,6 +49,10 @@ namespace FoodOrder.Admin.Controllers
         // GET: CategoriesController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
+            if (!await this.ValidateTokenInCookie(_adminUserService))
+            {
+                return this.RedirectToLoginPage();
+            }
             var cart = await _categoryServices.GetByID(id, this.GetTokenFromCookie());
 
             if (!cart.IsSuccessed)
@@ -56,8 +64,12 @@ namespace FoodOrder.Admin.Controllers
         }
 
         // GET: CategoriesController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            if (!await this.ValidateTokenInCookie(_adminUserService))
+            {
+                return this.RedirectToLoginPage();
+            }
             return View();
         }
 

@@ -16,17 +16,23 @@ namespace FoodOrder.Admin.Controllers
     [Authorize(Roles = RoleTypes.ManagerGroup)]
     public class HomeController : Controller
     {
+        private readonly AdminUserService _adminUserService;
         private readonly ILogger<HomeController> _logger;
         private readonly HomeServices _homeServices;
 
-        public HomeController(ILogger<HomeController> logger, HomeServices homeServices)
+        public HomeController(ILogger<HomeController> logger, HomeServices homeServices, AdminUserService adminUserService)
         {
+            _adminUserService = adminUserService;
             _logger = logger;
             _homeServices = homeServices;
         }
 
         public async Task<IActionResult> IndexAsync()
         {
+            if (!await this.ValidateTokenInCookie(_adminUserService))
+            {
+                return this.RedirectToLoginPage();
+            }
             var username = User.Identity.Name;
 
             DateTime startDay = DateTime.Now.AddDays(-30);
@@ -63,6 +69,7 @@ namespace FoodOrder.Admin.Controllers
 
         public IActionResult Privacy()
         {
+
             return View();
         }
 

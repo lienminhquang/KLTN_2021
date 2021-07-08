@@ -45,7 +45,7 @@ namespace FoodOrder.Admin.Extensions
             var jsonToken = handler.ReadToken(authHeader);
             var tokenS = handler.ReadToken(authHeader) as JwtSecurityToken;
 
-            if (!(tokenS.ValidTo <= DateTime.UtcNow))
+            if (tokenS.ValidTo <= DateTime.UtcNow)
             {
                 var loginResponse = await userService.RefreshToken(authHeader, refreshToken);
                 if (loginResponse.IsSuccessed)

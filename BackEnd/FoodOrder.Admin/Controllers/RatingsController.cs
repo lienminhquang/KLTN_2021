@@ -30,6 +30,10 @@ namespace FoodOrder.Admin.Controllers
         // GET: CartsController
         public async Task<ActionResult> IndexAsync([FromQuery] PagingRequestBase request)
         {
+            if (!await this.ValidateTokenInCookie(_adminUserService))
+            {
+                return this.RedirectToLoginPage();
+            }
             var vm = await _ratingServices.GetAllPaging(request, this.GetTokenFromCookie());
 
             if (!vm.IsSuccessed)
@@ -42,6 +46,10 @@ namespace FoodOrder.Admin.Controllers
 
         public async Task<ActionResult> DetailsAsync([FromQuery] int orderID, [FromQuery] int foodID)
         {
+            if (!await this.ValidateTokenInCookie(_adminUserService))
+            {
+                return this.RedirectToLoginPage();
+            }
             var vm = await _ratingServices.GetByID(orderID, foodID, this.GetTokenFromCookie());
 
             if (!vm.IsSuccessed)

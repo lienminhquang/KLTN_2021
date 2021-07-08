@@ -7,6 +7,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section CustomCss {
+    <style>
+        table {
+            width: 100%;
+           
+        }
+
+            table td {
+                white-space: nowrap; /** added **/
+            }
+
+            table td {
+                border: 1px solid #ccc;
+            }
+
+           
+    </style>
+}
+
 <div class="container-fluid">
     <h1 class="mt-4">List Order</h1>
     <ol class="breadcrumb mb-4">
@@ -23,7 +42,7 @@
         <div class="card-body">
             <h3>Đơn hàng đang xử lý</h3>
             <div class="table-responsive">
-                <table class="table table-bordered display" id="example" width="100%" cellspacing="0">
+                <table class="table table-bordered table-sm" id="example" >
                     <thead>
                         <tr>
                             <th>
