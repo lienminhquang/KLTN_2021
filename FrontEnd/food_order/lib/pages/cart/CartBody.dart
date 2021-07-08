@@ -63,6 +63,7 @@ class Body extends StatelessWidget {
         }));
       },
       child: Container(
+        margin: EdgeInsets.symmetric(vertical: 3),
         decoration: BoxDecoration(color: Colors.white, boxShadow: <BoxShadow>[
           new BoxShadow(
             blurRadius: 3.0,

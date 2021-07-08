@@ -82,23 +82,21 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                   context.read<CartBloc>().add(CartRefreshdEvent());
                 }
               },
-              child: ClipRRect(
-                borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
-                child: new Container(
-                  decoration: new BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  height: 50.0,
-                  child: new Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: new Center(
-                      child: new Text(
-                        "${AppConfigs.toPrice(totalPrice)}",
-                        style: new TextStyle(
-                            color: Colors.white,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w600),
-                      ),
+              child: new Container(
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
+                height: 50.0,
+                child: new Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: new Center(
+                    child: new Text(
+                      "${AppConfigs.toPrice(totalPrice)}",
+                      style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -108,28 +106,26 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
           SizedBox(
             width: 10,
           ),
-          ClipRRect(
-            borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
+          InkWell(
+            onTap: () {
+              setState(() {
+                if (count > 1) count--;
+                if (cartVM != null) {
+                  cartVM.quantity = count;
+                }
+              });
+            },
             child: Container(
               width: 40.0,
               height: 40.0,
               decoration: new BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: Colors.blueGrey[200],
+                borderRadius: new BorderRadius.circular(10.0),
               ),
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    if (count > 1) count--;
-                    if (cartVM != null) {
-                      cartVM.quantity = count;
-                    }
-                  });
-                },
-                child: Icon(
-                  Icons.remove,
-                  size: 25.0,
-                  color: Colors.white,
-                ),
+              child: Icon(
+                Icons.remove,
+                size: 25.0,
+                color: Colors.white,
               ),
             ),
           ),
@@ -143,28 +139,26 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                         fontSize: 18.0,
                         fontWeight: FontWeight.w600))),
           ),
-          ClipRRect(
-            borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
+          InkWell(
+            onTap: () {
+              setState(() {
+                count++;
+                if (cartVM != null) {
+                  cartVM.quantity = count;
+                }
+              });
+            },
             child: Container(
               width: 40.0,
               height: 40.0,
               decoration: new BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: Colors.blueGrey[200],
+                borderRadius: new BorderRadius.circular(10.0),
               ),
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    count++;
-                    if (cartVM != null) {
-                      cartVM.quantity = count;
-                    }
-                  });
-                },
-                child: Icon(
-                  Icons.add,
-                  size: 25.0,
-                  color: Colors.white,
-                ),
+              child: Icon(
+                Icons.add,
+                size: 25.0,
+                color: Colors.white,
               ),
             ),
           )
