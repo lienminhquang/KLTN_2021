@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 
 import 'Body.dart';
 
@@ -15,7 +16,7 @@ class Search extends StatelessWidget {
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.blue.shade100,
+    backgroundColor: AppTheme.appBarBackground,
     title: Column(
       children: [
         Text(

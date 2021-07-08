@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/bloc/Address/AddressBloc.dart';
 import 'package:food_delivery/bloc/Address/AddressEvent.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Addresses/AddressCreateVM.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ class _AddAdressState extends State<AddAdressScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Thêm địa chỉ'),
+        backgroundColor: AppTheme.appBarBackground,
       ),
       body: BodyAdressScreen(),
     );

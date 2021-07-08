@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/bloc/SignUp/SignUpBloc.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,7 @@ class ChangePasswordScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Đổi mật khẩu'),
+        backgroundColor: AppTheme.appBarBackground,
       ),
       body: buildBody(context),
     );

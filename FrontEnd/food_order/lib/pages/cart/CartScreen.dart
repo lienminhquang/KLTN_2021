@@ -33,7 +33,7 @@ AppBar buildAppBar(BuildContext context) {
   int count = 0;
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.lightBlue,
+    backgroundColor: AppTheme.appBarBackground,
     title: Column(
       children: [
         Text(

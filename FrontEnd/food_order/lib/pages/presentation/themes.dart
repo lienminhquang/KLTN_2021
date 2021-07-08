@@ -73,4 +73,5 @@ class AppTheme {
   );
 
   static final circleProgressIndicatorColor = Colors.grey[350];
+  static final appBarBackground = Colors.blue.shade100;
 }

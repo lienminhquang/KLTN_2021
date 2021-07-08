@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 
 import 'ChatBody.dart';
 
@@ -15,7 +16,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       appBar: AppBar(
         title: Text('Amee assistant'),
         centerTitle: true,
-        backgroundColor: Colors.blue.shade100,
+        backgroundColor: AppTheme.appBarBackground,
       ),
       body: Center(
         child: ChatBody(),

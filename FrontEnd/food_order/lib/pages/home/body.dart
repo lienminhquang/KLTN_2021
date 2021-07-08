@@ -51,6 +51,7 @@ class _BodyState extends State<Body> {
 
   Widget buidImageCarousel(List<String> images) {
     return Container(
+      margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
       height: 150,
       child: CarouselSlider(
         options: CarouselOptions(
@@ -96,6 +97,17 @@ class _BodyState extends State<Body> {
 
   Widget _buildLoadedState(BuildContext context, HomeLoadedState state) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppTheme.appBarBackground,
+        leading: Container(
+          margin: EdgeInsets.fromLTRB(15, 0, 0, 0),
+          child: Image.asset(
+            'images/logo.png',
+            //fit: BoxFit.fill,
+          ),
+        ),
+        title: fakeSearchBox(),
+      ),
       body: Container(
         child: RefreshIndicator(
           onRefresh: () async {
@@ -104,7 +116,7 @@ class _BodyState extends State<Body> {
           child: ListView(
             children: [
               //NotificationWidget(),
-              fakeSearchBox(),
+
               buidImageCarousel(_appBannerImages),
               offers(state),
               _categoryList(state.listCategory),
@@ -112,7 +124,8 @@ class _BodyState extends State<Body> {
                 height: 30,
               ),
               SaleContainer(state.listSaleCampaign),
-              PromotionContainer(state.listPromotion),
+              //PromotionContainer(state.listPromotion),
+              BestSellingContainer(state.listBestSellingFood)
               //PromotionContainer(state.listPromotion[1]),
             ],
           ),
@@ -122,8 +135,7 @@ class _BodyState extends State<Body> {
   }
 
   Widget fakeSearchBox() {
-    return Container(
-        child: GestureDetector(
+    return GestureDetector(
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => Search()));
@@ -133,7 +145,7 @@ class _BodyState extends State<Body> {
           borderRadius: BorderRadius.circular(5),
           color: Colors.grey[200],
         ),
-        margin: EdgeInsets.all(20),
+        //margin: EdgeInsets.all(20),
         height: 40,
         child: Row(
           children: [
@@ -145,13 +157,13 @@ class _BodyState extends State<Body> {
               ),
             ),
             Text(
-              "Bạn muốn ăn uống gì nhỉ?",
+              "Bạn muốn tìm gì?",
               style: TextStyle(color: Colors.grey[500], fontSize: 15.0),
             )
           ],
         ),
       ),
-    ));
+    );
   }
 
   Widget offers(HomeLoadedState state) {
@@ -397,6 +409,71 @@ class _FoodWidget extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class BestSellingContainer extends StatelessWidget {
+  final List<FoodVM> _listFoodVM;
+  BestSellingContainer(this._listFoodVM);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //color: Colors.grey[50],
+      padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.fromLTRB(0.0, 3.0, 8.0, 8.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Các món bán chạy".toUpperCase(),
+                overflow: TextOverflow.clip,
+                maxLines: 1,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color(0xFFFF5166)),
+              ),
+            ),
+          ),
+          // Container(
+          //   //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+          //   child: Align(
+          //     child: Text(
+          //       _promotionVM.desciption!,
+          //       textAlign: TextAlign.left,
+          //       overflow: TextOverflow.ellipsis,
+          //       style: TextStyle(
+          //           color: Color(0xFF646D7A), fontWeight: FontWeight.w500),
+          //     ),
+          //     alignment: Alignment.centerLeft,
+          //   ),
+          // ),
+          // Container(
+          //   margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          //   height: 250,
+          //   child: ListView.builder(
+          //       scrollDirection: Axis.horizontal,
+          //       itemCount: _listFoodVM.length,
+          //       itemBuilder: (BuildContext context, int index) {
+          //         final foodVM = _listFoodVM[index];
+
+          //         return _FoodWidget(
+          //           foodVM: foodVM,
+          //           promotionVM: null,
+          //           saleCampaignVM: foodVM.saleCampaignVM,
+          //         );
+          //       }),
+          // )
+          Column(
+            children: List.generate(_listFoodVM.length,
+                (index) => FoodCard(foodVM: _listFoodVM[index])),
+          )
+        ],
       ),
     );
   }

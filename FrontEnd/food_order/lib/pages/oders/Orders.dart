@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 
 import 'Body.dart';
 
@@ -16,7 +17,7 @@ class OderScreen extends StatelessWidget {
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.lightBlue,
+    backgroundColor: AppTheme.appBarBackground,
     title: Column(
       children: [
         Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/bloc/Address/AddressBloc.dart';
 import 'package:food_delivery/bloc/Address/AddressEvent.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Addresses/AddressEditVM.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class EditAdressScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sửa địa chỉ'),
+        backgroundColor: AppTheme.appBarBackground,
       ),
       body: buildBody(context),
     );

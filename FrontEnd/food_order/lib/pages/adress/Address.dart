@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 
 import 'Body.dart';
@@ -21,7 +22,7 @@ class AddressScreen extends StatelessWidget {
                 Navigator.of(context).pop();
               }),
           centerTitle: true,
-          backgroundColor: Colors.blue.shade100,
+          backgroundColor: AppTheme.appBarBackground,
           title: Text(
             'Địa chỉ',
             style: TextStyle(color: Colors.black),

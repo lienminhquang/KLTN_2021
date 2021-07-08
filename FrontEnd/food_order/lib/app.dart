@@ -37,43 +37,63 @@ class _MotherBoardState extends State<MotherBoard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          items: [
-            new BottomNavigationBarItem(
+    return WillPopScope(
+      onWillPop: () async {
+        var rs = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Bạn có muốn thoát ứng dụng?"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: Text("Có")),
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text("Không"))
+                ],
+              );
+            });
+        return rs == true;
+      },
+      child: Scaffold(
+        body: _children[_currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            items: [
+              new BottomNavigationBarItem(
+                  backgroundColor: Colors.black87,
+                  icon: Icon(
+                    Icons.home,
+                  ),
+                  label: "Home"),
+              new BottomNavigationBarItem(
+                  backgroundColor: Colors.black87,
+                  icon: Icon(Icons.receipt_long),
+                  label: "Order"),
+              new BottomNavigationBarItem(
+                  backgroundColor: Colors.black87,
+                  icon: Icon(Icons.shopping_cart),
+                  label: "Cart"),
+              // new BottomNavigationBarItem(
+              //     backgroundColor: Colors.black87,
+              //     icon: Icon(Icons.notifications_active_outlined),
+              //     label: "Notification"),
+              new BottomNavigationBarItem(
                 backgroundColor: Colors.black87,
-                icon: Icon(
-                  Icons.home,
-                ),
-                label: "Home"),
-            new BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: "Profile",
+              ),
+              new BottomNavigationBarItem(
                 backgroundColor: Colors.black87,
-                icon: Icon(Icons.receipt_long),
-                label: "Order"),
-            new BottomNavigationBarItem(
-                backgroundColor: Colors.black87,
-                icon: Icon(Icons.shopping_cart),
-                label: "Cart"),
-            // new BottomNavigationBarItem(
-            //     backgroundColor: Colors.black87,
-            //     icon: Icon(Icons.notifications_active_outlined),
-            //     label: "Notification"),
-            new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
-              icon: Icon(Icons.person),
-              label: "Profile",
-            ),
-            new BottomNavigationBarItem(
-              backgroundColor: Colors.black87,
-              icon: Icon(Icons.support_agent_outlined),
-              label: "Amee",
-            )
-          ],
-          onTap: (int index) {
-            onTabTapped(index, context);
-          }),
+                icon: Icon(Icons.support_agent_outlined),
+                label: "Amee",
+              )
+            ],
+            onTap: (int index) {
+              onTabTapped(index, context);
+            }),
+      ),
     );
   }
 
