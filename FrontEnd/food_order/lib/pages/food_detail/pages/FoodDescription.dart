@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
-class ProductDesc extends StatelessWidget {
+class FoodDescription extends StatelessWidget {
   final FoodVM _foodVM;
-  ProductDesc(this._foodVM);
+  FoodDescription(this._foodVM);
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

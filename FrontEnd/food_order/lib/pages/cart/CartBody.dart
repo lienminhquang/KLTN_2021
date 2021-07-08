@@ -7,7 +7,7 @@ import 'package:food_delivery/bloc/Cart/CartState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/cart/CheckoutBar.dart';
-import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/food_detail/FoodDetail.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/presentation/LightColor.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';

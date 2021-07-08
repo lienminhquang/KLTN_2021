@@ -8,9 +8,9 @@ import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 
-import 'footer.dart';
 import 'package:provider/provider.dart';
-import 'header.dart';
+
+import 'FoodDetailComponents.dart';
 
 class FoodDetailArguments {
   bool displayCartBtn;
@@ -178,10 +178,10 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
       body: new ListView(
         controller: _scrollController,
         children: <Widget>[
-          new MHeader(
+          new FoodImage(
             state: state,
           ),
-          FavnPrice(state),
+          NamePrice(state),
           //Divider(),
           NotificationListener<OverscrollNotification>(
               onNotification: (OverscrollNotification value) {
@@ -203,7 +203,7 @@ class _FoodDetailState extends State<FoodDetail> with TickerProviderStateMixin {
                     .jumpTo(_scrollController.offset + value.overscroll);
                 return true;
               },
-              child: new Mfooter(state)),
+              child: new DescriptionAndRating(state)),
         ],
       ),
       bottomNavigationBar: Container(

@@ -3,17 +3,141 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
+import 'package:food_delivery/view_models/Foods/FoodVM.dart';
+import 'pages/FoodDescription.dart';
+import 'pages/UserReview.dart';
 
-class Appbar extends StatelessWidget {
+class NamePrice extends StatelessWidget {
+  final FoodDetailLoadedState _loadedState;
+  NamePrice(this._loadedState);
+  Widget _priceWidget() {
+    FoodVM foodVM = _loadedState.foodVM;
+    double discount = 0;
+    if (_loadedState.foodVM.saleCampaignVM != null) {
+      discount = _loadedState.foodVM.saleCampaignVM!.percent;
+      final finalPrice = foodVM.price * (100 - discount) / 100;
+      return Column(
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              AppConfigs.toPrice(finalPrice),
+              style: new TextStyle(fontSize: 20.0),
+            ),
+            Text(
+              AppConfigs.toPrice(foodVM.price),
+              style: new TextStyle(
+                  fontSize: 13.0,
+                  decoration: TextDecoration.lineThrough,
+                  color: Colors.grey),
+            ),
+          ]);
+    }
+    return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+      Text(
+        AppConfigs.toPrice(foodVM.price),
+        style: new TextStyle(fontSize: 20.0),
+      ),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Align(
-      heightFactor: 0.35,
+    FoodVM foodVM = _loadedState.foodVM;
+
+    return new Padding(
+      padding: const EdgeInsets.only(
+          left: 20.0, right: 20.0, top: 10.0, bottom: 12.0),
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new Expanded(
-            child: new Container(),
+          Flexible(
+            flex: 5,
+            child: Text(
+              foodVM.name,
+              style: new TextStyle(
+                  fontSize: 18.0,
+                  fontFamily: "OpenSans",
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.normal),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+            ),
+          ),
+          Flexible(
+            flex: 2,
+            child: _priceWidget(),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class DescriptionAndRating extends StatefulWidget {
+  final FoodDetailLoadedState _loadedState;
+  DescriptionAndRating(this._loadedState);
+  @override
+  _DescriptionAndRatingState createState() =>
+      new _DescriptionAndRatingState(_loadedState);
+}
+
+class _DescriptionAndRatingState extends State<DescriptionAndRating>
+    with SingleTickerProviderStateMixin {
+  final FoodDetailLoadedState _loadedState;
+  _DescriptionAndRatingState(this._loadedState);
+  late List<Tab> _tabs;
+  late List<Widget> _pages;
+  static late TabController _controller;
+  @override
+  void initState() {
+    super.initState();
+
+    _tabs = [
+      new Tab(
+        child: new Text(
+          "Giới thiệu",
+          style: new TextStyle(color: Colors.black),
+        ),
+      ),
+      new Tab(
+        child: new Text(
+          "Đánh giá",
+          style: new TextStyle(color: Colors.black),
+        ),
+      ),
+    ];
+    _pages = [
+      new FoodDescription(_loadedState.foodVM),
+      new UserReview(_loadedState.userRatingList)
+    ];
+    _controller = new TabController(
+      length: _tabs.length,
+      vsync: this,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black12,
+      child: Column(
+        children: <Widget>[
+          TabBar(
+            isScrollable: true,
+            controller: _controller,
+            tabs: _tabs,
+            indicatorColor: Colors.blue,
+          ),
+          new Divider(
+            height: 1.0,
+          ),
+          new SizedBox.fromSize(
+            size: const Size.fromHeight(500.0),
+            child: new TabBarView(
+              controller: _controller,
+              children: _pages,
+            ),
           ),
         ],
       ),
@@ -21,58 +145,9 @@ class Appbar extends StatelessWidget {
   }
 }
 
-class Content extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: new EdgeInsets.only(top: 30.0),
-      child: new Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: 140.0,
-              height: 140.0,
-            ),
-            new Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Container(
-                    width: 80,
-                  ),
-                  new Container(
-                    width: 60.0,
-                    height: 60.0,
-                    decoration: new BoxDecoration(
-                        //gradient: btnGradient,
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        //border: Border.all(color: Colors.black),
-                        boxShadow: <BoxShadow>[
-                          new BoxShadow(
-                              blurRadius: 10.0,
-                              color: Colors.black12,
-                              offset: new Offset(0.0, 10.0))
-                        ]),
-                    child: new Icon(
-                      Icons.favorite_sharp,
-                      size: 25.0,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ]),
-    );
-  }
-}
-
-class MHeader extends StatelessWidget {
+class FoodImage extends StatelessWidget {
   final FoodDetailLoadedState state;
-  MHeader({required this.state});
+  FoodImage({required this.state});
   @override
   Widget build(BuildContext context) {
     final foodVM = state.foodVM;
@@ -172,7 +247,7 @@ class MHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              Appbar()
+              //Appbar()
             ],
           ),
         ),

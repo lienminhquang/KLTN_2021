@@ -5,7 +5,8 @@ import 'package:food_delivery/bloc/Search/SearchBloc.dart';
 import 'package:food_delivery/bloc/Search/SearchEvent.dart';
 import 'package:food_delivery/bloc/Search/SearchState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/categoty/Category.dart';
+import 'package:food_delivery/pages/food_detail/FoodDetail.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
@@ -101,10 +102,11 @@ class _SearchResults extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       //height: 100,
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: ListView.builder(
           itemCount: _listFood.length,
           itemBuilder: (context, index) {
-            return _ResultItem(_listFood[index]);
+            return FoodCard(foodVM: _listFood[index]);
           }),
     );
   }
@@ -116,10 +118,13 @@ class _ResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
         child: CachedNetworkImage(
-          placeholder: (context, url) => CircularProgressIndicator(
-              color: AppTheme.circleProgressIndicatorColor),
+          placeholder: (context, url) => Center(
+            child: CircularProgressIndicator(
+                color: AppTheme.circleProgressIndicatorColor),
+          ),
           imageUrl: AppConfigs.URL_Images + "/${_foodVM.imagePath}",
           height: 50,
           width: 50,

@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/food_detail/FoodDetail.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
@@ -263,7 +263,7 @@ class FoodCard extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.all(0.0),
-      child: GestureDetector(
+      child: InkWell(
         onTap: () async {
           Navigator.push(
               context,
@@ -296,11 +296,15 @@ class FoodCard extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                width: 170,
+                //width: 170,
                 height: 100,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      width: 170,
                       margin: const EdgeInsets.fromLTRB(0, 10, 5, 10),
                       child: Align(
                         alignment: Alignment.centerLeft,
@@ -312,54 +316,30 @@ class FoodCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Expanded(
+                    _priceWidget(foodVM),
+                    Container(
+                      height: 40,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: _priceWidget(foodVM)),
-                              Container(
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      //width: 110,
-                                      //color: Colors.white38,
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 18,
-                                          ),
-                                          Text(
-                                            "${foodVM.agvRating.toStringAsPrecision(2)}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.black),
-                                          ),
-                                          Text(
-                                            " (${foodVM.totalRating})",
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                            size: 18,
                           ),
+                          Text(
+                            "${foodVM.agvRating.toStringAsPrecision(2)}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            " (${foodVM.totalRating})",
+                            style: TextStyle(color: Colors.grey),
+                          )
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               )

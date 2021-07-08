@@ -24,15 +24,18 @@ class _SingleComment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      //margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           UserDetailsWithFollow(
               _ratingVM.userFullName, _ratingVM.timeCreate, _ratingVM.star),
-          Text(
-            _ratingVM.comment,
-            textAlign: TextAlign.left,
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 5, 5, 5),
+            child: Text(
+              _ratingVM.comment,
+              textAlign: TextAlign.left,
+            ),
           ),
           Divider(
             color: Colors.black45,

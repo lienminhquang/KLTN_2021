@@ -11,7 +11,7 @@ import 'package:food_delivery/bloc/Chat/ChatBloc.dart';
 import 'package:food_delivery/bloc/Chat/ChatEvent.dart';
 import 'package:food_delivery/bloc/Chat/ChatState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/food_detail/FoodDetail.dart';
 import 'package:food_delivery/pages/oders/OrderItem.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';

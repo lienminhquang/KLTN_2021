@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'body.dart';
+import 'Body.dart';
 
 class FavoriteScreen extends StatelessWidget {
   static String routeName = "/favorite";

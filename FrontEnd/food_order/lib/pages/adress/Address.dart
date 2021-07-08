@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/view_models/Addresses/AddressVM.dart';
 
-import 'body.dart';
+import 'Body.dart';
 
 typedef AddressScreenCallBack = void Function(
     AddressVM addressVM, BuildContext context);

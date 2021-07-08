@@ -14,7 +14,7 @@ import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/models/NotificationModel.dart';
-import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/food_detail/FoodDetail.dart';
 import 'package:food_delivery/pages/home/DashlinePainter.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/home/ZigZacVerticalLine.dart';

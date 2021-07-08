@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/pages/commons/start_ratings.dart';
+import 'package:food_delivery/pages/commons/StarRating.dart';
 import 'package:food_delivery/pages/food_detail/rating/user_details.dart';
 
 class UserDetailsWithFollowKeys {

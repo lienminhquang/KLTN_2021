@@ -6,11 +6,11 @@ import 'package:food_delivery/bloc/Profile/ProfileState.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
+import 'package:food_delivery/pages/profile/ChangePasswordScreen.dart';
 import 'package:food_delivery/services/UserServices.dart';
-import 'change_password.dart';
-import 'profile_menu.dart';
-import 'profile_pic.dart';
-import 'package:provider/provider.dart';
+
+import 'ProfileMenu.dart';
+import 'ProfilePicture.dart';
 
 class Body extends StatelessWidget {
   Widget _buildLoadeState(BuildContext context, ProfileLoadedState state) {
