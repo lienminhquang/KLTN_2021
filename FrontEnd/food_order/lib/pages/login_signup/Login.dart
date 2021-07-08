@@ -9,6 +9,7 @@ import 'package:food_delivery/bloc/Login/LoginBloc.dart';
 import 'package:food_delivery/bloc/Login/LoginState.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/login_signup/ResetPassword.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/pages/cart/CartScreen.dart';
@@ -319,7 +320,8 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
         if (state is LoginLoadingState) {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator(
+              color: AppTheme.circleProgressIndicatorColor);
         } else if (state is LoginLoadedState) {
           return _buildLoaedState(context, state);
         } else if (state is LoginErrorState) {

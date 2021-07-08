@@ -8,6 +8,7 @@ import 'package:food_delivery/bloc/Category/CategoryState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -285,8 +286,9 @@ class FoodCard extends StatelessWidget {
                     height: 80,
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
-                      placeholder: (context, url) =>
-                          Center(child: CircularProgressIndicator()),
+                      placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(
+                              color: AppTheme.circleProgressIndicatorColor)),
                       imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
                     ),
                   ),

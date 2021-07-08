@@ -71,4 +71,6 @@ class AppTheme {
     fontWeight: FontWeight.w500,
     color: Colors.green[900],
   );
+
+  static final circleProgressIndicatorColor = Colors.grey[350];
 }

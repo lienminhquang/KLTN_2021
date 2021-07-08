@@ -5,6 +5,7 @@ import 'package:food_delivery/bloc/Cart/CartEvent.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Promotions/PromotionVM.dart';
 
 const List<Key> keys = [Key('Network')];
@@ -36,7 +37,10 @@ class Body extends StatelessWidget {
   }
 
   Widget _buildLoadingState() {
-    return Container(child: Center(child: CircularProgressIndicator()));
+    return Container(
+        child: Center(
+            child: CircularProgressIndicator(
+                color: AppTheme.circleProgressIndicatorColor)));
   }
 
   @override

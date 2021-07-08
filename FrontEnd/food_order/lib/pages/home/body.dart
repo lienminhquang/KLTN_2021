@@ -18,6 +18,7 @@ import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/home/DashlinePainter.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/home/ZigZacVerticalLine.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
@@ -263,8 +264,10 @@ class CategoryItem extends StatelessWidget {
                 height: 100,
                 child: CachedNetworkImage(
                   fit: BoxFit.fill,
-                  placeholder: (context, url) =>
-                      Center(child: CircularProgressIndicator()),
+                  placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(
+                    color: AppTheme.circleProgressIndicatorColor,
+                  )),
                   imageUrl: AppConfigs.URL_Images + "/$image",
                 ),
               ),
@@ -364,8 +367,9 @@ class _FoodWidget extends StatelessWidget {
                   width: 200,
                   //padding: const EdgeInsets.all(16.0),
                   child: CachedNetworkImage(
-                      placeholder: (context, url) =>
-                          Center(child: CircularProgressIndicator()),
+                      placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(
+                              color: AppTheme.circleProgressIndicatorColor)),
                       imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
                       fit: BoxFit.cover),
                 ),

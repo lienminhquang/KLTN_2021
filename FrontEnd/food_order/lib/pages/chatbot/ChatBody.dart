@@ -13,6 +13,7 @@ import 'package:food_delivery/bloc/Chat/ChatState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
 import 'package:food_delivery/pages/oders/OrderItem.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderDetailVM.dart';
 import 'package:food_delivery/view_models/Orders/OrderStatusVM.dart';
@@ -74,7 +75,8 @@ class _ChatBodyState extends State<ChatBody> {
       if (state is ChatLoadingState) {
         return Container(
             child: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+              color: AppTheme.circleProgressIndicatorColor),
         ));
       }
       if (state is ChatErrorState) {
@@ -111,7 +113,9 @@ class _ChatBodyState extends State<ChatBody> {
                                     ),
                                     padding: EdgeInsets.symmetric(vertical: 20),
                                   ),
-                                  CircularProgressIndicator(),
+                                  CircularProgressIndicator(
+                                      color: AppTheme
+                                          .circleProgressIndicatorColor),
                                 ],
                               ),
                             ));
@@ -285,8 +289,8 @@ class FoodCard extends StatelessWidget {
                     height: 80,
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                      placeholder: (context, url) => CircularProgressIndicator(
+                          color: AppTheme.circleProgressIndicatorColor),
                       imageUrl: AppConfigs.URL_Images + "/${foodVM.imagePath}",
                     ),
                   ),

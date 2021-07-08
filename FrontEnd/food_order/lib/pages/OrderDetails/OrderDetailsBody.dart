@@ -25,7 +25,8 @@ class OrderDetailsBody extends StatelessWidget {
       if (state is OrderDetailsLoadingState) {
         return Container(
           child: Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+                color: AppTheme.circleProgressIndicatorColor),
           ),
         );
       }
@@ -284,8 +285,10 @@ class OrderDetailsBody extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5.0),
                           child: CachedNetworkImage(
                             fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
+                            placeholder: (context, url) => Center(
+                                child: CircularProgressIndicator(
+                                    color:
+                                        AppTheme.circleProgressIndicatorColor)),
                             imageUrl: AppConfigs.URL_Images +
                                 "/${model.foodVM!.imagePath}",
                           ),

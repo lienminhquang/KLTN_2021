@@ -83,8 +83,9 @@ class Body extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.0),
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          Center(child: CircularProgressIndicator()),
+                      placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(
+                              color: AppTheme.circleProgressIndicatorColor)),
                       imageUrl:
                           AppConfigs.URL_Images + "/${model.foodVM.imagePath}",
                     ),

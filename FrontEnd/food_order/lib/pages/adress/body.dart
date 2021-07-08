@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Address/AddressBloc.dart';
 import 'package:food_delivery/bloc/Address/AddressState.dart';
 import 'package:food_delivery/pages/adress/AddAdressScreen.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'Address.dart';
 import 'AddressItem.dart';
 
@@ -26,7 +27,9 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     return BlocBuilder<AddressBloc, AddressState>(builder: (context, state) {
       if (state is AddressLoadingState) {
-        return const CircularProgressIndicator();
+        return Center(
+            child: CircularProgressIndicator(
+                color: AppTheme.circleProgressIndicatorColor));
       }
       if (state is AddressLoadedState) {
         return Column(

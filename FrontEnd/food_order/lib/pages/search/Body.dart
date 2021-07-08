@@ -6,6 +6,7 @@ import 'package:food_delivery/bloc/Search/SearchEvent.dart';
 import 'package:food_delivery/bloc/Search/SearchState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/food_detail/food_detail.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 class Body extends StatelessWidget {
@@ -77,7 +78,8 @@ class _SearchBody extends StatelessWidget {
         return Container();
       }
       if (state is SearchLoadingState) {
-        return CircularProgressIndicator();
+        return CircularProgressIndicator(
+            color: AppTheme.circleProgressIndicatorColor);
       }
       if (state is SearchErrorState) {
         return Text(state.error);
@@ -116,7 +118,8 @@ class _ResultItem extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         child: CachedNetworkImage(
-          placeholder: (context, url) => CircularProgressIndicator(),
+          placeholder: (context, url) => CircularProgressIndicator(
+              color: AppTheme.circleProgressIndicatorColor),
           imageUrl: AppConfigs.URL_Images + "/${_foodVM.imagePath}",
           height: 50,
           width: 50,

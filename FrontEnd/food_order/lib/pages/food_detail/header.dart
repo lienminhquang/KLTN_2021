@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/bloc/FoodDetail/FoodDetailState.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
+import 'package:food_delivery/pages/presentation/Themes.dart';
 
 class Appbar extends StatelessWidget {
   @override
@@ -109,7 +110,8 @@ class MHeader extends StatelessWidget {
                           height: double.infinity,
                           fit: BoxFit.fill,
                           placeholder: (context, url) =>
-                              CircularProgressIndicator(),
+                              CircularProgressIndicator(
+                                  color: AppTheme.circleProgressIndicatorColor),
                           imageUrl:
                               AppConfigs.URL_Images + "/${foodVM.imagePath}",
                         ),
