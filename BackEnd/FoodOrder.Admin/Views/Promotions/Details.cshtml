@@ -1,5 +1,8 @@
 ﻿@model FoodOrder.Core.ViewModels.Promotions.PromotionVM
 
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+
+
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,6 +20,14 @@
         </div>
         <div class="card-body">
             <dl class="row">
+                <dt class="col-sm-2">
+                    Image
+                </dt>
+                <dd class="col-sm-10">
+                    <a href="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + Model.ImagePath)" title="@Model.ImagePath">
+                        <img src="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + Model.ImagePath)" style="height:150px" alt="@Model.ImagePath" />
+                    </a>
+                </dd>
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.ID)
                 </dt>

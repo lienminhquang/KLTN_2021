@@ -20,15 +20,17 @@ namespace FoodOrder.API.Services
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<PromotionServices> _logger;
+        private readonly FileServices _fileServices;
 
-        public PromotionServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<PromotionServices> logger)
+        public PromotionServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<PromotionServices> logger, FileServices fileServices)
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
             _logger = logger;
+            _fileServices = fileServices;
         }
 
-        public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValidPaging(PagingRequestBase request, String userID)
+        public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValidForUser(PagingRequestBase request, String userID)
         {
             var user = _dbContext.AppUsers.Find(new Guid(userID));
             if (user == null)
@@ -37,9 +39,9 @@ namespace FoodOrder.API.Services
             }
 
             var promotions = from c in _dbContext.Promotions
-                             join o in _dbContext.Orders on c.ID equals o.PromotionID
-
-                             where o.AppUserID.ToString().Equals(userID)
+                             join o in _dbContext.Orders on c.ID equals o.PromotionID into joined
+                             from o in joined.DefaultIfEmpty()
+                             where o == null || o.AppUserID.ToString().Equals(userID)
                              && (c.Enabled == true)
                              && (c.StartDate <= DateTime.Now)
                              && (c.EndDate >= DateTime.Now)
@@ -48,7 +50,6 @@ namespace FoodOrder.API.Services
 
             var vMs = from id in promotions
                       join p in _dbContext.Promotions on id.id equals p.ID
-                      where id.count < p.UseTimes
                       select p;
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -58,11 +59,41 @@ namespace FoodOrder.API.Services
                 || c.Code.Contains(request.SearchString));
             }
 
-            var vmList = await Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority").ToListAsync();
+            var sortedList = await Core.Helpers.Utilities<Promotion>.Sort(vMs, request.SortOrder, "Priority").ToListAsync();
+
+            var VMList = sortedList.Select(c => _mapper.Map<Promotion, PromotionVM>(c));
+            VMList = VMList.Where(x => {
+                x.TimeUsedByCurrentUser = (from o in _dbContext.Orders
+                                              where o.AppUserID.ToString().Equals(userID) && o.PromotionID == x.ID
+                                              select o).Count();
+                return x.TimeUsedByCurrentUser < x.UseTimes;
+            });
+
+            var created = PaginatedList<PromotionVM>.CreateFromList(VMList.ToList(),
+                request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
 
+            return new SuccessedResult<PaginatedList<PromotionVM>>(created);
+        }
 
-            var created = PaginatedList<PromotionVM>.CreateFromList(vMs.Select(c => _mapper.Map<Promotion, PromotionVM>(c)).ToList(),
+        public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValid(PagingRequestBase request, String userID)
+        {
+            var promotions = from c in _dbContext.Promotions
+                             where (c.Enabled == true)
+                             && (c.StartDate <= DateTime.Now)
+                             && (c.EndDate >= DateTime.Now)
+                             select c;
+
+            if (!String.IsNullOrEmpty(request.SearchString))
+            {
+                promotions = promotions.Where(c => c.Name.Contains(request.SearchString)
+                || c.Desciption.Contains(request.SearchString)
+                || c.Code.Contains(request.SearchString));
+            }
+
+            var sortedList = await Core.Helpers.Utilities<Promotion>.Sort(promotions, request.SortOrder, "Priority").ToListAsync();
+
+            var created = PaginatedList<PromotionVM>.CreateFromList(sortedList.Select(c => _mapper.Map<Promotion, PromotionVM>(c)).ToList(),
                 request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
             foreach (var item in created.Items)
@@ -114,9 +145,8 @@ namespace FoodOrder.API.Services
             try
             {
                 var result = await _dbContext.Promotions.AddAsync(_mapper.Map<PromotionCreateVM, Promotion>(vm));
+                result.Entity.ImagePath = await _fileServices.SaveFile(vm.ImageData);
                 await _dbContext.SaveChangesAsync();
-
-
                 transaction.Commit();
 
                 var promotionVM = _mapper.Map<PromotionVM>(result.Entity);
@@ -154,6 +184,12 @@ namespace FoodOrder.API.Services
                 promotion.IsGlobal = editVM.IsGlobal;
                 promotion.Priority = editVM.Priority;
 
+                if (editVM.ImageData != null)
+                {
+                    await _fileServices.DeleteFileAsync(promotion.ImagePath);
+                    promotion.ImagePath = await _fileServices.SaveFile(editVM.ImageData);
+                }
+
                 await _dbContext.SaveChangesAsync();
                 transaction.Commit();
 
@@ -177,6 +213,7 @@ namespace FoodOrder.API.Services
             }
             try
             {
+                await _fileServices.DeleteFileAsync(vm.ImagePath);
                 _dbContext.Promotions.Remove(vm);
                 await _dbContext.SaveChangesAsync();
             }

@@ -24,5 +24,6 @@ namespace FoodOrder.Core.ViewModels.Promotions
         public bool IsGlobal { get; set; }
         public int Priority { get; set; }
         public int TimeUsedByCurrentUser { get; set; }
+        public string ImagePath { get; set; }
     }
 }

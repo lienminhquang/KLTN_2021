@@ -1,5 +1,6 @@
 ﻿@using FoodOrder.Core.Helpers;
 @model PaginatedList<FoodOrder.Core.ViewModels.Promotions.PromotionVM>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
 
 @{
     ViewData["Title"] = "Index";
@@ -25,13 +26,16 @@
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ID)
                             </th>
                             <th>
+                                Image
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Name)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Code)
                             </th>
-                           
-                           
+
+
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().StartDate)
                             </th>
@@ -47,7 +51,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Enabled)
                             </th>
-                           
+
                             <th></th>
                         </tr>
                     </thead>
@@ -59,6 +63,13 @@
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ID)
+                                    </td>
+                                    <td>
+                                        <div class="row-cols-sm-3 row-cols-lg-1" style="width:100px;height:100px;overflow: hidden;">
+                                            <a href="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + item.ImagePath)" title="@item.ImagePath">
+                                                <img class="img-thumbnail" src="@(Configuration["BaseAddress"] + Configuration["user-content"] + "/" + item.ImagePath)" style="width:100%" alt="@item.ImagePath" />
+                                            </a>
+                                        </div>
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Name)
@@ -81,7 +92,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Enabled)
                                     </td>
-                                   
+
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
                                         @Html.ActionLink("Details", "Details", new { id = item.ID }) |

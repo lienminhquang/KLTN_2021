@@ -52,6 +52,7 @@ nlu:
     - món [burger](food_name) đi
     - món [pizza](food_name) đi
     - món [bánh](food_name) đi
+    - [trà sữa trân châu hạ long](food_name)
 - intent: ask_find_food
   examples: |
     - tôi muốn tìm món

@@ -26,7 +26,7 @@ class PromotionBloc extends Bloc<PromotionEvent, PromotionState> {
 
   Future<PromotionState> _fetchAll() async {
     var userID = UserServices.getUserID();
-    var promotions = await _promotionServices.getAllValid(userID);
+    var promotions = await _promotionServices.getAllValidForUser(userID);
 
     if (promotions.isSuccessed == false) {
       print(promotions.errorMessage);

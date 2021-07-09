@@ -9,10 +9,15 @@ class HomeLoadingState extends HomeState {}
 
 class HomeLoadedState extends HomeState {
   final List<CategoryVM> listCategory;
-  final List<PromotionVM> listPromotion;
+  final List<PromotionVM> listPromotionsValidForUser;
+  final List<PromotionVM> listPromotionsValid; //valid for all user
   final List<SaleCampaignVM> listSaleCampaign;
   final List<FoodVM> listBestSellingFood;
-  HomeLoadedState(this.listCategory, this.listPromotion, this.listSaleCampaign,
+  HomeLoadedState(
+      this.listCategory,
+      this.listPromotionsValidForUser,
+      this.listPromotionsValid,
+      this.listSaleCampaign,
       this.listBestSellingFood);
 }
 

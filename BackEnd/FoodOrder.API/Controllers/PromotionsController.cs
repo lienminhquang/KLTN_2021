@@ -43,8 +43,9 @@ namespace FoodOrder.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [Consumes("multipart/form-data")]
         [ValidTokenRequirement]
-        public async Task<IActionResult> Create([FromBody] PromotionCreateVM createVM)
+        public async Task<IActionResult> Create([FromForm] PromotionCreateVM createVM)
         {
             var result = await _promotionServices.Create(createVM);
             if (!result.IsSuccessed)
@@ -57,8 +58,9 @@ namespace FoodOrder.API.Controllers
 
         [HttpPut]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        [Consumes("multipart/form-data")]
         [ValidTokenRequirement]
-        public async Task<IActionResult> Edit(int id, [FromBody] PromotionEditVM editVM)
+        public async Task<IActionResult> Edit(int id, [FromForm] PromotionEditVM editVM)
         {
             // Todo: please handle this kind of error
             if (!ModelState.IsValid)
@@ -105,12 +107,23 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("valid")]
-        // TODO: return the sortorder, currentfilter, pagenumber to the client.
+        [HttpGet("validforuser")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllValidPaging([FromQuery] PagingRequestBase request, String userID)
+        public async Task<IActionResult> GetAllValidForUser([FromQuery] PagingRequestBase request, String userID)
         {
-            var result = await _promotionServices.GetAllValidPaging(request, userID);
+            var result = await _promotionServices.GetAllValidForUser(request, userID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("valid")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllValid([FromQuery] PagingRequestBase request, String userID)
+        {
+            var result = await _promotionServices.GetAllValid(request, userID);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

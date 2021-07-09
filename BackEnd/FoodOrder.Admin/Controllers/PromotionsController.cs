@@ -84,6 +84,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateAsync([FromForm] PromotionCreateVM createVM)
         {
             if (!await this.ValidateTokenInCookie(_adminUserService))
@@ -145,6 +146,7 @@ namespace FoodOrder.Admin.Controllers
         // POST: CartsController/Edit/5
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult> EditAsync([FromForm] PromotionEditVM editVM)
         {
             if (!await this.ValidateTokenInCookie(_adminUserService))

@@ -20,7 +20,8 @@ PromotionVM _$PromotionVMFromJson(Map<String, dynamic> json) {
     ..max = (json['max'] as num?)?.toDouble()
     ..minPrice = (json['minPrice'] as num?)?.toDouble()
     ..isGlobal = json['isGlobal'] as bool
-    ..timeUsedByCurrentUser = json['timeUsedByCurrentUser'] as int;
+    ..timeUsedByCurrentUser = json['timeUsedByCurrentUser'] as int
+    ..imagePath = json['imagePath'] as String;
 }
 
 Map<String, dynamic> _$PromotionVMToJson(PromotionVM instance) =>
@@ -38,4 +39,5 @@ Map<String, dynamic> _$PromotionVMToJson(PromotionVM instance) =>
       'minPrice': instance.minPrice,
       'isGlobal': instance.isGlobal,
       'timeUsedByCurrentUser': instance.timeUsedByCurrentUser,
+      'imagePath': instance.imagePath,
     };

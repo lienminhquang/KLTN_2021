@@ -19,6 +19,7 @@ class PromotionVM {
   double? minPrice;
   late bool isGlobal;
   late int timeUsedByCurrentUser;
+  late String imagePath;
 
   @JsonKey(ignore: true)
   late List<FoodVM> foodVMs;

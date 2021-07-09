@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -58,13 +59,32 @@ namespace FoodOrder.Admin.Services
 
         public async Task<ApiResult<PromotionVM>> Create(PromotionCreateVM createVM, string token)
         {
-            var json = JsonConvert.SerializeObject(createVM);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var requestContent = new MultipartFormDataContent();
+            byte[] data;
+            using (var br = new BinaryReader(createVM.ImageData.OpenReadStream()))
+            {
+                data = br.ReadBytes((int)createVM.ImageData.Length);
+            }
+            ByteArrayContent bytes = new ByteArrayContent(data);
+            requestContent.Add(bytes, "ImageData", createVM.ImageData.FileName);
+
+            requestContent.Add(new StringContent(createVM.Code.ToString()), "Code");
+            requestContent.Add(new StringContent(createVM.Desciption.ToString()), "Desciption");
+            requestContent.Add(new StringContent(createVM.Enabled.ToString()), "Enabled");
+            requestContent.Add(new StringContent(createVM.EndDate.ToString()), "EndDate");
+            requestContent.Add(new StringContent(createVM.IsGlobal.ToString()), "IsGlobal");
+            requestContent.Add(new StringContent(createVM.Max.ToString()), "Max");
+            requestContent.Add(new StringContent(createVM.MinPrice.ToString()), "MinPrice");
+            requestContent.Add(new StringContent(createVM.Name.ToString()), "Name");
+            requestContent.Add(new StringContent(createVM.Percent.ToString()), "Percent");
+            requestContent.Add(new StringContent(createVM.Priority.ToString()), "Priority");
+            requestContent.Add(new StringContent(createVM.StartDate.ToString()), "StartDate");
+            requestContent.Add(new StringContent(createVM.UseTimes.ToString()), "UseTimes");
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var rs = await client.PostAsync(BaseRoute, httpContent);
+            var rs = await client.PostAsync(BaseRoute, requestContent);
 
             if (rs.StatusCode == System.Net.HttpStatusCode.Created || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -77,13 +97,35 @@ namespace FoodOrder.Admin.Services
 
         public async Task<ApiResult<PromotionVM>> Edit(int id, PromotionEditVM editVM, string token)
         {
-            var json = JsonConvert.SerializeObject(editVM);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var requestContent = new MultipartFormDataContent();
+            if (editVM.ImageData != null)
+            {
+                byte[] data;
+                using (var br = new BinaryReader(editVM.ImageData.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)editVM.ImageData.Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "ImageData", editVM.ImageData.FileName);
+            }
+
+            requestContent.Add(new StringContent(editVM.Code.ToString()), "Code");
+            requestContent.Add(new StringContent(editVM.Desciption.ToString()), "Desciption");
+            requestContent.Add(new StringContent(editVM.Enabled.ToString()), "Enabled");
+            requestContent.Add(new StringContent(editVM.EndDate.ToString()), "EndDate");
+            requestContent.Add(new StringContent(editVM.IsGlobal.ToString()), "IsGlobal");
+            requestContent.Add(new StringContent(editVM.Max.ToString()), "Max");
+            requestContent.Add(new StringContent(editVM.MinPrice.ToString()), "MinPrice");
+            requestContent.Add(new StringContent(editVM.Name.ToString()), "Name");
+            requestContent.Add(new StringContent(editVM.Percent.ToString()), "Percent");
+            requestContent.Add(new StringContent(editVM.Priority.ToString()), "Priority");
+            requestContent.Add(new StringContent(editVM.StartDate.ToString()), "StartDate");
+            requestContent.Add(new StringContent(editVM.UseTimes.ToString()), "UseTimes");
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var rs = await client.PutAsync(BaseRoute + $"?id={id}", httpContent);
+            var rs = await client.PutAsync(BaseRoute + $"?id={id}", requestContent);
 
             if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {

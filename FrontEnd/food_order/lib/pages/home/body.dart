@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_delivery/bloc/Cart/CartBloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryEvent.dart';
 import 'package:food_delivery/bloc/Home/HomeBloc.dart';
@@ -13,12 +12,11 @@ import 'package:food_delivery/bloc/Home/HomeState.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionBloc.dart';
 import 'package:food_delivery/bloc/Promotions/PromotionEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
-import 'package:food_delivery/models/NotificationModel.dart';
 import 'package:food_delivery/pages/food_detail/FoodDetail.dart';
-import 'package:food_delivery/pages/home/DashlinePainter.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/home/ZigZacVerticalLine.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
+import 'package:food_delivery/pages/promotion/Body.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
 import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
@@ -51,8 +49,9 @@ class _BodyState extends State<Body> {
 
   Widget buidImageCarousel(List<String> images) {
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
-      height: 150,
+      color: Colors.white,
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+      height: 185,
       child: CarouselSlider(
         options: CarouselOptions(
           //height: 400.0,
@@ -109,6 +108,7 @@ class _BodyState extends State<Body> {
         title: fakeSearchBox(),
       ),
       body: Container(
+        color: Color(0xFFEBF1FA),
         child: RefreshIndicator(
           onRefresh: () async {
             context.read<HomeBloc>().add(HomeRefeshEvent());
@@ -120,9 +120,8 @@ class _BodyState extends State<Body> {
               buidImageCarousel(_appBannerImages),
               offers(state),
               _categoryList(state.listCategory),
-              Divider(
-                height: 30,
-              ),
+
+              promotion(state),
               SaleContainer(state.listSaleCampaign),
               //PromotionContainer(state.listPromotion),
               BestSellingContainer(state.listBestSellingFood)
@@ -166,51 +165,115 @@ class _BodyState extends State<Body> {
     );
   }
 
+  Widget promotion(HomeLoadedState state) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+      padding: EdgeInsets.symmetric(vertical: 5),
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              "Khuyến mãi ngập tràn",
+              overflow: TextOverflow.clip,
+              maxLines: 1,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Color(0xFF141619)),
+            ),
+          ),
+          Container(
+            height: 150,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: state.listPromotionsValid.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) =>
+                            promotionDetail(state.listPromotionsValid[index]));
+                  },
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    width: 270,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        placeholder: (context, index) => Center(
+                            child: CircularProgressIndicator(
+                                color: AppTheme.circleProgressIndicatorColor)),
+                        imageUrl: AppConfigs.URL_Images +
+                            "/${state.listPromotionsValid[index].imagePath}",
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget offers(HomeLoadedState state) {
-    if (state.listPromotion.length == 0) {
+    if (state.listPromotionsValidForUser.length == 0) {
       return Container(
         height: 20,
       );
     }
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (conetxt) {
-          return PromotionScreen();
-        }));
-      },
-      child: Container(
-        height: 50,
-        margin: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Colors.grey),
-            right: BorderSide.none,
-            bottom: BorderSide(color: Colors.grey),
-            left: BorderSide(color: Colors.grey),
-          ),
-          color: Color(0xFFEEEEEE),
-        ),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Nhanh tay nào! Có ${state.listPromotion.length} khuyến mãi đang chờ nè",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13.0,
-                    color: Color(0xFF5B5B5B)),
-                textAlign: TextAlign.left,
-              ),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      //margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+      color: Colors.white,
+      child: GestureDetector(
+        onTap: () {
+          context.read<PromotionBloc>().add(PromotionStartedEvent());
+          Navigator.of(context).push(MaterialPageRoute(builder: (conetxt) {
+            return PromotionScreen();
+          }));
+        },
+        child: Container(
+          height: 50,
+          //margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+          padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Colors.grey),
+              right: BorderSide.none,
+              bottom: BorderSide(color: Colors.grey),
+              left: BorderSide(color: Colors.grey),
             ),
-            Positioned(
-                right: 0,
-                child: CustomPaint(
-                  size: Size(1, 50),
-                  painter: ZigZacVerticalLine(),
-                ))
-          ],
+            color: Color(0xFFEEEEEE),
+          ),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Nhanh tay nào! Có ${state.listPromotionsValidForUser.length} khuyến mãi đang chờ nè",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13.0,
+                      color: Color(0xFF5B5B5B)),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Positioned(
+                  right: 0,
+                  child: CustomPaint(
+                    size: Size(1, 50),
+                    painter: ZigZacVerticalLine(),
+                  ))
+            ],
+          ),
         ),
       ),
     );
@@ -220,7 +283,8 @@ class _BodyState extends State<Body> {
     log("Rebuild CategoryList with count = " + categories.length.toString());
 
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
+        color: Colors.white,
+        margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
         //height: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -361,6 +425,7 @@ class _FoodWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
       child: Card(
         clipBehavior: Clip.antiAlias,
         child: GestureDetector(
@@ -420,8 +485,9 @@ class BestSellingContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //color: Colors.grey[50],
-      padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
+      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      color: Colors.white,
       child: Column(
         children: [
           Container(
@@ -436,7 +502,7 @@ class BestSellingContainer extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Color(0xFFFF5166)),
+                    color: Color(0xFF141619)),
               ),
             ),
           ),
@@ -490,7 +556,7 @@ class PromotionContainer extends StatelessWidget {
     var _promotionVM = _listPromotionVM[0];
     return Container(
       //color: Colors.grey[50],
-      padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
+      padding: const EdgeInsets.fromLTRB(15.0, 3.0, 15.0, 50.0),
       child: Column(
         children: [
           Container(
@@ -505,7 +571,7 @@ class PromotionContainer extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Color(0xFFFF5166)),
+                    color: Color(0xFF141619)),
               ),
             ),
           ),
@@ -554,11 +620,14 @@ class SaleContainer extends StatelessWidget {
 
       return Container(
         //color: Colors.grey[50],
-        padding: const EdgeInsets.fromLTRB(20.0, 3.0, 20.0, 50.0),
+        //padding: const EdgeInsets.fromLTRB(15.0, 3.0, 15.0, 50.0),
+        margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+        padding: EdgeInsets.symmetric(vertical: 10),
+        color: Colors.white,
         child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.fromLTRB(0.0, 3.0, 8.0, 8.0),
+              margin: EdgeInsets.symmetric(horizontal: 15),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -569,17 +638,18 @@ class SaleContainer extends StatelessWidget {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: Color(0xFFFF5166)),
+                      color: Color(0xFF141619)),
                 ),
               ),
             ),
             Container(
-              //margin: const EdgeInsets.fromLTRB(20.0, 3.0, 8.0, 3.0),
+              margin: EdgeInsets.symmetric(horizontal: 15),
               child: Align(
                 child: Text(
                   _saleCampaignVM.desciption,
                   textAlign: TextAlign.left,
                   overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Color(0xFF646D7A)),
                 ),
                 alignment: Alignment.centerLeft,
               ),

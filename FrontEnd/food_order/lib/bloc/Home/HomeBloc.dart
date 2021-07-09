@@ -55,18 +55,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     List<FoodVM> listBestSellingFood = rs.payLoad!.items!.take(10).toList();
 
-    var promotions = await _promotionServices.getAllValid(userID);
+    var promotionsValidForUser =
+        await _promotionServices.getAllValidForUser(userID);
     // todo: get all valid and enabled?
-    if (result.isSuccessed == false) {
+    if (promotionsValidForUser.isSuccessed == false) {
       return HomeErrorState(result.errorMessage!);
     }
-    if (promotions.isSuccessed == false) {
-      print(promotions.errorMessage);
-      return HomeErrorState(promotions.errorMessage!);
+    if (promotionsValidForUser.isSuccessed == false) {
+      print(promotionsValidForUser.errorMessage);
+      return HomeErrorState(promotionsValidForUser.errorMessage!);
     }
-    var listPromotions = promotions.payLoad!.items!;
-    for (var item in listPromotions) {
-      item.foodVMs = listBestSellingFood.take(10).toList();
+
+    var promotionsValid = await _promotionServices.getAllValid(userID);
+    // todo: get all valid and enabled?
+    if (promotionsValid.isSuccessed == false) {
+      return HomeErrorState(result.errorMessage!);
+    }
+    if (promotionsValid.isSuccessed == false) {
+      print(promotionsValid.errorMessage);
+      return HomeErrorState(promotionsValid.errorMessage!);
     }
 
     // Todo: must be get valid campaign instead
@@ -76,7 +83,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       throw listSaleCampaign.errorMessage!;
     }
 
-    return HomeLoadedState(result.payLoad!.items!, promotions.payLoad!.items!,
-        listSaleCampaign.payLoad!.items!, listBestSellingFood);
+    return HomeLoadedState(
+        result.payLoad!.items!,
+        promotionsValidForUser.payLoad!.items!,
+        promotionsValid.payLoad!.items!,
+        listSaleCampaign.payLoad!.items!,
+        listBestSellingFood);
   }
 }

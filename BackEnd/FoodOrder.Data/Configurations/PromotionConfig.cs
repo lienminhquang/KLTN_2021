@@ -21,6 +21,7 @@ namespace FoodOrder.Data.Configurations
             builder.Property(x => x.UseTimes).IsRequired();
             builder.Property(x => x.Percent).IsRequired().HasDefaultValue(10.0);
             builder.Property(x => x.Priority).IsRequired();
+            builder.Property(x => x.ImagePath).IsRequired().HasDefaultValue("default.png");
 
             builder.HasMany(x => x.Orders).WithOne(x => x.Promotion).HasForeignKey(x => x.PromotionID);
         }
