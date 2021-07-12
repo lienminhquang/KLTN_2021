@@ -20,9 +20,9 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async System.Threading.Tasks.Task<IActionResult> IndexAsync()
         {
-            var rs = _homeServices.Get();
+            var rs = await _homeServices.Get();
             return Ok(rs);
         }
 

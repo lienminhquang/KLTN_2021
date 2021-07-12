@@ -27,7 +27,7 @@ namespace FoodOrder.Admin.Services
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var uri = BaseRoute;/* + $"/total_sale_per_day?start={start}&count={count}";*/
+            var uri = BaseRoute;
             var rs = await client.GetAsync(uri);
             if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {

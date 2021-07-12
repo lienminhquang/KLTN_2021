@@ -358,7 +358,8 @@ namespace FoodOrder.API.Services
             }
             try
             {
-
+                var listCart = _dbContext.Carts.Where(x => x.FoodID == id);
+                _dbContext.Carts.RemoveRange(listCart);
                 var listFC = _dbContext.FoodCategories.Where(x => x.FoodID == id);
                 await listFC.ForEachAsync(x => { x.IsDeleted = true; x.TimeDeleted = DateTime.Now; });
                 food.IsDeleted = true;

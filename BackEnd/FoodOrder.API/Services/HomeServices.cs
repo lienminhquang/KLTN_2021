@@ -16,14 +16,25 @@ namespace FoodOrder.API.Services
         private readonly ApplicationDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<HomeServices> _logger;
-        public HomeServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<HomeServices> logger)
+        private readonly FoodServices _foodServices;
+        private readonly PromotionServices _promotionServices;
+        private readonly SaleCampaignServices _saleCampaignServices;
+
+        public HomeServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<HomeServices> logger
+            , FoodServices foodServices
+            , PromotionServices promotionServices
+            , SaleCampaignServices saleCampaignServices
+            )
         {
             _dbContext = applicationDBContext;
             _mapper = mapper;
             _logger = logger;
+            _foodServices = foodServices;
+            _promotionServices = promotionServices;
+            _saleCampaignServices = saleCampaignServices;
         }
 
-        public ApiResult<HomeVM> Get()
+        public async Task<ApiResult<HomeVM>> Get()
         {
             HomeVM homeVM = new HomeVM();
             var salePerDay = getTotalSalePerDay(DateTime.Now.AddDays(-30), 30);
@@ -41,6 +52,11 @@ namespace FoodOrder.API.Services
             homeVM.TotalCanceledToday = (from o in _dbContext.Orders
                                          where o.OrderStatusID == OrderStatus.DaHuy && o.DatePaid.Value.Date == DateTime.Now.Date
                                          select o).Count();
+            homeVM.ListBestSellingFood = (await _foodServices.GetBestSellingAsync(new Core.ViewModels.PagingRequestBase() { PageNumber = 1, PageSize = -1 })).PayLoad.Items;
+
+            homeVM.ListValidPromotion =(await _promotionServices.GetAllValid(new Core.ViewModels.PagingRequestBase() { PageNumber = 1, PageSize = -1 }, "")).PayLoad.Items;
+
+            homeVM.ListSaleCampaign = (await _saleCampaignServices.GetAllValidPaging(new Core.ViewModels.PagingRequestBase() { PageNumber = 1, PageSize = -1 })).PayLoad.Items;
 
             if (salePerDay.IsSuccessed == true && salePerMonth.IsSuccessed)
             {
