@@ -11,6 +11,8 @@ namespace FoodOrder.Core.Configurations
             builder.ToTable("Cart");
             builder.HasKey(x => new { x.FoodID, x.AppUserId });
             builder.Property(x => x.Quantity).IsRequired().HasDefaultValue(1);
+
+
         }
     }
 }

@@ -158,5 +158,17 @@ namespace FoodOrder.API.Controllers
             }
             return Ok(result);
         }
+
+        [HttpDelete("permanently")]
+        [Authorize(Roles = PolicyType.Admin )]
+        public async Task<IActionResult> DeletePermanently(int id)
+        {
+            var result = await _notiServices.DeletePermanently(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

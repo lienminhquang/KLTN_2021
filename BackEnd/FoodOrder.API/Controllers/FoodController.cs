@@ -150,6 +150,24 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("permanently/{id}")]
+        [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
+        public async Task<IActionResult> DeletePermanently(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _foodServices.DeletePermanently(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery]PagingRequestBase request)

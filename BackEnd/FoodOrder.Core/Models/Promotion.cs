@@ -22,6 +22,9 @@ namespace FoodOrder.Core.Models
         public int Priority { get; set; }
         public string ImagePath { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public List<Order> Orders { get; set; }
     }
 }

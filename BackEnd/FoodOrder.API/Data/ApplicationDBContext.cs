@@ -1,6 +1,5 @@
 ﻿using FoodOrder.Core.Configurations;
 using FoodOrder.Core.Models;
-using FoodOrder.Core.Configurations;
 using FoodOrder.Core.Extentions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -30,7 +29,7 @@ namespace FoodOrder.Data
             builder.ApplyConfiguration(new CategoryConfig());
             builder.ApplyConfiguration(new FoodCategoryConfig());
             builder.ApplyConfiguration(new FoodConfig());
-            builder.ApplyConfiguration(new ImageConfig());
+            //builder.ApplyConfiguration(new ImageConfig());
             builder.ApplyConfiguration(new OrderConfig());
             builder.ApplyConfiguration(new OrderDetailConfig());
             builder.ApplyConfiguration(new OrderStatusConfig());
@@ -56,7 +55,7 @@ namespace FoodOrder.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Food> Foods { get; set; }
         public DbSet<FoodCategory> FoodCategories { get; set; }
-        public DbSet<Image> Images { get; set; }
+        //public DbSet<Image> Images { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }

@@ -16,5 +16,8 @@ namespace FoodOrder.Core.ViewModels.Ratings
         public DateTime TimeCreate { get; set; }
         public string UserFullName { get; set; }
         public string UserID { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
     }
 }

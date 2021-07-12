@@ -29,7 +29,8 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<AddressVM>>> GetAllPaging(PagingRequestBase request)
         {
             var addresses = from c in _dbContext.Addresses
-                        select c;
+                            where c.IsDeleted == false
+                            select c;
 
             // Todo: search cart?
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -48,8 +49,8 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<AddressVM>>> GetByUserID(string userID, PagingRequestBase request)
         {
             var addresses = from c in _dbContext.Addresses
-                        where c.AppUserID.ToString() == userID
-                        select _mapper.Map<AddressVM>(c);
+                            where c.AppUserID.ToString() == userID && c.IsDeleted == false
+                            select _mapper.Map<AddressVM>(c);
 
             var created = await PaginatedList<AddressVM>.CreateAsync(addresses, 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
 
@@ -60,7 +61,7 @@ namespace FoodOrder.API.Services
         {
 
             var address = _dbContext.Addresses.Find(id);
-            if (address == null)
+            if (address == null || address.IsDeleted)
             {
                 return new FailedResult<AddressVM>("Address not found!");
             }
@@ -85,15 +86,15 @@ namespace FoodOrder.API.Services
                 _logger.LogError(e.Message);
                 return new FailedResult<AddressVM>("Some thing went wrong!");
             }
-            
+
         }
 
-        
+
 
         public async Task<ApiResult<AddressVM>> Edit(int id, AddressEditVM editVM)
         {
             var address = _dbContext.Addresses.Find(id);
-            if (address == null)
+            if (address == null || address.IsDeleted)
             {
                 return new FailedResult<AddressVM>("Address not found!");
             }
@@ -114,6 +115,27 @@ namespace FoodOrder.API.Services
         }
 
         public async Task<ApiResult<bool>> Delete(int id)
+        {
+            var addres = _dbContext.Addresses.Find(id);
+            if (addres == null || addres.IsDeleted)
+            {
+                return new FailedResult<bool>("Address not found!");
+            }
+            try
+            {
+                addres.IsDeleted = true;
+                addres.TimeDeleted = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
+            }
+            return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<bool>> DeletePermanently(int id)
         {
             var addres = _dbContext.Addresses.Find(id);
             if (addres == null)

@@ -23,6 +23,8 @@ namespace FoodOrder.Core.Configurations
             builder.Property(x => x.UserReceived).IsRequired();
 
             builder.HasOne(x => x.AppUser).WithMany(user => user.Notifications).HasForeignKey(a => a.UserID);
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

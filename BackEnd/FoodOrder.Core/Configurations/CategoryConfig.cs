@@ -15,6 +15,9 @@ namespace FoodOrder.Core.Configurations
             builder.Property(x => x.Description).IsRequired().IsUnicode().HasMaxLength(300);
 
             builder.HasMany(x => x.FoodCategories).WithOne(x => x.Category);
+
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

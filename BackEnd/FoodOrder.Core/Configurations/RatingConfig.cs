@@ -16,6 +16,8 @@ namespace FoodOrder.Core.Configurations
             builder.Property(x => x.Comment).IsUnicode();
             builder.Property(x => x.TimeCreate).IsUnicode();
             builder.HasOne(x => x.Order).WithMany(y => y.Ratings).HasForeignKey(x => x.OrderID);
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

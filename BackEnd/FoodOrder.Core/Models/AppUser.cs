@@ -26,6 +26,9 @@ namespace FoodOrder.Core.Models
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpire { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public List<Order> Orders { get; set; }
         public List<Rating> Ratings { get; set; }
         public List<Cart> Carts { get; set; }

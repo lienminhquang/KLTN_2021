@@ -14,6 +14,9 @@ namespace FoodOrder.Core.Models
         public int? SaleCampaignID { get; set; }
         public float? SalePercent { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public SaleCampaign SaleCampaign { get; set; }
         public Order Order { get; set; }
         public Food Food { get; set; }

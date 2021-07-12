@@ -108,5 +108,19 @@ namespace FoodOrder.Admin.Services
             }
             return new FailedResult<bool>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
+        public async Task<ApiResult<bool>> DeletePermanently(int orderID, int foodID, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = BaseRoute + $"/permanently?orderID={orderID}&foodID={foodID}";
+            var rs = await client.DeleteAsync(uri);
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<bool>>(body);
+                return vm;
+            }
+            return new FailedResult<bool>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
+        }
     }
 }

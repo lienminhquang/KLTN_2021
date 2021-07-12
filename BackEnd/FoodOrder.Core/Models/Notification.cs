@@ -21,6 +21,8 @@ namespace FoodOrder.Core.Models
         public DateTime TimeCreated { get; set; }
         public NotificationType Type { get; set; }
         public bool UserReceived { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
 
         public AppUser AppUser { get; set; }
     }

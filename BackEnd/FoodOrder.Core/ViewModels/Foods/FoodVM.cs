@@ -20,7 +20,10 @@ namespace FoodOrder.Core.ViewModels.Foods
 
         public double AgvRating { get; set; }
         public int TotalRating { get; set; }
-        
+
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
 
         public SaleCampaignVM SaleCampaignVM { get; set; }
 

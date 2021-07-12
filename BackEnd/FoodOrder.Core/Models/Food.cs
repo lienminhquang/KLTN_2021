@@ -14,11 +14,13 @@ namespace FoodOrder.Core.Models
         public int Count { get; set; }
         public string ImagePath { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public List<OrderDetail> OrderDetails { get; set; }
         public List<Rating> Ratings { get; set; }
         public List<FoodCategory> FoodCategories { get; set; }
         public List<Cart> Carts { get; set; }
-        public List<Image> Images { get; set; }
         public List<SaleCampaignFood> SaleCampaignFoods { get; set; }
     }
 }

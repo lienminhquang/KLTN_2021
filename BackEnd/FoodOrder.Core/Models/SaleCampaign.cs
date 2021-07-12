@@ -17,6 +17,9 @@ namespace FoodOrder.Core.Models
         public bool Enabled { get; set; }
         public int Priority { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public List<Order> Orders { get; set; }
         public List<Food> SaleCampaignFoods { get; set; }
     }

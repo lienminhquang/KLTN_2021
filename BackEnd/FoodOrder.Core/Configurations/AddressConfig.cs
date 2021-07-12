@@ -19,6 +19,8 @@ namespace FoodOrder.Core.Configurations
             builder.Property(x => x.AppUserID).IsRequired();
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.AddressString).IsRequired();
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

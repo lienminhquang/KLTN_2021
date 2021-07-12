@@ -13,6 +13,9 @@ namespace FoodOrder.Core.Models
         public String Name { get; set; }
         public String AddressString { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public AppUser AppUser { get; set; }
     }
 }

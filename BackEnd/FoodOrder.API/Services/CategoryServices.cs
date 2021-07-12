@@ -34,6 +34,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<CategoryVM>>> GetAllPaging(PagingRequestBase request)
         {
             var categoryVMs = from c in _dbContext.Categories
+                              where c.IsDeleted == false
                               select c;
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -52,7 +53,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetFoodInCategory(int id, PagingRequestBase request)
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
-            if (category == null)
+            if (category == null || category.IsDeleted)
             {
                 return new FailedResult<PaginatedList<FoodVM>>("Category not found!");
             }
@@ -99,7 +100,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetBestSellingInCategory(int id, PagingRequestBase request)
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
-            if (category == null)
+            if (category == null || category.IsDeleted)
             {
                 return new FailedResult<PaginatedList<FoodVM>>("Category not found!");
             }
@@ -155,7 +156,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetPromotingInCategory(int id, PagingRequestBase request)
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
-            if (category == null)
+            if (category == null || category.IsDeleted)
             {
                 return new FailedResult<PaginatedList<FoodVM>>("Category not found!");
             }
@@ -208,7 +209,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<CategoryVM>> GetByID(int id)
         {
             var c = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
-            if (c == null)
+            if (c == null || c.IsDeleted)
             {
                 return new FailedResult<CategoryVM>("Category not found!");
             }
@@ -250,7 +251,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<CategoryVM>> Edit(int id, CategoryEditVM categoryVM)
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
-            if (category == null)
+            if (category == null || category.IsDeleted)
             {
                 return new FailedResult<CategoryVM>("Category not found!");
             }
@@ -280,6 +281,31 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<bool>> Delete(int id)
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
+            if (category == null || category.IsDeleted)
+            {
+                return new FailedResult<bool>("Category not found!");
+            }
+            try
+            {
+                var foodCategories = _dbContext.FoodCategories.Where(x => x.CategoryID == id);
+
+                category.IsDeleted = true;
+                category.TimeDeleted = DateTime.Now;
+                await foodCategories.ForEachAsync(x => { x.IsDeleted = true; x.TimeDeleted = DateTime.Now; });
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>(e.Message);
+            }
+            return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<bool>> DeletePermanently(int id)
+        {
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.ID == id);
             if (category == null)
             {
                 return new FailedResult<bool>("Category not found!");
@@ -293,7 +319,7 @@ namespace FoodOrder.API.Services
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return new FailedResult<bool>("Some thing went wrong!");
+                return new FailedResult<bool>(e.Message);
             }
             return new SuccessedResult<bool>(true);
         }

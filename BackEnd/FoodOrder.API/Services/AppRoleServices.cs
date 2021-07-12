@@ -32,7 +32,8 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<AppRoleVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var vms = from c in _dbContext.AppRoles select c;
+            var vms = from c in _dbContext.AppRoles where c.IsDeleted == false 
+                      select c;
 
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -54,11 +55,14 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<AppRoleVM>> GetByID(Guid id)
         {
             var c = await _roleManager.FindByIdAsync(id.ToString());
-            if (c == null)
+            if (c == null || c.IsDeleted)
             {
                 return new FailedResult<AppRoleVM>("Role not found!");
             }
-            return new SuccessedResult<AppRoleVM>(_mapper.Map<AppRoleVM>(c));
+           
+
+
+            return new SuccessedResult<AppRoleVM>();
         }
 
         public async Task<ApiResult<AppRoleVM>> Create(AppRoleCreateVM vm)
@@ -81,7 +85,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<AppRoleVM>> Edit(Guid id, AppRoleEditVm editVM)
         {
             var vm = _dbContext.AppRoles.Find(id);
-            if (vm == null)
+            if (vm == null || vm.IsDeleted)
             {
                 return new FailedResult<AppRoleVM>("AppRole not found!");
             }
@@ -102,6 +106,29 @@ namespace FoodOrder.API.Services
         }
 
         public async Task<ApiResult<bool>> Delete(Guid id)
+        {
+            var role = await _dbContext.AppRoles.FirstOrDefaultAsync(c => c.Id == id);
+            if (role == null || role.IsDeleted)
+            {
+                return new FailedResult<bool>("AppRole not found!");
+            }
+
+            try
+            {
+                role.IsDeleted = true;
+                role.TimeDeleted = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>(e.Message);
+            }
+           
+            return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<bool>> DeletePermanently(Guid id)
         {
             var food = await _dbContext.AppRoles.FirstOrDefaultAsync(c => c.Id == id);
             if (food == null)

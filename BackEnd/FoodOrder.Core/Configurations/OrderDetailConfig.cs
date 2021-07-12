@@ -12,6 +12,9 @@ namespace FoodOrder.Core.Configurations
             builder.HasKey(x => new { x.OrderID, x.FoodID });
             builder.Property(x => x.Amount).IsRequired().HasDefaultValue(1);
             builder.Property(x => x.Price).IsRequired();
+
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

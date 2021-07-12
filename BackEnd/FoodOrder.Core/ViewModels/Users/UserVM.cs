@@ -18,6 +18,9 @@ namespace FoodOrder.Core.ViewModels.Users
         public DateTime DateOfBirth { get; set; }
         public string Email { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public List<string> AppRoles { get; set; }
     }
 }

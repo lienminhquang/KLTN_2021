@@ -24,6 +24,8 @@ namespace FoodOrder.Core.Configurations
             builder.Property(x => x.ImagePath).IsRequired().HasDefaultValue("default.png");
 
             builder.HasMany(x => x.Orders).WithOne(x => x.Promotion).HasForeignKey(x => x.PromotionID);
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

@@ -13,6 +13,9 @@ namespace FoodOrder.Core.Models
         public string Comment { get; set; }
         public DateTime TimeCreate { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public AppUser AppUser { get; set; }
         public Food Food { get; set; }
         public Order Order { get; set; }

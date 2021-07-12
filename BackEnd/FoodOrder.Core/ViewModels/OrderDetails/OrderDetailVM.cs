@@ -20,6 +20,9 @@ namespace FoodOrder.Core.ViewModels.OrderDetails
         public int? SaleCampaignID { get; set; }
         public float? SalePercent { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public SaleCampaignVM SaleCampaign { get; set; }
         public OrderVM OrderVM { get; set; }
         public FoodVM FoodVM { get; set; }

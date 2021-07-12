@@ -4,7 +4,7 @@ using FoodOrder.Core.ViewModels.Addresses;
 using FoodOrder.Core.ViewModels.AppRoles;
 using FoodOrder.Core.ViewModels.Categories;
 using FoodOrder.Core.ViewModels.Foods;
-using FoodOrder.Core.ViewModels.Images;
+
 using FoodOrder.Core.ViewModels.Notifications;
 using FoodOrder.Core.ViewModels.OrderDetails;
 using FoodOrder.Core.ViewModels.Orders;
@@ -78,10 +78,10 @@ namespace FoodOrder.Core.AutoMapper
             CreateMap<AddressCreateVM, Address>();
             CreateMap<AddressVM, AddressEditVM>();
 
-            CreateMap<Image, ImageVM>();
+            //CreateMap<Image, ImageVM>();
                // .ForMember(dest => dest.ImageData, options => options.MapFrom<ImageCustomeResolver>());
-            CreateMap<ImageCreateVM, Image>();
-            CreateMap<ImageVM, ImageEditVM>();
+            //CreateMap<ImageCreateVM, Image>();
+            //CreateMap<ImageVM, ImageEditVM>();
         }
 
         //private class ImageCustomeResolver : IValueResolver<Image, ImageVM, IFormFile>

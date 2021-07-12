@@ -41,7 +41,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<OrderVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var orders = (from c in _dbContext.Orders select c)
+            var orders = (from c in _dbContext.Orders where c.IsDeleted == false select c)
                 .Include(a => a.OrderStatus)
                 .Include(a => a.AppUser);
 
@@ -59,7 +59,7 @@ namespace FoodOrder.API.Services
         {
             var c = _dbContext.Orders.Find(id);
 
-            if (c == null)
+            if (c == null || c.IsDeleted)
             {
                 return new FailedResult<OrderVM>("Order not found!");
             }
@@ -107,7 +107,7 @@ namespace FoodOrder.API.Services
         public ApiResult<List<OrderVM>> GetByUserID(string userID)
         {
             var orders = (from o in _dbContext.Orders
-                          where o.AppUserID.ToString() == userID
+                          where o.AppUserID.ToString() == userID && o.IsDeleted == false
                           select o)
                     .Include(a => a.OrderDetails)
                     .Include(a => a.OrderStatus)
@@ -147,6 +147,7 @@ namespace FoodOrder.API.Services
         {
             var orders = (from o in _dbContext.Orders
                           where o.AppUserID.ToString() == userID
+                          && o.IsDeleted == false
                           select o)
                     //.Include(a => a.OrderDetails)
                     //.Include(a => a.OrderStatus)
@@ -188,7 +189,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<OrderVM>> Create(OrderCreateVM vm)
         {
             var user = _dbContext.AppUsers.Find(vm.AppUserID);
-            if(user == null)
+            if(user == null || user.IsDeleted)
             {
                 return new  FailedResult<OrderVM>("User not found!");
             }
@@ -249,6 +250,12 @@ namespace FoodOrder.API.Services
 
                     if(orderDetail.SaleCampaignID != null)
                     {
+                        var sc = _dbContext.SaleCampaigns.Find(orderDetail.SaleCampaignID);
+                        if(sc == null || sc.IsDeleted)
+                        {
+                            return new FailedResult<OrderVM>("Sale Campaign not found!");
+                        }
+
                         totalPrice += orderDetail.Price
                             * orderDetail.Amount 
                             * (100 - orderDetail.SalePercent.Value) / 100;
@@ -264,7 +271,7 @@ namespace FoodOrder.API.Services
                 if(vm.PromotionID != null)
                 {
                     var promotion = _dbContext.Promotions.Find(vm.PromotionID);
-                    if (promotion == null)
+                    if (promotion == null || promotion.IsDeleted)
                     {
                         return new FailedResult<OrderVM>("Promotion not found!");
                     }
@@ -315,7 +322,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<OrderVM>> Edit(int id, OrderEditVM editVM)
         {
             var vm = await _dbContext.Orders.FirstOrDefaultAsync(c => c.ID == id);
-            if (vm == null)
+            if (vm == null || vm.IsDeleted)
             {
                 return new FailedResult<OrderVM>("Order not found!");
             }
@@ -342,7 +349,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<OrderVM>> ChangOrderStatus(ChangeOrderStatusVM changeVM)
         {
             var vm = await _dbContext.Orders.FirstOrDefaultAsync(c => c.ID == changeVM.ID);
-            if (vm == null)
+            if (vm == null || vm.IsDeleted)
             {
                 return new FailedResult<OrderVM>("Order not found!");
             }
@@ -380,6 +387,26 @@ namespace FoodOrder.API.Services
         }
 
         public async Task<ApiResult<bool>> Delete(int id)
+        {
+            var order = await _dbContext.Orders.FirstOrDefaultAsync(c => c.ID == id);
+            if (order == null || order.IsDeleted)
+            {
+                return new FailedResult<bool>("Order not found!");
+            }
+            try
+            {
+                order.IsDeleted = true;
+                order.TimeDeleted = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
+            }
+            return new SuccessedResult<bool>(true);
+        }
+        public async Task<ApiResult<bool>> DeletePermanently(int id)
         {
             var order = await _dbContext.Orders.FirstOrDefaultAsync(c => c.ID == id);
             if (order == null)

@@ -14,6 +14,9 @@ namespace FoodOrder.Core.ViewModels.Carts
         public int FoodID { get; set; }
         public int Quantity { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public AppUser AppUser { get; set; }
         public FoodVM FoodVM { get; set; }
     }

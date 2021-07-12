@@ -29,7 +29,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<OrderDetailVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var odVMs = _dbContext.OrderDetails
+            var odVMs = _dbContext.OrderDetails.Where(x => x.IsDeleted == false)
                .Include(f => f.Food) //Todo: is this need for paging?
                .Include(f => f.Order)
                .AsNoTracking();
@@ -51,7 +51,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<OrderDetailVM>> GetByID(int orderID, int foodID)
         {
             var c =  _dbContext.OrderDetails.Find(orderID, foodID );
-            if (c == null)
+            if (c == null || c.IsDeleted)
             {
                 return new FailedResult<OrderDetailVM>("OrderDetail not found!");
             }
@@ -61,7 +61,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<OrderDetailVM>> Create(OrderDetailCreateVM vm)
         {
             Food food = _dbContext.Foods.Find(vm.FoodID);
-            if (food == null)
+            if (food == null || food.IsDeleted)
             {
                 return new FailedResult<OrderDetailVM>("Food not found!");
             }
@@ -88,7 +88,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<OrderDetailVM>> Edit(int orderID, int foodID, OrderDetailEditVM editVM)
         {
             var od = await _dbContext.OrderDetails.FindAsync(orderID, foodID);
-            if (od == null)
+            if (od == null || od.IsDeleted)
             {
                 return new FailedResult<OrderDetailVM>("OrderDetail not found!");
             }
@@ -110,6 +110,27 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<bool>> Delete(int orderID, int foodID)
         {
             var vm = await _dbContext.OrderDetails.FindAsync(orderID,  foodID );
+            if (vm == null || vm.IsDeleted)
+            {
+                return new FailedResult<bool>("OrderDetail not found!");
+            }
+            try
+            {
+                vm.IsDeleted = true;
+                vm.TimeDeleted = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
+            }
+            return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<bool>> DeletePermanently(int orderID, int foodID)
+        {
+            var vm = await _dbContext.OrderDetails.FindAsync(orderID, foodID);
             if (vm == null)
             {
                 return new FailedResult<bool>("OrderDetail not found!");

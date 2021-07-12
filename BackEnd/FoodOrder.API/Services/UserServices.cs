@@ -55,7 +55,7 @@ namespace FoodOrder.API.Services
         {
             var user = await _userManager.FindByNameAsync(loginRequest.Username);
 
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<LoginResponse>("Phone number or password is incorrect!");
             }
@@ -141,7 +141,7 @@ namespace FoodOrder.API.Services
             var user = await _userManager.FindByNameAsync(
                 jwtSecurityToken.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault().Value);
 
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<LoginResponse>("Invalid token!");
             }
@@ -237,7 +237,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<UserUpdateRequest>> EditUser(string id, UserUpdateRequest request)
         {
             AppUser user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<UserUpdateRequest>("User not found!");
             }
@@ -288,7 +288,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<bool>> ChangePassword(ChangePasswordVM request)
         {
             AppUser user = await _userManager.FindByNameAsync(request.Username);
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<bool>("User not found!");
             }
@@ -335,7 +335,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<bool>> ResetPassword(ResetPassword request)
         {
             AppUser user = await _userManager.FindByNameAsync(request.Username);
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<bool>("User not found!");
             }
@@ -387,7 +387,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<bool>> AssignRoleToUser(String userID, List<String> roles)
         {
             var user = await _userManager.FindByIdAsync(userID.ToString());
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<bool>("User not found!");
             }
@@ -424,6 +424,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<UserVM>>> GetAllPaging(PagingRequestBase request)
         {
             var users = from c in _dbContext.AppUsers
+                        where c.IsDeleted == false
                         select new UserVM()
                         {
                             Username = c.UserName,
@@ -453,7 +454,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<UserVM>> GetUserByID(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<UserVM>("User not found!");
             }
@@ -472,6 +473,29 @@ namespace FoodOrder.API.Services
         }
 
         public async Task<ApiResult<bool>> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null || user.IsDeleted)
+            {
+                return new FailedResult<bool>("User not found!");
+            }
+
+            try
+            {
+                user.UserName = user.UserName + "_" +Guid.NewGuid().ToString();
+                user.IsDeleted = true;
+                user.TimeDeleted = DateTime.Now;
+                var result = await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return new FailedResult<bool>(e.Message);
+               
+            }
+
+            return new SuccessedResult<bool>(true);
+        }
+        public async Task<ApiResult<bool>> DeleteUserPermanently(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)

@@ -19,6 +19,9 @@ namespace FoodOrder.Core.ViewModels.SaleCampaigns
         public bool Enabled { get; set; }
         public int Priority { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public List<OrderVM> OrderVMs { get; set; }
         public List<FoodVM> FoodVMs { get; set; }
     }

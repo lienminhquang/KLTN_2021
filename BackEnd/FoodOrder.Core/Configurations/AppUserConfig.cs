@@ -19,6 +19,9 @@ namespace FoodOrder.Core.Configurations
             
             builder.HasMany(x => x.Carts).WithOne(x => x.AppUser).HasForeignKey(x => x.AppUserId);
             builder.HasMany(x => x.Addresses).WithOne(x => x.AppUser).HasForeignKey(x => x.AppUserID);
+
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

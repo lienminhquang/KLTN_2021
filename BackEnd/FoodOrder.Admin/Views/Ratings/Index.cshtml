@@ -14,10 +14,10 @@
     </ol>
     <div class="card mb-4">
         <div class="card-header">
-            @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+            @*@if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
             {
                 <a asp-action="Create">Create New</a>
-            }
+            }*@
         </div>
         <div class="card-body">
             <div class="table-responsive">

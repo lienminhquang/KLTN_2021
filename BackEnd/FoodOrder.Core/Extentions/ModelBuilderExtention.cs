@@ -101,12 +101,12 @@ namespace FoodOrder.Core.Extentions
                 new Food { ID = 3, Name = "Pepsi", Description = "Nuoc giai khat pepsi", Price = 7000, Count = 1000 },
                 new Food { ID = 4, Name = "Tra da", Description = "Tra da lam tu by quyet gia truyen co 2 khong 1", Price = 5000, Count = 200 }
                 );
-            modelBuilder.Entity<Image>().HasData(
-                new Image { ID = 1, Caption = "", FoodID = 1, ImagePath = "default.png", SortOrder = 1 },
-                new Image { ID = 2, Caption = "", FoodID = 2, ImagePath = "default.png", SortOrder = 1 },
-                new Image { ID = 3, Caption = "", FoodID = 3, ImagePath = "default.png", SortOrder = 1 },
-                new Image { ID = 4, Caption = "", FoodID = 4, ImagePath = "default.png", SortOrder = 1 }
-                );
+            //modelBuilder.Entity<Image>().HasData(
+            //    new Image { ID = 1, Caption = "", FoodID = 1, ImagePath = "default.png", SortOrder = 1 },
+            //    new Image { ID = 2, Caption = "", FoodID = 2, ImagePath = "default.png", SortOrder = 1 },
+            //    new Image { ID = 3, Caption = "", FoodID = 3, ImagePath = "default.png", SortOrder = 1 },
+            //    new Image { ID = 4, Caption = "", FoodID = 4, ImagePath = "default.png", SortOrder = 1 }
+            //    );
             modelBuilder.Entity<FoodCategory>().HasData(
                 new FoodCategory { CategoryID = 1, FoodID = 1 },
                 new FoodCategory { CategoryID = 2, FoodID = 3 },

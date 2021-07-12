@@ -15,6 +15,8 @@ namespace FoodOrder.Core.Configurations
         {
             builder.ToTable("SaleCampaignFood");
             builder.HasKey(x => new { x.FoodID, x.SaleCampaignID });
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

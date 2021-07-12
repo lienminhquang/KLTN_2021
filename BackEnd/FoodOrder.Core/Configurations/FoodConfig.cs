@@ -21,8 +21,11 @@ namespace FoodOrder.Core.Configurations
             builder.HasMany(x => x.Ratings).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
             builder.HasMany(x => x.FoodCategories).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
             builder.HasMany(x => x.Carts).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
-            builder.HasMany(x => x.Images).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
+            //builder.HasMany(x => x.Images).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
             builder.HasMany(x => x.SaleCampaignFoods).WithOne(x => x.Food).HasForeignKey(x => x.FoodID);
+
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

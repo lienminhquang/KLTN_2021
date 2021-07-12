@@ -18,6 +18,9 @@ namespace FoodOrder.Core.Configurations
             builder.Property(x => x.FinalTotalPrice).IsRequired().HasDefaultValue(0);
 
             builder.HasMany(x => x.OrderDetails).WithOne(x => x.Order).HasForeignKey(x => x.OrderID);
+
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

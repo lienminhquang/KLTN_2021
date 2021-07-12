@@ -12,6 +12,9 @@ namespace FoodOrder.Core.Models
         public string Description { get; set; }
         public string ImagePath { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public List<FoodCategory> FoodCategories { get; set; }
     }
 }

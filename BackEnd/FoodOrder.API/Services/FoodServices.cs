@@ -38,7 +38,9 @@ namespace FoodOrder.API.Services
                //.Include(f => f.Ratings) //Todo: is this need for paging?
                //.Include(f => f.Images)
                //.Include(f => f.FoodCategories)
-               .AsNoTracking();
+               .AsNoTracking()
+               .Where(x => x.IsDeleted == false)
+               ;
 
 
 
@@ -59,7 +61,7 @@ namespace FoodOrder.API.Services
             foreach (var item in created.Items)
             {
                 var ratings = from r in _dbContext.Ratings
-                              where r.FoodID == item.ID
+                              where r.FoodID == item.ID && r.IsDeleted == false
                               select r;
                 if (ratings != null && ratings.Count() > 0)
                 {
@@ -69,7 +71,7 @@ namespace FoodOrder.API.Services
 
                 var query = from cf in _dbContext.SaleCampaignFoods
                             join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
-                            where (cf.FoodID == item.ID)
+                            where (cf.FoodID == item.ID) && c.IsDeleted == false
                             && (c.Enabled == true)
                             && (c.StartDate <= DateTime.Now)
                             && (c.EndDate >= DateTime.Now)
@@ -92,6 +94,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetBestSellingAsync(PagingRequestBase request)
         {
             var food = from f in _dbContext.Foods
+                       where f.IsDeleted == false
                        join od in _dbContext.OrderDetails on f.ID equals od.FoodID
                        group f by f.ID into g
                        select new { id = g.Key, count = g.Count() };
@@ -112,7 +115,7 @@ namespace FoodOrder.API.Services
             foreach (var item in created.Items)
             {
                 var ratings = from r in _dbContext.Ratings
-                              where r.FoodID == item.ID
+                              where r.FoodID == item.ID && r.IsDeleted == false
                               select r;
                 if (ratings != null && ratings.Count() > 0)
                 {
@@ -123,7 +126,7 @@ namespace FoodOrder.API.Services
 
                 var query = from cf in _dbContext.SaleCampaignFoods
                             join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
-                            where (cf.FoodID == item.ID)
+                            where (cf.FoodID == item.ID) && c.IsDeleted == false
                             && (c.Enabled == true)
                             && (c.StartDate <= DateTime.Now)
                             && (c.EndDate >= DateTime.Now)
@@ -144,12 +147,13 @@ namespace FoodOrder.API.Services
 
         public ApiResult<PaginatedList<FoodVM>> GetMostDiscounted(PagingRequestBase request)
         {
-            var food = from f in _dbContext.Foods
+            var food = from f in _dbContext.Foods.Where(x => x.IsDeleted == false)
                        join fsc in _dbContext.SaleCampaignFoods on f.ID equals fsc.FoodID
                        join sc in _dbContext.SaleCampaigns on fsc.SaleCampaignID equals sc.ID
                        where (sc.Enabled == true)
                             && (sc.StartDate <= DateTime.Now)
                             && (sc.EndDate >= DateTime.Now)
+                            && sc.IsDeleted == false
                        select new { f, sc };
             food.ToList().Sort( (x ,y) => { return (int)(y.sc.Percent - x.sc.Percent); });
             var listFoodVM = food.Select(x => _mapper.Map<FoodVM>(x.f)).ToList();
@@ -160,7 +164,7 @@ namespace FoodOrder.API.Services
             foreach (var item in created.Items)
             {
                 var ratings = from r in _dbContext.Ratings
-                              where r.FoodID == item.ID
+                              where r.FoodID == item.ID && r.IsDeleted == false
                               select r;
                 if (ratings != null && ratings.Count() > 0)
                 {
@@ -170,7 +174,7 @@ namespace FoodOrder.API.Services
 
                 var query = from cf in _dbContext.SaleCampaignFoods
                             join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
-                            where (cf.FoodID == item.ID)
+                            where (cf.FoodID == item.ID) && c.IsDeleted == false
                             && (c.Enabled == true)
                             && (c.StartDate <= DateTime.Now)
                             && (c.EndDate >= DateTime.Now)
@@ -192,7 +196,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<bool>> AddFoodToCategories(List<string> categoryIDs, int foodID)
         {
             var food = _dbContext.Foods.Find(foodID);
-            if (food == null)
+            if (food == null || food.IsDeleted)
             {
                 return new FailedResult<bool>("Food not found!");
             }
@@ -213,7 +217,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<bool>> DeleteFoodFromAllCategory(int foodID)
         {
             var food = _dbContext.Foods.Find(foodID);
-            if (food == null)
+            if (food == null || food.IsDeleted)
             {
                 return new FailedResult<bool>("Food not found!");
             }
@@ -238,7 +242,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<FoodVM>> GetByID(int id)
         {
             var food = await _dbContext.Foods.FirstOrDefaultAsync(c => c.ID == id);
-            if (food == null)
+            if (food == null || food.IsDeleted)
             {
                 return new FailedResult<FoodVM>("Food not found!");
             }
@@ -315,7 +319,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<FoodVM>> Edit(int id, FoodEditVM foodVM)
         {
             var food = await _dbContext.Foods.FirstOrDefaultAsync(c => c.ID == id);
-            if (food == null)
+            if (food == null || food.IsDeleted)
             {
                 return new FailedResult<FoodVM>("Food not found!");
             }
@@ -346,6 +350,30 @@ namespace FoodOrder.API.Services
         }
 
         public async Task<ApiResult<bool>> Delete(int id)
+        {
+            var food = await _dbContext.Foods.FirstOrDefaultAsync(c => c.ID == id);
+            if (food == null || food.IsDeleted)
+            {
+                return new FailedResult<bool>("Food not found!");
+            }
+            try
+            {
+
+                var listFC = _dbContext.FoodCategories.Where(x => x.FoodID == id);
+                await listFC.ForEachAsync(x => { x.IsDeleted = true; x.TimeDeleted = DateTime.Now; });
+                food.IsDeleted = true;
+                food.TimeDeleted = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
+            }
+            return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<bool>> DeletePermanently(int id)
         {
             var food = await _dbContext.Foods.FirstOrDefaultAsync(c => c.ID == id);
             if (food == null)

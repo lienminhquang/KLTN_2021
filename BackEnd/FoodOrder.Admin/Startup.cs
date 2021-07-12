@@ -70,7 +70,7 @@ namespace FoodOrder.Admin
             services.AddTransient<PromotionServices, PromotionServices>();
             services.AddTransient<RatingServices, RatingServices>();
             services.AddTransient<AppRoleServices, AppRoleServices>();
-            services.AddTransient<ImageServices, ImageServices>();
+            //services.AddTransient<ImageServices, ImageServices>();
             services.AddTransient<NotificationServices, NotificationServices>();
             services.AddTransient<SaleCampaignServices, SaleCampaignServices>();
             services.AddTransient<HomeServices, HomeServices>();

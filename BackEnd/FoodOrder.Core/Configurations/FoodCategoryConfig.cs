@@ -13,6 +13,8 @@ namespace FoodOrder.Core.Configurations
 
             // TODO: Is this needed?
             //builder.HasOne(x => x.Food).WithMany(x => x.FoodCategories).HasForeignKey(x => x.FoodID);
+            builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
+            builder.Property(x => x.TimeDeleted).IsRequired(false);
         }
     }
 }

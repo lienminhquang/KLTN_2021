@@ -29,7 +29,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<RatingVM>>> GetRatingsOfFood(int foodID, PagingRequestBase request)
         {
-            var vMs = _dbContext.Ratings.Where(r => r.FoodID == foodID)
+            var vMs = _dbContext.Ratings.Where(r => r.FoodID == foodID && r.IsDeleted == false)
                //.Include(f => f.Food) //Todo: is this need for paging?
                //.Include(f => f.Order)
                .AsNoTracking();
@@ -56,7 +56,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<RatingVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var vMs = _dbContext.Ratings
+            var vMs = _dbContext.Ratings.Where(x => x.IsDeleted == false)
                //.Include(f => f.Food) //Todo: is this need for paging?
                //.Include(f => f.Order)
                .AsNoTracking();
@@ -77,7 +77,7 @@ namespace FoodOrder.API.Services
         public ApiResult<RatingVM> GetByID(int orderID, int foodID)
         {
             var c = _dbContext.Ratings.Find(orderID, foodID);
-            if (c == null)
+            if (c == null || c.IsDeleted)
             {
                 return new FailedResult<RatingVM>("Rating not found!");
             }
@@ -87,19 +87,19 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<RatingVM>> Create(RatingCreateVM vm)
         {
             Food food = _dbContext.Foods.Find(vm.FoodID);
-            if (food == null)
+            if (food == null || food.IsDeleted)
             {
                 return new FailedResult<RatingVM>("Food not found!");
             }
 
             Order order = _dbContext.Orders.Find(vm.OrderID);
-            if (order == null)
+            if (order == null || order.IsDeleted)
             {
                 return new FailedResult<RatingVM>("Order not found!");
             }
 
             var od = _dbContext.OrderDetails.Find(vm.OrderID, vm.FoodID);
-            if (od == null)
+            if (od == null || od.IsDeleted)
             {
                 return new FailedResult<RatingVM>("Food is not in order!");
             }
@@ -137,7 +137,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<RatingVM>> Edit(int orderID, int foodID, RatingEditVM editVM)
         {
             var od = await _dbContext.Ratings.FindAsync(orderID, foodID);
-            if (od == null)
+            if (od == null || od.IsDeleted)
             {
                 return new FailedResult<RatingVM>("Rating not found!");
             }
@@ -165,6 +165,27 @@ namespace FoodOrder.API.Services
         }
 
         public async Task<ApiResult<bool>> Delete(int orderID, int foodID)
+        {
+            var vm = await _dbContext.Ratings.FindAsync(orderID, foodID);
+            if (vm == null || vm.IsDeleted)
+            {
+                return new FailedResult<bool>("Rating not found!");
+            }
+            try
+            {
+                vm.IsDeleted = true;
+                vm.TimeDeleted = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
+            }
+            return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<bool>> DeletePermanently(int orderID, int foodID)
         {
             var vm = await _dbContext.Ratings.FindAsync(orderID, foodID);
             if (vm == null)

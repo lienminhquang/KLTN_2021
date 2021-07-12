@@ -25,5 +25,8 @@ namespace FoodOrder.Core.ViewModels.Promotions
         public int Priority { get; set; }
         public int TimeUsedByCurrentUser { get; set; }
         public string ImagePath { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
     }
 }

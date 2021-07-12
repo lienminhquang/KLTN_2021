@@ -30,7 +30,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<NotificationVM>>> GetByUserID(string userID, PagingRequestBase request)
         {
             var vMs = (from n in _dbContext.Notifications
-                       where n.UserID.ToString() == userID
+                       where n.UserID.ToString() == userID && n.IsDeleted == false
                        select n);
 
             //vMs = Core.Helpers.Utilities<Notification>.Sort(vMs, request.SortOrder, "TimeCreated");
@@ -44,7 +44,7 @@ namespace FoodOrder.API.Services
         {
             var vMs = _dbContext.Notifications.Find(notificationReceivedVM.NotificationID);
            
-            if (vMs == null)
+            if (vMs == null || vMs.IsDeleted)
             {
                 return new FailedResult<bool>("Notification not found");
             }
@@ -63,7 +63,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<NotificationVM>>> GetUnReceivedByUserID(string userID, PagingRequestBase request)
         {
             var vMs = (from n in _dbContext.Notifications
-                       where n.UserID.ToString() == userID && n.UserReceived == false
+                       where n.UserID.ToString() == userID && n.UserReceived == false && n.IsDeleted == false
                        select n);
 
             //vMs = Core.Helpers.Utilities<Notification>.Sort(vMs, request.SortOrder, "TimeCreated");
@@ -75,7 +75,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<NotificationVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var vMs = _dbContext.Notifications
+            var vMs = _dbContext.Notifications.Where(x => x.IsDeleted == false)
                //.Include(f => f.Food) //Todo: is this need for paging?
                //.Include(f => f.Order)
                .AsNoTracking();
@@ -91,7 +91,7 @@ namespace FoodOrder.API.Services
         public ApiResult<NotificationVM> GetByID(int id)
         {
             var c = _dbContext.Notifications.Find(id);
-            if (c == null)
+            if (c == null || c.IsDeleted)
             {
                 return new FailedResult<NotificationVM>("Notification not found!");
             }
@@ -101,7 +101,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<NotificationVM>> Create(NotificationCreateVM vm)
         {
             var user = _dbContext.AppUsers.Find(vm.UserID);
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<NotificationVM>("User not found!");
             }
@@ -153,6 +153,27 @@ namespace FoodOrder.API.Services
         //}
 
         public async Task<ApiResult<bool>> Delete(int id)
+        {
+            var vm = _dbContext.Notifications.Find(id);
+            if (vm == null || vm.IsDeleted)
+            {
+                return new FailedResult<bool>("Notification not found!");
+            }
+            try
+            {
+                vm.IsDeleted = true;
+                vm.TimeDeleted = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
+            }
+            return new SuccessedResult<bool>(true);
+        }
+
+        public async Task<ApiResult<bool>> DeletePermanently(int id)
         {
             var vm = _dbContext.Notifications.Find(id);
             if (vm == null)

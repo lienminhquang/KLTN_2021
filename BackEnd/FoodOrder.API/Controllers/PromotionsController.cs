@@ -94,6 +94,24 @@ namespace FoodOrder.API.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("permanently/{id}")]
+        [Authorize(Roles = PolicyType.Admin)]
+        [ValidTokenRequirement]
+        public async Task<IActionResult> DeletePermanently(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _promotionServices.DeletePermanently(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpGet]
         // TODO: return the sortorder, currentfilter, pagenumber to the client.
         [AllowAnonymous]

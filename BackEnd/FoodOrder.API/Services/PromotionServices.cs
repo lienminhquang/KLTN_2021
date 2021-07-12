@@ -33,12 +33,12 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllValidForUser(PagingRequestBase request, String userID)
         {
             var user = _dbContext.AppUsers.Find(new Guid(userID));
-            if (user == null)
+            if (user == null || user.IsDeleted)
             {
                 return new FailedResult<PaginatedList<PromotionVM>>("User not found!");
             }
 
-            var promotions = from c in _dbContext.Promotions
+            var promotions = from c in _dbContext.Promotions.Where(x => x.IsDeleted == false)
                              join o in _dbContext.Orders on c.ID equals o.PromotionID into joined
                              from o in joined.DefaultIfEmpty()
                              where o == null || o.AppUserID.ToString().Equals(userID)
@@ -82,6 +82,7 @@ namespace FoodOrder.API.Services
                              where (c.Enabled == true)
                              && (c.StartDate <= DateTime.Now)
                              && (c.EndDate >= DateTime.Now)
+                             && c.IsDeleted == false
                              select c;
 
             if (!String.IsNullOrEmpty(request.SearchString))
@@ -108,7 +109,7 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<PaginatedList<PromotionVM>>> GetAllPaging(PagingRequestBase request)
         {
-            var vMs = from c in _dbContext.Promotions select c;
+            var vMs = from c in _dbContext.Promotions where c.IsDeleted == false select c;
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {
@@ -127,7 +128,7 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<PromotionVM>> GetByID(int id)
         {
             var c = await _dbContext.Promotions.FirstOrDefaultAsync(c => c.ID == id);
-            if (c == null)
+            if (c == null || c.IsDeleted)
             {
                 return new FailedResult<PromotionVM>("Order not found!");
             }
@@ -167,7 +168,7 @@ namespace FoodOrder.API.Services
             try
             {
                 var promotion = await _dbContext.Promotions.FirstOrDefaultAsync(c => c.ID == id);
-                if (promotion == null)
+                if (promotion == null || promotion.IsDeleted)
                 {
                     return new FailedResult<PromotionVM>("Promotion not found!");
                 }
@@ -205,6 +206,26 @@ namespace FoodOrder.API.Services
         }
 
         public async Task<ApiResult<bool>> Delete(int id)
+        {
+            var vm = await _dbContext.Promotions.FirstOrDefaultAsync(c => c.ID == id);
+            if (vm == null || vm.IsDeleted)
+            {
+                return new FailedResult<bool>("Promotion not found!");
+            }
+            try
+            {
+                vm.IsDeleted = true;
+                vm.TimeDeleted = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FailedResult<bool>("Some thing went wrong!");
+            }
+            return new SuccessedResult<bool>(true);
+        }
+        public async Task<ApiResult<bool>> DeletePermanently(int id)
         {
             var vm = await _dbContext.Promotions.FirstOrDefaultAsync(c => c.ID == id);
             if (vm == null)

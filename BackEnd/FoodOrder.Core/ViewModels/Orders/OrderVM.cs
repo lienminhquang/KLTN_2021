@@ -24,6 +24,9 @@ namespace FoodOrder.Core.ViewModels.Orders
         public string AddressString { get; set; }
         public string AddressName { get; set; }
 
+        public bool IsDeleted { get; set; }
+        public DateTime? TimeDeleted { get; set; }
+
         public UserVM UserVM { get; set; }
 
         public OrderStatusVM OrderStatusVM { get; set; }
