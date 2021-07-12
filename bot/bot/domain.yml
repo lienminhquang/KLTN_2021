@@ -67,7 +67,7 @@ responses:
   - text: Xin lỗi, tôi chưa hiểu ý bạn. Bạn có thể diễn đạt lại không?
   utter_thanks:
   - text: Vâng, không có gì !
-  utter_ask_func:
+  utter_func:
   - text: |-
       Tôi có thể giúp bạn:
       - Tìm món
@@ -81,8 +81,6 @@ responses:
       Chúng tôi đang phục vụ các loại đồ ăn dưới đây:
       {list_category}
       Bạn muốn tìm các món thuộc loại nào?
-  utter_ask_find_promotion:
-  - text: hiện nay đang có khuyến mãi 50% tất cả các món ăn
   utter_list_order_status:
   - text: Danh sách các đơn hàng đang xử lý của bạn
   utter_list_order_empty:
@@ -91,16 +89,14 @@ responses:
   - text: |-
       Xin lỗi!. Hệ thống đang gặp sự cố ngoài ý muốn :(. 
       Xin vui lòng thực hiện lại sau.
-  utter_ask_cancel_dishes:
-  - text: đang hủy món
+  utter_cannot_cancel_order:
+  - text: Xin lỗi, bạn sẽ không thể hủy đơn hàng trên ứng dụng vì Quán/Nhà hàng có thể đã bắt đầu chuẩn bị ngay sau khi nhận được đơn hàng. Vì vậy, hãy kiểm tra thật kỹ món ăn cũng như địa chỉ giao hàng trước khi tiến hành đặt đơn nhé. 
   utter_ask_name:
   - text: Tôi tên là Amee !
   utter_explain_food_name:
   - text: Tôi cần biết tên món để có thể tìm giúp bạn ^^
   utter_ask_continue_find_food:
   - text: Bạn muốn tiếp tục tìm món không?
-  utter_out_of_category:
-  - text: Dạ không! hiện tại cửa hàng chỉ có các món Bò, Cơm, Trà sữa, Bánh ngọt thôi ạ
   utter_finding_food:
   - text: Chờ một chút nhé. Tôi đang tìm {food_name}
 actions:

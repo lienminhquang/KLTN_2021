@@ -20,11 +20,16 @@ rules:
   - rule: ask func
     steps:
       - intent: ask_func
-      - action: utter_ask_func
+      - action: utter_func
   - rule: ask name
     steps:
       - intent: ask_name
       - action: utter_ask_name
+
+  - rule: cancel order
+    steps:
+      - intent: cancel_order
+      - action: utter_cannot_cancel_order
 
   - rule: activate find food form
     steps:

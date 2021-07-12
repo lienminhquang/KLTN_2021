@@ -1,6 +1,7 @@
-﻿using FoodOrder.Core.Models;
-using FoodOrder.Data.Configurations;
-using FoodOrder.Data.Extentions;
+﻿using FoodOrder.Core.Configurations;
+using FoodOrder.Core.Models;
+using FoodOrder.Core.Configurations;
+using FoodOrder.Core.Extentions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

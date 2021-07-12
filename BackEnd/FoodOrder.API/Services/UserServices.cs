@@ -51,17 +51,6 @@ namespace FoodOrder.API.Services
             _mapper = mapper;
         }
 
-        //public async Task<bool> ValidateJWTAsync(ClaimsPrincipal claims)
-        //{
-        //    var timeCreateJWT = claims.FindFirstValue("TimeCreateJWT");
-        //    var user = await _userManager.FindByNameAsync(claims.FindFirstValue(ClaimTypes.Name));
-        //    if(user.TimeCreateJWT.ToString() != timeCreateJWT)
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
-
         public async Task<ApiResult<LoginResponse>> Authenticate(LoginRequest loginRequest)
         {
             var user = await _userManager.FindByNameAsync(loginRequest.Username);
