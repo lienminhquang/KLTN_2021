@@ -179,7 +179,10 @@ class CheckoutBar extends StatelessWidget {
                         return PromotionScreen();
                       }));
                     },
-                    child: Text('Mã khuyến mãi')),
+                    child: Text(
+                      'Mã khuyến mãi',
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )),
                 const SizedBox(
                   width: 10,
                 ),
@@ -197,15 +200,16 @@ class CheckoutBar extends StatelessWidget {
               children: [
                 Text.rich(
                   TextSpan(
-                      style: AppTheme.subTitleStyle,
+                      style: Theme.of(context).textTheme.bodyText1,
                       text: 'Thành tiền:\n',
                       children: [
                         TextSpan(
                             text: '${AppConfigs.toPrice(finalPrice)}',
                             style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold))
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Montserrat'))
                       ]),
                 ),
                 SizedBox(
@@ -228,11 +232,15 @@ class CheckoutBar extends StatelessWidget {
                                 content: Text("Giỏ hàng đang rỗng!"),
                                 actions: [
                                   TextButton(
+                                    style: TextButton.styleFrom(
+                                        backgroundColor:
+                                            Theme.of(context).buttonColor),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: const Text('Ok',
-                                        style: TextStyle(color: Colors.white)),
+                                    child: Text('Ok',
+                                        style:
+                                            Theme.of(context).textTheme.button),
                                   ),
                                 ],
                               );
@@ -249,12 +257,15 @@ class CheckoutBar extends StatelessWidget {
                                     Text("Vui lòng thêm địa chỉ giao hàng!"),
                                 actions: [
                                   TextButton(
+                                    style: TextButton.styleFrom(
+                                        backgroundColor:
+                                            Theme.of(context).buttonColor),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       'Ok',
-                                      style: TextStyle(color: Colors.white),
+                                      style: Theme.of(context).textTheme.button,
                                     ),
                                   ),
                                 ],
@@ -316,10 +327,12 @@ Widget buildSuccessedOrderDialog(BuildContext context) {
     content: Text("Chúng tôi sẽ giao hàng đến bạn trong chốc lát."),
     actions: [
       TextButton(
+        style: TextButton.styleFrom(
+            backgroundColor: Theme.of(context).buttonColor),
         onPressed: () => Navigator.pop(context, 'Ok'),
-        child: const Text(
+        child: Text(
           'Ok',
-          style: TextStyle(color: Colors.white),
+          style: Theme.of(context).textTheme.button,
         ),
       ),
     ],
@@ -335,8 +348,10 @@ Widget buildFailedOrderDialog(BuildContext context, String? error) {
             "\nVui lòng kiểm tra lại thông tin hoặc liên hệ chúng tôi để được hỗ trợ."),
     actions: [
       TextButton(
+        style: TextButton.styleFrom(
+            backgroundColor: Theme.of(context).buttonColor),
         onPressed: () => Navigator.pop(context, 'Ok'),
-        child: const Text('Ok', style: TextStyle(color: Colors.white)),
+        child: Text('Ok', style: Theme.of(context).textTheme.button),
       ),
     ],
   );

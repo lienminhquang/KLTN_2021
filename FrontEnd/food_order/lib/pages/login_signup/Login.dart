@@ -116,14 +116,14 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
-                            hintText: 'Số điện thoại',
-                            prefix: Icon(Icons.phone),
-                            labelStyle: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue))),
+                          hintText: 'Số điện thoại',
+                          prefix: Icon(Icons.phone,
+                              color: Theme.of(context).buttonColor),
+                          labelStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
                       ), //
                       SizedBox(
                         height: 15.0,
@@ -138,17 +138,19 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            hintText: 'Mật khẩu ',
-                            prefix: Icon(Icons.lock),
-                            suffixIcon: InkWell(
-                                onTap: _togglePasswordView,
-                                child: Icon(Icons.visibility)),
-                            labelStyle: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue))),
+                          hintText: 'Mật khẩu ',
+                          prefix: Icon(Icons.lock,
+                              color: Theme.of(context).buttonColor),
+                          suffixIcon: InkWell(
+                              onTap: _togglePasswordView,
+                              child: Icon(
+                                Icons.visibility,
+                              )),
+                          labelStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
                         obscureText: isHiddenPassword,
                       ),
                       SizedBox(
@@ -159,23 +161,19 @@ class _LoginPageState extends State<LoginPage> {
                         height: 40.0,
                         child: Material(
                           borderRadius: BorderRadius.circular(20),
-                          shadowColor: Colors.blueAccent,
+                          shadowColor: Colors.red,
                           color: Colors.blue,
                           elevation: 7.0,
-                          child: TextButton(
+                          child: FlatButton(
+                            color: Theme.of(context).buttonColor,
                             onPressed: () {
                               login(context);
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) => AppLoadingScreen()));
                             },
                             child: Center(
-                              child: Text(
-                                'Đăng nhập',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat'),
-                              ),
+                              child: Text('Đăng nhập',
+                                  style: Theme.of(context).textTheme.button),
                             ),
                           ),
                         ),
@@ -198,11 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Center(
                             child: Text(
                               'Quên mật khẩu',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: 'Montserrat',
-                              ),
+                              style: Theme.of(context).textTheme.headline2,
                             ),
                           ),
                         ),
@@ -210,37 +204,6 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      // Container(
-                      //   height: 40.0,
-                      //   color: Colors.transparent,
-                      //   child: Container(
-                      //     decoration: BoxDecoration(
-                      //       border: Border.all(
-                      //           color: Colors.black,
-                      //           style: BorderStyle.solid,
-                      //           width: 1.0),
-                      //       color: Colors.transparent,
-                      //       borderRadius: BorderRadius.circular(20.0),
-                      //     ),
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       children: <Widget>[
-                      //         Center(
-                      //             child: ImageIcon(
-                      //                 AssetImage('images/iconfacebook.png'))),
-                      //         SizedBox(
-                      //           width: 10,
-                      //         ),
-                      //         Center(
-                      //           child: Text('Đăng nhập bằng Facebook',
-                      //               style: TextStyle(
-                      //                   fontWeight: FontWeight.bold,
-                      //                   fontFamily: 'Montserrat')),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      // )
                     ],
                   ),
                 ),
@@ -255,8 +218,6 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               Text(
                 'Bạn chưa có tài khoản ?',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
               ),
               SizedBox(
                 width: 5,
@@ -269,12 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                   }));
                 },
                 child: Text('Đăng ký',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Montserrat',
-                    )),
+                    style: Theme.of(context).textTheme.headline2),
               )
             ],
           )

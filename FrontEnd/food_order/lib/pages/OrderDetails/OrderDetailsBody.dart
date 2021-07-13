@@ -51,7 +51,7 @@ class OrderDetailsBody extends StatelessWidget {
           Container(
             height: 40,
             child: Row(children: [
-              Text("Trạng thái", style: AppTheme.subTitleStyle),
+              Text("Trạng thái", style: Theme.of(context).textTheme.bodyText1),
               Spacer(),
               Text(state.orderVM.orderStatusVM.name,
                   style: TextStyle(
@@ -77,7 +77,7 @@ class OrderDetailsBody extends StatelessWidget {
             height: 30,
             child: Row(
               children: [
-                Text("Tạm tính"),
+                Text("Tạm tính", style: Theme.of(context).textTheme.bodyText1),
                 Spacer(),
                 Text(AppConfigs.toPrice(state.tempPrice))
               ],
@@ -87,7 +87,8 @@ class OrderDetailsBody extends StatelessWidget {
             height: 30,
             child: Row(
               children: [
-                Text("Mã giảm giá"),
+                Text("Mã giảm giá",
+                    style: Theme.of(context).textTheme.bodyText1),
                 Spacer(),
                 Text("-" + AppConfigs.toPrice(state.promotedAmount))
               ],
@@ -98,7 +99,7 @@ class OrderDetailsBody extends StatelessWidget {
             height: 50,
             child: Row(
               children: [
-                Text("Tổng cộng", style: TextStyle(fontSize: 16)),
+                Text("Tổng cộng", style: Theme.of(context).textTheme.bodyText1),
                 Spacer(),
                 Text(
                   AppConfigs.toPrice(state.tempPrice),
@@ -108,7 +109,10 @@ class OrderDetailsBody extends StatelessWidget {
                       decoration: TextDecoration.lineThrough),
                 ),
                 Text(AppConfigs.toPrice(state.finalPrice),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green))
               ],
             ),
           ),
@@ -137,7 +141,7 @@ class OrderDetailsBody extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               "Giao đến",
-                              style: AppTheme.subTitleStyle,
+                              style: Theme.of(context).textTheme.bodyText1,
                             )),
                       ),
                       Container(
@@ -146,8 +150,7 @@ class OrderDetailsBody extends StatelessWidget {
                             alignment: Alignment.topLeft,
                             child: Text(
                               addressString,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.normal),
+                              style: Theme.of(context).textTheme.headline3,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             )),
@@ -168,7 +171,7 @@ class OrderDetailsBody extends StatelessWidget {
             child: Align(
               child: Text(
                 "Đơn hàng",
-                style: AppTheme.subTitleStyle,
+                style: Theme.of(context).textTheme.bodyText1,
               ),
               alignment: Alignment.centerLeft,
             ),
@@ -193,19 +196,23 @@ class OrderDetailsBody extends StatelessWidget {
                   return AlertDialog(
                     actions: [
                       TextButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: Theme.of(context).buttonColor),
                           onPressed: () {
                             Navigator.of(context).pop(true);
                           },
                           child: Text(
                             "OK",
-                            style: TextStyle(color: Colors.white),
+                            style: Theme.of(context).textTheme.button,
                           )),
                       TextButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: Theme.of(context).buttonColor),
                           onPressed: () {
                             Navigator.of(context).pop(false);
                           },
                           child: Text("Cancel",
-                              style: TextStyle(color: Colors.white)))
+                              style: Theme.of(context).textTheme.button))
                     ],
                     title: Text("Đánh giá"),
                     content: Column(

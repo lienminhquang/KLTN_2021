@@ -23,6 +23,7 @@ import 'package:food_delivery/bloc/SignUp/SignUpBloc.dart';
 import 'package:food_delivery/configs/DevHttpsOveride.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
+import 'package:food_delivery/theme.dart';
 
 void main() {
   //acept bad certificate request
@@ -63,7 +64,7 @@ class MyApp extends StatelessWidget {
         //   primarySwatch: Colors.blue,
         //   visualDensity: VisualDensity.adaptivePlatformDensity,
         // ),
-        theme: AppTheme.lightTheme,
+        theme: basicTheme(),
         home: LoginPage(),
       ),
     );

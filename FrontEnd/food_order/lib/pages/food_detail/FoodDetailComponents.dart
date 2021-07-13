@@ -97,13 +97,11 @@ class _DescriptionAndRatingState extends State<DescriptionAndRating>
       new Tab(
         child: new Text(
           "Giới thiệu",
-          style: new TextStyle(color: Colors.black),
         ),
       ),
       new Tab(
         child: new Text(
           "Đánh giá",
-          style: new TextStyle(color: Colors.black),
         ),
       ),
     ];
@@ -120,14 +118,13 @@ class _DescriptionAndRatingState extends State<DescriptionAndRating>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black12,
+      color: Colors.white,
       child: Column(
         children: <Widget>[
           TabBar(
             isScrollable: true,
             controller: _controller,
             tabs: _tabs,
-            indicatorColor: Colors.blue,
           ),
           new Divider(
             height: 1.0,

@@ -33,12 +33,12 @@ AppBar buildAppBar(BuildContext context) {
   int count = 0;
   return AppBar(
     centerTitle: true,
-    backgroundColor: AppTheme.appBarBackground,
+    backgroundColor: Theme.of(context).primaryColor,
     title: Column(
       children: [
         Text(
           'Giỏ hàng',
-          style: TextStyle(color: Colors.black),
+          style: Theme.of(context).textTheme.headline1,
         ),
         // Text(
         //   '$count sản phẩm',

@@ -41,7 +41,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       child: Text(
                         'Khôi phục tài khoản',
                         style: TextStyle(
-                            fontSize: 30.0, fontWeight: FontWeight.bold),
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat'),
                       ),
                     ),
                   ],
@@ -64,13 +66,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           controller: _phoneNumberController,
                           keyboardType: TextInputType.phone,
                           decoration: InputDecoration(
-                              labelText: 'Số điện thoại',
-                              labelStyle: TextStyle(
-                                  fontFamily: 'Mocntserrat',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue))),
+                            labelText: 'Số điện thoại',
+                            labelStyle: Theme.of(context).textTheme.bodyText1,
+                          ),
                         ),
                         SizedBox(height: 10.0),
                         TextFormField(
@@ -83,13 +81,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           controller: _passwordController,
                           obscureText: true,
                           decoration: InputDecoration(
-                              labelText: 'Mật khẩu mới',
-                              labelStyle: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue))),
+                            labelText: 'Mật khẩu mới',
+                            labelStyle: Theme.of(context).textTheme.bodyText1,
+                          ),
                         ),
                         SizedBox(height: 10.0),
                         TextFormField(
@@ -103,13 +97,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           },
                           obscureText: true,
                           decoration: InputDecoration(
-                              labelText: 'Nhập lại mật khẩu',
-                              labelStyle: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue))),
+                            labelText: 'Nhập lại mật khẩu',
+                            labelStyle: Theme.of(context).textTheme.bodyText1,
+                          ),
                         ),
                         SizedBox(height: 50.0),
                         Container(
@@ -117,7 +107,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             child: Material(
                               borderRadius: BorderRadius.circular(20.0),
                               shadowColor: Colors.blueAccent,
-                              color: Colors.blue,
+                              color: Colors.redAccent,
                               elevation: 7.0,
                               child: GestureDetector(
                                 onTap: () async {
@@ -145,10 +135,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                 child: Center(
                                   child: Text(
                                     'Đồng ý',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Montserrat'),
+                                    style: Theme.of(context).textTheme.button,
                                   ),
                                 ),
                               ),

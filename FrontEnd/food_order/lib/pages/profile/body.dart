@@ -20,12 +20,16 @@ class Body extends StatelessWidget {
         ProfilePic(),
         //SizedBox(height: 20),
         ProfileMenu(
-          icon: Icon(Icons.person),
+          icon: Icon(
+            Icons.person,
+            color: Theme.of(context).iconTheme.color,
+          ),
           text: fullname,
           press: () {},
         ),
         ProfileMenu(
-          icon: Icon(Icons.location_on_outlined),
+          icon: Icon(Icons.location_on_outlined,
+              color: Theme.of(context).iconTheme.color),
           text: 'Địa chỉ',
           press: () {
             //context.read<AddressBloc>().fetchAll();
@@ -38,7 +42,8 @@ class Body extends StatelessWidget {
           },
         ),
         ProfileMenu(
-          icon: Icon(Icons.lock_outline_rounded),
+          icon: Icon(Icons.lock_outline_rounded,
+              color: Theme.of(context).iconTheme.color),
           text: 'Đổi mật khẩu',
           press: () {
             Navigator.push(
@@ -48,12 +53,12 @@ class Body extends StatelessWidget {
           },
         ),
         ProfileMenu(
-          icon: Icon(Icons.phone),
+          icon: Icon(Icons.phone, color: Theme.of(context).iconTheme.color),
           text: state.userVM.username,
           press: () {},
         ),
         ProfileMenu(
-          icon: Icon(Icons.logout),
+          icon: Icon(Icons.logout, color: Theme.of(context).iconTheme.color),
           text: 'Đăng xuất',
           press: () async {
             UserServices userServices = UserServices();

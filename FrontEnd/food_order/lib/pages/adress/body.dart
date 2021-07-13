@@ -57,7 +57,11 @@ class _BodyState extends State<Body> {
                           SizedBox(
                             width: 10,
                           ),
-                          Expanded(child: Text('Thêm địa chỉ mới')),
+                          Expanded(
+                              child: Text(
+                            'Thêm địa chỉ mới',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          )),
                           Icon(
                             Icons.arrow_forward_ios,
                           )

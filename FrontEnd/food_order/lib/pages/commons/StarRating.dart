@@ -21,7 +21,7 @@ class StarRating extends StatelessWidget {
     if (index >= rating) {
       icon = new Icon(
         Icons.star_border,
-        color: Theme.of(context).buttonColor,
+        color: Colors.grey,
         size: iconSize,
       );
     } else if (index > rating - 1 && index < rating) {

@@ -16,12 +16,12 @@ class OrderDetails extends StatelessWidget {
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      backgroundColor: AppTheme.appBarBackground,
+      backgroundColor: Theme.of(context).primaryColor,
       title: Column(
         children: [
           Text(
             'Chi tiết hóa đơn',
-            style: TextStyle(color: Colors.black),
+            style: Theme.of(context).textTheme.headline1,
           ),
         ],
       ),

@@ -34,8 +34,10 @@ class _SignupPageState extends State<SignupPage> {
                   padding: EdgeInsets.fromLTRB(15.0, 70.0, 0.0, 0.0),
                   child: Text(
                     'Đăng ký',
-                    style:
-                        TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 50.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Montserrat'),
                   ),
                 ),
                 Container(
@@ -45,7 +47,7 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(
                           fontSize: 80.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue),
+                          color: Colors.red),
                     ))
               ],
             ),
@@ -66,15 +68,11 @@ class _SignupPageState extends State<SignupPage> {
                       },
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
-                          labelText: 'Tên người dùng',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                          // hintText: 'EMAIL',
-                          // hintStyle: ,
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue))),
+                        labelText: 'Tên người dùng',
+                        labelStyle: Theme.of(context).textTheme.bodyText1,
+                        // hintText: 'EMAIL',
+                        // hintStyle: ,
+                      ),
                     ),
                     SizedBox(height: 10.0),
                     TextFormField(
@@ -87,13 +85,9 @@ class _SignupPageState extends State<SignupPage> {
                       controller: _phoneNumberController,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                          labelText: 'Số điện thoại',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Mocntserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue))),
+                        labelText: 'Số điện thoại',
+                        labelStyle: Theme.of(context).textTheme.bodyText1,
+                      ),
                     ),
                     SizedBox(height: 10.0),
                     TextFormField(
@@ -106,13 +100,9 @@ class _SignupPageState extends State<SignupPage> {
                       controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                          labelText: 'Mật khẩu',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue))),
+                        labelText: 'Mật khẩu',
+                        labelStyle: Theme.of(context).textTheme.bodyText1,
+                      ),
                     ),
                     SizedBox(height: 10.0),
                     TextFormField(
@@ -126,13 +116,9 @@ class _SignupPageState extends State<SignupPage> {
                       },
                       obscureText: true,
                       decoration: InputDecoration(
-                          labelText: 'Nhập lại mật khẩu',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue))),
+                        labelText: 'Nhập lại mật khẩu',
+                        labelStyle: Theme.of(context).textTheme.bodyText1,
+                      ),
                     ),
                     SizedBox(height: 50.0),
                     Container(
@@ -140,7 +126,7 @@ class _SignupPageState extends State<SignupPage> {
                         child: Material(
                           borderRadius: BorderRadius.circular(20.0),
                           shadowColor: Colors.blueAccent,
-                          color: Colors.blue,
+                          color: Colors.redAccent,
                           elevation: 7.0,
                           child: GestureDetector(
                             onTap: () async {
@@ -167,10 +153,7 @@ class _SignupPageState extends State<SignupPage> {
                             child: Center(
                               child: Text(
                                 'Đăng ký',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat'),
+                                style: Theme.of(context).textTheme.button,
                               ),
                             ),
                           ),
