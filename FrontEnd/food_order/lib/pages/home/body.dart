@@ -97,7 +97,6 @@ class _BodyState extends State<Body> {
   Widget _buildLoadedState(BuildContext context, HomeLoadedState state) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.appBarBackground,
         leading: Container(
           margin: EdgeInsets.fromLTRB(15, 0, 0, 0),
           child: Image.asset(

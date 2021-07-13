@@ -17,7 +17,7 @@ class OderScreen extends StatelessWidget {
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: AppTheme.appBarBackground,
+    backgroundColor: Theme.of(context).primaryColor,
     title: Column(
       children: [
         Text(

@@ -117,13 +117,16 @@ class _LoginPageState extends State<LoginPage> {
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                             hintText: 'Số điện thoại',
-                            prefix: Icon(Icons.phone),
+                            prefix: Icon(
+                              Icons.phone,
+                            ),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue))),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).indicatorColor))),
                       ), //
                       SizedBox(
                         height: 15.0,
@@ -139,16 +142,19 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         decoration: InputDecoration(
                             hintText: 'Mật khẩu ',
-                            prefix: Icon(Icons.lock),
+                            prefix: Icon(Icons.lock, color: Colors.red),
                             suffixIcon: InkWell(
                                 onTap: _togglePasswordView,
-                                child: Icon(Icons.visibility)),
+                                child: Icon(
+                                  Icons.visibility,
+                                )),
                             labelStyle: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue))),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).indicatorColor))),
                         obscureText: isHiddenPassword,
                       ),
                       SizedBox(
@@ -159,10 +165,11 @@ class _LoginPageState extends State<LoginPage> {
                         height: 40.0,
                         child: Material(
                           borderRadius: BorderRadius.circular(20),
-                          shadowColor: Colors.blueAccent,
+                          shadowColor: Colors.red,
                           color: Colors.blue,
                           elevation: 7.0,
-                          child: TextButton(
+                          child: FlatButton(
+                            color: Theme.of(context).buttonColor,
                             onPressed: () {
                               login(context);
                               // Navigator.of(context).push(MaterialPageRoute(
@@ -270,7 +277,6 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: Text('Đăng ký',
                     style: TextStyle(
-                      color: Colors.blue,
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Montserrat',

@@ -62,31 +62,35 @@ class _MotherBoardState extends State<MotherBoard> {
             currentIndex: _currentIndex,
             items: [
               new BottomNavigationBarItem(
-                  backgroundColor: Colors.black87,
-                  icon: Icon(
-                    Icons.home,
-                  ),
-                  label: "Home"),
+                icon: Icon(
+                  Icons.home,
+                ),
+                label: "Home",
+              ),
               new BottomNavigationBarItem(
-                  backgroundColor: Colors.black87,
-                  icon: Icon(Icons.receipt_long),
+                  icon: Icon(
+                    Icons.receipt_long,
+                  ),
                   label: "Order"),
               new BottomNavigationBarItem(
-                  backgroundColor: Colors.black87,
-                  icon: Icon(Icons.shopping_cart),
+                  icon: Icon(
+                    Icons.shopping_cart,
+                  ),
                   label: "Cart"),
               // new BottomNavigationBarItem(
               //     backgroundColor: Colors.black87,
               //     icon: Icon(Icons.notifications_active_outlined),
               //     label: "Notification"),
               new BottomNavigationBarItem(
-                backgroundColor: Colors.black87,
-                icon: Icon(Icons.person),
+                icon: Icon(
+                  Icons.person,
+                ),
                 label: "Profile",
               ),
               new BottomNavigationBarItem(
-                backgroundColor: Colors.black87,
-                icon: Icon(Icons.support_agent_outlined),
+                icon: Icon(
+                  Icons.support_agent_outlined,
+                ),
                 label: "Amee",
               )
             ],
