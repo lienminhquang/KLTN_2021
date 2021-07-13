@@ -6,8 +6,8 @@ part 'RatingVM.g.dart';
 class RatingVM {
   RatingVM();
 
-  int id = 0;
-  String appUserID = "";
+  int orderID = 0;
+  String userID = "";
   int foodID = 0;
   int star = 0;
   String comment = "";

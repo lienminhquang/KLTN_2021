@@ -8,8 +8,8 @@ part of 'RatingVM.dart';
 
 RatingVM _$RatingVMFromJson(Map<String, dynamic> json) {
   return RatingVM()
-    ..id = json['id'] as int
-    ..appUserID = json['appUserID'] as String
+    ..orderID = json['orderID'] as int
+    ..userID = json['userID'] as String
     ..foodID = json['foodID'] as int
     ..star = json['star'] as int
     ..comment = json['comment'] as String
@@ -18,8 +18,8 @@ RatingVM _$RatingVMFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$RatingVMToJson(RatingVM instance) => <String, dynamic>{
-      'id': instance.id,
-      'appUserID': instance.appUserID,
+      'orderID': instance.orderID,
+      'userID': instance.userID,
       'foodID': instance.foodID,
       'star': instance.star,
       'comment': instance.comment,

@@ -8,7 +8,7 @@ class UserVM {
   String username;
   String name;
   DateTime dateOfBirth;
-  String email;
+  String? email;
   UserVM(this.id, this.username, this.name, this.dateOfBirth, this.email);
 
   factory UserVM.fromJson(Map<String, dynamic> json) => _$UserVMFromJson(json);

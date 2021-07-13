@@ -12,7 +12,7 @@ UserVM _$UserVMFromJson(Map<String, dynamic> json) {
     json['username'] as String,
     json['name'] as String,
     DateTime.parse(json['dateOfBirth'] as String),
-    json['email'] as String,
+    json['email'] as String?,
   );
 }
 
