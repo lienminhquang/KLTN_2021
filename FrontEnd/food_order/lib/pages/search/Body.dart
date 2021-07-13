@@ -13,28 +13,26 @@ import 'package:food_delivery/pages/search/SortOption.dart';
 import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
-class Body extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: _SearchBody(),
-    );
-  }
-}
-
-class _SearchBody extends StatefulWidget {
+class SearchBody extends StatefulWidget {
+  final int? categoryID;
+  SearchBody(this.categoryID);
   @override
   __SearchBodyState createState() => __SearchBodyState();
 }
 
-class __SearchBodyState extends State<_SearchBody> {
+class __SearchBodyState extends State<SearchBody> {
   final _textController = TextEditingController();
   late SearchBloc _searchBloc;
   SortFactor? _sortFactor = SortFactor.Name;
   List<int>? cid;
+  String oldText = "";
 
   @override
   void initState() {
+    if (widget.categoryID != null) {
+      cid = [widget.categoryID!];
+    }
+
     _searchBloc = BlocProvider.of<SearchBloc>(context);
     super.initState();
   }
@@ -47,33 +45,41 @@ class __SearchBodyState extends State<_SearchBody> {
 
   void _onClearTapped() {
     _textController.text = "";
-    _searchBloc.add(SearchTextChangedEvent("", null));
+    _searchBloc.add(SeachClearResultEvent());
   }
 
   Widget _searchBar() {
     return TextField(
+      style: Theme.of(context).textTheme.headline1,
       controller: _textController,
       autocorrect: false,
       onChanged: (text) {
-        _searchBloc.add(SearchTextChangedEvent(text, cid));
+        if (text != oldText) {
+          _searchBloc.add(SearchTextChangedEvent(text, cid));
+          oldText = text;
+        }
       },
       decoration: InputDecoration(
           //prefixIcon: Icon(Icons.search),
           suffixIcon: GestureDetector(
-            child: Icon(Icons.clear),
+            child: Icon(
+              Icons.clear,
+              color: Colors.grey,
+            ),
             onTap: () {
               _onClearTapped();
             },
           ),
           border: InputBorder.none,
-          hintText: 'Bạn muốn ăn gì?'),
+          hintText: 'Bạn muốn ăn gì?',
+          hintStyle: Theme.of(context).textTheme.headline1),
     );
   }
 
   Widget _searchEmptyState() {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: AppTheme.appBarBackground,
+          backgroundColor: Theme.of(context).primaryColor,
           title: _searchBar(),
         ),
         body: Center(
@@ -84,7 +90,7 @@ class __SearchBodyState extends State<_SearchBody> {
   Widget _searchLoadingState() {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: AppTheme.appBarBackground,
+          backgroundColor: Theme.of(context).primaryColor,
           title: _searchBar(),
         ),
         body: Center(
@@ -96,7 +102,7 @@ class __SearchBodyState extends State<_SearchBody> {
   Widget _searchErrorState(SearchErrorState state) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: AppTheme.appBarBackground,
+          backgroundColor: Theme.of(context).primaryColor,
           title: _searchBar(),
         ),
         body: Text(state.error));
@@ -105,7 +111,7 @@ class __SearchBodyState extends State<_SearchBody> {
   Widget _searchResultState(SearchSuccessState state) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: AppTheme.appBarBackground,
+          backgroundColor: Theme.of(context).primaryColor,
           title: _searchBar(),
         ),
         body: _SearchResults(state.listFood, state.listCategory));

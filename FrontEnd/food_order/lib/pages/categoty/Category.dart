@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryBloc.dart';
 import 'package:food_delivery/bloc/Category/CategoryState.dart';
+import 'package:food_delivery/bloc/Search/SearchBloc.dart';
+import 'package:food_delivery/bloc/Search/SearchEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/food_detail/FoodDetail.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
+import 'package:food_delivery/pages/search/Search.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -26,6 +29,17 @@ class _CategoryPageState extends State<CategoryPage> {
   Widget _buildLoadedState(BuildContext context, CategoryLoadedState state) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                context.read<SearchBloc>().add(SeachClearResultEvent());
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return Search(state.categoryVM.id);
+                }));
+              },
+              icon: Icon(Icons.search))
+        ],
         backgroundColor: Theme.of(context).primaryColor,
         title: new Text((state.categoryVM.name == null
             ? "Category"

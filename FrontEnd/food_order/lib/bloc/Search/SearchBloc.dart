@@ -37,6 +37,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield SearchSuccessState(
           result.payLoad!.items!, category.payLoad!.items!);
     }
+    if (event is SeachClearResultEvent) {
+      yield SearchEmptyState();
+    }
   }
 
   @override
