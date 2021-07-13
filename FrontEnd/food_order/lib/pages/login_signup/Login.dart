@@ -88,127 +88,113 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          FutureBuilder(
-            future: _userServices.getUserAccountFromCache(),
-            builder: (BuildContext context,
-                AsyncSnapshot<ApiResult<Map<String, dynamic>>> snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.isSuccessed == true) {
-                  _usenameTextController.text =
-                      snapshot.data!.payLoad!["username"]! as String;
-                  _passwordTextController.text =
-                      snapshot.data!.payLoad!["password"]! as String;
-                }
-              }
-              return Container(
-                padding: EdgeInsets.only(top: 0.0, left: 40.0, right: 40.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        controller: _usenameTextController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Vui lòng nhập số điện thoại!';
-                          }
-                          return null;
-                        },
-                        keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
-                          hintText: 'Số điện thoại',
-                          prefix: Icon(Icons.phone,
-                              color: Theme.of(context).buttonColor),
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                        ),
-                      ), //
-                      SizedBox(
-                        height: 15.0,
-                      ),
-
-                      TextFormField(
-                        controller: _passwordTextController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Password!';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Mật khẩu ',
-                          prefix: Icon(Icons.lock,
-                              color: Theme.of(context).buttonColor),
-                          suffixIcon: InkWell(
-                              onTap: _togglePasswordView,
-                              child: Icon(
-                                Icons.visibility,
-                              )),
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                        ),
-                        obscureText: isHiddenPassword,
-                      ),
-                      SizedBox(
-                        height: 25.0,
-                      ),
-
-                      Container(
-                        height: 40.0,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20),
-                          shadowColor: Colors.red,
-                          color: Colors.blue,
-                          elevation: 7.0,
-                          child: FlatButton(
-                            color: Theme.of(context).buttonColor,
-                            onPressed: () {
-                              login(context);
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) => AppLoadingScreen()));
-                            },
-                            child: Center(
-                              child: Text('Đăng nhập',
-                                  style: Theme.of(context).textTheme.button),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Container(
-                        alignment: Alignment(1.0, 0.0),
-                        padding: EdgeInsets.only(
-                          top: 15.0,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return ResetPasswordPage();
-                            }));
-                          },
-                          child: Center(
-                            child: Text(
-                              'Quên mật khẩu',
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                    ],
+          Container(
+            padding: EdgeInsets.only(top: 0.0, left: 40.0, right: 40.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: _usenameTextController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Vui lòng nhập số điện thoại!';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: 'Số điện thoại',
+                      prefix: Icon(Icons.phone,
+                          color: Theme.of(context).buttonColor),
+                      labelStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                    ),
+                  ), //
+                  SizedBox(
+                    height: 15.0,
                   ),
-                ),
-              );
-            },
+
+                  TextFormField(
+                    controller: _passwordTextController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Vui lòng nhập mật khẩu';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Mật khẩu ',
+                      prefix: Icon(Icons.lock,
+                          color: Theme.of(context).buttonColor),
+                      suffixIcon: InkWell(
+                          onTap: _togglePasswordView,
+                          child: Icon(
+                            Icons.visibility,
+                          )),
+                      labelStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                    ),
+                    obscureText: isHiddenPassword,
+                  ),
+                  SizedBox(
+                    height: 25.0,
+                  ),
+
+                  Container(
+                    height: 40.0,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(20),
+                      shadowColor: Colors.red,
+                      color: Colors.blue,
+                      elevation: 7.0,
+                      child: FlatButton(
+                        color: Theme.of(context).buttonColor,
+                        onPressed: () {
+                          login(context);
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => AppLoadingScreen()));
+                        },
+                        child: Center(
+                          child: Text('Đăng nhập',
+                              style: Theme.of(context).textTheme.button),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Container(
+                    alignment: Alignment(1.0, 0.0),
+                    padding: EdgeInsets.only(
+                      top: 15.0,
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return ResetPasswordPage();
+                        }));
+                      },
+                      child: Center(
+                        child: Text(
+                          'Quên mật khẩu',
+                          style: Theme.of(context).textTheme.headline2,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                ],
+              ),
+            ),
           ),
           SizedBox(
             height: 25,
