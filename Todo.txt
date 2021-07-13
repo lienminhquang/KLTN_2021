@@ -1,8 +1,2 @@
 Documents:
 - Http request on flutter: https://flutter.dev/docs/cookbook#networking
-
-
-+ refresh token?
-+ user register?
-+ user forgot password?
-+ user image?

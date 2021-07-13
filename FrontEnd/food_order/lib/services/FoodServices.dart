@@ -53,10 +53,15 @@ class FoodServices {
   }
 
   Future<ApiResult<PaginatedList<FoodVM>>> searchFood(
-      PagingRequest pagingRequest) async {
+      PagingRequest pagingRequest, List<int>? categoryIDs) async {
     IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
-    final String url = baseRoute +
-        "?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
+    String url = baseRoute +
+        "/filter?pageNumber=${pagingRequest.pageNumber}&searchString=${pagingRequest.searchString}&sortOrder=${pagingRequest.sortOrder}";
+    if (categoryIDs != null) {
+      for (var item in categoryIDs) {
+        url += "&CID=$item";
+      }
+    }
     Response? response;
     try {
       log("GET: " + url);

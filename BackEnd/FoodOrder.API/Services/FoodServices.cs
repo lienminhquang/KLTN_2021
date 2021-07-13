@@ -91,6 +91,82 @@ namespace FoodOrder.API.Services
             return new SuccessedResult<PaginatedList<FoodVM>>(created);
         }
 
+        public async Task<ApiResult<PaginatedList<FoodVM>>> GetAllByFilter(CategoryFilterPagingRequest request)
+        {
+            IQueryable<Food> food;
+            if(request.CID != null && request.CID.Count > 0)
+            {
+                var foodID = from fc in _dbContext.FoodCategories
+                         where request.CID.Contains(fc.CategoryID)
+                         group fc by fc.FoodID into g
+                         select g.Key;
+                food = from f in _dbContext.Foods
+                           from id in foodID
+                           where id == f.ID && f.IsDeleted == false
+                           select f;
+            }
+            else
+            {
+                food = _dbContext.Foods
+              //.Include(f => f.Ratings) //Todo: is this need for paging?
+              //.Include(f => f.Images)
+              //.Include(f => f.FoodCategories)
+              .AsNoTracking()
+              .Where(x => x.IsDeleted == false)
+              ;
+            }
+
+           
+
+
+
+            if (!String.IsNullOrEmpty(request.SearchString))
+            {
+                food = food.Where(c => c.Name.Contains(request.SearchString)
+                || c.Description.Contains(request.SearchString));
+            }
+
+            if (!String.IsNullOrEmpty(request.SortOrder))
+            {
+                food = Core.Helpers.Utilities<Food>.Sort(food, request.SortOrder, "Name");
+            }
+
+            var created = await PaginatedList<FoodVM>.CreateAsync(food.Select(f => _mapper.Map<Food, FoodVM>(f)), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
+
+            // get sale campaign for each food
+            foreach (var item in created.Items)
+            {
+                var ratings = from r in _dbContext.Ratings
+                              where r.FoodID == item.ID && r.IsDeleted == false
+                              select r;
+                if (ratings != null && ratings.Count() > 0)
+                {
+                    item.AgvRating = ratings.Average(a => a.Star);
+                    item.TotalRating = ratings.Count();
+                }
+
+                var query = from cf in _dbContext.SaleCampaignFoods
+                            join c in _dbContext.SaleCampaigns on cf.SaleCampaignID equals c.ID
+                            where (cf.FoodID == item.ID) && c.IsDeleted == false
+                            && (c.Enabled == true)
+                            && (c.StartDate <= DateTime.Now)
+                            && (c.EndDate >= DateTime.Now)
+                            select c;
+                query = query.OrderBy(x => x.Priority);
+                if (query.Count() > 0)
+                {
+                    item.SaleCampaignVM = _mapper.Map<SaleCampaignVM>(query.First());
+                }
+                else
+                {
+                    item.SaleCampaignVM = null;
+                }
+            }
+
+
+            return new SuccessedResult<PaginatedList<FoodVM>>(created);
+        }
+
         public async Task<ApiResult<PaginatedList<FoodVM>>> GetBestSellingAsync(PagingRequestBase request)
         {
             var food = from f in _dbContext.Foods

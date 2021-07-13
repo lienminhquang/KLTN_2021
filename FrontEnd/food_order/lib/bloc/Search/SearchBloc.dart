@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery/bloc/Search/SearchEvent.dart';
 import 'package:food_delivery/bloc/Search/SearchState.dart';
+import 'package:food_delivery/services/CategoriesServices.dart';
 import 'package:food_delivery/services/FoodServices.dart';
 import 'package:food_delivery/view_models/commons/PagingRequest.dart';
 import 'package:rxdart/rxdart.dart';
@@ -10,6 +11,7 @@ import 'package:rxdart/rxdart.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc() : super(SearchEmptyState());
   final FoodServices _foodServices = FoodServices();
+  final CategoriesServices _categoriesServices = CategoriesServices();
 
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async* {
@@ -21,13 +23,19 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       }
       yield SearchLoadingState();
 
-      var result = await _foodServices.searchFood(PagingRequest(
-          searchString: event.searchText, pageNumber: 1, sortOrder: null));
-      if (result.isSuccessed) {
-        yield SearchSuccessState(result.payLoad!.items!);
-      } else {
+      var result = await _foodServices.searchFood(
+          PagingRequest(
+              searchString: event.searchText, pageNumber: 1, sortOrder: null),
+          event.cid);
+      var category = await _categoriesServices.getAllPaging();
+      if (category.isSuccessed == false) {
+        yield SearchErrorState(category.errorMessage!);
+      }
+      if (result.isSuccessed == false) {
         yield SearchErrorState(result.errorMessage!);
       }
+      yield SearchSuccessState(
+          result.payLoad!.items!, category.payLoad!.items!);
     }
   }
 

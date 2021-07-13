@@ -179,5 +179,17 @@ namespace FoodOrder.API.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet("filter")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllByFilter([FromQuery] CategoryFilterPagingRequest request)
+        {
+            var result = await _foodServices.GetAllByFilter(request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

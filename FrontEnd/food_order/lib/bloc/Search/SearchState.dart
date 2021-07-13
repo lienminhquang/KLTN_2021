@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:food_delivery/view_models/Categories/CategoryVM.dart';
 import 'package:food_delivery/view_models/Foods/FoodVM.dart';
 
 abstract class SearchState extends Equatable {
@@ -12,7 +13,8 @@ class SearchLoadingState extends SearchState {}
 
 class SearchSuccessState extends SearchState {
   final List<FoodVM> listFood;
-  SearchSuccessState(this.listFood);
+  final List<CategoryVM> listCategory;
+  SearchSuccessState(this.listFood, this.listCategory);
 
   @override
   List<Object?> get props => [listFood];
