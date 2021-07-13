@@ -106,6 +106,7 @@ actions:
 - action_find_food
 - action_find_most_discounted_food
 - action_find_best_selling_food
+- action_reset_food_name_slot
 forms:
   find_food_form:
     required_slots:

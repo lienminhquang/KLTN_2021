@@ -45,6 +45,7 @@ rules:
       - active_loop: null
       - action: utter_finding_food
       - action: action_find_food
+      - action: action_reset_food_name_slot
 
   - rule: find most discounted food
     steps:

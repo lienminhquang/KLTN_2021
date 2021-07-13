@@ -5,7 +5,7 @@ from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import UserUtteranceReverted
+from rasa_sdk.events import UserUtteranceReverted, SlotSet
 
 
 import json
@@ -17,6 +17,16 @@ locale.setlocale(locale.LC_ALL, 'vi_VN')
 
 
 
+class ActionResetFoodNameSlot(Action):
+
+    def name(self) -> Text:
+        return "action_reset_food_name_slot"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        return [SlotSet("food_name", None)]
 
 class ActionFindFood(Action):
 

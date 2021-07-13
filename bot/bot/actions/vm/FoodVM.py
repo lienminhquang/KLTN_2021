@@ -11,7 +11,9 @@ class FoodVM:
         saleCampaignVM,
         categoryVMs,
         ratings,
-       carts):
+        carts,
+        isDeleted,
+        timeDeleted):
        self.id=id
        self.name=name
        self.description=description
@@ -24,3 +26,5 @@ class FoodVM:
        self.categoryVMs=categoryVMs
        self.ratings=ratings
        self.carts=carts
+       self.isDeleted=isDeleted
+       self.timeDeleted=timeDeleted
