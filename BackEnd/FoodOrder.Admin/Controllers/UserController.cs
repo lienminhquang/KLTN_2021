@@ -54,14 +54,28 @@ namespace FoodOrder.Admin.Controllers
                 return RedirectToAction("Login", "User");
             }
 
-            var users = await _adminUserService.GetUserPaging(request, this.GetTokenFromCookie());
+            var users = await _adminUserService.GetUserInRolePaging(request, "user" ,this.GetTokenFromCookie());
+            var admin = await _adminUserService.GetUserInRolePaging(request, "admin" ,this.GetTokenFromCookie());
+            var manager = await _adminUserService.GetUserInRolePaging(request, "manager" ,this.GetTokenFromCookie());
 
-            if (!users.IsSuccessed)
+            if (!admin.IsSuccessed)
             {
                 return this.RedirectToErrorPage(users.ErrorMessage);
             }
+            if (!admin.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(admin.ErrorMessage);
+            }
+            if (!manager.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(manager.ErrorMessage);
+            }
 
-            return View(users.PayLoad);
+            ViewBag.users = users.PayLoad.Items;
+            ViewBag.admins = admin.PayLoad.Items;
+            ViewBag.managers = manager.PayLoad.Items;
+
+            return View();
         }
 
         [HttpGet]

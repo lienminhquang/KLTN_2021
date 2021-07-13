@@ -222,7 +222,7 @@
                         </div>
                         <!---------------------------- End Users ----------------------------->
                         <!---------------------------- AppRoles ----------------------------->
-                        @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                        @if (false @*(await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded*@)
                         {
                             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAppRoles" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>

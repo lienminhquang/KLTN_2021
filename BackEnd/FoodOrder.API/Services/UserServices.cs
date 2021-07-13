@@ -421,6 +421,36 @@ namespace FoodOrder.API.Services
             return new FailedResult<bool>("Some thing when wrong!");
         }
 
+        public async Task<ApiResult<PaginatedList<UserVM>>> GetAllInRolePaging(PagingRequestBase request, string role)
+        {
+            var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+
+
+            var users = from c in usersInRole
+                        where c.IsDeleted == false
+                        select new UserVM()
+                        {
+                            Username = c.UserName,
+                            Name = c.Name,
+                            DateOfBirth = c.DateOfBirth,
+                            Email = c.Email,
+                            ID = c.Id
+                        };
+
+
+            if (!String.IsNullOrEmpty(request.SearchString))
+            {
+                users = users.Where(c => c.Username.Contains(request.SearchString)
+                //|| c.FirstName.Contains(request.SearchString)
+                || c.Name.Contains(request.SearchString)
+                || c.Email.Contains(request.SearchString));
+            }    
+
+            var created = PaginatedList<UserVM>.CreateFromList(users.ToList(), request.PageNumber ?? 1, request.PageSize ?? Core.Helpers.Configs.DefaultPageSize);
+
+            return new SuccessedResult<PaginatedList<UserVM>>(created);
+        }
+
         public async Task<ApiResult<PaginatedList<UserVM>>> GetAllPaging(PagingRequestBase request)
         {
             var users = from c in _dbContext.AppUsers
@@ -435,6 +465,7 @@ namespace FoodOrder.API.Services
                             Email = c.Email,
                             ID = c.Id
                         };
+
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {
@@ -482,7 +513,7 @@ namespace FoodOrder.API.Services
 
             try
             {
-                user.UserName = user.UserName + "_" +Guid.NewGuid().ToString();
+                user.UserName = user.UserName + "_" + Guid.NewGuid().ToString();
                 user.IsDeleted = true;
                 user.TimeDeleted = DateTime.Now;
                 var result = await _dbContext.SaveChangesAsync();
@@ -490,7 +521,7 @@ namespace FoodOrder.API.Services
             catch (Exception e)
             {
                 return new FailedResult<bool>(e.Message);
-               
+
             }
 
             return new SuccessedResult<bool>(true);

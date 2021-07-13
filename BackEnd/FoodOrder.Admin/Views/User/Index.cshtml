@@ -1,9 +1,14 @@
 ﻿@using FoodOrder.Core.Helpers;
 @model PaginatedList<FoodOrder.Core.ViewModels.Users.UserVM>
+@using FoodOrder.Core.ViewModels.Users;
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<UserVM> users = ViewBag.users;
+    List<UserVM> admins = ViewBag.admins;
+    List<UserVM> managers = ViewBag.managers;
 }
 
 
@@ -21,6 +26,7 @@
             }
         </div>
         <div class="card-body">
+            <h2 class="mt-4">List customer</h2>
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -31,7 +37,7 @@
                             <th>
                                 Name
                             </th>
-                           
+
                             <th>
                                 DateOfBirth
                             </th>
@@ -42,13 +48,145 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Items)
+                        @foreach (var item in users)
                         {
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Username)
                                 </td>
-                               
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item btn btn-primary" href=@Url.Action("Details", new { id = item.ID })>Details</a>
+
+                                            @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                            {
+                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Delete", new { id = item.ID })>Delete</a>
+                                            }
+                                            @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                            {
+                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Edit", new { id = item.ID })>Edit</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @*@await Component.InvokeAsync("Pager", Model);*@
+        </div>
+
+        <div class="card-body">
+            <h2 class="mt-4">List manager</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                Username
+                            </th>
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                DateOfBirth
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in managers)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Username)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item btn btn-primary" href=@Url.Action("Details", new { id = item.ID })>Details</a>
+
+                                            @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                            {
+                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Delete", new { id = item.ID })>Delete</a>
+                                            }
+                                            @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                            {
+                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Edit", new { id = item.ID })>Edit</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @*@await Component.InvokeAsync("Pager", Model);*@
+        </div>
+
+        <div class="card-body">
+            <h2 class="mt-4">List admin</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                Username
+                            </th>
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                DateOfBirth
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in admins)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Username)
+                                </td>
+
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>

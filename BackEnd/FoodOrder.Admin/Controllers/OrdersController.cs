@@ -221,8 +221,7 @@ namespace FoodOrder.Admin.Controllers
             var result = await _orderServices.Delete(id, this.GetTokenFromCookie());
             if (!result.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = result.ErrorMessage;
-                return View(result.PayLoad);
+                return this.RedirectToErrorPage(result.ErrorMessage);
             }
 
             TempData[AppConfigs.SuccessMessageString] = "Order delete succesed";

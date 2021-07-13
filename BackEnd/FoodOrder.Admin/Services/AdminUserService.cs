@@ -101,6 +101,21 @@ namespace FoodOrder.Admin.Services
             return new FailedResult<PaginatedList<UserVM>>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
+        public async Task<ApiResult<PaginatedList<UserVM>>> GetUserInRolePaging(PagingRequestBase request, string role, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = _config["BaseAddress"] + $"/api/Users/userinrole/{role}?" + request.ToQueryString("&");
+            var rs = await client.GetAsync(uri);
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<UserVM>>>(body);
+                return vm;
+            }
+            return new FailedResult<PaginatedList<UserVM>>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
+        }
+
         public async Task<ApiResult<bool>> CreateUser(RegisterRequest request, string token)
         {
             var json = JsonConvert.SerializeObject(request);

@@ -96,6 +96,20 @@ namespace FoodOrder.API.Controllers
             return Ok(rs);
         }
 
+        [HttpGet("userinrole/{role}")]
+        [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin)]
+        //[Authorize(Roles = "user")]
+        [ValidTokenRequirement]
+        public async Task<IActionResult> GetUserInRole([FromQuery] PagingRequestBase request, [FromRoute] string role)
+        {
+            var rs = await _userService.GetAllInRolePaging(request, role);
+            if (!rs.IsSuccessed)
+            {
+                return BadRequest(rs);
+            }
+            return Ok(rs);
+        }
+
         [HttpGet("role/{id}")]
         [Authorize(Roles = PolicyType.Manager + "," + PolicyType.Admin + "," + PolicyType.User)]
         [ValidTokenRequirement]

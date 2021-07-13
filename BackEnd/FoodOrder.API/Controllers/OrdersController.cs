@@ -166,7 +166,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = PolicyType.Manager)]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             if (!ModelState.IsValid)
@@ -183,7 +183,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("permanently/{id}")]
-        [Authorize(Roles = PolicyType.Manager)]
+        [Authorize(Roles = PolicyType.Admin)]
         public async Task<IActionResult> DeletePermanently(int id)
         {
             if (!ModelState.IsValid)
