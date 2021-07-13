@@ -2,6 +2,7 @@
 using FoodOrder.Core.Inferstructer;
 using FoodOrder.Core.ViewModels;
 using FoodOrder.Core.ViewModels.Categories;
+using FoodOrder.Core.ViewModels.Foods;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -60,6 +61,21 @@ namespace FoodOrder.Admin.Services
                 return vm;
             }
             return new FailedResult<CategoryVM>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
+        }
+
+        public async Task<ApiResult<PaginatedList<FoodVM>>> GetFoodInCategory(int id, string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var uri = BaseRoute + $"/{id}/foods";
+            var rs = await client.GetAsync(uri);
+            if (rs.StatusCode == System.Net.HttpStatusCode.OK || rs.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var body = await rs.Content.ReadAsStringAsync();
+                var vm = JsonConvert.DeserializeObject<ApiResult<PaginatedList<FoodVM>>>(body);
+                return vm;
+            }
+            return new FailedResult<PaginatedList<FoodVM>>(rs.ReasonPhrase != null ? rs.ReasonPhrase : "Some thing went wrong!");
         }
 
         public async Task<ApiResult<CategoryVM>> Create(CategoryCreateVM categoryCreateVM, string token)

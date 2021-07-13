@@ -54,11 +54,19 @@ namespace FoodOrder.Admin.Controllers
                 return this.RedirectToLoginPage();
             }
             var cart = await _categoryServices.GetByID(id, this.GetTokenFromCookie());
+            var foodVM = await _categoryServices.GetFoodInCategory(id, this.GetTokenFromCookie());
+
+            if (!foodVM.IsSuccessed)
+            {
+                return this.RedirectToErrorPage(foodVM.ErrorMessage);
+            }
 
             if (!cart.IsSuccessed)
             {
                 return this.RedirectToErrorPage(cart.ErrorMessage);
             }
+
+            ViewBag.ListFood = foodVM.PayLoad.Items;
 
             return View(cart.PayLoad);
         }
