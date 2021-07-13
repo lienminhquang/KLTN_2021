@@ -14,10 +14,22 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [_SearchBar(), _SearchBody()],
+        // child: Column(
+        //   children: [_SearchBar(), _SearchBody()],
+        // ),
+        child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppTheme.appBarBackground,
+        title: _SearchBar(),
+        // bottom: PreferredSize(
+        //   child: Row(
+        //     children: [],
+        //   ),
+        //   preferredSize: Size.fromHeight(30),
+        // ),
       ),
-    );
+      body: _SearchBody(),
+    ));
   }
 }
 
@@ -53,7 +65,7 @@ class __SearchBarState extends State<_SearchBar> {
         _searchBloc.add(SearchTextChangedEvent(text));
       },
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.search),
+          //prefixIcon: Icon(Icons.search),
           suffixIcon: GestureDetector(
             child: Icon(Icons.clear),
             onTap: () {
@@ -88,7 +100,7 @@ class _SearchBody extends StatelessWidget {
       if (state is SearchSuccessState) {
         return state.listFood.isEmpty
             ? Text("Không tìm thấy kết quả!")
-            : Expanded(child: _SearchResults(state.listFood));
+            : _SearchResults(state.listFood);
       }
       throw "Unknow State";
     });
@@ -100,47 +112,68 @@ class _SearchResults extends StatelessWidget {
   _SearchResults(this._listFood);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //height: 100,
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: ListView.builder(
-          itemCount: _listFood.length,
-          itemBuilder: (context, index) {
-            return FoodCard(foodVM: _listFood[index]);
-          }),
-    );
-  }
-}
-
-class _ResultItem extends StatelessWidget {
-  _ResultItem(this._foodVM);
-  final FoodVM _foodVM;
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: CachedNetworkImage(
-          placeholder: (context, url) => Center(
-            child: CircularProgressIndicator(
-                color: AppTheme.circleProgressIndicatorColor),
-          ),
-          imageUrl: AppConfigs.URL_Images + "/${_foodVM.imagePath}",
+    return Column(
+      //mainAxisSize: MainAxisSize.max,
+      children: [
+        Container(
           height: 50,
-          width: 50,
-          fit: BoxFit.cover,
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog();
+                      });
+                },
+                child: Container(
+                  child: Center(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text("Sắp xếp"),
+                      Icon(Icons.keyboard_arrow_down)
+                    ],
+                  )),
+                  width: 100,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(15)),
+                ),
+              ),
+              Text(
+                "Lọc:",
+                style: TextStyle(color: Colors.grey),
+              ),
+              Container(
+                child: Center(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [Text("Danh mục"), Icon(Icons.keyboard_arrow_down)],
+                )),
+                width: 150,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(15)),
+              ),
+            ],
+          ),
         ),
-      ),
-      title: Text(_foodVM.name),
-      onTap: () {
-        //context.read<FoodDetailBloc>().add(FoodDetailStartedEvent(_foodVM.id));
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return FoodDetail(
-            foodID: _foodVM.id,
-            promotionID: null,
-          );
-        }));
-      },
+        Expanded(
+          child: Container(
+            //height: 100,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: ListView.builder(
+                itemCount: _listFood.length,
+                itemBuilder: (context, index) {
+                  return FoodCard(foodVM: _listFood[index]);
+                }),
+          ),
+        ),
+      ],
     );
   }
 }
