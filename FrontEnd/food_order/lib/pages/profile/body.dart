@@ -6,6 +6,7 @@ import 'package:food_delivery/bloc/Profile/ProfileState.dart';
 import 'package:food_delivery/pages/adress/Address.dart';
 import 'package:food_delivery/pages/home/AppLoadingScreen.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
+import 'package:food_delivery/pages/profile/ChangeName.dart';
 import 'package:food_delivery/pages/profile/ChangePasswordScreen.dart';
 import 'package:food_delivery/services/UserServices.dart';
 
@@ -25,7 +26,10 @@ class Body extends StatelessWidget {
             color: Theme.of(context).iconTheme.color,
           ),
           text: fullname,
-          press: () {},
+          press: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ChangeNameScreen(fullname)));
+          },
         ),
         ProfileMenu(
           icon: Icon(Icons.location_on_outlined,

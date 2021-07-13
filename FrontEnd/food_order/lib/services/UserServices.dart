@@ -9,6 +9,7 @@ import 'package:food_delivery/view_models/Users/LoginResponse.dart';
 import 'package:food_delivery/view_models/Users/ResetPasswordVM.dart';
 import 'package:food_delivery/view_models/Users/LoginVM.dart';
 import 'package:food_delivery/view_models/Users/RegisterRequest.dart';
+import 'package:food_delivery/view_models/Users/UserEditVM.dart';
 import 'package:food_delivery/view_models/Users/UserVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 import 'package:food_delivery/services/FileServices.dart';
@@ -242,6 +243,49 @@ class UserServices {
         // PayloadMap = parseJWT(result.payLoad!);
         //print(PayloadMap);
         return ApiResult.succesedApiResult(true);
+      } else {
+        return ApiResult.failedApiResult(result.errorMessage);
+      }
+    }
+
+    return ApiResult.failedApiResult("Some thing went wrong!");
+  }
+
+  Future<ApiResult<UserEditVM>> changeName(String newName) async {
+    //saveUserAccountToCache(loginVM.username!, loginVM.password!);
+    var user = await this.getUser();
+    if (user.isSuccessed == false) {
+      return ApiResult<UserEditVM>.failedApiResult(user.errorMessage);
+    }
+
+    var userEditVM = UserEditVM(user.payLoad!.id, user.payLoad!.username,
+        newName, user.payLoad!.dateOfBirth, user.payLoad!.email);
+
+    log("userEditVM " + jsonEncode(userEditVM.toJson()));
+    IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
+    Response? response;
+    try {
+      var url = baseRoute + '/${user.payLoad!.id}';
+      print("PUT: " + url);
+      response = await ioClient.put(Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + UserServices.JWT!
+          },
+          body: jsonEncode(userEditVM));
+    } catch (e) {
+      return ApiResult<UserEditVM>.failedApiResult(
+          "Could not connect to server. Check your connection!");
+    }
+    if (response.statusCode == HttpStatus.ok ||
+        response.statusCode == HttpStatus.badRequest) {
+      var json = jsonDecode(response.body);
+      var result = ApiResult<UserEditVM>.fromJson(
+          json, (a) => UserEditVM.fromJson(a as Map<String, dynamic>));
+      if (result.isSuccessed == true) {
+        log("User edited !");
+
+        return result;
       } else {
         return ApiResult.failedApiResult(result.errorMessage);
       }

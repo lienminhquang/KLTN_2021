@@ -12,6 +12,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     if (event is ProfileStartedEvent) {
       yield* _mapStartedEventToState(state, event);
     }
+    if (event is ProfileRefreshEvent) {
+      yield* _mapRefreshEventToState(state, event);
+    }
   }
 
   Stream<ProfileState> _mapStartedEventToState(
@@ -20,6 +23,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield ProfileLoadingState();
     }
 
+    yield await _fetchAll();
+  }
+
+  Stream<ProfileState> _mapRefreshEventToState(
+      ProfileState currentState, ProfileRefreshEvent event) async* {
     yield await _fetchAll();
   }
 

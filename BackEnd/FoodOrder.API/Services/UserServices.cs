@@ -267,6 +267,8 @@ namespace FoodOrder.API.Services
                 await _userManager.UpdateSecurityStampAsync(user);
                 //user.JWT = null;
                 user.TimeCreateJWT = DateTime.MinValue;
+                user.RefreshToken = null;
+                user.RefreshTokenExpire = DateTime.MinValue;
                 await _dbContext.SaveChangesAsync();
 
             }

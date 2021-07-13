@@ -4,6 +4,7 @@ import 'package:food_delivery/bloc/SignUp/SignUpState.dart';
 import 'package:food_delivery/services/UserServices.dart';
 import 'package:food_delivery/view_models/Users/ResetPasswordVM.dart';
 import 'package:food_delivery/view_models/Users/RegisterRequest.dart';
+import 'package:food_delivery/view_models/Users/UserEditVM.dart';
 import 'package:food_delivery/view_models/commons/ApiResult.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
@@ -28,5 +29,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   Future<ApiResult<bool>> changePassword(
       String oldPassword, String newPassword) async {
     return _userServices.changePassword(oldPassword, newPassword);
+  }
+
+  Future<ApiResult<UserEditVM>> changeName(String newName) async {
+    return _userServices.changeName(newName);
   }
 }

@@ -115,6 +115,14 @@ namespace FoodOrder.API.Controllers
         [ValidTokenRequirement]
         public async Task<IActionResult> GetRolesOfUser(string id)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != id.ToString())
+                {
+                    return Forbid();
+                }
+            }
             var result = await _userService.GetRolesOfUser(id);
             if (!result.IsSuccessed)
             {
@@ -181,6 +189,14 @@ namespace FoodOrder.API.Controllers
         [ValidTokenRequirement]
         public async Task<IActionResult> Get(string id)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != id.ToString())
+                {
+                    return Forbid();
+                }
+            }
             var result = await _userService.GetUserByID(id);
             if (!result.IsSuccessed)
             {
@@ -203,6 +219,14 @@ namespace FoodOrder.API.Controllers
         [ValidTokenRequirement]
         public async Task<IActionResult> Put(string id, [FromBody] UserUpdateRequest request)
         {
+            if (!(HttpContext.User.IsInRole(PolicyType.Manager) || HttpContext.User.IsInRole(PolicyType.Admin)))
+            {
+                var userIDInClaim = HttpContext.User.Claims.First(x => x.Type == "UserID").Value;
+                if (userIDInClaim != id.ToString())
+                {
+                    return Forbid();
+                }
+            }
             var result = await _userService.EditUser(id, request);
             if (!result.IsSuccessed)
             {
