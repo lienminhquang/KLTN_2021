@@ -329,7 +329,7 @@ namespace FoodOrder.API.Services
             var categories = from c in _dbContext.Categories
                              join fc in _dbContext.FoodCategories on c.ID equals fc.CategoryID
                              join f in _dbContext.Foods on fc.FoodID equals f.ID
-                             where f.ID == id
+                             where f.ID == id && c.IsDeleted == false && fc.IsDeleted == false
                              select _mapper.Map<CategoryVM>(c);
             foodVM.CategoryVMs = await categories.ToListAsync();
 

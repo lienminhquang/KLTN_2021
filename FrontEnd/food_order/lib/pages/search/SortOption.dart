@@ -50,6 +50,12 @@ class _SortOptionState extends State<SortOption> {
                 height: 40,
                 width: 150,
                 child: TextButton(
+                    style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.red)))),
                     onPressed: () {
                       Navigator.of(context).pop(_sortFactor);
                     },
@@ -59,6 +65,12 @@ class _SortOptionState extends State<SortOption> {
                   height: 40,
                   width: 150,
                   child: TextButton(
+                      style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.red)))),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },

@@ -78,6 +78,12 @@ class _SortCategoryFilter extends State<CategoryFilter> {
                   height: 40,
                   width: 150,
                   child: TextButton(
+                      style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.red)))),
                       onPressed: () {
                         Navigator.of(context).pop(cid);
                       },
@@ -87,6 +93,12 @@ class _SortCategoryFilter extends State<CategoryFilter> {
                     height: 40,
                     width: 150,
                     child: TextButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.red)))),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },

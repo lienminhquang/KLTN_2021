@@ -298,8 +298,8 @@ class _BodyState extends State<Body> {
                       categories[index].imagePath!, categories[index].id!);
                 }
                 return Container(
-                  width: 100,
-                  height: 130,
+                  width: 150,
+                  height: 150,
                 );
               }),
             );

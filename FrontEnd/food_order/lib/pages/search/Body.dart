@@ -108,9 +108,7 @@ class __SearchBodyState extends State<_SearchBody> {
           backgroundColor: AppTheme.appBarBackground,
           title: _searchBar(),
         ),
-        body: state.listFood.isEmpty
-            ? const Text("Không tìm thấy kết quả!")
-            : _SearchResults(state.listFood, state.listCategory));
+        body: _SearchResults(state.listFood, state.listCategory));
   }
 
   @override
