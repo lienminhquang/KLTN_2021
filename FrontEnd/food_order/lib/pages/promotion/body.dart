@@ -123,10 +123,7 @@ class PromotionItem extends StatelessWidget {
                             _promotionVM.name,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey.shade700),
+                            style: Theme.of(context).textTheme.headline3,
                           ),
                         ),
                       ),
@@ -138,20 +135,11 @@ class PromotionItem extends StatelessWidget {
                           children: [
                             Text(
                               "CODE: ",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             Center(
-                              child: Text(
-                                _promotionVM.code,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  //fontWeight: FontWeight.w300,
-                                  color: Colors.grey,
-                                ),
-                              ),
+                              child: Text(_promotionVM.code,
+                                  style: Theme.of(context).textTheme.bodyText1),
                             ),
                           ],
                         ),

@@ -129,21 +129,26 @@ class Body extends StatelessWidget {
             children: [
               Text(
                 "Tạm tính: ",
-                style: TextStyle(color: Colors.grey),
+                style: Theme.of(context).textTheme.bodyText1,
               ),
               Text(
                 " (${state.getTotalProduct()} sản phẩm)",
-                style: TextStyle(color: Colors.grey),
+                style: Theme.of(context).textTheme.bodyText1,
               ),
               Spacer(),
-              Text(AppConfigs.toPrice(state.getTotalPrice())),
+              Text(
+                AppConfigs.toPrice(
+                  state.getTotalPrice(),
+                ),
+                style: Theme.of(context).textTheme.headline3,
+              ),
             ],
           ),
           Row(
             children: [
               Text(
                 "Mã giảm giá: ",
-                style: TextStyle(color: Colors.grey),
+                style: Theme.of(context).textTheme.bodyText1,
               ),
               Spacer(),
               Text(
@@ -175,7 +180,7 @@ class Body extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               "Địa điểm nhận hàng",
-                              style: AppTheme.subTitleStyle,
+                              style: Theme.of(context).textTheme.bodyText1,
                             )),
                       ),
                       Container(
@@ -186,10 +191,9 @@ class Body extends StatelessWidget {
                               addressVM == null
                                   ? "Không tìm thấy địa chỉ nào!"
                                   : addressVM.addressString,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
+                              style: Theme.of(context).textTheme.headline3,
                             )),
                       )
                     ],
@@ -216,7 +220,7 @@ class Body extends StatelessWidget {
                       width: 80,
                       child: Text(
                         "Thay đổi",
-                        style: TextStyle(fontSize: 13, color: Colors.blue),
+                        style: Theme.of(context).textTheme.headline2,
                       )),
                 ),
               ],
@@ -233,7 +237,7 @@ class Body extends StatelessWidget {
             child: Align(
               child: Text(
                 "Đơn hàng",
-                style: AppTheme.subTitleStyle,
+                style: Theme.of(context).textTheme.bodyText1,
               ),
               alignment: Alignment.centerLeft,
             ),

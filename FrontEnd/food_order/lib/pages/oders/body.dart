@@ -48,7 +48,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
         child: Column(
           children: [
             TabBar(
-              indicatorColor: Theme.of(context).indicatorColor,
+              //indicatorColor: Theme.of(context).indicatorColor,
               tabs: myTabs,
               controller: _tabController,
               indicatorSize: TabBarIndicatorSize.tab,

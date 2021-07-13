@@ -181,8 +181,9 @@ class _BodyState extends State<Body> {
               textAlign: TextAlign.left,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color(0xFF141619)),
+                  fontSize: 18,
+                  color: Color(0xFF141619),
+                  fontFamily: 'Montserrat'),
             ),
           ),
           Container(
@@ -353,7 +354,10 @@ class CategoryItem extends StatelessWidget {
                 //margin: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
               this.name,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  fontFamily: 'Montserrat'),
             ))
           ],
         ),
@@ -501,7 +505,8 @@ class BestSellingContainer extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Color(0xFF141619)),
+                    color: Color(0xFF141619),
+                    fontFamily: 'Montserrat'),
               ),
             ),
           ),

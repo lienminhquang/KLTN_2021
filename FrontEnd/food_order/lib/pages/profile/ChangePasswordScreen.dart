@@ -10,8 +10,11 @@ class ChangePasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đổi mật khẩu'),
-        backgroundColor: AppTheme.appBarBackground,
+        title: Text(
+          'Đổi mật khẩu',
+          style: Theme.of(context).textTheme.headline1,
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: buildBody(context),
     );
@@ -73,12 +76,13 @@ Widget buildBody(BuildContext context) {
               Padding(padding: const EdgeInsets.symmetric(vertical: 30)),
               TextButton(
                 child: Container(
+                    color: Theme.of(context).buttonColor,
                     alignment: Alignment.center,
                     height: 40,
                     width: 150,
                     child: Text(
                       'Xác nhận',
-                      style: TextStyle(color: Colors.white),
+                      style: Theme.of(context).textTheme.button,
                     )),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {

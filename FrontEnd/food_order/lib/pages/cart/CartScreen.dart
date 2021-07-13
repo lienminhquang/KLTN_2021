@@ -38,7 +38,7 @@ AppBar buildAppBar(BuildContext context) {
       children: [
         Text(
           'Giỏ hàng',
-          style: TextStyle(color: Colors.black),
+          style: Theme.of(context).textTheme.headline1,
         ),
         // Text(
         //   '$count sản phẩm',

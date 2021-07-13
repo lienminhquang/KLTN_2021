@@ -17,8 +17,11 @@ class _AddAdressState extends State<AddAdressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thêm địa chỉ'),
-        backgroundColor: AppTheme.appBarBackground,
+        title: Text(
+          'Thêm địa chỉ',
+          style: Theme.of(context).textTheme.headline1,
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: BodyAdressScreen(),
     );
@@ -44,7 +47,9 @@ class _BodyAdressScreenState extends State<BodyAdressScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               TextField(
-                decoration: InputDecoration(labelText: 'Tên'),
+                decoration: InputDecoration(
+                  labelText: 'Tên',
+                ),
                 controller: _nameController,
                 onChanged: (text) {},
               ),
@@ -57,11 +62,12 @@ class _BodyAdressScreenState extends State<BodyAdressScreen> {
               TextButton(
                 child: Container(
                     alignment: Alignment.center,
+                    color: Theme.of(context).buttonColor,
                     height: 40,
                     width: 150,
                     child: Text(
                       'Thêm địa chỉ',
-                      style: TextStyle(color: Colors.white),
+                      style: Theme.of(context).textTheme.button,
                     )),
                 onPressed: () async {
                   if (_nameController.text.isEmpty ||

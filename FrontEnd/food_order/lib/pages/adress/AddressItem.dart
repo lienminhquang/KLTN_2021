@@ -41,11 +41,10 @@ class AdressItem extends StatelessWidget {
                 children: [
                   Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        adress.name,
-                        style: AppTheme.titleStyle,
-                      )),
-                  Text(adress.addressString, style: AppTheme.subTitleStyle)
+                      child: Text(adress.name,
+                          style: Theme.of(context).textTheme.headline3)),
+                  Text(adress.addressString,
+                      style: Theme.of(context).textTheme.bodyText1)
                 ],
               ),
             ),

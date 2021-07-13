@@ -26,7 +26,7 @@ class _CategoryPageState extends State<CategoryPage> {
   Widget _buildLoadedState(BuildContext context, CategoryLoadedState state) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.appBarBackground,
+        backgroundColor: Theme.of(context).primaryColor,
         title: new Text((state.categoryVM.name == null
             ? "Category"
             : state.categoryVM.name)!),

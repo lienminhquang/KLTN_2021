@@ -8,8 +8,11 @@ class PromotionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Mã khuyến mãi'),
-          backgroundColor: AppTheme.appBarBackground,
+          title: Text(
+            'Mã khuyến mãi',
+            style: Theme.of(context).textTheme.headline1,
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Body());
   }

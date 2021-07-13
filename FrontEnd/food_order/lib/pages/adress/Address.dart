@@ -22,10 +22,10 @@ class AddressScreen extends StatelessWidget {
                 Navigator.of(context).pop();
               }),
           centerTitle: true,
-          backgroundColor: AppTheme.appBarBackground,
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             'Địa chỉ',
-            style: TextStyle(color: Colors.black),
+            style: Theme.of(context).textTheme.headline1,
           ),
         ),
         body: Body(addressScreenCallBack));

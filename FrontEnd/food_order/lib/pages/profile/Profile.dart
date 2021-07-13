@@ -23,7 +23,7 @@ AppBar buildAppBar(BuildContext context) {
       children: [
         Text(
           'Thông tin cá nhân',
-          style: TextStyle(color: Colors.black),
+          style: Theme.of(context).textTheme.headline1,
         ),
       ],
     ),
