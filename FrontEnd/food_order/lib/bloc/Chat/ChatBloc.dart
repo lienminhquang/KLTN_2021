@@ -191,6 +191,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     print("sending message:" + messageRequest.toString());
 
-    _socket.emit("user_uttered", {"session_id": _user.id, "message": message});
+    //_socket.emit("user_uttered", {"session_id": _user.id, "message": message});
+    _socket.emit("user_uttered", messageRequest);
   }
 }
