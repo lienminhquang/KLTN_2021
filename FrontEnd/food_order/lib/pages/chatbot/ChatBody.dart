@@ -33,7 +33,7 @@ class ChatBody extends StatefulWidget {
 class _ChatBodyState extends State<ChatBody> {
   //final List<ChatMessage> _messages = <ChatMessage>[];
   final TextEditingController _textController = TextEditingController();
-
+  bool _isConnectingDialogShowing = false;
   @override
   void initState() {
     super.initState();
@@ -69,6 +69,10 @@ class _ChatBodyState extends State<ChatBody> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
+      if (_isConnectingDialogShowing) {
+        Navigator.of(context).pop();
+        _isConnectingDialogShowing = false;
+      }
       if (state is ChatLoadedState) {
         return _loadedState(context, state);
       }
@@ -89,13 +93,14 @@ class _ChatBodyState extends State<ChatBody> {
               TextButton(
                   onPressed: () {
                     context.read<ChatBloc>().add(ChatReconnectEvent());
-
+                    _isConnectingDialogShowing = true;
                     showDialog(
                       context: context,
                       barrierDismissible: false,
                       builder: (BuildContext context) {
                         return WillPopScope(
                             onWillPop: () async {
+                              _isConnectingDialogShowing = false;
                               return true;
                             },
                             child: AlertDialog(

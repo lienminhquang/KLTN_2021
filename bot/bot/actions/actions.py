@@ -45,7 +45,8 @@ class ActionFindFood(Action):
 
             if len(list_food) > 0:
                 dispatcher.utter_message("Tôi tìm thấy những món này:")
-                dispatcher.utter_message(json_message= {"payload": "list_food", "data": {"list_food": list_food}})
+                dispatcher.utter_message(json_message= {"payload": "list_food", "data": {"list_food": list_food,
+                                                                                         "type":"list_food"}})
             else:
                 dispatcher.utter_message("Xin lỗi! Tôi không tìm thấy những món nào phù hợp với yêu cầu của bạn :(")
         else:

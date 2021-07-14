@@ -64,9 +64,9 @@ ThemeData basicTheme() {
       color: Colors.black,
     ),
     inputDecorationTheme: base.inputDecorationTheme.copyWith(
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.redAccent),
-      ),
+      // focusedBorder: UnderlineInputBorder(
+      //   borderSide: BorderSide(color: Colors.redAccent),
+      // ),
       labelStyle:
           TextStyle(color: Colors.grey, fontFamily: 'Montserrat', fontSize: 12),
     ),
