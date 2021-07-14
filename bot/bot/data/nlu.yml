@@ -5,6 +5,11 @@ nlu:
     - chào
     - xin chào
     - hi
+    - xin chàio
+    - Hi
+    - Chào
+    - xin chà
+    - chào bạn
 - intent: goodbye
   examples: |
     - bye
@@ -14,17 +19,24 @@ nlu:
     - bạn là bot à
     - bạn là ai?
     - bạn là gì?
+    - Bạn là ai
 - intent: thanks
   examples: |
     - cảm ơn
     - thanks
     - đa tạ
+    - vậy à. cảm ơn
+    - cảm ơn bạn
+    - ok, cảm ơn nè
+    - thankiu
 - intent: ask_func
   examples: |
     - bạn làm được gì
     - bạn có thể làm gì?
     - chức năng của bạn là gì?
     - bạn có chức năng gì?
+    - bạn làm được gì?
+    - bạn làm được gì nà?
 - intent: ask_find_most_discounted_food
   examples: |
     - tìm món giảm giá
@@ -33,6 +45,8 @@ nlu:
     - món nào đang giảm giá nhiều nhất
     - có món nào đang giảm giá không?
     - món giảm giá
+    - có món nào giảm giá
+    - còn món nào đang giảm giá?
 - intent: ask_find_best_selling_food
   examples: |
     - tìm món bán chạy
@@ -41,6 +55,7 @@ nlu:
     - món nào đang bán chạy nhiều nhất
     - có món nào đang bán chạy
     - món bán chạy
+    - món nào bán chạy nhất?
 - intent: inform
   examples: |
     - [trà sữa](food_name)
@@ -53,6 +68,27 @@ nlu:
     - món [pizza](food_name) đi
     - món [bánh](food_name) đi
     - [trà sữa trân châu hạ long](food_name)
+    - [Bánh canh](food_name)
+    - [Pizza](food_name)
+    - [bạc xỉu](food_name)
+    - [Bánh ngọt](food_name)
+    - [matcha](food_name)
+    - [bò tắm phô mai](food_name)
+    - [bánh cuốn](food_name)
+    - món [bò](food_name)
+    - [Burger siêu nhân phô mai](food_name)
+    - [bún đậu mắm tôm](food_name)
+    - [bún chả cá](food_name)
+    - t muốn mua [bún riêu](food_name)
+    - [bánh mì](food_name)
+    - [bánh bao](food_name)
+    - [trà sữa socola](food_name)
+    - cho tớ [pizza ý](food_name) đi
+    - cho tớ [chè đậu đỏ](food_name) đi
+    - [sinh tố bơ](food_name)
+    - [kem tràng tiền](food_name)
+    - [trà chanh](food_name)
+    - [gà giòn](food_name)
 - intent: ask_find_food
   examples: |
     - tôi muốn tìm món
@@ -69,6 +105,46 @@ nlu:
     - có bán [trà sữa](food_name) không?
     - có bán [bánh](food_name) không?
     - có bán [pizza](food_name) không?
+    - Tìm trà sữa
+    - Tôi muốn tìm [trà sữa trân châu hạ long](food_name)
+    - Tìm món
+    - Tim món
+    - tôi muốn tìm [bánh quy](food_name)
+    - tôi muốn tìm [vitamin day](food_name)
+    - tôi muốn tìm [phô mai](food_name)
+    - có bán [burger](food_name) không?
+    - có bán [Burger bò nướng khoai tây lát](food_name) không?
+    - tìm giúp [pizza Thập Cẩm](food_name) đi
+    - tìm giúp tôi món [pizza Thập Cẩm](food_name)
+    - tôi muốn tìm [pizza thập cẩm](food_name)
+    - có [bánh ngọt](food_name) không?
+    - có [hamberger](food_name) không?
+    - có bán [gà rán](food_name) không?
+    - có bán món làm từ [gà](food_name) không?
+    - tìm [trà đào](food_name)
+    - cóa [trà vải](food_name) không?
+    - có [trà chanh](food_name) không?
+    - tôi muốn tìm [bún](food_name)
+    - tôi muốn ăn [hủ tiếu](food_name)
+    - có bán [cơm tấm](food_name) không?
+    - có bán [mì quảng](food_name) không?
+    - có bán [mì xào](food_name) không?
+    - tôi muốn tìm [cá kho](food_name)
+    - tui muốn tìm [xôi gà](food_name)
+    - tìm [xôi](food_name)
+    - có bán [bánh xèo](food_name) hông?
+    - ở đây có [trà sữa kiwi](food_name) ko?
+    - ở đây có [trà sữa dâu](food_name) ko?
+    - có bán [đậu nành](food_name) hông?
+    - có bán [bánh flan](food_name) không?
+    - có bán [flan](food_name) không?
+    - có bán [sinh tố dừa](food_name) hok?
+    - tìm [kem bơ](food_name)
+    - có bán [coca cola](food_name) không?
+    - tôi muốn tìm món ăn
+    - có [bạc xỉu](food_name) không?
+    - tìm món giúp tôi
+    - có món [burger](food_name) không?
 - intent: ask_find_promotion
   examples: |
     - hiện tại có khuyến mãi gì vậy
@@ -84,6 +160,8 @@ nlu:
     - check dùm tôi đơn hàng
     - kiểm tra đơn hàng giúp tôi
     - check đơn
+    - Kiểm tra đơn hàng
+    - kiểm tra hóa đơn
 - intent: cancel_order
   examples: |
     - hủy đơn
@@ -92,10 +170,15 @@ nlu:
     - tôi muốn hủy món
     - hủy đơn như thế nào nhỉ
     - hủy món giúp tôi với
+    - Tôi muốn hủy đơn
+    - làm sao để hủy đơn hàng?
+    - tôi muốn hủy đơn có được không?
 - intent: ask_name
   examples: |
     - bạn tên gì nhỉ
     - tên bạn là gì
+    - bạn tên gì
+    - bạn tên gì?
 - intent: explain
   examples: |
     - tại sao?
@@ -118,3 +201,14 @@ nlu:
     - có nha
     - yes
     - đồng ý
+    - [mỳ ý](food_name)
+- intent: nlu_fallback
+  examples:
+  - text: |
+      Hakdhhd
+      Shsh
+- intent: that_enough
+  examples: |
+    - ờ, vậy thôi
+    - thôi vậy
+    - thế thì thôi

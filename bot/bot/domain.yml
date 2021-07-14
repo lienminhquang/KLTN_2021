@@ -1,56 +1,35 @@
 version: '2.0'
-config:
-  store_entities_as_slots: true
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
 intents:
-- ask_find_most_discounted_food:
-    use_entities: true
-- ask_find_best_selling_food:
-    use_entities: true
-- inform:
-    use_entities: true
-- greet:
-    use_entities: true
-- goodbye:
-    use_entities: true
-- bot_challenge:
-    use_entities: true
-- nlu_fallback:
-    use_entities: true
-- thanks:
-    use_entities: true
-- ask_func:
-    use_entities: true
-- ask_find_food:
-    use_entities: true
-- ask_find_promotion:
-    use_entities: true
-- ask_name:
-    use_entities: true
-- explain:
-    use_entities: true
-- affirm:
-    use_entities: true
-- deny:
-    use_entities: true
-- check_order_status:
-    use_entities: true
-- cancel_order:
-    use_entities: true
+- check_order_status
+- cancel_order
+- greet
+- thanks
+- ask_find_food
+- ask_find_best_selling_food
+- ask_find_most_discounted_food
+- ask_func
+- bot_challenge
+- inform
+- ask_name
+- goodbye
+- nlu_fallback
+- ask_find_promotion
+- explain
+- affirm
+- deny
+- that_enough
 entities:
 - food_name
 slots:
   food_name:
-    type: rasa.shared.core.slots.TextSlot
-    initial_value: null
+    type: text
     auto_fill: false
     influence_conversation: false
   requested_slot:
-    type: rasa.shared.core.slots.CategoricalSlot
-    initial_value: null
-    auto_fill: true
+    type: categorical
     influence_conversation: true
     values:
     - food_name
@@ -65,8 +44,9 @@ responses:
   - text: Xin lỗi, tôi không hiểu. Bạn có thể diễn đạt lại không?
   utter_default:
   - text: Xin lỗi, tôi chưa hiểu ý bạn. Bạn có thể diễn đạt lại không?
-  utter_thanks:
+  utter_noproblem:
   - text: Vâng, không có gì !
+  - text: Rất vui được giúp đỡ bạn.
   utter_func:
   - text: |-
       Tôi có thể giúp bạn:
@@ -74,6 +54,7 @@ responses:
       - Tìm món đang giảm giá nhiều nhất
       - Tìm món bán chạy nhất
       - Kiểm tra trạng thái đơn hàng
+      - Và trả lời một số thắc mắc thông thường của khách hàng.
   utter_ask_food_name:
   - text: Bạn muốn tìm món tên gì?
   utter_list_category_and_ask_category:
@@ -90,7 +71,7 @@ responses:
       Xin lỗi!. Hệ thống đang gặp sự cố ngoài ý muốn :(. 
       Xin vui lòng thực hiện lại sau.
   utter_cannot_cancel_order:
-  - text: Xin lỗi, bạn sẽ không thể hủy đơn hàng trên ứng dụng vì Quán/Nhà hàng có thể đã bắt đầu chuẩn bị ngay sau khi nhận được đơn hàng. Vì vậy, hãy kiểm tra thật kỹ món ăn cũng như địa chỉ giao hàng trước khi tiến hành đặt đơn nhé. 
+  - text: Xin lỗi, bạn sẽ không thể hủy đơn hàng trên ứng dụng vì Quán/Nhà hàng có thể đã bắt đầu chuẩn bị ngay sau khi nhận được đơn hàng. Vì vậy, hãy kiểm tra thật kỹ món ăn cũng như địa chỉ giao hàng trước khi tiến hành đặt đơn nhé.
   utter_ask_name:
   - text: Tôi tên là Amee !
   utter_explain_food_name:
@@ -99,18 +80,27 @@ responses:
   - text: Bạn muốn tiếp tục tìm món không?
   utter_finding_food:
   - text: Chờ một chút nhé. Tôi đang tìm {food_name}
+  utter_sorry_cannot_help:
+  - text: Xin lỗi vì chưa giúp được cho bạn.
 actions:
-- action_find_food_category
-- action_default_fallback
 - action_check_order_status
-- action_find_food
-- action_find_most_discounted_food
+- action_default_fallback
 - action_find_best_selling_food
+- action_find_food
+- action_find_food_category
+- action_find_most_discounted_food
 - action_reset_food_name_slot
+- utter_ask_name
+- utter_bot_challenge
+- utter_cannot_cancel_order
+- utter_finding_food
+- utter_func
+- utter_greet
+- utter_noproblem
+- utter_sorry_cannot_help
 forms:
   find_food_form:
     required_slots:
       food_name:
       - entity: food_name
         type: from_entity
-e2e_actions: []

@@ -1,15 +1,135 @@
 version: "2.0"
-
 stories:
+- story: food_name interjection
+  steps:
+  - intent: ask_find_food
+  - action: find_food_form
+  - active_loop: find_food_form
+  - slot_was_set:
+    - requested_slot: food_name
+  - intent: explain
+  - action: utter_explain_food_name
+  - action: find_food_form
 
-  - story: food_name interjection
-    steps:
-      - intent: ask_find_food
-      - action: find_food_form
-      - active_loop: find_food_form
-      - slot_was_set:
-          - requested_slot: food_name
-      - intent: explain
-      - action: utter_explain_food_name
-      - action: find_food_form
 
+
+- story: interactive_story_1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_name
+  - action: utter_ask_name
+
+- story: interactive_story_1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: bot_challenge
+  - action: utter_bot_challenge
+  - intent: ask_func
+  - action: utter_func
+  - intent: ask_find_food
+  - action: find_food_form
+  - active_loop: find_food_form
+  - slot_was_set:
+    - requested_slot: food_name
+  - slot_was_set:
+    - food_name: trà sữa
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: utter_finding_food
+  - action: action_find_food
+  - action: action_reset_food_name_slot
+  - slot_was_set:
+    - food_name: null
+  - intent: thanks
+  - action: utter_noproblem
+
+- story: interactive_story_1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_find_food
+  - action: find_food_form
+  - active_loop: find_food_form
+  - slot_was_set:
+    - requested_slot: food_name
+  - slot_was_set:
+    - food_name: pizza
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: utter_finding_food
+  - action: action_find_food
+  - action: action_reset_food_name_slot
+  - slot_was_set:
+    - food_name: null
+  - intent: thanks
+  - action: utter_noproblem
+
+- story: interactive_story_1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_find_most_discounted_food
+  - action: action_find_most_discounted_food
+  - intent: thanks
+  - action: utter_noproblem
+
+- story: interactive_story_1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_find_best_selling_food
+  - action: action_find_best_selling_food
+  - intent: thanks
+  - action: utter_noproblem
+
+- story: interactive_story_1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_func
+  - action: utter_func
+  - intent: ask_find_best_selling_food
+  - action: action_find_best_selling_food
+  - intent: ask_find_most_discounted_food
+  - action: action_find_most_discounted_food
+  - intent: ask_find_food
+    entities:
+    - food_name: burger
+  - action: find_food_form
+  - active_loop: find_food_form
+  - slot_was_set:
+    - food_name: burger
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: utter_finding_food
+  - action: action_find_food
+  - action: action_reset_food_name_slot
+  - slot_was_set:
+    - food_name: null
+  - intent: thanks
+  - action: utter_noproblem
+
+- story: interactive_story_1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: check_order_status
+  - action: action_check_order_status
+  - intent: cancel_order
+  - action: utter_cannot_cancel_order
+  - intent: thanks
+  - action: utter_noproblem
+
+- story: interactive_story_1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: cancel_order
+  - action: utter_cannot_cancel_order
+  - intent: that_enough
+  - action: utter_sorry_cannot_help
