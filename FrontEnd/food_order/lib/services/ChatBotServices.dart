@@ -12,7 +12,8 @@ import 'package:http/io_client.dart';
 
 import 'HttpClientFactory.dart';
 
-class ChatBotServices {
+// depredecated use now socketio instead of rest
+class _ChatBotServices {
   final String baseRoute = AppConfigs.URL_BaseBotAPI;
   final HttpClientFactory _httpClientFactory = new HttpClientFactory();
 

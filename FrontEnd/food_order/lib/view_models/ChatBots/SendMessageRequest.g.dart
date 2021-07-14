@@ -8,13 +8,13 @@ part of 'SendMessageRequest.dart';
 
 SendMessageRequest _$SendMessageRequestFromJson(Map<String, dynamic> json) {
   return SendMessageRequest(
-    json['sender'] as String,
+    json['session_id'] as String,
     json['message'] as String,
   );
 }
 
 Map<String, dynamic> _$SendMessageRequestToJson(SendMessageRequest instance) =>
     <String, dynamic>{
-      'sender': instance.sender,
+      'session_id': instance.session_id,
       'message': instance.message,
     };

@@ -1,7 +1,7 @@
 class OrderVM:
 
     def __init__(self, id, appUserID, createdDate, isPaid, datePaid, orderStatusID, promotionID, finalTotalPrice, promotionAmount, addressString,
-        addressName, userVM, orderStatusVM, orderDetailVMs
+        addressName, userVM, orderStatusVM, orderDetailVMs, isDeleted, timeDeleted
     ):
         self.id = id
         self.appUserID = appUserID
@@ -17,4 +17,6 @@ class OrderVM:
         self.userVM = userVM
         self.orderStatusVM = orderStatusVM
         self.orderDetailVMs = orderDetailVMs
+        self.isDeleted = isDeleted
+        self.timeDeleted = timeDeleted
         

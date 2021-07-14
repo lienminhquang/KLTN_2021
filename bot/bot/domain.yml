@@ -16,7 +16,6 @@ intents:
 - ask_name
 - goodbye
 - nlu_fallback
-- ask_find_promotion
 - explain
 - affirm
 - deny

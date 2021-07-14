@@ -47,6 +47,9 @@ nlu:
     - món giảm giá
     - có món nào giảm giá
     - còn món nào đang giảm giá?
+    - có món nào đang khuyến mãi
+    - món nào khuyến mãi
+    - có khuyến mãi nào không?
 - intent: ask_find_best_selling_food
   examples: |
     - tìm món bán chạy
@@ -145,13 +148,6 @@ nlu:
     - có [bạc xỉu](food_name) không?
     - tìm món giúp tôi
     - có món [burger](food_name) không?
-- intent: ask_find_promotion
-  examples: |
-    - hiện tại có khuyến mãi gì vậy
-    - có khuyến mãi gì nhỉ
-    - đang có ưu đãi gì
-    - đang có khuyến mãi gì
-    - khuyến mãi
 - intent: check_order_status
   examples: |
     - tôi muốn kiểm tra đơn hàng
