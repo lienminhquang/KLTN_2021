@@ -1,6 +1,6 @@
 ﻿USE [master]
 GO
-/****** Object:  Database [FoodOrder]    Script Date: 7/14/2021 9:54:06 AM ******/
+/****** Object:  Database [FoodOrder]    Script Date: 7/14/2021 10:01:41 AM ******/
 CREATE DATABASE [FoodOrder]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -133,7 +133,7 @@ ALTER DATABASE SCOPED CONFIGURATION SET XTP_QUERY_EXECUTION_STATISTICS = OFF;
 GO
 USE [FoodOrder]
 GO
-/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 7/14/2021 10:01:41 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -147,7 +147,7 @@ CREATE TABLE [dbo].[__EFMigrationsHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Address]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[Address]    Script Date: 7/14/2021 10:01:42 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -165,7 +165,7 @@ CREATE TABLE [dbo].[Address](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppRole]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[AppRole]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -184,7 +184,7 @@ CREATE TABLE [dbo].[AppRole](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppRoleClaim]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[AppRoleClaim]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -200,7 +200,7 @@ CREATE TABLE [dbo].[AppRoleClaim](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUser]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[AppUser]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -234,7 +234,7 @@ CREATE TABLE [dbo].[AppUser](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUserClaim]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[AppUserClaim]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -250,7 +250,7 @@ CREATE TABLE [dbo].[AppUserClaim](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUserLogin]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[AppUserLogin]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -266,7 +266,7 @@ CREATE TABLE [dbo].[AppUserLogin](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUserRole]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[AppUserRole]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -281,7 +281,7 @@ CREATE TABLE [dbo].[AppUserRole](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AppUserToken]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[AppUserToken]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -297,7 +297,7 @@ CREATE TABLE [dbo].[AppUserToken](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Cart]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[Cart]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -313,7 +313,7 @@ CREATE TABLE [dbo].[Cart](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Category]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[Category]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -331,7 +331,7 @@ CREATE TABLE [dbo].[Category](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Food]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[Food]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -352,7 +352,7 @@ CREATE TABLE [dbo].[Food](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[FoodCategory]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[FoodCategory]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -369,7 +369,7 @@ CREATE TABLE [dbo].[FoodCategory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Notification]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[Notification]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -390,7 +390,7 @@ CREATE TABLE [dbo].[Notification](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Order]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[Order]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -416,7 +416,7 @@ CREATE TABLE [dbo].[Order](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[OrderDetail]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[OrderDetail]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -437,7 +437,7 @@ CREATE TABLE [dbo].[OrderDetail](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[OrderStatus]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[OrderStatus]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -452,7 +452,7 @@ CREATE TABLE [dbo].[OrderStatus](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Promotion]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[Promotion]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -480,7 +480,7 @@ CREATE TABLE [dbo].[Promotion](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Rating]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[Rating]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -501,7 +501,7 @@ CREATE TABLE [dbo].[Rating](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SaleCampaign]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[SaleCampaign]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -523,7 +523,7 @@ CREATE TABLE [dbo].[SaleCampaign](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SaleCampaignFood]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Table [dbo].[SaleCampaignFood]    Script Date: 7/14/2021 10:01:43 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -628,6 +628,7 @@ INSERT [dbo].[Category] ([ID], [Name], [Description], [ImagePath], [IsDeleted], 
 INSERT [dbo].[Category] ([ID], [Name], [Description], [ImagePath], [IsDeleted], [TimeDeleted]) VALUES (10, N'Drink', N'trà sữa, nước ngọt các loại', N'fe73961d-7014-49cd-ace4-e802d692a62c.jpg', 0, NULL)
 INSERT [dbo].[Category] ([ID], [Name], [Description], [ImagePath], [IsDeleted], [TimeDeleted]) VALUES (11, N'Burger', N'Bánh Burger', N'b8a57495-bd79-44b8-beef-d05cd636d6ac.jpg', 0, NULL)
 INSERT [dbo].[Category] ([ID], [Name], [Description], [ImagePath], [IsDeleted], [TimeDeleted]) VALUES (12, N'Pizza', N'Pizza', N'9309e59e-387e-407b-86f1-230f5012f924.jpg', 0, NULL)
+INSERT [dbo].[Category] ([ID], [Name], [Description], [ImagePath], [IsDeleted], [TimeDeleted]) VALUES (13, N'Bánh ngọt', N'Bánh ngọt', N'53d31037-c36d-4d5b-bb65-ed104c825f01.jpg', 0, NULL)
 SET IDENTITY_INSERT [dbo].[Category] OFF
 SET IDENTITY_INSERT [dbo].[Food] ON 
 
@@ -659,10 +660,10 @@ INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted])
 INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (40, 10, 0, NULL)
 INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (41, 10, 0, NULL)
 INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (42, 10, 0, NULL)
-INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (44, 3, 1, CAST(N'2021-07-13T21:14:14.7462232' AS DateTime2))
-INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (45, 3, 1, CAST(N'2021-07-13T21:14:14.7465809' AS DateTime2))
-INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (46, 3, 1, CAST(N'2021-07-13T21:14:14.7466178' AS DateTime2))
-INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (47, 3, 1, CAST(N'2021-07-13T21:14:14.7466411' AS DateTime2))
+INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (44, 13, 0, NULL)
+INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (45, 13, 0, NULL)
+INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (46, 13, 0, NULL)
+INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (47, 13, 0, NULL)
 INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (48, 11, 0, NULL)
 INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (49, 11, 0, NULL)
 INSERT [dbo].[FoodCategory] ([FoodID], [CategoryID], [IsDeleted], [TimeDeleted]) VALUES (50, 11, 0, NULL)
@@ -819,7 +820,7 @@ INSERT [dbo].[SaleCampaignFood] ([FoodID], [SaleCampaignID], [IsDeleted], [TimeD
 INSERT [dbo].[SaleCampaignFood] ([FoodID], [SaleCampaignID], [IsDeleted], [TimeDeleted]) VALUES (51, 1, 0, NULL)
 INSERT [dbo].[SaleCampaignFood] ([FoodID], [SaleCampaignID], [IsDeleted], [TimeDeleted]) VALUES (53, 1, 0, NULL)
 INSERT [dbo].[SaleCampaignFood] ([FoodID], [SaleCampaignID], [IsDeleted], [TimeDeleted]) VALUES (56, 1, 0, NULL)
-/****** Object:  Index [IX_Address_AppUserID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Address_AppUserID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Address_AppUserID] ON [dbo].[Address]
 (
 	[AppUserID] ASC
@@ -827,7 +828,7 @@ CREATE NONCLUSTERED INDEX [IX_Address_AppUserID] ON [dbo].[Address]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [RoleNameIndex]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [RoleNameIndex]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [RoleNameIndex] ON [dbo].[AppRole]
 (
 	[NormalizedName] ASC
@@ -835,7 +836,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [RoleNameIndex] ON [dbo].[AppRole]
 WHERE ([NormalizedName] IS NOT NULL)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_AppRoleClaim_RoleId]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_AppRoleClaim_RoleId]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_AppRoleClaim_RoleId] ON [dbo].[AppRoleClaim]
 (
 	[RoleId] ASC
@@ -843,7 +844,7 @@ CREATE NONCLUSTERED INDEX [IX_AppRoleClaim_RoleId] ON [dbo].[AppRoleClaim]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [EmailIndex]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [EmailIndex]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [EmailIndex] ON [dbo].[AppUser]
 (
 	[NormalizedEmail] ASC
@@ -851,7 +852,7 @@ CREATE NONCLUSTERED INDEX [EmailIndex] ON [dbo].[AppUser]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UserNameIndex]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [UserNameIndex]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE UNIQUE NONCLUSTERED INDEX [UserNameIndex] ON [dbo].[AppUser]
 (
 	[NormalizedUserName] ASC
@@ -859,91 +860,91 @@ CREATE UNIQUE NONCLUSTERED INDEX [UserNameIndex] ON [dbo].[AppUser]
 WHERE ([NormalizedUserName] IS NOT NULL)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_AppUserClaim_UserId]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_AppUserClaim_UserId]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_AppUserClaim_UserId] ON [dbo].[AppUserClaim]
 (
 	[UserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_AppUserRole_RoleId]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_AppUserRole_RoleId]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_AppUserRole_RoleId] ON [dbo].[AppUserRole]
 (
 	[RoleId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Cart_AppUserId]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Cart_AppUserId]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Cart_AppUserId] ON [dbo].[Cart]
 (
 	[AppUserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Food_SaleCampaignID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Food_SaleCampaignID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Food_SaleCampaignID] ON [dbo].[Food]
 (
 	[SaleCampaignID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_FoodCategory_CategoryID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_FoodCategory_CategoryID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_FoodCategory_CategoryID] ON [dbo].[FoodCategory]
 (
 	[CategoryID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Notification_UserID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Notification_UserID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Notification_UserID] ON [dbo].[Notification]
 (
 	[UserID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_AppUserID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Order_AppUserID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_AppUserID] ON [dbo].[Order]
 (
 	[AppUserID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_OrderStatusID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Order_OrderStatusID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_OrderStatusID] ON [dbo].[Order]
 (
 	[OrderStatusID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_PromotionID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Order_PromotionID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_PromotionID] ON [dbo].[Order]
 (
 	[PromotionID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Order_SaleCampaignID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Order_SaleCampaignID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Order_SaleCampaignID] ON [dbo].[Order]
 (
 	[SaleCampaignID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_OrderDetail_FoodID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_OrderDetail_FoodID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_OrderDetail_FoodID] ON [dbo].[OrderDetail]
 (
 	[FoodID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_OrderDetail_SaleCampaignID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_OrderDetail_SaleCampaignID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_OrderDetail_SaleCampaignID] ON [dbo].[OrderDetail]
 (
 	[SaleCampaignID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Rating_AppUserId]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Rating_AppUserId]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Rating_AppUserId] ON [dbo].[Rating]
 (
 	[AppUserId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Rating_FoodID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_Rating_FoodID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_Rating_FoodID] ON [dbo].[Rating]
 (
 	[FoodID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_SaleCampaignFood_SaleCampaignID]    Script Date: 7/14/2021 9:54:07 AM ******/
+/****** Object:  Index [IX_SaleCampaignFood_SaleCampaignID]    Script Date: 7/14/2021 10:01:44 AM ******/
 CREATE NONCLUSTERED INDEX [IX_SaleCampaignFood_SaleCampaignID] ON [dbo].[SaleCampaignFood]
 (
 	[SaleCampaignID] ASC
