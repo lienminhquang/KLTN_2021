@@ -9,6 +9,7 @@ import 'package:food_delivery/bloc/Promotions/PromotionEvent.dart';
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
 import 'package:food_delivery/pages/promotion/Promotions.dart';
+import 'package:food_delivery/pages/promotion/body.dart';
 
 class CheckoutBar extends StatelessWidget {
   const CheckoutBar({Key? key, required this.state}) : super(key: key);
@@ -104,57 +105,9 @@ class CheckoutBar extends StatelessWidget {
                               GestureDetector(
                                   onTap: () {
                                     showDialog(
-                                      context: context,
-                                      builder: (context) => Dialog(
-                                          backgroundColor: Colors.transparent,
-                                          insetPadding: EdgeInsets.all(10),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Container(
-                                                width: double.infinity,
-                                                height: 200,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    color: Colors.white),
-                                                padding: EdgeInsets.fromLTRB(
-                                                    20, 50, 20, 20),
-                                                child: Column(children: [
-                                                  Text(state.promotionVM!.name,
-                                                      style: TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                      textAlign:
-                                                          TextAlign.center),
-                                                  SizedBox(height: 20),
-                                                  Text(
-                                                      state.promotionVM!
-                                                          .desciption
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors
-                                                              .grey.shade700)),
-                                                  Text(
-                                                      "Áp dụng cho đơn hàng từ: ${AppConfigs.toPrice(state.promotionVM!.minPrice!)}",
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors
-                                                              .grey.shade700)),
-                                                  Text(
-                                                      "Tối đa: ${AppConfigs.toPrice(state.promotionVM!.max!)}",
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors
-                                                              .grey.shade700)),
-                                                ]),
-                                              ),
-                                            ],
-                                          )),
-                                    );
+                                        context: context,
+                                        builder: (context) => promotionDetail(
+                                            state.promotionVM!));
                                   },
                                   child: Text(promotionCode)),
                               IconButton(

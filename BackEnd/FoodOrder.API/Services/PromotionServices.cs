@@ -38,19 +38,13 @@ namespace FoodOrder.API.Services
                 return new FailedResult<PaginatedList<PromotionVM>>("User not found!");
             }
 
-            var promotions = from c in _dbContext.Promotions.Where(x => x.IsDeleted == false)
-                             join o in _dbContext.Orders on c.ID equals o.PromotionID into joined
-                             from o in joined.DefaultIfEmpty()
-                             where o == null || o.AppUserID.ToString().Equals(userID)
-                             && (c.Enabled == true)
-                             && (c.StartDate <= DateTime.Now)
-                             && (c.EndDate >= DateTime.Now)
-                             group c by c.ID into g
-                             select new { id = g.Key, count = g.Count() };
-
-            var vMs = from id in promotions
-                      join p in _dbContext.Promotions on id.id equals p.ID
-                      select p;
+            var vMs = _dbContext.Promotions
+                             .Where(x => x.IsDeleted == false
+                             && x.Enabled == true
+                             && x.StartDate <= DateTime.Now
+                             && x.EndDate >= DateTime.Now
+                             );
+                           
 
             if (!String.IsNullOrEmpty(request.SearchString))
             {

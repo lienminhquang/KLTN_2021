@@ -57,7 +57,7 @@ namespace FoodOrder.API.Services
 
             if (user == null || user.IsDeleted)
             {
-                return new FailedResult<LoginResponse>("Phone number or password is incorrect!");
+                return new FailedResult<LoginResponse>("Số điện thoại hoặc mật khẩu không đúng!");
             }
 
             //if (user.IsBanned)
@@ -68,7 +68,7 @@ namespace FoodOrder.API.Services
             var signinResult = await _signInManager.PasswordSignInAsync(user, loginRequest.Password, loginRequest.RememberMe, true);
             if (!signinResult.Succeeded)
             {
-                return new FailedResult<LoginResponse>("Phone number or password is incorrect!");
+                return new FailedResult<LoginResponse>("Số điện thoại hoặc mật khẩu không đúng!");
             }
             user.TimeCreateJWT = DateTime.UtcNow;
             var claims = new List<Claim>
