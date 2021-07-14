@@ -59,7 +59,8 @@ class _SortOptionState extends State<SortOption> {
                     onPressed: () {
                       Navigator.of(context).pop(_sortFactor);
                     },
-                    child: Text("Áp dụng")),
+                    child: Text("Áp dụng",
+                        style: Theme.of(context).textTheme.headline3)),
               ),
               Container(
                   height: 40,
@@ -74,14 +75,15 @@ class _SortOptionState extends State<SortOption> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text("Hủy")))
+                      child: Text("Hủy",
+                          style: Theme.of(context).textTheme.headline3)))
             ],
           )
         ]),
       ),
       appBar: AppBar(
         title: const Text("Sắp xếp theo"),
-        backgroundColor: AppTheme.appBarBackground,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
     );
   }
