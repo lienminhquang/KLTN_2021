@@ -87,7 +87,8 @@ class _SortCategoryFilter extends State<CategoryFilter> {
                       onPressed: () {
                         Navigator.of(context).pop(cid);
                       },
-                      child: Text("Áp dụng")),
+                      child: Text("Áp dụng",
+                          style: Theme.of(context).textTheme.headline3)),
                 ),
                 Container(
                     height: 40,
@@ -102,7 +103,8 @@ class _SortCategoryFilter extends State<CategoryFilter> {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text("Hủy")))
+                        child: Text("Hủy",
+                            style: Theme.of(context).textTheme.headline3)))
               ],
             )
           ],
@@ -113,7 +115,7 @@ class _SortCategoryFilter extends State<CategoryFilter> {
           "Lọc kết quả",
           //style: GoogleFonts.getFont('Lato'),
         ),
-        backgroundColor: AppTheme.appBarBackground,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
     );
   }
