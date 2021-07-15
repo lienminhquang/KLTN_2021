@@ -92,6 +92,7 @@ nlu:
     - [kem tràng tiền](food_name)
     - [trà chanh](food_name)
     - [gà giòn](food_name)
+    - [Burger]{"entity":"food_name","value":"burger"}
 - intent: ask_find_food
   examples: |
     - tôi muốn tìm món
@@ -135,6 +136,7 @@ nlu:
     - tôi muốn tìm [cá kho](food_name)
     - tui muốn tìm [xôi gà](food_name)
     - tìm [xôi](food_name)
+    - tìm [xôi](food_name)
     - có bán [bánh xèo](food_name) hông?
     - ở đây có [trà sữa kiwi](food_name) ko?
     - ở đây có [trà sữa dâu](food_name) ko?
@@ -148,6 +150,9 @@ nlu:
     - có [bạc xỉu](food_name) không?
     - tìm món giúp tôi
     - có món [burger](food_name) không?
+    - tôi muốn tìm [bơ gơ]{"entity":"food_name","value":"burger"}
+    - tôi muốn mua [ham bơ gơ]{"entity":"food_name","value":"burger"}
+    - có bán [ham bua gơ]{"entity":"food_name","value":"burger"}
 - intent: check_order_status
   examples: |
     - tôi muốn kiểm tra đơn hàng
@@ -208,3 +213,31 @@ nlu:
     - ờ, vậy thôi
     - thôi vậy
     - thế thì thôi
+- synonym: pizza
+  examples: |
+    - piza
+    - biza
+    - bizza
+    - pizzza
+    - Pizza
+    - Piza
+    - Biza
+    - Bizza
+    - Pizzza
+- synonym: burger
+  examples: |
+    - bơ gơ
+    - ham bơ gơ
+    - ham bua gơ
+    - buger
+    - burge
+    - burgger
+    - Bơ gơ
+    - Ham bơ gơ
+    - Ham bua gơ
+    - Buger
+    - Burge
+    - Burgger
+    - Burger
+    
+
