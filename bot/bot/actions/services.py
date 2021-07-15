@@ -133,3 +133,25 @@ def find_best_selling_food():
     else:
         logError(response.reason)
         return "Đã xảy ra lỗi"
+
+def find_list_category():
+    check_token()
+    url = base_url + "/api/Category"
+    response = requests.get(url,
+        headers={'Authorization':'Bearer ' + jwt},
+        verify=False
+    )
+    
+    logInfo("Statuscode: " + str(response.status_code))
+    if response.status_code == 200:
+    
+        result_json = json.loads(response.text)
+        logInfo(result_json)
+        listCategory = []
+        for i in range(0, min(5, len(result_json['payLoad']['items']))):
+            listCategory.append(result_json['payLoad']['items'][i])
+        logInfo(listCategory)
+        return listCategory
+    else:
+        logError(response.reason)
+        return "Đã xảy ra lỗi"

@@ -20,6 +20,7 @@ intents:
 - affirm
 - deny
 - that_enough
+- ask_what_serve
 entities:
 - food_name
 slots:
@@ -56,11 +57,10 @@ responses:
       - Và trả lời một số thắc mắc thông thường của khách hàng.
   utter_ask_food_name:
   - text: Bạn muốn tìm món tên gì?
-  utter_list_category_and_ask_category:
+  utter_list_category:
   - text: |-
       Chúng tôi đang phục vụ các loại đồ ăn dưới đây:
       {list_category}
-      Bạn muốn tìm các món thuộc loại nào?
   utter_list_order_status:
   - text: Danh sách các đơn hàng đang xử lý của bạn
   utter_list_order_empty:
@@ -86,9 +86,9 @@ actions:
 - action_default_fallback
 - action_find_best_selling_food
 - action_find_food
-- action_find_food_category
 - action_find_most_discounted_food
 - action_reset_food_name_slot
+- action_show_list_category
 - utter_ask_name
 - utter_bot_challenge
 - utter_cannot_cancel_order

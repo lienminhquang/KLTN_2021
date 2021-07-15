@@ -149,3 +149,28 @@ class ActionFindBestSellingFood(Action):
         return []
 
 
+class ActionShowListCategory(Action):
+
+    def name(self) -> Text:
+        return "action_show_list_category"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        list_category = find_list_category();
+
+        if type(list_category) is list:
+
+            if len(list_category) > 0:
+                concarated_list = ""
+                for i in range(0, len(list_category)):
+                    concarated_list += list_category[i]['name'] + "\n"
+                dispatcher.utter_message(response = "utter_list_category", list_category = concarated_list);
+            else:
+                dispatcher.utter_message("Xin lỗi! tôi không tìm thấy danh mục nào trong app, xin vui lòng thử lại sau.")
+        else:
+            logError(type(list_food))
+            dispatcher.utter_message(response="utter_internal_error", error_message = list_category)
+            
+        return []

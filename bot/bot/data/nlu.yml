@@ -208,3 +208,14 @@ nlu:
     - ờ, vậy thôi
     - thôi vậy
     - thế thì thôi
+- intent: ask_what_serve
+  examples: |
+    - app này bán những món nào?
+    - app này có những món nào?
+    - các bạn phục vụ gì?
+    - bạn bán món gì vậy?
+    - cửa hàng các bạn bán gì?
+    - ở đây bán gì?
+    - ở đây có bán món gì?
+    - bán gì ở đây?
+    - tui mua được gì trên này?
