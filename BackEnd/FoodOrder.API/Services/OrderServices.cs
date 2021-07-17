@@ -29,18 +29,23 @@ namespace FoodOrder.API.Services
         private readonly ILogger<OrderServices> _logger;
         public FoodServices _foodServices { get; set; }
 
+        private FirebaseServices _firebaseServices;
 
-        public OrderServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<OrderServices> logger, FoodServices foodServices, IConfiguration configuration)
+        public OrderServices(ApplicationDBContext applicationDBContext, IMapper mapper, ILogger<OrderServices> logger, FoodServices foodServices, IConfiguration configuration, FirebaseServices firebaseServices)
         {
             _config = configuration;
             _dbContext = applicationDBContext;
             _mapper = mapper;
             _logger = logger;
             _foodServices = foodServices;
+            _firebaseServices = firebaseServices;
         }
 
         public async Task<ApiResult<PaginatedList<OrderVM>>> GetAllPaging(PagingRequestBase request)
         {
+
+
+
             var orders = (from c in _dbContext.Orders where c.IsDeleted == false select c)
                 .Include(a => a.OrderStatus)
                 .Include(a => a.AppUser);
@@ -85,15 +90,15 @@ namespace FoodOrder.API.Services
             foreach (var item in orderDetailVMs)
             {
                 var rating = _dbContext.Ratings.Find(id, item.FoodID);
-                
-                if(rating != null)
+
+                if (rating != null)
                 {
                     item.RatingVM = _mapper.Map<RatingVM>(rating);
-                    item.RatingVM.UserFullName = userVM.Name  + " " + userVM.Name;
+                    item.RatingVM.UserFullName = userVM.Name + " " + userVM.Name;
                 }
             }
 
-            
+
             var orderVM = _mapper.Map<Order, OrderVM>(c);
 
 
@@ -189,17 +194,17 @@ namespace FoodOrder.API.Services
         public async Task<ApiResult<OrderVM>> Create(OrderCreateVM vm)
         {
             var user = _dbContext.AppUsers.Find(vm.AppUserID);
-            if(user == null || user.IsDeleted)
+            if (user == null || user.IsDeleted)
             {
-                return new  FailedResult<OrderVM>("User not found!");
+                return new FailedResult<OrderVM>("User not found!");
             }
 
             var numProcessingOrder = (from o in _dbContext.Orders
-                                     where (o.OrderStatusID == OrderStatus.DangGiao
-                                     || o.OrderStatusID == OrderStatus.DangChuanBi)
-                                     && o.AppUserID.Equals(vm.AppUserID)
-                                     select o).Count();
-            if(numProcessingOrder >= _config.GetValue<int>("MaxProcessingOrderPerUser"))
+                                      where (o.OrderStatusID == OrderStatus.DangGiao
+                                      || o.OrderStatusID == OrderStatus.DangChuanBi)
+                                      && o.AppUserID.Equals(vm.AppUserID)
+                                      select o).Count();
+            if (numProcessingOrder >= _config.GetValue<int>("MaxProcessingOrderPerUser"))
             {
                 return new FailedResult<OrderVM>("Bạn đang có quá nhiều đơn hàng đang xử lý.\nVui lòng thử lại sau!");
             }
@@ -248,34 +253,34 @@ namespace FoodOrder.API.Services
                     _dbContext.OrderDetails.Add(orderDetail);
                     _dbContext.Carts.Remove(cart);
 
-                    if(orderDetail.SaleCampaignID != null)
+                    if (orderDetail.SaleCampaignID != null)
                     {
                         var sc = _dbContext.SaleCampaigns.Find(orderDetail.SaleCampaignID);
-                        if(sc == null || sc.IsDeleted)
+                        if (sc == null || sc.IsDeleted)
                         {
                             return new FailedResult<OrderVM>("Sale Campaign not found!");
                         }
 
                         totalPrice += orderDetail.Price
-                            * orderDetail.Amount 
+                            * orderDetail.Amount
                             * (100 - orderDetail.SalePercent.Value) / 100;
                     }
                     else
                     {
                         totalPrice += orderDetail.Price * orderDetail.Amount;
                     }
-                    
+
                 }
 
                 _logger.LogInformation("Create order: TotalPrice: " + totalPrice);
-                if(vm.PromotionID != null)
+                if (vm.PromotionID != null)
                 {
                     var promotion = _dbContext.Promotions.Find(vm.PromotionID);
                     if (promotion == null || promotion.IsDeleted)
                     {
                         return new FailedResult<OrderVM>("Promotion not found!");
                     }
-                   
+
                     var timeUsed = (from o in _dbContext.Orders
                                     where o.AppUserID.Equals(order.AppUserID) && o.PromotionID == promotion.ID
                                     select o).Count() - 1;
@@ -283,7 +288,7 @@ namespace FoodOrder.API.Services
                     if (promotion.StartDate <= DateTime.Now
                         && promotion.EndDate >= DateTime.Now
                         && promotion.Enabled == true
-                        && promotion.MinPrice <= totalPrice 
+                        && promotion.MinPrice <= totalPrice
                         && timeUsed < promotion.UseTimes)
                     {
                         double promotedAmount = Math.Min((double)promotion.Max, totalPrice * promotion.Percent / 100);
@@ -348,6 +353,10 @@ namespace FoodOrder.API.Services
 
         public async Task<ApiResult<OrderVM>> ChangOrderStatus(ChangeOrderStatusVM changeVM)
         {
+            string pnTitle = "";
+            string pnBody = "";
+            string userDeviceToken = "";
+
             var vm = await _dbContext.Orders.FirstOrDefaultAsync(c => c.ID == changeVM.ID);
             if (vm == null || vm.IsDeleted)
             {
@@ -359,6 +368,9 @@ namespace FoodOrder.API.Services
             {
                 return new FailedResult<OrderVM>("OrderStatus not found!");
             }
+
+            var user = _dbContext.AppUsers.Find(vm.AppUserID);
+            userDeviceToken = user.DeviceToken;
 
             vm.OrderStatusID = changeVM.OrderStatusID;
             if (vm.OrderStatusID == OrderStatus.DaNhan)
@@ -373,9 +385,16 @@ namespace FoodOrder.API.Services
                 vm.DatePaid = DateTime.Now;
             }
 
+            pnTitle = orderStatus.PNTitle;
+            pnBody = orderStatus.PNBody;
+
             try
             {
                 await _dbContext.SaveChangesAsync();
+                if (!string.IsNullOrEmpty(userDeviceToken))
+                {
+                    await _firebaseServices.SendPNAsync(userDeviceToken, pnTitle, pnBody);
+                }
             }
             catch (Exception e)
             {

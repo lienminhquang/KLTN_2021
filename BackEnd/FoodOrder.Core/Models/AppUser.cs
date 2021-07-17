@@ -25,6 +25,7 @@ namespace FoodOrder.Core.Models
 
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpire { get; set; }
+        public string DeviceToken { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime? TimeDeleted { get; set; }

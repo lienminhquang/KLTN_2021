@@ -26,12 +26,16 @@ namespace FoodOrder.API.Controllers
         {
             public string Name { get; set; }
             public string Description { get; set; }
+            public string PNTitle { get; set; }
+            public string PNBody { get; set; }
         }
 
         public class OrderStatusUpdateRequest
         {
             public string Name { get; set; }
             public string Description { get; set; }
+            public string PNTitle { get; set; }
+            public string PNBody { get; set; }
         }
 
         private readonly ApplicationDBContext m_dbContext;
@@ -74,7 +78,9 @@ namespace FoodOrder.API.Controllers
             var rs = await m_dbContext.OrderStatuses.AddAsync(new OrderStatus
             {
                 Name = value.Name,
-                Description = value.Description
+                Description = value.Description,
+                PNTitle = value.PNTitle,
+                PNBody = value.PNBody
             });
             try
             {
@@ -101,6 +107,8 @@ namespace FoodOrder.API.Controllers
             {
                 rs.Name = value.Name;
                 rs.Description = value.Description;
+                rs.PNTitle = value.PNTitle;
+                rs.PNBody = value.PNBody;
                 await m_dbContext.SaveChangesAsync();
             }
             catch (Exception e)

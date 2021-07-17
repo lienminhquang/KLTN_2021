@@ -9,6 +9,7 @@ class LoginVM {
   String? username;
   String? password;
   bool? rememberMe;
+  String? deviceToken;
 
   factory LoginVM.fromJson(Map<String, dynamic> json) =>
       _$LoginVMFromJson(json);

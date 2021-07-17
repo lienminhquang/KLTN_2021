@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 var notificationIDRandom =
     Random(); // keep this somewhere in a static variable. Just make sure to initialize only once.
+String? deviceToken = "";
 
 class FCMServices {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -18,8 +19,14 @@ class FCMServices {
         InitializationSettings(android: initializationSettingAndroid);
 
     await Firebase.initializeApp();
-    var deviceToken = await FirebaseMessaging.instance.getToken();
-    print("FCM Token: " + deviceToken.toString());
+    deviceToken = await FirebaseMessaging.instance.getToken();
+    if (deviceToken != null) {
+      print("FCM Token: " + deviceToken.toString());
+    }
+    if (deviceToken == null) {
+      print("FCM Failed to get device token, PN will not work!");
+      return;
+    }
 
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'high_importance_channel', // id

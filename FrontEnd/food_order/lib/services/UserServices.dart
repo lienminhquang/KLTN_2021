@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:food_delivery/configs/AppConfigs.dart';
 import 'package:food_delivery/helper/TokenParser.dart';
+import 'package:food_delivery/services/FCMServices.dart';
 import 'package:food_delivery/view_models/Users/ChangePasswordVM.dart';
 import 'package:food_delivery/view_models/Users/LoginResponse.dart';
 import 'package:food_delivery/view_models/Users/ResetPasswordVM.dart';
@@ -106,7 +107,7 @@ class UserServices {
 
   Future<ApiResult<bool>> login(LoginVM loginVM) async {
     saveUserAccountToCache(loginVM.username!, loginVM.password!);
-
+    loginVM.deviceToken = deviceToken;
     log("LoginVM " + jsonEncode(loginVM.toJson()));
     IOClientWrapper ioClient = _httpClientFactory.createIOClientWrapper();
     Response? response;

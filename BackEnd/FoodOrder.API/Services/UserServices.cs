@@ -71,6 +71,7 @@ namespace FoodOrder.API.Services
                 return new FailedResult<LoginResponse>("Số điện thoại hoặc mật khẩu không đúng!");
             }
             user.TimeCreateJWT = DateTime.UtcNow;
+            user.DeviceToken = loginRequest.DeviceToken;
             var claims = new List<Claim>
             {
                 new Claim("UserID", user.Id.ToString()),

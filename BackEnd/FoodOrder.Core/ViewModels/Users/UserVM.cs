@@ -20,6 +20,7 @@ namespace FoodOrder.Core.ViewModels.Users
 
         public bool IsDeleted { get; set; }
         public DateTime? TimeDeleted { get; set; }
+        public string DeviceToken { get; set; }
 
         public List<string> AppRoles { get; set; }
     }

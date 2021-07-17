@@ -13,5 +13,8 @@ namespace FoodOrder.Core.ViewModels.OrderStatuses
         [Display(Name ="Order Status")]
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public string PNTitle { get; set; }
+        public string PNBody { get; set; }
     }
 }

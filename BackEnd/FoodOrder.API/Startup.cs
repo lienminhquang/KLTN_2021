@@ -105,6 +105,8 @@ namespace FoodOrder.API
             services.AddTransient<SaleCampaignServices, SaleCampaignServices>();
             services.AddTransient<HomeServices, HomeServices>();
 
+            services.AddSingleton<FirebaseServices, FirebaseServices>();
+
             #endregion
 
 
@@ -154,8 +156,11 @@ namespace FoodOrder.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, FirebaseServices firebaseServices)
         {
+            firebaseServices.Init();
+            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
