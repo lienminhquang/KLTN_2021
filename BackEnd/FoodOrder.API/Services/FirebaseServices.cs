@@ -24,6 +24,12 @@ namespace FoodOrder.API.Services
         public void Init()
         {
             var path = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
+            if (string.IsNullOrEmpty(path))
+            {
+                _logger.LogInformation("FCM: Firebase service init failed. Could not find GOOGLE_APPLICATION_CREDENTIALS in your env");
+                _app = null;
+                return;
+            }
             
             _app = FirebaseApp.Create(new AppOptions()
             {
@@ -36,6 +42,12 @@ namespace FoodOrder.API.Services
 
         public async Task SendPNAsync(string token, string title, string body)
         {
+            if(_app == null)
+            {
+                _logger.LogInformation("FCM: Could not send PN to user, Firebase service is not initialized or init failed");
+                return;
+            }
+
             //var registrationToken = "cP7yBjeZR1SVQmkHT77Nx-:APA91bFBm8jMh-2Cs5o07f6csf8IuHU3GwKi5vgdjcyCdl-ZpnFcnGVXULsfO8gEqLodiTINHuS47lKbTASjfqz5f9ModUj1QnxEqxTl-h3ct-0-Il4UlCCXiareSCx3lvBPLjwYuOSW";
             var androidConfig = new AndroidConfig()
             {
