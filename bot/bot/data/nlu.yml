@@ -109,7 +109,7 @@ nlu:
     - có bán [trà sữa](food_name) không?
     - có bán [bánh](food_name) không?
     - có bán [pizza](food_name) không?
-    - Tìm trà sữa
+    - Tìm [trà sữa](food_name)
     - Tôi muốn tìm [trà sữa trân châu hạ long](food_name)
     - Tìm món
     - Tim món

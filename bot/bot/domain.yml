@@ -35,11 +35,11 @@ slots:
     - food_name
 responses:
   utter_greet:
-  - text: Chào bạn. Tôi có thể giúp gì cho bạn.
+  - text: Xin chào. Tôi có thể giúp gì cho bạn?
   utter_goodbye:
   - text: Tạm biệt! Chúc bạn một ngày tốt lành
   utter_bot_challenge:
-  - text: Vâng, Tôi là một ChatBot
+  - text: Vâng, Tôi là một trợ lý ảo.
   utter_ask_rephrase:
   - text: Xin lỗi, tôi không hiểu. Bạn có thể diễn đạt lại không?
   utter_default:
