@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/bloc/Chat/ChatBloc.dart';
 import 'package:food_delivery/bloc/Chat/ChatEvent.dart';
-import 'package:food_delivery/bloc/Home/HomeBloc.dart';
-import 'package:food_delivery/bloc/Home/HomeEvent.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryBloc.dart';
 import 'package:food_delivery/bloc/OrderHistory/OrderHistoryEvent.dart';
 import 'package:food_delivery/bloc/Profile/ProfileBloc.dart';
@@ -34,6 +32,11 @@ class _MotherBoardState extends State<MotherBoard> {
     ChatBotScreen()
     //TestChat(title: "test chat")
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +108,7 @@ class _MotherBoardState extends State<MotherBoard> {
     _currentIndex = index;
     switch (_currentIndex) {
       case 0:
-        context.read<HomeBloc>().add(HomeRefeshEvent());
+        //context.read<HomeBloc>().add(HomeRefeshEvent());
         break;
       case 1:
         context.read<OrderHistoryBloc>().add(OrderHistoryStartedEvent());

@@ -51,6 +51,8 @@ class _LoginPageState extends State<LoginPage> {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(value.errorMessage!)));
           } else {
+            _usenameTextController.text = "";
+            _passwordTextController.text = "";
             context.read<HomeBloc>().add(HomeStartedEvent());
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) {
@@ -72,6 +74,7 @@ class _LoginPageState extends State<LoginPage> {
       _usenameTextController.text = state.map!["username"]! as String;
       _passwordTextController.text = state.map!["password"]! as String;
     }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(

@@ -249,6 +249,7 @@ class OrderDetailsBody extends StatelessWidget {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(rs.errorMessage!)));
               }
+              _commentController.text = "";
               context
                   .read<OrderDetailsBloc>()
                   .add(OrderDetailStartedEvent(model.orderID));

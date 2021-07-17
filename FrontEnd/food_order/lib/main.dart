@@ -23,6 +23,7 @@ import 'package:food_delivery/bloc/SignUp/SignUpBloc.dart';
 import 'package:food_delivery/configs/DevHttpsOveride.dart';
 import 'package:food_delivery/pages/login_signup/Login.dart';
 import 'package:food_delivery/pages/presentation/Themes.dart';
+import 'package:food_delivery/services/FCMServices.dart';
 import 'package:food_delivery/theme.dart';
 
 void main() {
@@ -32,8 +33,19 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    FCMServices fcmServices = FCMServices();
+    fcmServices.configureFCM();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

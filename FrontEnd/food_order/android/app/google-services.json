@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "950191804974",
+    "project_id": "foodorder-56928",
+    "storage_bucket": "foodorder-56928.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950191804974:android:5dac71fbf031323f1805bf",
+        "android_client_info": {
+          "package_name": "com.lmq.thetop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950191804974-14142bfarmhsc0f36ugf607sah4l6fp1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-eZspzSaTKEmZpaQVk85GxJT8oHusiKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950191804974-14142bfarmhsc0f36ugf607sah4l6fp1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
