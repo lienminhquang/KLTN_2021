@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var listCategory = Model.Categories;
 }
 
 <div class="container-fluid">
@@ -51,10 +52,10 @@
                             <span asp-validation-for="ImageData" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(i => i.Categories, new { @class = "control-label " })
+                            @Html.LabelFor(i => i.CategoryIDs, new { @class = "control-label " })
                             <div class="col-md-10">
-                                @Html.ListBoxFor(i => Model.CategoryIDs, Model.Categories, new { @class = "control-label " })
-                                @Html.ValidationMessageFor(i => i.Categories,
+                                @Html.ListBoxFor(i => Model.CategoryIDs, listCategory, new { @class = "control-label " })
+                                @Html.ValidationMessageFor(i => i.CategoryIDs,
                                     "", new { @class = "text-warning" })
                             </div>
                         </div>

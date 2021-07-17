@@ -209,7 +209,7 @@
                         </div>
                         <!---------------------------- End Ratings ----------------------------->
                         <!---------------------------- Notifications ----------------------------->
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNotifications" aria-expanded="false" aria-controls="collapseLayouts">
+                        <!--<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNotifications" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             Notifications
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -219,7 +219,7 @@
                                 <a class="nav-link" asp-action="Index" asp-controller="Notifications">List</a>
                                 <a class="nav-link" asp-action="Create" asp-controller="Notifications">Create</a>
                             </nav>
-                        </div>
+                        </div>-->
                         <!---------------------------- End Users ----------------------------->
                         <!---------------------------- AppRoles ----------------------------->
                         @if (false @*(await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded*@)

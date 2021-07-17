@@ -73,7 +73,6 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Create
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> CreateAsync([FromForm] CartCreateVM cartCreateVM)
         {
@@ -122,9 +121,7 @@ namespace FoodOrder.Admin.Controllers
             });
         }
 
-        // POST: CartsController/Edit/5
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> EditAsync([FromForm] CartEditVM cartEditVM)
         {
@@ -166,9 +163,7 @@ namespace FoodOrder.Admin.Controllers
             return View(result.PayLoad);
         }
 
-        // POST: CartsController/Delete/5
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete([FromForm] CartVM vM)
         {

@@ -71,9 +71,7 @@ namespace FoodOrder.Admin.Controllers
             return View();
         }
 
-        // POST: CartsController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync([FromForm] RatingCreateVM createVM)
         {
             if (!await this.ValidateTokenInCookie(_adminUserService))
@@ -117,9 +115,7 @@ namespace FoodOrder.Admin.Controllers
             return View(_mapper.Map<RatingVM, RatingEditVM>(vm));
         }
 
-        // POST: CartsController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> EditAsync([FromForm] RatingEditVM editVM)
         {
@@ -162,9 +158,7 @@ namespace FoodOrder.Admin.Controllers
             return View(result.PayLoad);
         }
 
-        // POST: CartsController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete([FromForm] RatingVM model)
         {

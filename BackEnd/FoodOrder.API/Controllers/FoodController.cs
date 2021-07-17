@@ -100,7 +100,7 @@ namespace FoodOrder.API.Controllers
         }
 
         [HttpDelete("{id}/categories")]
-        [Authorize(Roles = PolicyType.Admin)]
+        [Authorize(Roles = PolicyType.Admin + "," + PolicyType.Manager)]
         [ValidTokenRequirement]
         public async Task<IActionResult> DeleteFoodFromCategory(int id)
         {

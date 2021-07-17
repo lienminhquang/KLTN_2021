@@ -81,9 +81,7 @@ namespace FoodOrder.Admin.Controllers
             return View();
         }
 
-        // POST: CategoriesController/Create
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateAsync([FromForm] CategoryCreateVM categoryCreateVM)
         {
@@ -127,9 +125,7 @@ namespace FoodOrder.Admin.Controllers
             return View(vm);
         }
 
-        // POST: CategoriesController/Edit/5
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> EditAsync([FromForm] CategoryEditVM vm)
         {
@@ -171,9 +167,7 @@ namespace FoodOrder.Admin.Controllers
             return View(result.PayLoad);
         }
 
-        // POST: CategoriesController/Delete/5
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> DeleteAsync(int id, CategoryVM categoryVM)
         {

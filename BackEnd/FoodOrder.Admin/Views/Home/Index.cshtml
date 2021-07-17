@@ -360,10 +360,13 @@
                                         </td>
 
                                         <td>
-                                            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                                            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-                                        </td>
+                                            @Html.ActionLink("Edit", "Edit", "Promotions", new { id = item.ID }) |
+                                            @Html.ActionLink("Details", "Details", "Promotions", new { id = item.ID }) |
+                                            @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
+                                            {
+                                                 @Html.ActionLink("Delete", "Delete", "Promotions", new { id = item.ID })
+                                            }
+                                            </td>
                                     </tr>
                                 }
                             }
@@ -444,13 +447,13 @@
                                                     Action
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Details", new { id = item.ID })>Details</a>
+                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Details", "SaleCampaigns", new { id = item.ID })>Details</a>
 
-                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Delete", new { id = item.ID })>Delete</a>
+                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Delete", "SaleCampaigns",new { id = item.ID })>Delete</a>
 
                                                     @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
                                                     {
-                                                        <a class="dropdown-item btn btn-primary" href=@Url.Action("Edit", new { id = item.ID })>Edit</a>
+                                                        <a class="dropdown-item btn btn-primary" href=@Url.Action("Edit", "SaleCampaigns",new { id = item.ID })>Edit</a>
                                                     }
                                                 </div>
                                             </div>

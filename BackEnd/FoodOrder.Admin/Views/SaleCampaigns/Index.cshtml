@@ -81,11 +81,12 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item btn btn-primary" href=@Url.Action("Details", new { id = item.ID })>Details</a>
 
-                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Delete", new { id = item.ID })>Delete</a>
+                                                <a class="dropdown-item btn btn-primary" href=@Url.Action("Edit", new { id = item.ID })>Edit</a>
 
                                                 @if ((await AuthorizationService.AuthorizeAsync(User, RoleTypes.Admin)).Succeeded)
                                                 {
-                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Edit", new { id = item.ID })>Edit</a>
+                                                    <a class="dropdown-item btn btn-primary" href=@Url.Action("Delete", new { id = item.ID })>Delete</a>
+
                                                 }
                                             </div>
                                         </div>

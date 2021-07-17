@@ -104,9 +104,8 @@ namespace FoodOrder.Admin.Controllers
             return View(foodCreateVM);
         }
 
-        // POST: CartsController/Create
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [DisableRequestSizeLimit]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> CreateAsync([FromForm] FoodCreateVM createVM)
         {
@@ -162,17 +161,16 @@ namespace FoodOrder.Admin.Controllers
             List<string> listCategory = result.PayLoad.CategoryVMs.Select(c => c.ID.ToString()).ToList();
             foodEditVM.CategoryIDs = listCategory;
 
-            List<SelectListItem> items = categoryResult.PayLoad.Items.Select(i => new SelectListItem() 
+            List<SelectListItem> items = categoryResult.PayLoad.Items.Select(i => new SelectListItem()
             { Text = i.Name, Value = i.ID.ToString(), Selected = listCategory.Contains(i.ID.ToString()) }).ToList();
             foodEditVM.Categories = new MultiSelectList(items, "Value", "Text");
+
 
 
             return View(foodEditVM);
         }
 
-        // POST: CartsController/Edit/5
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> EditAsync([FromForm] FoodEditVM editVM)
         {
@@ -189,15 +187,13 @@ namespace FoodOrder.Admin.Controllers
             var fcResult = await _foodServices.DeleteFoodFromAllCategory(editVM.ID, this.GetTokenFromCookie());
             if(!fcResult.IsSuccessed)
             {
-                TempData[AppConfigs.ErrorMessageString] = fcResult.ErrorMessage;
-                return View(editVM);
+                return this.RedirectToErrorPage(fcResult.ErrorMessage);
             }
 
-            var fcAddResult = await _foodServices.AddFoodToCategories(editVM.ID, editVM.CategoryIDs, this.GetTokenFromCookie());
+            var fcAddResult = await _foodServices.AddFoodToCategories(editVM.ID, editVM.CategoryIDs.Select(x => x.ToString()).ToList(), this.GetTokenFromCookie());
             if (fcResult.IsSuccessed == false)
             {
-                TempData[AppConfigs.ErrorMessageString] = fcAddResult.ErrorMessage;
-                return View(editVM);
+                return this.RedirectToErrorPage(fcAddResult.ErrorMessage);
             }
 
             var rs = await _foodServices.Edit(editVM.ID, editVM, this.GetTokenFromCookie());
@@ -207,8 +203,7 @@ namespace FoodOrder.Admin.Controllers
                 return RedirectToAction("Details", new { id = editVM.ID });
             }
 
-            TempData[AppConfigs.ErrorMessageString] = rs.ErrorMessage;
-            return View(editVM);
+            return this.RedirectToErrorPage(rs.ErrorMessage);
         }
 
         // GET: CartsController/Delete/5
@@ -228,9 +223,7 @@ namespace FoodOrder.Admin.Controllers
             return View(result.PayLoad);
         }
 
-        // POST: CartsController/Delete/5
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Authorize(Roles = RoleTypes.Admin)]
         public async Task<ActionResult> Delete(int id)
         {

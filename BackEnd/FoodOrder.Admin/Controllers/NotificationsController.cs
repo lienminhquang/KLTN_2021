@@ -77,7 +77,6 @@ namespace FoodOrder.Admin.Controllers
             return View();
         }
 
-        // POST: CartsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync([FromForm] NotificationCreateVM createVM)
@@ -175,7 +174,6 @@ namespace FoodOrder.Admin.Controllers
 
         // POST: CartsController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete([FromForm] NotificationVM model)
         {
             if (!await this.ValidateTokenInCookie(_adminUserService))
